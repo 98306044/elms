@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * Implementation of hook_requirements().
+ */
+function elms_helper_requirements($phase) {
+ $requirements = array();
+ $t = get_t();
+ if ($phase === 'runtime' && file_exists('profiles/elms/VERSION.txt')) {
+    $version = trim(file_get_contents('profiles/elms/VERSION.txt'));
+    $requirements['elms'] = array(
+      'title' => $t('ELMS Version'), 
+      'value' => check_plain($version),
+      'severity' => REQUIREMENT_OK,
+    );
+  }
+  return $requirements;
+}

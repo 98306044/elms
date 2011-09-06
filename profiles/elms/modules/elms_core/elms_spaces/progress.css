@@ -1,0 +1,12 @@
+/* CSS Document */
+#content {
+ width:100%;	
+}
+
+#progress {
+ width:100%;	
+}
+
+.sidebar, #main {
+	float:none !important;
+}

@@ -1,0 +1,10 @@
+; $Id: elms_spaces.info
+name = ELMS Spaces
+description = This module is for all Spaces based modifications
+package = ELMS
+version = ELMS_VERSION
+core = "6.x"
+dependencies[] = og
+dependencies[] = spaces
+dependencies[] = spaces_og
+dedependencies[] = elms_instructional_templates

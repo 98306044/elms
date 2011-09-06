@@ -1,0 +1,23 @@
+/* CSS Document */
+
+#appbar_container {
+ display:none !important;	
+}
+
+#views-bulk-operations-submit {
+ position:fixed;
+ top:0;
+ text-align:center;
+ width:100%;
+ padding:10px;
+ background-color:#000;
+}
+
+body {
+ color:#000 !important;
+ background:#FFF !important;	
+}
+
+th, td {
+ background-color:transparent !important;	
+}

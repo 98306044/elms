@@ -1,0 +1,52 @@
+<?php
+// $Id: elms_appbar.module
+
+/**
+ * @file
+ * Application bar styling for ELMS
+ */
+
+/**
+ * Implementation of hook_appbar_css().
+ */
+function elms_appbar_appbar_css() {
+  $elms = drupal_get_path('module', 'elms_appbar') .'/css/elms.appbar.css';
+  return array(
+    $elms => t('ELMS (@path)', array('@path' => $elms)),
+  );
+}
+
+/**
+ * Implementation of hook_init().
+ */
+function elms_appbar_init() {
+  $settings['color'] = variable_get('elms_appbar_color', '');
+  if ($settings['color'] != '') {
+    drupal_add_js(drupal_get_path('module', 'elms_appbar') .'/js/elms_appbar.js');
+    drupal_add_js(array('elms_appbar' => $settings), 'setting');
+  }
+}
+
+function _elms_appbar_get_color($wid = 0) {
+  switch ($wid) {
+    case 3: //dev
+	  $color = '#ac3000';
+	break;
+	case 4: //staging
+	  $color = '#c0e6ff';
+	break;
+	case 5: //active
+	  $color = '#356090';
+	break;
+	case 6: //archive
+	  $color = '#e6e6d4';
+	break;
+	case 7: //demo
+	  $color = '#327944';
+	break;
+	case 0: //error
+	  $color = '';
+	break;
+  }
+  return $color;
+}

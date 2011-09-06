@@ -1,0 +1,26 @@
+/* Slideplayer CSS */
+
+#slideplayer-container {
+height:450px;
+margin:100px auto 0;
+width:800px;
+}
+#slideplayer-navigation {
+float:left;
+height:356px;
+overflow: auto;
+width:200px;
+border:2px #000 solid;
+margin:2px;
+}
+#slideplayer-images {
+margin:0 auto;
+text-decoration:none;
+width:160px;
+}
+#slideplayer-video {
+float:left;
+height:360px;
+width:480px;
+margin: 2px 2px 2px 0;
+}

@@ -1,0 +1,41 @@
+This file is to keep track of the custom patches applied to make this stack work:
+--Core--
+CDN Patch for Drupal core and imagecache
+-- comes packaged with CDN module integration patches, though module is not included
+-- Next release this will most likely be dropped in favor of Pressflow
+Book Caching glitch
+-- sometimes book cache isn't refreshed correctly
+-- http://drupal.org/node/360377 patch fixes issue
+
+--Contributed--
+Appbar
+-- http://drupal.org/node/923672
+-- appbar.js
+-- line 45 commented out function for performance
+Editable Fields
+-- similar to http://drupal.org/node/777870
+-- editablefields.js
+-- modified included js file to work with date popups
+Chamfer
+-- Accounted for Aria Landmarks
+-- Took into account ELMS environment where needed
+-- This will be rolled into the community version of Chamfer once ICMS is final
+Outline Designer
+-- Patch to block deleting of non-book items triggered by PURL
+-- This will be rolled into the community version of Chamfer once ICMS is final
+Spaces OG
+-- http://drupal.org/node/1101738
+-- spaces/spaces_og/spaces_og.modules
+-- Helps improve user experience / performance around node access rebuilds
+
+-- http://drupal.org/node/933634#comment-4720472
+-- spaces/spaces_og/plugins/space_og.inc
+-- line 149 -- Fixes issue w/ Space activation when creating nodes outside of Space context (happens only when creating a course outline
+Masquerade
+-- http://drupal.org/node/1180494
+-- masquerade.module
+-- one line fix to account for purl
+CKEditor Link
+-- http://drupal.org/node/1181506
+-- ckeditor_link.module
+-- few line tweak to account for group context and only select pages we want

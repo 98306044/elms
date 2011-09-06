@@ -1,0 +1,11 @@
+name = "Readability"
+description = "Provides several readability tests for content."
+package = Content analysis
+dependencies[] = contentanalysis
+core = 6.x
+; Information added by drupal.org packaging script on 2011-03-06
+version = "6.x-1.0-rc3"
+core = "6.x"
+project = "readability"
+datestamp = "1299386469"
+

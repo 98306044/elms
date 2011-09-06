@@ -1,0 +1,6 @@
+; $Id: elms_instructional_templates.info
+name = ELMS Instructional Templates
+description = This Module provides the instructional template hook / api
+package = ELMS
+version = ELMS_VERSION
+core = "6.x"

@@ -1,0 +1,102 @@
+<?php
+// $Id: vt_default.module,v 1.1.2.5 2010/02/24 20:31:40 crea Exp $
+
+/**
+ * @file
+ * Vertical Tabs Default Tab module.
+ */
+
+/**
+ * Implementation of hook_form_alter.
+ */
+function vt_default_form_alter(&$form, $form_state, $form_id) {
+  // Check to see which form we are in. Since the node form's form id is not
+  // just node_form, we can't implement a function for all node forms, so we are
+  // stuck implementing the global form_alter and checking if there is the
+  // string node_form in the form id.
+  if (preg_match('/_node_form$/', $form_id)) {
+    $node_type = $form['type']['#value'];
+    $default_tab = vt_default_tab($node_type);
+    if (strlen($default_tab)) {
+      // Add default tab now, but move elements inside later,
+      // in pre-render callback
+      $form['vertical_tab_default'] = array(
+        '#type'        => 'fieldset',
+        '#title'       => filter_xss_admin(t($default_tab)),
+        '#weight'      => -100,
+      );
+      // Setting prerender callback for default vertical tab manipulations.
+      $form['#pre_render'][] = 'vt_default_node_form_prerender';
+    }
+  }
+  
+  if ($form_id == 'node_type_form' && $form['#node_type']->type) {
+    $form['vt_default_tab'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Vertical tabs default tab'),
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#description' => t("Enter name for default vertical tab of this content type. All elements which you don't put explicitly into own vertical tab will be moved inside this default tab."),
+    );
+    $form['vt_default_tab']['vertical_tabs_default_tab'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Name of Default Vertical Tab'),
+      '#description' => t('Leave blank to turn off this feature.'),
+      '#default_value' => vt_default_tab($form['#node_type']->type),
+    );
+  }
+}
+
+/**
+ *  Pre-render callback for moving form elements to default vertical tab.
+ */
+function vt_default_node_form_prerender($form) {
+  $node_type = $form['type']['#value'];
+  $default_tab = vt_default_tab($node_type);
+  if (strlen($default_tab)) {
+    // Form element types to exclude from the default tab.
+    // 
+    // Since beta6 VT assumes all fieldsets are tabs (supposedly further 
+    // controlled by Form Controller module). Unless we implement 
+    // our own UI for selecting fieldsets or integrate with Form Controller,
+    // we too assume that all fieldsets are tabs and skip em.
+    $exclude_types = array('hidden', 'value', 'fieldset', 'token');
+    
+    // Form element keys to exclude from the default tab
+    $exclude_keys = array('vertical_tab_default', 'vertical_tabs', 'buttons');
+    
+    // Any module can implement hook_vt_default_tab_alter(&$exclude_keys, &$exclude_types, &$form) for more precise 
+    // control of what gets into default tab.
+    $data = &$exclude_keys;
+    $data['__drupal_alter_by_ref'] = array(&$exclude_types, &$form);
+    drupal_alter('vt_default_tab', $data);
+     
+    // Iterate through the form, finding everything that meets our criteria.
+    foreach (element_children($form) as $delta => $key) {     
+      if (!in_array($key, $exclude_keys) &&
+        (!isset($form[$key]['#access']) || $form[$key]['#access'] != FALSE) &&
+        (!in_array($form[$key]['#type'], $exclude_types) || !isset($form[$key]['#type']))) {
+          $form['vertical_tab_default'][$key] = $form[$key];
+          unset($form[$key]);
+      }
+    }
+    uasort($form['vertical_tab_default'], 'element_sort');
+  }
+  return $form;
+}
+
+/**
+ * Retrieve the name of the default tab if it's set.
+ */
+function vt_default_tab($node_type) {
+  return variable_get('vertical_tabs_default_tab_' . $node_type, '');
+}
+
+/**
+ * Implementation of hook_node_type().
+ */
+function vt_default_node_type($op, $info) {
+  if ($op == 'delete') {
+    variable_del('vertical_tabs_default_tab_' . $info->type);
+  }
+}

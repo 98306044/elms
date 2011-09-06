@@ -1,0 +1,7 @@
+; $Id: elms_export_html.info
+name = ELMS Export HTML
+description = This allows course versions to export themselves as HTML
+core = "6.x"
+project = "elms_export_html"
+package = ELMS
+version = ELMS_VERSION

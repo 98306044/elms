@@ -1,0 +1,39 @@
+; $Id
+name = Chamfer
+description = Cham-pher, A highly customizable theme
+engine = phptemplate
+
+;block regions
+regions[superfish]       = Superfish menu
+regions[content_top]     = Content top
+regions[content]         = Content
+regions[content_bottom]  = Content bottom
+regions[left]            = Sidebar left
+regions[right]           = Sidebar right
+regions[footer]          = footer
+
+;styles
+stylesheets[all][] = superfish/css/superfish.css
+stylesheets[all][] = css/style.css
+stylesheets[all][] = css/sticky_footer.css
+
+;scripts
+scripts[] = superfish/js/superfish.js
+scripts[] = superfish/js/hoverIntent.js
+scripts[] = js/aria-roles.js
+
+;features
+features[] = logo
+features[] = name
+features[] = slogan
+features[] = node_user_picture
+features[] = comment_user_picture
+features[] = favicon
+features[] = primary_links
+
+; Information added by drupal.org packaging script on 2010-05-27
+version = "6.x-0.3"
+core = "6.x"
+project = "chamfer"
+datestamp = "1274988303"
+

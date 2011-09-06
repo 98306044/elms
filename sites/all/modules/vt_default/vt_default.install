@@ -1,0 +1,17 @@
+<?php
+// $Id: vt_default.install,v 1.1 2009/11/21 23:23:45 crea Exp $
+
+/**
+ * @file
+ * Install, update and uninstall functions for the vt_default module.
+ */
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function vt_default_uninstall() {
+  $node_types = array_keys(node_get_types('names'));
+  foreach ($node_types as $node_type) {
+    variable_del('vertical_tabs_default_tab_' . $node_type);
+  }
+}

@@ -1,0 +1,6 @@
+; $Id: elms_appbar.info
+name = ELMS Appbar
+description = Application bar styling and tweaks for ELMS
+package = ELMS
+version = ELMS_VERSION
+core = "6.x"
