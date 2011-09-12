@@ -286,7 +286,7 @@ function elms_helper_link($type, $object, $teaser = FALSE) {
     );
 	$group = og_get_group_context();
 	$links['book_print_course'] = array(
-      'href' => 'print/book/export/html/'. $group->book_nid,
+      'href' => 'book/export/html/'. $group->book_nid,
       'title' => '<img src="/sites/all/modules/print/icons/print_icon.gif" alt="Print Course" title="Print Course" width="16" height="16" class="print-icon" />',
       'attributes' => array(
         'title' => 'Display a printer-friendly version of this page.',
