@@ -407,11 +407,38 @@ function _elms_spaces_theme_form($form_state, $feature = NULL) {
   '#collapsed' => TRUE,
   '#collapsible' => TRUE,
   );
+  //support for logo
+  $form['theme_settings']['toggle_logo'] = array(
+  '#type' => 'checkbox',
+  '#title' => t("Logo"),
+  '#description' => "Display the logo uploaded in this theme",
+  '#default_value' => $settings['toggle_logo'],
+  );
+  //support for site name
+  $form['theme_settings']['toggle_name'] = array(
+  '#type' => 'checkbox',
+  '#title' => t("Course Name"),
+  '#description' => "Display the Course Name if the theme if it supports it",
+  '#default_value' => $settings['toggle_name'],
+  );
+  //support for site slogan
+  $form['theme_settings']['toggle_slogan'] = array(
+  '#type' => 'checkbox',
+  '#title' => t("Course Title"),
+  '#description' => "Display the Course Title if the theme supports it",
+  '#default_value' => $settings['toggle_slogan'],
+  );
   $form['theme_settings']['toggle_primary_links'] = array(
   '#type' => 'checkbox',
   '#title' => t("Primary Links"),
-  '#description' => "Selecting this will use the theme's built in menu to handle the Features of this course offering.",
+  '#description' => "Include primary links if the theme supports them. This will also remove the block displaying course features that are enabled",
   '#default_value' => $settings['toggle_primary_links'],
+  );
+  $form['theme_settings']['toggle_secondary_links'] = array(
+  '#type' => 'checkbox',
+  '#title' => t("Secondary Links"),
+  '#description' => "Include secondary links if the theme supports them",
+  '#default_value' => $settings['toggle_secondary_links'],
   );
   
   return $form;

@@ -271,9 +271,13 @@ function elms_helper_form_alter(&$form, &$form_state, $form_id) {
  */
 function elms_helper_link($type, $object, $teaser = FALSE) {
   $links = array();
+  $print_option = variable_get('elms_print_options','both');
   if ($type == 'node' && isset($object->book['plid']) && !$teaser && user_access('see printer-friendly version')) {
-    $parent = book_link_load($object->book['plid']);
-    $links['book_print_lesson'] = array(
+	$group = og_get_group_context();
+	$parent = book_link_load($object->book['plid']);
+	//verify print setting
+	if ($print_option == 'print_lesson' || $print_option == 'print_course' && $group->book_nid != $parent['nid']) {
+      $links['book_print_lesson'] = array(
       'href' => 'print/book/export/html/'. $parent['nid'],
       'title' => '<img src="/sites/all/modules/print/icons/print_icon.gif" alt="Print Lesson" title="Print Lesson" width="16" height="16" class="print-icon" />',
       'attributes' => array(
@@ -283,9 +287,11 @@ function elms_helper_link($type, $object, $teaser = FALSE) {
         'rel' => 'nofollow',
       ),
       'html' => 1,
-    );
-	$group = og_get_group_context();
-	$links['book_print_course'] = array(
+      );
+	}
+	//verify print setting
+	if ($print_option == 'print_course') {
+	  $links['book_print_course'] = array(
       'href' => 'book/export/html/'. $group->book_nid,
       'title' => '<img src="/sites/all/modules/print/icons/print_icon.gif" alt="Print Course" title="Print Course" width="16" height="16" class="print-icon" />',
       'attributes' => array(
@@ -295,7 +301,8 @@ function elms_helper_link($type, $object, $teaser = FALSE) {
         'rel' => 'nofollow',
       ),
       'html' => 1,
-    );
+      );
+	}
   }
   return $links;
 }
@@ -304,37 +311,13 @@ function elms_helper_link($type, $object, $teaser = FALSE) {
  * Implementation of hook_link_alter()
  */
 function elms_helper_link_alter(&$links, $node, $comment = NULL) {
-  //check print settings changes
-  switch (variable_get('elms_print_options','both')) {
-    case 'both':
-      $print_display = TRUE;
-      $print_pdf_display = TRUE;
-    break;
-    case 'print':  
-      $print_display = TRUE;
-      $print_pdf_display = FALSE;
-    break;
-    case 'pdf':
-      $print_display = FALSE;
-      $print_pdf_display = TRUE;
-    break;
-    case 'none':
-      $print_display = FALSE;
-      $print_pdf_display = FALSE;
-    break;
-  }
-  if (!$print_display) {
+  //check print setting
+  $print_option = variable_get('elms_print_options','both');
+  if ($print_option == 'none') {
     unset($links['book_printer']);
-  }
-  if (!$print_pdf_display) {
-    unset($links['book_pdf']);
   }
   //remove add book as it's confusing with outline designer in place
   unset($links['book_add_child']);
-  //shift comments down if they are activated
-  $temp = $links['comment_add'];
-  unset($links['comment_add']);
-  array_unshift($links,$temp);
   //shifts bookmarks if activated
   $temp = $links['flag-bookmarks'];
   unset($links['flag-bookmarks']);
@@ -476,7 +459,8 @@ function _elms_helper_nav($position = 'left') {
         'expanded' => 0,
         );
         $render = TRUE;
-        $displaytitle = TRUE;
+        $displaytitle = FALSE;
+		$title = 'Content';
       break;
       case 'activeleftleft':
         $config2 = array(
@@ -514,7 +498,7 @@ function _elms_helper_nav($position = 'left') {
       );
       $render = TRUE;
       $displaytitle = FALSE;
-      $title = 'Course Outline';
+      $title = 'Course Content';
     break;  
     }
   break;
@@ -540,6 +524,7 @@ function _elms_helper_nav($position = 'left') {
       $blockary['title'] = '<none>';
     }
     else {
+	  $blockary['subject'] = $title;
       $blockary['title'] = $title;
     }
   }

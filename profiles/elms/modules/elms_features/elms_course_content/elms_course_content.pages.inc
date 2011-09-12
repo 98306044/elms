@@ -14,12 +14,12 @@ function elms_course_content_settings() {
     '#type' => 'select',
     '#title' => t('Print Options'),
     '#options' => array(
-      'both' => t('Print and PDF'),
-      'print' => t('Print'),
-      'pdf' => t('PDF'),
+      'print' => t('Print Page Only'),
+	  'print_lesson' => t('Print Lesson or Page'),
+	  'print_course' => t('Print Course, Lesson or Page'),
       'none' => t('Can not print'),
     ),
-    '#default_value' => variable_get('elms_print_options','both'),
+    '#default_value' => variable_get('elms_print_options','print'),
   );
   if (module_exists('elms_instructional_templates')) {
     $form['elms_content_outline'] = array(
