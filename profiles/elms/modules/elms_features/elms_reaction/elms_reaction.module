@@ -18,3 +18,13 @@ function elms_reaction_menu() {
   );
   return $items;
 }
+
+/**
+ * Implementation of hook_link_alter().
+ */
+function elms_reaction_link_alter(&$links, $node, $comment = NULL) {
+  $features = variable_get('spaces_features');
+  if (!$features['elms_reaction']) {
+    unset($links['reaction_field_related_content']);
+  }
+}

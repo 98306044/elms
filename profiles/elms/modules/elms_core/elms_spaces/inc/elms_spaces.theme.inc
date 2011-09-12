@@ -400,6 +400,20 @@ function _elms_spaces_theme_form($form_state, $feature = NULL) {
     '#weight' => 10,
     '#submit' => array('_elms_spaces_theme_form_submit'),
   );
+  
+  $form['theme_settings'] = array(
+  '#type' => 'fieldset',
+  '#title' => t('Other Settings'),
+  '#collapsed' => TRUE,
+  '#collapsible' => TRUE,
+  );
+  $form['theme_settings']['toggle_primary_links'] = array(
+  '#type' => 'checkbox',
+  '#title' => t("Primary Links"),
+  '#description' => "Selecting this will use the theme's built in menu to handle the Features of this course offering.",
+  '#default_value' => $settings['toggle_primary_links'],
+  );
+  
   return $form;
 }
 //validate
