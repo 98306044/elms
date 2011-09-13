@@ -1,0 +1,118 @@
+<?php
+
+/**
+* Implementation of hook_perm
+*/
+function og_clone_perm() {
+  return array('clone organic groups');	
+}
+
+/**
+* Implementation of hook_menu
+*/
+function og_clone_menu() {
+  $items = array();
+  $items['og_clone'] = array(
+    'title' => 'OG Clone',
+    'description' => 'Copy information related to an organic group to another one',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('_og_clone_clone_form'),
+	'access callback' => '_og_clone_access',
+    'type' => MENU_NORMAL_ITEM,
+   );
+  return $items;
+}
+
+/**
+* helper function for assessing access to the path
+*/
+function _og_clone_access() {
+  if (user_access('clone organic groups')) {
+    return true;
+  }
+  return false;
+}
+
+/**
+* Implementation of hook_form
+*/
+function _og_clone_clone_form($form_id, $args) {
+  $form = array();
+  $group = og_get_group_context();
+  //if we are currently on a group form, then force selection of that group to clone
+  $form['group'] = array(
+    '#description' => t("Select the Group you'd like to clone"),
+    '#required' => '1',
+    '#type' => 'select',
+    '#title' => t('Group to Clone'),
+    '#options' => _og_clone_get_list(),
+  );
+  if (isset($group->nid)) {
+    $form['group'] = array(
+      '#disabled' => '1',
+    );
+  }
+  //if feautures module exists, then allow for export per feature
+  if (module_exists('features')) {
+	//get a list of enabled features and convert to an appropriate array
+	$tmp = variable_get('spaces_features');
+	$fcache = cache_get('features_module_info');
+	foreach ($tmp as $key => $value) {
+	  if ($value == 1) {
+	    $features[$key] = $fcache->data['module'][$key]->info['name'];
+	  }
+	}
+	
+    $form['features'] = array(
+      '#default_value' => $features,
+      '#description' => t('Select the Features that you want to clone as part of this OG clone'),
+      '#type' => 'checkboxes',
+      '#options' => $features,
+      '#title' => t('Features'),
+    );
+  }
+  //user roles
+  $form['user_roles'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Roles'),
+    '#description' => t("Selet the user roles you want to include content from. Unchecking a role will exclude that role's content from the clone even if that Feature is being cloned above."),
+    '#required' => '1',
+    '#options' =>  user_roles(),
+    '#default_value' => array(),
+  );
+
+  //author field
+  global $user;
+  $form['author'] = array(
+    '#type' => 'textfield', 
+    '#description' => t('Enter a user name here to make this the author of all content of this clone. By default you will be set as the author of all content since your cloned it.'),
+    '#title' => t('Authored by'), 
+    '#maxlength' => 60, 
+    '#autocomplete_path' => 'user/autocomplete', 
+    '#default_value' => $user->name, 
+  );
+  
+  $form['submit'] = array(
+    '#type' => 'submit',
+	'#description' => 'This process will take some time based on how large the group is',
+    '#value' => t('Clone Course'),
+    '#submit' => array('_og_clone_clone_form_submit'),
+  );
+  
+  return $form;
+}
+
+/**
+* helper function to get the groups of the current user
+*/
+function _og_clone_get_list() {
+  global $user;
+  //select all groups the user has access to
+  $result = db_query(db_rewrite_sql("SELECT {node}.nid, title FROM {node} JOIN {og} ON {node}.nid = {og}.nid"));
+  //parse results and dump them into an array
+  while ($node = db_fetch_object($result)) {
+    $ary[$node->nid] = $node->title;
+  }
+  //return list of all groups the user has access to
+  return $ary;
+}

@@ -1,0 +1,7 @@
+; $Id: og_clone.info
+name = OG Clone
+description = This module provides a method for cloning all content in an organic group based on certain criteria
+package = ELMS
+version = ELMS_VERSION
+core = "6.x"
+dependencies[] = og

@@ -120,7 +120,7 @@ function elms_spaces_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
       if ($space) {
         $space->controllers->variable->set('site_name', $node->title);
         //set the front page to the homepage of the course
-        $space->controllers->variable->set('site_frontpage', 'node/'. $node->nid);
+        //$space->controllers->variable->set('site_frontpage', 'node/'. $node->nid);
         $course = node_load($node->field_course_ref[0]['nid']);
         //set slogan to the description of the course
         $space->controllers->variable->set('site_slogan', $course->field_course_description[0]['value']);
