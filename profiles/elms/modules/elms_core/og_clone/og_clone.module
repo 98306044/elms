@@ -48,12 +48,11 @@ function _og_clone_clone_form($form_id, $args) {
     '#options' => _og_clone_get_list(),
   );
   if (isset($group->nid)) {
-    $form['group'] = array(
-      '#disabled' => '1',
-    );
+    $form['group']['#disabled'] = '1';
+	$form['group']['#default_value'] = $group->nid;
   }
   //if feautures module exists, then allow for export per feature
-  if (module_exists('features')) {
+  if (module_exists('features') && isset($group->nid)) {
 	//get a list of enabled features and convert to an appropriate array
 	$tmp = variable_get('spaces_features');
 	$fcache = cache_get('features_module_info');
@@ -62,9 +61,9 @@ function _og_clone_clone_form($form_id, $args) {
 	    $features[$key] = $fcache->data['module'][$key]->info['name'];
 	  }
 	}
-	
+	//list features that are available to this group
     $form['features'] = array(
-      '#default_value' => $features,
+      '#default_value' => array_keys($features),
       '#description' => t('Select the Features that you want to clone as part of this OG clone'),
       '#type' => 'checkboxes',
       '#options' => $features,
@@ -72,13 +71,15 @@ function _og_clone_clone_form($form_id, $args) {
     );
   }
   //user roles
+  $user_roles = user_roles(TRUE);
+  array_shift($user_roles);
   $form['user_roles'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Roles'),
     '#description' => t("Selet the user roles you want to include content from. Unchecking a role will exclude that role's content from the clone even if that Feature is being cloned above."),
     '#required' => '1',
-    '#options' =>  user_roles(),
-    '#default_value' => array(),
+    '#options' =>  $user_roles,
+    '#default_value' => array_keys($user_roles),
   );
 
   //author field
@@ -100,6 +101,36 @@ function _og_clone_clone_form($form_id, $args) {
   );
   
   return $form;
+}
+
+/**
+* Implementation of hook_form_submit
+*/
+function _og_clone_clone_form_submit($form, &$form_state) {
+  $fcache = cache_get('features_module_info');
+  $content_types = array();
+  //generate a list of all content types created by the features selected
+  foreach ($form_state['values']['features'] as $key => $value) {
+    if ($value != '0') {
+      $content_types = array_merge($content_types, $fcache->data['module'][$key]->info['features']['node']);
+	}
+  }
+  //pull out the user roles that were selected
+  foreach ($form_state['values']['user_roles'] as $key => $value) {
+    if ($value != '0') {
+      $user_roles[] = $key;
+	}
+  }
+  //merge all values appropriately for a secure query rewrite
+  $query_vars = array_merge(array($form_state['values']['group']), $content_types, $user_roles);
+  //query all nodes we want related to this group
+  $result = db_query(db_rewrite_sql("SELECT n.nid, ur.rid, n.type FROM {node} as n JOIN {og_ancestry} as oga ON oga.nid = n.nid JOIN {users_roles} as ur ON ur.uid = n.uid WHERE oga.group_nid=%d AND n.type IN (". db_placeholders($content_types, 'text') .") AND ur.rid IN (". db_placeholders($user_roles) .")"), $query_vars);
+  //these are the nodes we need to replicate
+  while ($val = db_fetch_object($result)) {
+    drupal_set_message('should make node '. $val->nid .' rid '. $val->rid .' type '. $val->type);
+  }
+  
+  //$form_state['values']['author']
 }
 
 /**
