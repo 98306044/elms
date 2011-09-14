@@ -145,7 +145,7 @@ class space_og extends space_type_purl {
           }
           // Otherwise route
           reset($node->og_groups);
-		  if ($_GET['q'] != 'node/add/course') {
+		  if ($_GET['q'] != 'node/add/course' && arg(0) != 'og_clone') {
             spaces_load('og', current($node->og_groups))->activate();
 		  }
           return;
