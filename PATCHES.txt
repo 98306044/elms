@@ -1,8 +1,8 @@
 This file is to keep track of the custom patches applied to make this stack work:
---Core--
-CDN Patch for Drupal core and imagecache
--- comes packaged with CDN module integration patches, though module is not included
--- Next release this will most likely be dropped in favor of Pressflow
+--Pressflow Core--
+ereg for php 5.3
+-- ereg throws a depricated warning for 5.3 which could cause issues for some people
+-- http://drupal.org/node/883038
 Book Caching glitch
 -- sometimes book cache isn't refreshed correctly
 -- http://drupal.org/node/360377 patch fixes issue
