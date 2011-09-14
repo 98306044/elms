@@ -188,6 +188,11 @@ class space_og extends space_type_purl {
     $excluded[] = 'og';
     $excluded[] = 'og/my';
     $excluded[] = 'og/all';
+	//PATCH: accounts for elms
+	$excluded[] = 'node/add/courses';
+	//PATCH: accounts for og_clone
+	$excluded[] = 'og_clone';
+	$excluded[] = 'og_clone/*';
 	
     return $excluded;
   }

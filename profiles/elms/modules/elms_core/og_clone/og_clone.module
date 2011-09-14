@@ -1,28 +1,5 @@
 <?php
-/**
- * Implementation of hook_spaces_plugins().
- */
-function og_clone_spaces_plugins() {
-  $plugins = array();
-  $plugins['space_og_clone'] = array(
-    'handler' => array(
-    'path' => drupal_get_path('module', 'og_clone') .'/plugins',
-    'file' => 'space_og_clone.inc',
-    'class' => 'space_og_clone',
-    'parent' => 'space_og',
-    ),
-  );
-  return $plugins;
-}
 
-/**
- * Implementation of hook_spaces_registry_alter().
- */
-function og_clone_spaces_registry_alter(&$registry) {
-  if (!empty($registry['types']['og'])) {
-    $registry['types']['og']['plugin'] = 'space_og_clone';
-  }
-}
 
 /**
 * Implementation of hook_perm
