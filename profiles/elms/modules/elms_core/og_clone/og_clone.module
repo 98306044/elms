@@ -39,6 +39,17 @@ function _og_clone_access() {
 function _og_clone_clone_form($form_id, $args) {
   $form = array();
   $group = og_get_group_context();
+  if (isset($group->nid)) {
+	  if (module_exists('purl')) {
+        purl_goto('og_clone/'. $group->nid, array('purl' => array('disabled' => true)));  
+	  }
+	  else {
+		drupal_goto('og_clone/'. $group->nid);  
+	  }
+  }
+  elseif (arg(1) != '') {
+    $group = node_load(arg(1));
+  }
   //if we are currently on a group form, then force selection of that group to clone
   $form['group'] = array(
     '#description' => t("Select the Group you'd like to clone"),
@@ -49,12 +60,15 @@ function _og_clone_clone_form($form_id, $args) {
   );
   if (isset($group->nid)) {
     $form['group']['#disabled'] = '1';
-  $form['group']['#default_value'] = $group->nid;
+    $form['group']['#default_value'] = $group->nid;
   }
   //if feautures module exists, then allow for export per feature
-  if (module_exists('features') && isset($group->nid)) {
-  //get a list of enabled features and convert to an appropriate array
-  $tmp = variable_get('spaces_features');
+  if (module_exists('features') && module_exists('spaces') && isset($group->nid)) {
+    //get a list of enabled features and convert to an appropriate array
+    $space = spaces_load('og', $group->nid, TRUE);
+    if ($space) {
+      $tmp = $space->controllers->variable->get('spaces_features');
+	}
   $fcache = cache_get('features_module_info');
   foreach ($tmp as $key => $value) {
     if ($value == 1) {
@@ -129,10 +143,10 @@ function _og_clone_clone_form_submit($form, &$form_state) {
   if (og_is_group_type($group->type)) {
     $author = $form_state['values']['author'];
 	$author_id = db_result(db_query("SELECT uid FROM {users} WHERE name = '%s'", $author));
-    //set some common values to null so this will create a new node
-    $group->nid = NULL;
-    $group->vid = NULL;
-    $group->revision_uid = $author_id;
+	//set some common values to null so this will create a new node
+    unset($group->nid);
+    unset($group->vid);
+    unset($group->revision_uid);
     //append clone
     $group->title .= ' clone';
     //reset purl if it exists
@@ -169,6 +183,7 @@ function _og_clone_clone_form_submit($form, &$form_state) {
       }
 	}
     drupal_set_message('Group Created successfully');
+	//now copy all the content since we have a group we can copy into
 	//if features were set, pull together the content types from cache
 	if (isset($form_state['values']['features'])) {
 	  $fcache = cache_get('features_module_info');
@@ -203,17 +218,17 @@ function _og_clone_clone_form_submit($form, &$form_state) {
 	  $node = node_load($val['nid']);
 	  //set some common values to null so this will create a new node
       $node->log = "Original node nid: ". $node->nid;
-	  $node->nid = NULL;
-      $node->vid = NULL;
-	  $node->path = NULL;
-	  $node->create = NULL;
-      $node->revision_uid = $author_id;
+	  unset($node->nid);
+      unset($node->vid);
+      unset($node->path);
+	  unset($node->create);
+	  unset($node->revision_uid);
+	  unset($node->og_groups_both);
+	  $node->og_groups = array($group->nid => $group->nid);
 	  //change the user id to the one that the form dictates
       $node->uid = $author_id;
       //change the author name to match
       $node->name = $author;
-      $node->og_groups = NULL;
-      $node->og_groups_both = NULL;
 	  //account for books
 	  if (isset($node->book['mlid'])) {
 	    $old_mlid = $node->book['mlid'];
@@ -227,13 +242,8 @@ function _og_clone_clone_form_submit($form, &$form_state) {
         if (isset($context['sandbox']['map'][$node->book['plid']]) ) {
           $node->book['plid'] = $context['sandbox']['map'][$node->book['plid']];
         }
+		
 		node_save($node);
-		print_r($node);
-		$node->og_groups = array($group->nid => $group->nid);
-        $node->og_groups_both = array($group->nid => $group->title);
-		node_save($node);
-		print_r($node);
-		exit;
         //if this is a root store that id
 	    if ($root) {
           $context['sandbox']['root_nid'] = $node->nid;
@@ -241,7 +251,7 @@ function _og_clone_clone_form_submit($form, &$form_state) {
         $context['sandbox']['map'][$old_mlid] = $node->book['mlid'];
 	  }
       else {
-	    //node_save($node);
+	    node_save($node);
 	  }
 	  $context['message'] = 'Cloning Group nodes: Creating '. $node->type .' '. $node->title .' ('. ($context['sandbox']['max'] - $context['sandbox']['progress']) .' nodes remaining)';
     }
@@ -255,6 +265,7 @@ function _og_clone_clone_form_submit($form, &$form_state) {
       _book_update_outline($node);
 	}
   }
+  return 1;
 }
 
 //function _og_clone_clone_form_submit() {
