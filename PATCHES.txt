@@ -28,6 +28,9 @@ Spaces OG
 -- spaces/spaces_og/spaces_og.modules
 -- Helps improve user experience / performance around node access rebuilds
 
+-- spaces/spaces_og/spaces_og/plugins/space_og.inc
+-- Accounted for elms and og_clone
+
 Masquerade
 -- http://drupal.org/node/1180494
 -- masquerade.module
