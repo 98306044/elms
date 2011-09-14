@@ -59,7 +59,7 @@ function dblog_filters_menu() {
 function dblog_filters_form_alter(&$form, &$form_state, $form_id) {
   if ($form_id == 'dblog_ext_filter_form') {
     drupal_add_css(drupal_get_path('module', 'dblog_filters') . '/dblog_filters.css');
-    $form['filters']['#description'] .= t('You may configure and enable/disable filters from the !link.', array('!link' => l(t('settings page'), 'admin/settings/logging/filters')));
+    //$form['filters']['#description'] .= t('You may configure and enable/disable filters from the !link.', array('!link' => l(t('settings page'), 'admin/settings/logging/filters')));
   }
 }
 

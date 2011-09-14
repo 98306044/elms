@@ -24,7 +24,7 @@ function elms_reaction_menu() {
  */
 function elms_reaction_link_alter(&$links, $node, $comment = NULL) {
   $features = variable_get('spaces_features', array());
-  if (!$features['elms_reaction']) {
+  if (!isset($features['elms_reaction']) || !$features['elms_reaction']) {
     unset($links['reaction_field_related_content']);
   }
 }

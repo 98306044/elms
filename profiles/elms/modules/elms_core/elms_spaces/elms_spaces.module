@@ -615,22 +615,21 @@ function elms_spaces_translated_menu_link_alter(&$item, $map) {
     break;
     case 'node/[field_course_ref-nid]':
       if (arg(1) == 'add' && arg(2) == 'version') {
-      $node = node_load(arg(3));
+        $node = node_load(arg(3));
       }
       elseif (isset($node->nid)) {
-      $node = node_load($node->field_course_ref[0]['nid']);
+        $node = node_load($node->field_course_ref[0]['nid']);
       }
-      else {
+        else {
       $node = node_load(arg(1));
       }
       //this node is type course and we're on that page
-      if($node->type == 'course') {
-            $menu_token_item['link_path'] = 'node/[nid]';
-        $item['title'] =  str_replace('[field_course_ref-title]','[title]',$item['title']); 
-      //if ($item['title'] == '[title]') {
-        //$item['title'] = theme('crayon_swatch', crayon_generate_acronym($node->title), crayon_generate_index($node->nid), $node->title) . $item['title'];
-      //}
-      }
+	  if (isset($node->type)) {
+        if ($node->type == 'course') {
+          $menu_token_item['link_path'] = 'node/[nid]';
+          $item['title'] =  str_replace('[field_course_ref-title]','[title]',$item['title']);
+        }
+	  }
     break;
     case 'node/[nid]':
       if (arg(1) == 'add' && arg(2) == 'version' && $item['title'] != 'View [title]' && $item['title'] != '[title] ([workflow-current-state-name])') {

@@ -47,7 +47,7 @@
 	    if ($current_day == $record[1]) {
 		  $jump_to_current = '<div><a href="#event_'. $record[0] .'">Jump to this week'."'".'s content</a></div>';
 	    }
-		elseif ($prev_record[1] < $current_day && $record[1] > $current_day) {
+		elseif (isset($prev_record) && $prev_record[1] < $current_day && $record[1] > $current_day) {
 		  $jump_to_current = '<div><a href="#event_'. $prev_record[0] .'">Jump to this week'."'".'s content</a></div>';
 		}
 		$prev_record = $record;

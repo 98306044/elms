@@ -39,3 +39,9 @@ CKEditor Link
 -- http://drupal.org/node/1181506
 -- ckeditor_link.module
 -- few line tweak to account for group context and only select pages we want
+
+og_node_access
+-- Minor isset added to squelch a NOTICE in php error logs
+
+dblog_filters
+-- Minor isset added to squelch a NOTICE in php error logs

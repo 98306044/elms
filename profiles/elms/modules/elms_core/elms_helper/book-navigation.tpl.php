@@ -9,6 +9,7 @@
     $options = array_merge(array('node/'. $group->nid => t('Home')),$options);
   }
   //find the current array item and advance the internal pointer to it
+  $found_current = false;
   foreach ($options as $key => $option) {
     //we're at the current node
     if ($key == 'node/'. $nid) {

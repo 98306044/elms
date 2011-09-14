@@ -47,9 +47,11 @@ function og_node_access_menu() {
 function og_node_access_help($path, $arg) {
   if (module_exists('spaces_og')) {
     $space = spaces_get_space();
-    if ($space->type != 'og') {
-      unset($space);
-    }
+	if (isset($space->type)) {
+      if ($space->type != 'og') {
+        unset($space);
+      }
+	}
   }
   $needs_rebuild = og_node_access_needs_rebuild();
 

@@ -20,6 +20,7 @@
  */
  $has_end = false;
 foreach ($fields as $id => $field) {
+  $style = '';
   switch ($id) {
     case 'field_color_value':
 	  $color = strtolower($field->content);
@@ -67,6 +68,7 @@ foreach ($fields as $id => $field) {
 	  //nothing's set so just display the field to change the icon
 	  if ($event_type == '') {
 		$event_type.= '<img width="24px" height="24px" class="schedule_event_type" src="'. base_path() . drupal_get_path('module','elms_schedule') .'/images/types/blank.png" alt="blank" title="blank"/>';
+		$event_icon = '';
 	  }
 	  else {
 		$event_icon = strtolower($event_type);
@@ -77,25 +79,25 @@ foreach ($fields as $id => $field) {
 }
 $depth = -1;
 //calculate depth
-while ($tmpnid != 0) {
+while (isset($tmpnid) && $tmpnid != 0) {
 	$last_nid = $tmpnid;
 	$tmpnid = db_result(db_query("SELECT value FROM {draggableviews_structure} WHERE delta=1 AND view_name='course_schedule' AND nid=%d", $last_nid));
 	$depth++;
 }
 //make it a link if we have to but ref node takes priority over an external link
-if ($ref_nid != '') {
-  $title = l($title,'node/'. $ref_nid,array('html' => true,'attributes'=>array('alt'=>$title,'title'=>$title)));
+if (isset($ref_nid) && $ref_nid != '') {
+  $title = l($title, 'node/'. $ref_nid, array('html' => true, 'attributes' => array('alt' => $title, 'title' => $title)));
 }
-elseif ($url != '') {
-  $title = l($title,$url,array('html' => true, 'attributes'=>array('alt'=>$title,'title'=>$title)));
+elseif (isset($url) && $url != '') {
+  $title = l($title, $url, array('html' => true, 'attributes' => array('alt' => $title,'title' => $title)));
 }
 
 //alter date if needed for due-dates
 if (!$has_end) {
-  if ($mod_text != '') {
+  if (isset($mod_text) && $mod_text != '') {
     $date = $mod_text .' '. $date;
   }
-  if ($time != '') {
+  if (isset($time) && $time != '') {
 	$date = $date .' at '. $time; 
   }
 }

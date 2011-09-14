@@ -42,7 +42,7 @@ if (is_null(theme_get_setting('chamfer_borders'))) { // if this is null it means
  * Add custom PHPTemplate variable into the page template
  */
 function chamfer_preprocess_page(&$vars) {
-if ($vars['template_files'][4] == 'page-admin-build-themes-settings-chamfer') {
+if (isset($vars['template_files'][4]) && $vars['template_files'][4] == 'page-admin-build-themes-settings-chamfer') {
 	$vars['content'] = str_replace('<fieldset class="theme-settings-bottom">','<fieldset class="collapsed collapsible theme-settings-bottom">',str_replace('<fieldset>','<fieldset class="collapsed collapsible">',$vars['content']));
 }
 

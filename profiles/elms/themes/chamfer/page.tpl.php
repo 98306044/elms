@@ -165,7 +165,7 @@ if ($left && $right) {
             <div class="banner-crop">
             <?php if ($primary_links || $superfish): ?>
               <!-- Primary || Superfish -->
-              <div class="main-menu <?php print $primary_menu ? 'primary' : 'superfish' ; ?>" id="<?php print $primary_menu ? 'primary' : 'superfish' ; ?>">
+              <div class="main-menu <?php print $primary_links ? 'primary' : 'superfish' ; ?>" id="<?php print $primary_links ? 'primary' : 'superfish' ; ?>">
               <?php if (isset($primary_links)) : ?>
           <?php print theme('links', $primary_links, array('class' => 'links primary-links')) ?>
         <?php endif; ?>

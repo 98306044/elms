@@ -51,7 +51,12 @@ class context_var_context_condition extends context_condition {
         //scan for the %theme value for replacement
         if (module_exists('og')) {
           $group = og_get_group_context();
-          $theme = $group->og_theme;
+		  if (isset($group->type)) {
+            $theme = $group->og_theme;
+		  }
+		  else {
+			$theme = variable_get('default_theme','garland');
+		  }
         }
         else {
           $theme = variable_get('default_theme','garland');
@@ -82,7 +87,7 @@ class context_var_context_condition extends context_condition {
 			//drupal values can store arrays, we need to check for an array value
             $tmp_val = explode(':', $value);
 			//if the database value doesn't equal the context value, return false
-            if ($sys_var[$tmp_val[0]] != $tmp_val[1]) {
+            if (!isset($sys_var[$tmp_val[0]]) || $sys_var[$tmp_val[0]] != $tmp_val[1]) {
               $all_conditions_met = false;  
             }
           }

@@ -12,14 +12,14 @@
  if ($specialblocks == '') {
 	$specialblocks = array(); 
  }
- if (in_array($block->bid,$specialblocks)) {
+ if (isset($block->bid) && in_array($block->bid, $specialblocks)) {
 	$block_style_class = ' block-minimal-menu'; 
  }
  else {
 	$block_style_class = ''; 
  }
 ?>
-<div id="block-<?php print $block->module .'-'. $block->delta; ?>" class="block <?php print $block_classes . $block_style_class; ?>">
+<div id="block-<?php print $block->module .'-'. $block->delta; ?>" class="block <?php print $block_style_class; ?>">
   <div class="block-inner">
   <?php if ($block->subject): ?>
     <h2 class="block-title"><?php print $block->subject; ?></h2>

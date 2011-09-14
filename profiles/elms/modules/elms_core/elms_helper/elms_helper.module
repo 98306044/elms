@@ -53,7 +53,7 @@ function elms_helper_init() {
     //add in custom font setting, a none file exists too
     drupal_add_css(drupal_get_path('module', 'elms_helper') .'/css/'. $theme_settings['font'] .'.css','theme');
     //add in custom css if this course has any
-    if ($theme_settings['extra_css_path'] != '' && $theme_settings['extra_css_use'] == 1) {
+    if (isset($theme_settings['extra_css_path']) && $theme_settings['extra_css_path'] != '' && $theme_settings['extra_css_use'] == 1) {
       drupal_add_css($theme_settings['extra_css_path'], 'theme');
     }
         og_set_group_context($group_node);
@@ -90,14 +90,17 @@ function elms_helper_init() {
     }
   else {
     $group = og_get_group_context();
-    $theme_settings = variable_get('theme_'. $group->og_theme .'_settings',array());
-    //add in custom font setting, a none file exists too
-    drupal_add_css(drupal_get_path('module', 'elms_helper') .'/css/'. $theme_settings['font'] .'.css','theme');
-    //add in custom css if this course has any
-    if ($theme_settings['extra_css_path'] != '' && $theme_settings['extra_css_use'] == 1) {
-      drupal_add_css($theme_settings['extra_css_path'], 'theme');
-    }
-    
+	if (isset($group->type)) {
+      $theme_settings = variable_get('theme_'. $group->og_theme .'_settings',array());
+      //add in custom font setting, a none file exists too
+	  if (isset($theme_settings['font'])) {
+        drupal_add_css(drupal_get_path('module', 'elms_helper') .'/css/'. $theme_settings['font'] .'.css','theme');
+	  }
+      //add in custom css if this course has any
+      if (isset($theme_settings['extra_css_path']) && $theme_settings['extra_css_path'] != '' && $theme_settings['extra_css_use'] == 1) {
+        drupal_add_css($theme_settings['extra_css_path'], 'theme');
+      }
+	}
   }
   }
   elseif(arg(0) == 'courses') {
@@ -108,10 +111,17 @@ function elms_helper_init() {
       drupal_set_message('Continue where you left off? '. l(t($val['title']),$val['path']),'elms-message');
     }
   }
-  $group = og_get_group_context();
-  //version form
-  if ((arg(0) == 'node' && arg(1) == 'add' && arg(2) == 'version') || ($group->type == 'version' && arg(2) == 'edit')) {
-    drupal_add_js(drupal_get_path('module', 'elms_helper') .'/js/version_form.js');
+  if (arg(0) == 'node') {
+    $group = og_get_group_context();
+	if (isset($group->type)) {
+      if ($group->type == 'version' && arg(2) == 'edit') {
+	    drupal_add_js(drupal_get_path('module', 'elms_helper') .'/js/version_form.js');
+	  }
+	}
+    //version form
+    if (arg(1) == 'add' && arg(2) == 'version') {
+      drupal_add_js(drupal_get_path('module', 'elms_helper') .'/js/version_form.js');
+    }
   }
 }
 
@@ -219,6 +229,7 @@ function elms_helper_block($op = 'list', $delta = 0, $edit = array()) {
 
 //helper function for logged in items
 function _elms_helper_loggedin_links($uid, $group) {
+  $output = '';
   //anonymous user and psu webaccess installed
   if($uid == 0 && module_exists('webaccess')) {
    $output.= theme('menu_item',l(t('Login'),'login', array('query' => array('destination' => '/courses/my'), 'icon'=> 'default', 'purl' => array('disabled' => TRUE))), 0);
@@ -318,11 +329,15 @@ function elms_helper_link_alter(&$links, $node, $comment = NULL) {
     unset($links['book_printer']);
   }
   //remove add book as it's confusing with outline designer in place
-  unset($links['book_add_child']);
+  if (isset($links['book_add_child'])) {
+    unset($links['book_add_child']);
+  }
   //shifts bookmarks if activated
-  $temp = $links['flag-bookmarks'];
-  unset($links['flag-bookmarks']);
-  array_unshift($links,$temp);
+  if (isset($links['flag-bookmarks'])) {
+    $temp = $links['flag-bookmarks'];
+    unset($links['flag-bookmarks']);
+    array_unshift($links,$temp);
+  }
 }
 
 /**
@@ -351,14 +366,16 @@ function elms_helper_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
       $breadcrumb[] = l(t('Course Home'), 'node/'. $key);
     }
     //get the book path in menu_link form
-    $book_path = book_build_active_trail($node->book);
-    //first links are always frontpage and book-root
-    array_shift($book_path);
-    array_shift($book_path);
-    //iterate each menu itema nd convert to valid breadcrumb
-    foreach($book_path as $bookpage) {
-    $breadcrumb[] = l(t($bookpage['title']),$bookpage['link_path']);
-    }
+	if (isset($node->book)) {
+      $book_path = book_build_active_trail($node->book);
+      //first links are always frontpage and book-root
+      array_shift($book_path);
+      array_shift($book_path);
+      //iterate each menu itema nd convert to valid breadcrumb
+      foreach($book_path as $bookpage) {
+        $breadcrumb[] = l(t($bookpage['title']),$bookpage['link_path']);
+      }
+	}
     drupal_set_breadcrumb($breadcrumb);
     }
     elseif(og_is_group_type($node->type)) {
@@ -380,6 +397,7 @@ function _elms_helper_nav($position = 'left') {
     $location = $group_node->field_navigation[0]['value'];
     $config2 = array();
     $render = FALSE;
+	$displaytitle = TRUE;
     $config1 = array(
     'delta' => -1,
     'menu_name' => 'book-toc-'. $group_node->book_nid,
