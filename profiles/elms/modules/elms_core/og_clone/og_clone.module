@@ -1,4 +1,28 @@
 <?php
+/**
+ * Implementation of hook_spaces_plugins().
+ */
+function og_clone_spaces_plugins() {
+  $plugins = array();
+  $plugins['space_og_clone'] = array(
+    'handler' => array(
+    'path' => drupal_get_path('module', 'og_clone') .'/plugins',
+    'file' => 'space_og_clone.inc',
+    'class' => 'space_og_clone',
+    'parent' => 'space_og',
+    ),
+  );
+  return $plugins;
+}
+
+/**
+ * Implementation of hook_spaces_registry_alter().
+ */
+function og_clone_spaces_registry_alter(&$registry) {
+  if (!empty($registry['types']['og'])) {
+    $registry['types']['og']['plugin'] = 'space_og_clone';
+  }
+}
 
 /**
 * Implementation of hook_perm
@@ -17,7 +41,7 @@ function og_clone_menu() {
     'description' => 'Copy information related to an organic group to another one',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('_og_clone_clone_form'),
-  'access callback' => '_og_clone_access',
+    'access callback' => '_og_clone_access',
     'type' => MENU_NORMAL_ITEM,
    );
   return $items;
@@ -36,16 +60,17 @@ function _og_clone_access() {
 /**
 * Implementation of hook_form
 */
-function _og_clone_clone_form($form_id, $args) {
+function _og_clone_clone_form($form_id) {
   $form = array();
+  //this is only nessecary if the patch wasn't applied to spaces/spaces_og/plugins/spaces_og.inc
   $group = og_get_group_context();
   if (isset($group->nid)) {
-	  if (module_exists('purl')) {
-        purl_goto('og_clone/'. $group->nid, array('purl' => array('disabled' => true)));  
-	  }
-	  else {
-		drupal_goto('og_clone/'. $group->nid);  
-	  }
+	if (module_exists('purl')) {
+      purl_goto('og_clone/'. $group->nid, array('purl' => array('disabled' => true)));
+	}
+	else {
+	  drupal_goto('og_clone/'. $group->nid);  
+	}
   }
   elseif (arg(1) != '') {
     $group = node_load(arg(1));
@@ -63,19 +88,18 @@ function _og_clone_clone_form($form_id, $args) {
     $form['group']['#default_value'] = $group->nid;
   }
   //if feautures module exists, then allow for export per feature
-  if (module_exists('features') && module_exists('spaces') && isset($group->nid)) {
-    //get a list of enabled features and convert to an appropriate array
-    $space = spaces_load('og', $group->nid, TRUE);
-    if ($space) {
-      $tmp = $space->controllers->variable->get('spaces_features');
-	}
-  $fcache = cache_get('features_module_info');
-  foreach ($tmp as $key => $value) {
-    if ($value == 1) {
-      $features[$key] = $fcache->data['module'][$key]->info['name'];
+  if (module_exists('features') && isset($group->nid)) {
+    //because og_clone is out of scope of purl / spaces we need to manually look up the features available
+	$tmp = unserialize(db_result(db_query("SELECT value FROM {spaces_overrides} WHERE id=%d and object_id='spaces_features'", $group->nid)));
+	//if there are more then 1 feature then output them for selection
+	if (count($tmp) > 0) {
+    $fcache = cache_get('features_module_info');
+    foreach ($tmp as $key => $value) {
+      if ($value == 1) {
+        $features[$key] = $fcache->data['module'][$key]->info['name'];
+      }
     }
-  }
-  //list features that are available to this group
+    //list features that are available to this group
     $form['features'] = array(
       '#default_value' => array_keys($features),
       '#description' => t('Select the Features that you want to clone as part of this OG clone'),
@@ -83,6 +107,7 @@ function _og_clone_clone_form($form_id, $args) {
       '#options' => $features,
       '#title' => t('Features'),
     );
+	}
   }
   //user roles
   $user_roles = user_roles(TRUE);
