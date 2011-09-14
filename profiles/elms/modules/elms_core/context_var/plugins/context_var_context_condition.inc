@@ -46,7 +46,6 @@ class context_var_context_condition extends context_condition {
    * Execute.
    */
   function execute() {
-    $current_path = drupal_get_path_alias($_GET['q']);
     foreach (context_enabled_contexts() as $context) {
       if ($vars = $this->fetch_from_context($context, 'values')) {
         //scan for the %theme value for replacement
@@ -55,7 +54,7 @@ class context_var_context_condition extends context_condition {
           $theme = $group->og_theme;
         }
         else {
-          $theme = variable_get('default_theme');
+          $theme = variable_get('default_theme','garland');
         }
         $vars = str_replace('%theme', $theme, $vars);
         //split all values that we recieve
@@ -71,7 +70,7 @@ class context_var_context_condition extends context_condition {
 		//go through each value pair and compare to drupal's current values
 		//because we use variable_get this will take into account strongarm / spaces
         foreach ($sys_array as $key => $value) {
-          $sys_var = variable_get($key);
+          $sys_var = variable_get($key,array());
           //check to see if this is an even deeper array
           if (strpos($value, ':') === false) {
 			//if the database value doesn't equal the context value, return false
@@ -91,7 +90,7 @@ class context_var_context_condition extends context_condition {
 		}
 		//if all the conditions are met, pass ahead that they are met
         if ($all_conditions_met) {
-          $this->condition_met($context, $path);
+          $this->condition_met($context);
         }
       }
     }
