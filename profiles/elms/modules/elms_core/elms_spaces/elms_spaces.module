@@ -123,7 +123,7 @@ function elms_spaces_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
         //$space->controllers->variable->set('site_frontpage', 'node/'. $node->nid);
         $course = node_load($node->field_course_ref[0]['nid']);
         //set slogan to the description of the course
-        $space->controllers->variable->set('site_slogan', $course->field_course_description[0]['value']);
+        $space->controllers->variable->set('site_slogan', $course->field_course_title[0]['value']);
         //need to do extra step with purl rewrite to ensure it has the node and course name in in
         $modifier = array(
           'value' => $course->path .'_dev_'. $node->nid,

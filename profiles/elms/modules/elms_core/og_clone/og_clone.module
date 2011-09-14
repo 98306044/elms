@@ -4,7 +4,7 @@
 * Implementation of hook_perm
 */
 function og_clone_perm() {
-  return array('clone organic groups');	
+  return array('clone organic groups');  
 }
 
 /**
@@ -17,7 +17,7 @@ function og_clone_menu() {
     'description' => 'Copy information related to an organic group to another one',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('_og_clone_clone_form'),
-	'access callback' => '_og_clone_access',
+  'access callback' => '_og_clone_access',
     'type' => MENU_NORMAL_ITEM,
    );
   return $items;
@@ -49,19 +49,19 @@ function _og_clone_clone_form($form_id, $args) {
   );
   if (isset($group->nid)) {
     $form['group']['#disabled'] = '1';
-	$form['group']['#default_value'] = $group->nid;
+  $form['group']['#default_value'] = $group->nid;
   }
   //if feautures module exists, then allow for export per feature
   if (module_exists('features') && isset($group->nid)) {
-	//get a list of enabled features and convert to an appropriate array
-	$tmp = variable_get('spaces_features');
-	$fcache = cache_get('features_module_info');
-	foreach ($tmp as $key => $value) {
-	  if ($value == 1) {
-	    $features[$key] = $fcache->data['module'][$key]->info['name'];
-	  }
-	}
-	//list features that are available to this group
+  //get a list of enabled features and convert to an appropriate array
+  $tmp = variable_get('spaces_features');
+  $fcache = cache_get('features_module_info');
+  foreach ($tmp as $key => $value) {
+    if ($value == 1) {
+      $features[$key] = $fcache->data['module'][$key]->info['name'];
+    }
+  }
+  //list features that are available to this group
     $form['features'] = array(
       '#default_value' => array_keys($features),
       '#description' => t('Select the Features that you want to clone as part of this OG clone'),
@@ -95,7 +95,7 @@ function _og_clone_clone_form($form_id, $args) {
   
   $form['submit'] = array(
     '#type' => 'submit',
-	'#description' => 'This process will take some time based on how large the group is',
+  '#description' => 'This process will take some time based on how large the group is',
     '#value' => t('Clone Course'),
     '#submit' => array('_og_clone_clone_form_submit'),
   );
@@ -107,30 +107,177 @@ function _og_clone_clone_form($form_id, $args) {
 * Implementation of hook_form_submit
 */
 function _og_clone_clone_form_submit($form, &$form_state) {
-  $fcache = cache_get('features_module_info');
-  $content_types = array();
-  //generate a list of all content types created by the features selected
-  foreach ($form_state['values']['features'] as $key => $value) {
-    if ($value != '0') {
-      $content_types = array_merge($content_types, $fcache->data['module'][$key]->info['features']['node']);
+	//intial setting of the batch job
+  if (!isset($context['sandbox']['progress'])) {
+  $context['sandbox']['mlid_list'] = array();
+  /*$result = db_query("
+    SELECT mlid
+    FROM {menu_links}  
+    WHERE p1=%d
+    ORDER BY depth ASC, mlid ASC", $node->book['mlid']);
+  while ($val = db_fetch_array($result)) {
+    $context['sandbox']['mlid_list'][] = $val['mlid'];
+  }*/
+  $context['sandbox']['mlid'] = array();
+  $context['sandbox']['progress'] = 0;
+  $context['sandbox']['map'] = array();
+  }
+  //load group for cloning
+  $original_gid = $form_state['values']['group'];
+  $group = node_load($original_gid);
+  //verify we weren't passed a bad group to clone
+  if (og_is_group_type($group->type)) {
+    $author = $form_state['values']['author'];
+	$author_id = db_result(db_query("SELECT uid FROM {users} WHERE name = '%s'", $author));
+    //set some common values to null so this will create a new node
+    $group->nid = NULL;
+    $group->vid = NULL;
+    $group->revision_uid = $author_id;
+    //append clone
+    $group->title .= ' clone';
+    //reset purl if it exists
+    if (module_exists('purl')) {
+      $group->purl = NULL;
+    }
+	//account for statistics if its enabled
+    if (module_exists('og_statistics')) {
+      $group->og_statistics = NULL;
+    }
+    //silly og thing where og_theme doesn't save correctly unless defined as theme
+    //only perform it if a theme was set though
+    if (isset($group->og_theme)) {
+      $group->theme = $group->og_theme;
+    }
+    //change the user id to the one that the form dictates
+    $group->uid = $author_id;
+    //change the author name to match
+    $group->name = $author;
+    node_save($group);
+	//if spaces exists, verify that we copied the overrides correctly for that space
+	if (module_exists('spaces')) {
+	  //remove any overides just written in the node save as they may not be exact clones
+	  db_query("DELETE FROM {spaces_overrides} WHERE id=%d", $group->nid);
+	  //grab all overrides from the current group space
+      $result = db_query("SELECT * FROM {spaces_overrides} WHERE id=%d", $original_gid);
+	  //iterate through and replicate the settings
+	  while ($row = db_fetch_object($result)) {
+		//switch id to node id
+		$row->id = $group->nid;
+		//return encoded value
+		$row->value = unserialize($row->value);
+        drupal_write_record('spaces_overrides',$row);
+      }
+	}
+    drupal_set_message('Group Created successfully');
+	//if features were set, pull together the content types from cache
+	if (isset($form_state['values']['features'])) {
+	  $fcache = cache_get('features_module_info');
+      $content_types = array();
+      //generate a list of all content types created by the features selected
+      foreach ($form_state['values']['features'] as $key => $value) {
+        if ($value != '0') {
+          $content_types = array_merge($content_types, $fcache->data['module'][$key]->info['features']['node']);
+        }
+      }
+	  //build the query
+      $type_query = "AND n.type IN (". db_placeholders($content_types, 'text') .")";
+	  $query_vars = array_merge(array($original_gid), $content_types);
+	}
+	else {
+      $type_query = '';
+	  $query_vars = array($original_gid);	
+	}
+    //pull out the user roles that were selected
+    foreach ($form_state['values']['user_roles'] as $key => $value) {
+      if ($value != '0') {
+        $user_roles[] = $key;
+      }
+    }
+    //merge all values appropriately for a secure query rewrite
+    $query_vars = array_merge($query_vars, $user_roles);
+    //query all nodes we want related to this group
+    $result = db_query(db_rewrite_sql("SELECT n.nid FROM {node} as n JOIN {og_ancestry} as oga ON oga.nid = n.nid JOIN {users_roles} as ur ON ur.uid = n.uid WHERE oga.group_nid=%d ". $type_query ." AND ur.rid IN (". db_placeholders($user_roles) .")"), $query_vars);
+    //these are the nodes we need to replicate
+    while ($val = db_fetch_array($result)) {
+	  $node = NULL;
+	  $node = node_load($val['nid']);
+	  //set some common values to null so this will create a new node
+      $node->log = "Original node nid: ". $node->nid;
+	  $node->nid = NULL;
+      $node->vid = NULL;
+	  $node->path = NULL;
+	  $node->create = NULL;
+      $node->revision_uid = $author_id;
+	  //change the user id to the one that the form dictates
+      $node->uid = $author_id;
+      //change the author name to match
+      $node->name = $author;
+      $node->og_groups = NULL;
+      $node->og_groups_both = NULL;
+	  //account for books
+	  if (isset($node->book['mlid'])) {
+	    $old_mlid = $node->book['mlid'];
+	    $node->book['mlid'] = NULL;
+	    if ($node->book['plid'] == 0) {
+          $root = TRUE;
+        }
+        else {
+          $root = FALSE;
+        }
+        if (isset($context['sandbox']['map'][$node->book['plid']]) ) {
+          $node->book['plid'] = $context['sandbox']['map'][$node->book['plid']];
+        }
+		node_save($node);
+		print_r($node);
+		$node->og_groups = array($group->nid => $group->nid);
+        $node->og_groups_both = array($group->nid => $group->title);
+		node_save($node);
+		print_r($node);
+		exit;
+        //if this is a root store that id
+	    if ($root) {
+          $context['sandbox']['root_nid'] = $node->nid;
+        }
+        $context['sandbox']['map'][$old_mlid] = $node->book['mlid'];
+	  }
+      else {
+	    //node_save($node);
+	  }
+	  $context['message'] = 'Cloning Group nodes: Creating '. $node->type .' '. $node->title .' ('. ($context['sandbox']['max'] - $context['sandbox']['progress']) .' nodes remaining)';
+    }
+	//found a book root
+	if (isset($context['sandbox']['root_nid'])) {
+	  //everything has been duplicated correctly, now move it to it's own book
+      $node = node_load($context['sandbox']['root_nid']);
+      $node->book['bid'] = $node->nid;
+      $node->book['menu_name'] = book_menu_name($node->book['bid']);
+      //update outline for new book
+      _book_update_outline($node);
 	}
   }
-  //pull out the user roles that were selected
-  foreach ($form_state['values']['user_roles'] as $key => $value) {
-    if ($value != '0') {
-      $user_roles[] = $key;
-	}
-  }
-  //merge all values appropriately for a secure query rewrite
-  $query_vars = array_merge(array($form_state['values']['group']), $content_types, $user_roles);
-  //query all nodes we want related to this group
-  $result = db_query(db_rewrite_sql("SELECT n.nid, ur.rid, n.type FROM {node} as n JOIN {og_ancestry} as oga ON oga.nid = n.nid JOIN {users_roles} as ur ON ur.uid = n.uid WHERE oga.group_nid=%d AND n.type IN (". db_placeholders($content_types, 'text') .") AND ur.rid IN (". db_placeholders($user_roles) .")"), $query_vars);
-  //these are the nodes we need to replicate
-  while ($val = db_fetch_object($result)) {
-    drupal_set_message('should make node '. $val->nid .' rid '. $val->rid .' type '. $val->type);
-  }
-  
-  //$form_state['values']['author']
+}
+
+//function _og_clone_clone_form_submit() {
+
+//}
+
+/**
+* helper function to start the batch job for og clone
+*/
+function _og_clone_start_batch_job($group_nid) {
+	$batch = array(
+	  'title' => t('Creating Course Outline'),
+	  'operations' => array(
+		array('_elms_spaces_duplicate_branch', array($group_nid)),
+		array('_elms_spaces_node_access_rebuild_batch_operation', array($group_nid))
+	  ),
+	  'progress_message' => t('Completed job @current of @total.'),
+	  'init_message' => t('Copying course structure'),
+	  'error_message' => t('An error has occured'),
+	  'finished' => '_elms_spaces_duplicate_branch_finished',
+	);
+	batch_set($batch);
+	batch_process('node/'. $node->nid .'/edit/4');
 }
 
 /**
