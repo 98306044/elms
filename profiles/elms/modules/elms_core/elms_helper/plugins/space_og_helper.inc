@@ -3,7 +3,7 @@
 /**
  * Organic groups integration for Spaces.
  */
-class space_og extends space_type_purl {
+class space_og_elms_helper extends space_og_clone {
   var $group = NULL;
 
   /**
@@ -181,13 +181,11 @@ class space_og extends space_type_purl {
 
   /**
    * Override of excluded_paths().
-   * Adds og, og/* paths.
    */
   protected function excluded_paths() {
     $excluded = parent::excluded_paths();
-    $excluded[] = 'og';
-    $excluded[] = 'og/my';
-    $excluded[] = 'og/all';
+	//account for the creation of version nodes outside the scope of the active version
+	$excluded[] = 'node/add/courses';
 	
     return $excluded;
   }

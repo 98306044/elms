@@ -28,9 +28,6 @@ Spaces OG
 -- spaces/spaces_og/spaces_og.modules
 -- Helps improve user experience / performance around node access rebuilds
 
--- http://drupal.org/node/933634#comment-4720472
--- spaces/spaces_og/plugins/space_og.inc
--- line 149 -- Fixes issue w/ Space activation when creating nodes outside of Space context (happens only when creating a course outline
 Masquerade
 -- http://drupal.org/node/1180494
 -- masquerade.module

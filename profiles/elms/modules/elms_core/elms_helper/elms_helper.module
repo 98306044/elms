@@ -6,6 +6,32 @@
  * UX improvements for the ELMS experience that we want
  */
 define('ELMS_VERSION', '6.x-1.0-alpha5');
+
+/**
+ * Implementation of hook_spaces_plugins().
+ */
+function elms_helper_spaces_plugins() {
+  $plugins = array();
+  $plugins['space_og_elms_helper'] = array(
+    'handler' => array(
+    'path' => drupal_get_path('module', 'elms_helper') .'/plugins',
+    'file' => 'space_og_elms_helper.inc',
+    'class' => 'space_og_elms_helper',
+    'parent' => 'space_og_clone',
+    ),
+  );
+  return $plugins;
+}
+
+/**
+ * Implementation of hook_spaces_registry_alter().
+ */
+function elms_helper_spaces_registry_alter(&$registry) {
+  if (!empty($registry['types']['og'])) {
+    $registry['types']['og']['plugin'] = 'space_og_elms_helper';
+  }
+}
+
 /**
  * Implementation of (undocumented) hook_theme_registry_alter().
  */
