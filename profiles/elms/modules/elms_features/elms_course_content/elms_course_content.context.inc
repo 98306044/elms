@@ -25,6 +25,9 @@ function elms_course_content_context_default_contexts() {
     ),
     'views' => array(
       'values' => array(
+        'course_content_bookmarks' => 'course_content_bookmarks',
+        'course_content_bookmarks:page' => 'course_content_bookmarks:page',
+        'course_content_root_node' => 'course_content_root_node',
         'course_content_root_node:page_1' => 'course_content_root_node:page_1',
         'og_ghp_course_content_root_node' => 'og_ghp_course_content_root_node',
       ),
@@ -47,6 +50,7 @@ function elms_course_content_context_default_contexts() {
         ),
       ),
     ),
+    'menu' => 'content',
   );
   $context->condition_mode = 0;
 

@@ -165,14 +165,98 @@ function elms_reaction_views_default_views() {
   ));
   $handler->override_option('sorts', array(
     'created' => array(
-      'order' => 'ASC',
+      'order' => 'DESC',
       'granularity' => 'second',
       'id' => 'created',
       'table' => 'node',
       'field' => 'created',
       'relationship' => 'none',
+      'override' => array(
+        'button' => 'Override',
+      ),
     ),
   ));
+  $handler->override_option('filters', array(
+    'type' => array(
+      'operator' => 'in',
+      'value' => array(
+        'reaction' => 'reaction',
+      ),
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'type',
+      'table' => 'node',
+      'field' => 'type',
+      'relationship' => 'none',
+    ),
+    'field_reaction_feeling_value_many_to_one' => array(
+      'operator' => 'or',
+      'value' => array(),
+      'group' => '0',
+      'exposed' => TRUE,
+      'expose' => array(
+        'use_operator' => 0,
+        'operator' => 'field_reaction_feeling_value_many_to_one_op',
+        'identifier' => 'field_reaction_feeling_value_many_to_one',
+        'label' => 'Feeling',
+        'optional' => 1,
+        'single' => 1,
+        'remember' => 0,
+        'reduce' => 0,
+      ),
+      'id' => 'field_reaction_feeling_value_many_to_one',
+      'table' => 'node_data_field_reaction_feeling',
+      'field' => 'field_reaction_feeling_value_many_to_one',
+      'override' => array(
+        'button' => 'Override',
+      ),
+      'relationship' => 'none',
+      'reduce_duplicates' => 0,
+    ),
+    'current' => array(
+      'operator' => '=',
+      'value' => '',
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'current',
+      'table' => 'spaces',
+      'field' => 'current',
+      'override' => array(
+        'button' => 'Override',
+      ),
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('access', array(
+    'type' => 'spaces_feature',
+    'spaces_feature' => 'elms_reaction',
+    'perm' => 'access content',
+  ));
+  $handler->override_option('cache', array(
+    'type' => 'none',
+  ));
+  $handler->override_option('title', 'Reactions');
+  $handler->override_option('footer_format', '1');
+  $handler->override_option('footer_empty', 0);
+  $handler->override_option('use_pager', 'mini');
+  $handler->override_option('row_options', array(
+    'inline' => array(
+      'picture' => 'picture',
+      'body' => 'body',
+      'field_reaction_feeling_value' => 'field_reaction_feeling_value',
+    ),
+    'separator' => '',
+    'hide_empty' => 0,
+  ));
+  $handler = $view->new_display('block', 'Stream Block', 'block_1');
   $handler->override_option('arguments', array(
     'field_related_content_nid' => array(
       'default_action' => 'default',
@@ -243,6 +327,25 @@ function elms_reaction_views_default_views() {
       'validate_argument_php' => '',
     ),
   ));
+  $handler->override_option('block_description', '');
+  $handler->override_option('block_caching', -1);
+  $handler = $view->new_display('page', 'Listing page', 'page_1');
+  $handler->override_option('path', 'reactions');
+  $handler->override_option('menu', array(
+    'type' => 'normal',
+    'title' => 'Reactions',
+    'description' => 'List of all Course Reactions',
+    'weight' => '0',
+    'name' => 'features',
+  ));
+  $handler->override_option('tab_options', array(
+    'type' => 'normal',
+    'title' => 'Reactions',
+    'description' => 'reactions to course materials',
+    'weight' => '0',
+    'name' => 'features',
+  ));
+  $handler = $view->new_display('page', 'my listing page', 'page_2');
   $handler->override_option('filters', array(
     'type' => array(
       'operator' => 'in',
@@ -262,11 +365,7 @@ function elms_reaction_views_default_views() {
     ),
     'field_reaction_feeling_value_many_to_one' => array(
       'operator' => 'or',
-      'value' => array(
-        'positive' => 'positive',
-        'negative' => 'negative',
-        'nuetral' => 'nuetral',
-      ),
+      'value' => array(),
       'group' => '0',
       'exposed' => TRUE,
       'expose' => array(
@@ -283,45 +382,54 @@ function elms_reaction_views_default_views() {
       'table' => 'node_data_field_reaction_feeling',
       'field' => 'field_reaction_feeling_value_many_to_one',
       'override' => array(
-        'button' => 'Override',
+        'button' => 'Use default',
       ),
       'relationship' => 'none',
       'reduce_duplicates' => 0,
     ),
-  ));
-  $handler->override_option('access', array(
-    'type' => 'spaces_feature',
-    'spaces_feature' => '0',
-    'perm' => 'access content',
-  ));
-  $handler->override_option('cache', array(
-    'type' => 'none',
-  ));
-  $handler->override_option('title', 'Reactions');
-  $handler->override_option('footer_format', '1');
-  $handler->override_option('footer_empty', 0);
-  $handler->override_option('use_pager', 'mini');
-  $handler->override_option('row_options', array(
-    'inline' => array(
-      'picture' => 'picture',
-      'body' => 'body',
-      'field_reaction_feeling_value' => 'field_reaction_feeling_value',
+    'current' => array(
+      'operator' => '=',
+      'value' => '',
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'current',
+      'table' => 'spaces',
+      'field' => 'current',
+      'override' => array(
+        'button' => 'Override',
+      ),
+      'relationship' => 'none',
     ),
-    'separator' => '',
-    'hide_empty' => 0,
+    'uid_current' => array(
+      'operator' => '=',
+      'value' => '1',
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'uid_current',
+      'table' => 'users',
+      'field' => 'uid_current',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
   ));
-  $handler = $view->new_display('block', 'Reaction Stream', 'block_1');
-  $handler->override_option('block_description', '');
-  $handler->override_option('block_caching', -1);
-  $handler = $view->new_display('page', 'Listing of Reactions', 'page_1');
-  $handler->override_option('arguments', array());
-  $handler->override_option('path', 'reactions');
+  $handler->override_option('title', 'My Reactions');
+  $handler->override_option('path', 'reactions/my');
   $handler->override_option('menu', array(
     'type' => 'normal',
-    'title' => 'Reactions',
-    'description' => 'List of all Course Reactions',
-    'weight' => '0',
-    'name' => 'features',
+    'title' => 'My Reactions',
+    'description' => 'A list of all your reactions',
+    'weight' => '1',
+    'name' => 'menu-elms-reactions',
   ));
   $handler->override_option('tab_options', array(
     'type' => 'none',
@@ -329,6 +437,22 @@ function elms_reaction_views_default_views() {
     'description' => '',
     'weight' => 0,
     'name' => 'navigation',
+  ));
+  $handler = $view->new_display('page', 'Listing Tab', 'page_3');
+  $handler->override_option('path', 'reactions/all');
+  $handler->override_option('menu', array(
+    'type' => 'normal',
+    'title' => 'All Reactions',
+    'description' => 'View all Reactions in this course',
+    'weight' => '0',
+    'name' => 'menu-elms-reactions',
+  ));
+  $handler->override_option('tab_options', array(
+    'type' => 'normal',
+    'title' => 'All Reactions',
+    'description' => 'View all Reactions in this course',
+    'weight' => '0',
+    'name' => 'menu-elms-reactions',
   ));
 
   $views[$view->name] = $view;

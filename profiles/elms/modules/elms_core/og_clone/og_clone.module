@@ -66,6 +66,7 @@ function _og_clone_clone_form($form_id) {
   $form['group'] = array(
     '#description' => t("Select the Group you'd like to clone"),
     '#required' => '1',
+	'#weight' => -1, 
     '#type' => 'select',
     '#title' => t('Group to Clone'),
     '#options' => _og_clone_get_list(),
@@ -90,6 +91,7 @@ function _og_clone_clone_form($form_id) {
     $form['features'] = array(
       '#default_value' => array_keys($features),
       '#description' => t('Select the Features that you want to clone as part of this OG clone'),
+	  '#weight' => 1, 
       '#type' => 'checkboxes',
       '#options' => $features,
       '#title' => t('Features'),
@@ -102,6 +104,7 @@ function _og_clone_clone_form($form_id) {
   $form['user_roles'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Roles'),
+	'#weight' => 1,
     '#description' => t("Selet the user roles you want to include content from. Unchecking a role will exclude that role's content from the clone even if that Feature is being cloned above."),
     '#required' => '1',
     '#options' =>  $user_roles,
@@ -111,7 +114,8 @@ function _og_clone_clone_form($form_id) {
   //author field
   global $user;
   $form['author'] = array(
-    '#type' => 'textfield', 
+    '#type' => 'textfield',
+	'#weight' => 2, 
     '#description' => t('Enter a user name here to make this the author of all content of this clone. By default you will be set as the author of all content since your cloned it.'),
     '#title' => t('Authored by'), 
     '#maxlength' => 60, 
@@ -121,8 +125,9 @@ function _og_clone_clone_form($form_id) {
   
   $form['submit'] = array(
     '#type' => 'submit',
-  '#description' => 'This process will take some time based on how large the group is',
-    '#value' => t('Clone Course'),
+	'#weight' => 3,
+  '#description' => t('This process will take some time based on how large the group is'),
+    '#value' => t('Clone Group'),
     '#submit' => array('_og_clone_clone_form_submit'),
   );
   

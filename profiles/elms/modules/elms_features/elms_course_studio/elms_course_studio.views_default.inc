@@ -145,92 +145,19 @@ function elms_course_studio_views_default_views() {
       'relationship' => 'none',
     ),
   ));
-  $handler->override_option('arguments', array(
-    'group_nid' => array(
-      'default_action' => 'default',
-      'style_plugin' => 'default_summary',
-      'style_options' => array(),
-      'wildcard' => 'all',
-      'wildcard_substitution' => 'All',
-      'title' => '',
-      'breadcrumb' => '',
-      'default_argument_type' => 'og_group_node',
-      'default_argument' => '',
-      'validate_type' => 'none',
-      'validate_fail' => 'not found',
-      'break_phrase' => 0,
-      'not' => 0,
-      'id' => 'group_nid',
-      'table' => 'og_ancestry',
-      'field' => 'group_nid',
-      'validate_user_argument_type' => 'uid',
-      'validate_user_roles' => array(
-        '2' => 0,
-        '3' => 0,
-        '6' => 0,
-        '4' => 0,
-        '9' => 0,
-        '10' => 0,
-        '8' => 0,
-      ),
-      'override' => array(
-        'button' => 'Override',
-      ),
-      'relationship' => 'none',
-      'default_options_div_prefix' => '',
-      'default_argument_fixed' => '',
-      'default_argument_user' => 0,
-      'default_argument_php' => '',
-      'validate_argument_node_type' => array(
-        'accessibility_guideline' => 0,
-        'accessibility_test' => 0,
-        'course_event' => 0,
-        'course' => 0,
-        'folder' => 0,
-        'link' => 0,
-        'page' => 0,
-        'promo' => 0,
-        'reaction' => 0,
-        'studio_submission' => 0,
-        'version' => 0,
-      ),
-      'validate_argument_node_access' => 0,
-      'validate_argument_nid_type' => 'nid',
-      'validate_argument_vocabulary' => array(
-        '1' => 0,
-      ),
-      'validate_argument_type' => 'tid',
-      'validate_argument_transform' => 0,
-      'validate_user_restrict_roles' => 0,
-      'validate_argument_node_flag_name' => '*relationship*',
-      'validate_argument_node_flag_test' => 'flaggable',
-      'validate_argument_node_flag_id_type' => 'id',
-      'validate_argument_user_flag_name' => '*relationship*',
-      'validate_argument_user_flag_test' => 'flaggable',
-      'validate_argument_user_flag_id_type' => 'id',
-      'validate_argument_is_member' => 'OG_VIEWS_VALIDATE_GROUP_MEMBER',
-      'validate_argument_group_node_type' => array(
-        'version' => 'version',
-      ),
-      'validate_argument_php' => '',
-    ),
-  ));
   $handler->override_option('filters', array(
-    'status' => array(
+    'current' => array(
       'operator' => '=',
-      'value' => '1',
+      'value' => '',
       'group' => '0',
       'exposed' => FALSE,
       'expose' => array(
         'operator' => FALSE,
         'label' => '',
       ),
-      'id' => 'status',
-      'table' => 'node',
-      'field' => 'status',
-      'override' => array(
-        'button' => 'Override',
-      ),
+      'id' => 'current',
+      'table' => 'spaces',
+      'field' => 'current',
       'relationship' => 'none',
     ),
     'type' => array(
@@ -252,16 +179,33 @@ function elms_course_studio_views_default_views() {
       ),
       'relationship' => 'none',
     ),
+    'status' => array(
+      'operator' => '=',
+      'value' => '1',
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'status',
+      'table' => 'node',
+      'field' => 'status',
+      'override' => array(
+        'button' => 'Override',
+      ),
+      'relationship' => 'none',
+    ),
   ));
   $handler->override_option('access', array(
     'type' => 'spaces_feature',
-    'spaces_feature' => '0',
+    'spaces_feature' => 'elms_course_studio',
     'perm' => 'access content',
   ));
   $handler->override_option('cache', array(
     'type' => 'none',
   ));
-  $handler->override_option('title', 'Studio');
+  $handler->override_option('title', 'Course Studio');
   $handler->override_option('items_per_page', 24);
   $handler->override_option('style_plugin', 'fluid_grid');
   $handler->override_option('style_options', array(
@@ -285,7 +229,7 @@ function elms_course_studio_views_default_views() {
     'separator' => '',
     'hide_empty' => 0,
   ));
-  $handler = $view->new_display('page', 'Course Studio', 'page_1');
+  $handler = $view->new_display('page', 'Listing Page', 'page_1');
   $handler->override_option('path', 'studio');
   $handler->override_option('menu', array(
     'type' => 'normal',
@@ -301,20 +245,109 @@ function elms_course_studio_views_default_views() {
     'weight' => 0,
     'name' => 'navigation',
   ));
-  $handler = $view->new_display('page', 'View Tab', 'page_2');
+  $handler = $view->new_display('page', 'List View Tab', 'page_2');
   $handler->override_option('path', 'studio/view');
   $handler->override_option('menu', array(
-    'type' => 'tab',
-    'title' => 'View',
-    'description' => 'View the Studio',
+    'type' => 'normal',
+    'title' => 'View Studio',
+    'description' => 'View all Studio Submissions',
     'weight' => '0',
-    'name' => 'navigation',
+    'name' => 'features',
   ));
   $handler->override_option('tab_options', array(
     'type' => 'tab',
     'title' => 'View',
     'description' => 'View Studio',
     'weight' => '0',
+    'name' => 'navigation',
+  ));
+  $handler = $view->new_display('page', 'My Listing Page', 'page_3');
+  $handler->override_option('filters', array(
+    'uid_current' => array(
+      'operator' => '=',
+      'value' => '1',
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'uid_current',
+      'table' => 'users',
+      'field' => 'uid_current',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+    'current' => array(
+      'operator' => '=',
+      'value' => '',
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'current',
+      'table' => 'spaces',
+      'field' => 'current',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+    'type' => array(
+      'operator' => 'in',
+      'value' => array(
+        'studio_submission' => 'studio_submission',
+      ),
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'type',
+      'table' => 'node',
+      'field' => 'type',
+      'override' => array(
+        'button' => 'Override',
+      ),
+      'relationship' => 'none',
+    ),
+    'status' => array(
+      'operator' => '=',
+      'value' => '1',
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'status',
+      'table' => 'node',
+      'field' => 'status',
+      'override' => array(
+        'button' => 'Override',
+      ),
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('title', 'My Studio Submissions');
+  $handler->override_option('path', 'studio/my');
+  $handler->override_option('menu', array(
+    'type' => 'normal',
+    'title' => 'My Submissions',
+    'description' => 'My Studio Submissions',
+    'weight' => '1',
+    'name' => 'features',
+  ));
+  $handler->override_option('tab_options', array(
+    'type' => 'none',
+    'title' => '',
+    'description' => '',
+    'weight' => 0,
     'name' => 'navigation',
   ));
 
