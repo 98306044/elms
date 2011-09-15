@@ -189,17 +189,57 @@ function _og_clone_clone_form_submit($form, &$form_state) {
 	  //remove any overides just written in the node save as they may not be exact clones
 	  db_query("DELETE FROM {spaces_overrides} WHERE id=%d", $group->nid);
 	  //grab all overrides from the current group space
-      $result = db_query("SELECT * FROM {spaces_overrides} WHERE id=%d", $original_gid);
+	  //ordering by object id we'll be sure to build all custom boxes first
+	  //this way they can all be set in the custom contexts should they exist
+	  //if boxes aren't in use then it degrades gracefully
+      $result = db_query("SELECT * FROM {spaces_overrides} WHERE id=%d ORDER BY object_type", $original_gid);
+	  $custom_boxes = array();
 	  //iterate through and replicate the settings
 	  while ($row = db_fetch_object($result)) {
 		//switch id to node id
 		$row->id = $group->nid;
-		//return encoded value
-		$row->value = unserialize($row->value);
+		//special case for replicating boxes
+		switch ($row->object_type) {
+			//boxes are created on the fly and need special treatment
+			case 'boxes':
+			  //split out the 3 values of the boxes keyed string
+			  $old_object_id = split('-', $row->object_id);
+			  //build the new one based on the og value
+			  $new_object_id = $old_object_id[0] .'-'. $group->nid .'-'. $old_object_id[2];
+			  //need to keep an array for translation when checking context for values
+			  $custom_boxes[$row->object_id] = $new_object_id;
+			  $row->object_id = $new_object_id;
+			  //open up the values of the row and search the keys for the old_object_id
+			  $row->value = unserialize($row->value);
+			  $row->value->delta = $new_object_id;
+			break;
+			//context only needs special treatment if boxes exist
+		    case 'context':
+			  $row->value = unserialize($row->value);
+			  //try and match custom boxes found previously to blocks positioned in context
+			  //this will support the creation of multiple custom boxes per context as a result
+			  foreach ($custom_boxes as $key => $new_key){
+				//if the key matched the pattern in the context array
+				if (array_key_exists('boxes-'. $key, $row->value['blocks'])) {
+					//reset the delta to the new one
+					$row->value['blocks']['boxes-'. $key]['delta'] = $new_key;
+					//copy the old key to the new key location
+					$row->value['blocks']['boxes-'. $new_key] = $row->value['blocks']['boxes-'. $key];
+					//remove the original key
+					unset($row->value['blocks']['boxes-'. $key]);
+				}
+			  }
+			break;
+			default:
+			  $row->value = unserialize($row->value);
+			break;
+		}
+		//write new row back to database
         drupal_write_record('spaces_overrides',$row);
       }
 	}
-    drupal_set_message('Group Created successfully');
+	  $output .= '<p>'. t('Go to the <a href="@contact-page">contact page</a>.', array('@contact-page' => url('contact'))) .'</p>';
+    drupal_set_message(t('Group Created successfully click to access <a href="@node">%title</a>', array('@node' => url('node/'. $group->nid), '%title' => $group->title)));
 	//now copy all the content since we have a group we can copy into
 	//if features were set, pull together the content types from cache
 	if (isset($form_state['values']['features'])) {
@@ -208,12 +248,21 @@ function _og_clone_clone_form_submit($form, &$form_state) {
       //generate a list of all content types created by the features selected
       foreach ($form_state['values']['features'] as $key => $value) {
         if ($value != '0') {
-          $content_types = array_merge($content_types, $fcache->data['module'][$key]->info['features']['node']);
+			//not all features define content types so only pay attention to if they do
+			if (isset($fcache->data['module'][$key]->info['features']['node'])) {
+              $content_types = array_merge($content_types, $fcache->data['module'][$key]->info['features']['node']);
+			}
         }
       }
-	  //build the query
-      $type_query = "AND n.type IN (". db_placeholders($content_types, 'text') .")";
-	  $query_vars = array_merge(array($original_gid), $content_types);
+	  //build the query if we found anything
+	  if (count($content_types) == 0) {
+		$type_query = '';
+	    $query_vars = array($original_gid);  
+	  }
+	  else {
+        $type_query = "AND n.type IN (". db_placeholders($content_types, 'text') .")";
+	    $query_vars = array_merge(array($original_gid), $content_types);
+	  }
 	}
 	else {
       $type_query = '';
