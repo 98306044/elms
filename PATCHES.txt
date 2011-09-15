@@ -12,6 +12,10 @@ Appbar
 -- http://drupal.org/node/923672
 -- appbar.js
 -- line 45 commented out function for performance
+Boxes
+-- http://drupal.org/node/887260#comment-3488192
+-- boxes.module
+-- line 155 pressflow support added
 Editable Fields
 -- similar to http://drupal.org/node/777870
 -- editablefields.js
