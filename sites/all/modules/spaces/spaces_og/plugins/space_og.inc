@@ -145,8 +145,10 @@ class space_og extends space_type_purl {
           }
           // Otherwise route
           reset($node->og_groups);
-		  
+		  //PATCH to work with elms / og_clone
+		  if ($_GET['q'] == 'node/add/courses' || arg(0) == 'og_clone') {
             spaces_load('og', current($node->og_groups))->activate();
+		  }
 
           return;
         }
@@ -188,12 +190,7 @@ class space_og extends space_type_purl {
     $excluded[] = 'og';
     $excluded[] = 'og/my';
     $excluded[] = 'og/all';
-	//PATCH: accounts for elms
-	$excluded[] = 'node/add/courses';
-	//PATCH: accounts for og_clone
-	$excluded[] = 'og_clone';
-	$excluded[] = 'og_clone/*';
-	
+    	
     return $excluded;
   }
 }

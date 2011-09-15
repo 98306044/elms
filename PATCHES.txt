@@ -22,23 +22,19 @@ Chamfer
 -- This will be rolled into the community version of Chamfer once ICMS is final
 Outline Designer
 -- Patch to block deleting of non-book items triggered by PURL
--- This will be rolled into the community version of Chamfer once ICMS is final
+-- This will be rolled into the community version of Outline Designer once ICMS is final
 Spaces OG
 -- http://drupal.org/node/1101738
 -- spaces/spaces_og/spaces_og.modules
 -- Helps improve user experience / performance around node access rebuilds
 
 -- spaces/spaces_og/spaces_og/plugins/space_og.inc
--- Accounted for elms and og_clone
+-- accounted for elms / og_clone. Needed because we are loading nodes which would activate a space while outside of the context of the space itself. this causes major issues for spaces / drupal and usually results in code ending prematurly
 
 Masquerade
 -- http://drupal.org/node/1180494
 -- masquerade.module
 -- one line fix to account for purl
-CKEditor Link
--- http://drupal.org/node/1181506
--- ckeditor_link.module
--- few line tweak to account for group context and only select pages we want
 
 og_node_access
 -- Minor isset added to squelch a NOTICE in php error logs
