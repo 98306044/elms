@@ -100,6 +100,10 @@ function jquery_colorpicker_requirements($phase)
 	}
 	elseif($phase == 'install')
 	{
+      //account for install profiles
+      if ($path == '/') {
+        $path = dirname(__FILE__) . '/';
+      }
 		// The first file we check is the 3rd party integration. Without this file, the module will not work. Other
 		// files are also required, but the assumption is made that if they got this file, they will have gotten all the other files.
 		// This is done to keep code relatively streamlined.

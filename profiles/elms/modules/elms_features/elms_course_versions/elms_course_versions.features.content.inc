@@ -67,7 +67,7 @@ function elms_course_versions_content_default_fields() {
       ),
       'default_value_php' => NULL,
       'label' => 'Angel String',
-      'weight' => '20',
+      'weight' => '10',
       'description' => 'This field should contain the "Angel Strings" or url component pertaining to the course sections in angel that you want to have access to this offering. For example, in https://cms.psu.edu/section/default.asp?id=MC_2006SPUP_RART_010_001 the part after "https://cms.psu.edu/section/default.asp?id=" is what we call the Angel String.  In this example it would be MC_2006SPUP_RART_010_001.  In the future this integration point will be more automated.',
       'type' => 'text_textfield',
       'module' => 'text',
@@ -243,7 +243,7 @@ yk|York Campus',
       'fallback' => 'select',
       'edit_fallback' => 0,
       'label' => 'Course',
-      'weight' => '-4',
+      'weight' => '-5',
       'description' => '',
       'type' => 'nodereference_url',
       'module' => 'nodereference_url',
@@ -449,7 +449,7 @@ prototype|Build from Prototype Lesson / Course',
       ),
       'default_value_php' => NULL,
       'label' => 'Instructional Template',
-      'weight' => '8',
+      'weight' => '-1',
       'description' => '',
       'type' => 'optionwidgets_select',
       'module' => 'optionwidgets',
@@ -528,7 +528,7 @@ prototype|Build from Prototype Lesson / Course',
       ),
       'default_value_php' => NULL,
       'label' => 'Lessons',
-      'weight' => '9',
+      'weight' => 0,
       'description' => 'How many lessons would you like to start with?',
       'type' => 'optionwidgets_select',
       'module' => 'optionwidgets',
@@ -594,7 +594,7 @@ activeleftleft|active left, left',
       'default_value_php' => NULL,
       'multistep' => '4',
       'label' => 'Navigation Style',
-      'weight' => '16',
+      'weight' => '6',
       'description' => 'How should course navigation be handled?<br/>
 <strong>left</strong> - Display course outline on the left<br/>
 <strong>active left, left</strong> - Display two left blocks with the active page outline in one and the highest level in another',
@@ -864,7 +864,7 @@ percentage|Percentages',
       'default_value_php' => NULL,
       'multistep' => '3',
       'label' => 'Scoring Method',
-      'weight' => '12',
+      'weight' => '3',
       'description' => 'This will base all Event Score values on either points or percentages.  Points is the default and this value won\'t be used unless you decide to add points to events.',
       'type' => 'optionwidgets_select',
       'module' => 'optionwidgets',
@@ -1222,69 +1222,6 @@ summer2|Summer 2',
     ),
   );
 
-  // Exported field: field_syllabus
-  $fields['version-field_syllabus'] = array(
-    'field_name' => 'field_syllabus',
-    'type_name' => 'version',
-    'display_settings' => array(
-      'weight' => '4',
-      'parent' => '',
-      'label' => array(
-        'format' => 'above',
-      ),
-      'teaser' => array(
-        'format' => 'default',
-        'exclude' => 1,
-      ),
-      'full' => array(
-        'format' => 'default',
-        'exclude' => 1,
-      ),
-      '5' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '4' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '2' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '3' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      'token' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-    ),
-    'widget_active' => '1',
-    'type' => 'filefield',
-    'required' => '0',
-    'multiple' => '0',
-    'module' => 'filefield',
-    'active' => '1',
-    'list_field' => '0',
-    'list_default' => 1,
-    'description_field' => '0',
-    'widget' => array(
-      'file_extensions' => 'pdf',
-      'file_path' => '',
-      'progress_indicator' => 'bar',
-      'max_filesize_per_file' => '4M',
-      'max_filesize_per_node' => '',
-      'multistep' => '2',
-      'label' => 'Syllabus',
-      'weight' => '4',
-      'description' => 'Use this for the student copy of the syllabus.  If you make changes to the Syllabus while the course is running make sure you use this field.',
-      'type' => 'filefield_widget',
-      'module' => 'filefield',
-    ),
-  );
-
   // Exported field: field_top_level_name
   $fields['version-field_top_level_name'] = array(
     'field_name' => 'field_top_level_name',
@@ -1513,7 +1450,6 @@ reading|Reading',
   t('Section Semester');
   t('Semester');
   t('Start');
-  t('Syllabus');
   t('Top Level Name');
   t('Week Structure');
   t('Year');

@@ -45,3 +45,7 @@ og_node_access
 
 dblog_filters
 -- Minor isset added to squelch a NOTICE in php error logs
+
+jquery colorpicker
+-- Allow for inclusion in install profiles
+-- http://drupal.org/node/1283468#comment-5008268

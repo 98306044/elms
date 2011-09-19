@@ -6,58 +6,6 @@
 function elms_course_versions_fieldgroup_default_groups() {
   $groups = array();
 
-  // Exported group: group_basic
-  $groups['version-group_basic'] = array(
-    'group_type' => 'standard',
-    'type_name' => 'version',
-    'group_name' => 'group_basic',
-    'label' => 'Basic Information',
-    'settings' => array(
-      'form' => array(
-        'style' => 'fieldset',
-        'description' => '',
-      ),
-      'display' => array(
-        'description' => '',
-        '5' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-        'teaser' => array(
-          'format' => 'fieldset',
-          'exclude' => 1,
-        ),
-        'full' => array(
-          'format' => 'no_style',
-          'exclude' => 1,
-        ),
-        '4' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-        '2' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-        '3' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-        'token' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-        'label' => 'hidden',
-      ),
-      'multistep' => array(
-        'step' => '1',
-        'block' => 1,
-      ),
-    ),
-    'weight' => '-5',
-    'fields' => array(),
-  );
-
   // Exported group: group_content
   $groups['version-group_content'] = array(
     'group_type' => 'standard',
@@ -106,7 +54,7 @@ function elms_course_versions_fieldgroup_default_groups() {
         'block' => 1,
       ),
     ),
-    'weight' => '2',
+    'weight' => '-3',
     'fields' => array(),
   );
 
@@ -158,7 +106,7 @@ function elms_course_versions_fieldgroup_default_groups() {
         'block' => 1,
       ),
     ),
-    'weight' => '19',
+    'weight' => '9',
     'fields' => array(),
   );
 
@@ -210,7 +158,7 @@ function elms_course_versions_fieldgroup_default_groups() {
         'block' => 0,
       ),
     ),
-    'weight' => '5',
+    'weight' => '-2',
     'fields' => array(),
   );
 
@@ -262,7 +210,7 @@ function elms_course_versions_fieldgroup_default_groups() {
         'block' => 0,
       ),
     ),
-    'weight' => '13',
+    'weight' => '4',
     'fields' => array(
       '0' => 'field_schedule_to_build',
       '1' => 'field_schedule_source',
@@ -325,7 +273,7 @@ function elms_course_versions_fieldgroup_default_groups() {
         'block' => 1,
       ),
     ),
-    'weight' => '10',
+    'weight' => '1',
     'fields' => array(),
   );
 
@@ -377,7 +325,7 @@ function elms_course_versions_fieldgroup_default_groups() {
         'block' => 1,
       ),
     ),
-    'weight' => '18',
+    'weight' => '8',
     'fields' => array(
       '0' => 'field_section_semester',
       '1' => 'field_section_year',
@@ -434,13 +382,12 @@ function elms_course_versions_fieldgroup_default_groups() {
         'block' => 1,
       ),
     ),
-    'weight' => '15',
+    'weight' => '5',
     'fields' => array(),
   );
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('Basic Information');
   t('Content');
   t('Content Outline');
   t('Design');

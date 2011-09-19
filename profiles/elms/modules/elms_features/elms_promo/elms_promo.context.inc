@@ -25,9 +25,9 @@ function elms_promo_context_default_contexts() {
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
-        'menu_block-7' => array(
-          'module' => 'menu_block',
-          'delta' => 7,
+        'menu-menu-promo' => array(
+          'module' => 'menu',
+          'delta' => 'menu-promo',
           'region' => 'right',
           'weight' => 0,
         ),

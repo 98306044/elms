@@ -1,0 +1,5 @@
+; $Id: profiler_builder
+name = "Profiler Builder"
+description = "Helper module for profiler to build distributions even faster"
+package = Development
+core = 6.x
