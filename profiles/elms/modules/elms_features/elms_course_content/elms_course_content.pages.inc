@@ -21,7 +21,13 @@ function elms_course_content_settings() {
     ),
     '#default_value' => variable_get('elms_print_options','print'),
   );
-  $form['elms_content_outline'] = array(
+  $form['content'] = array(
+    '#title' => t('Content Outline'),
+	'#type' => 'fieldset',
+	'#collapsed' => true,
+	'#collapsible' => true,
+  );
+  $form['content']['elms_content_outline'] = array(
     '#description' => t('Select a content outline to work from.  This is not required to create a course but can help with rapid prototyping.'),
     '#key_type_toggled' => '1',
     '#type' => 'select',
@@ -29,6 +35,13 @@ function elms_course_content_settings() {
     '#multiple_toggle' => '1',
     '#title' => t('Content Outline'),
   );
+  $form['content']['elms_content_lessons'] = array(
+    '#description' => t('How many lessons would you like to start with?'),
+    '#type' => 'select',
+    '#options' => array(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15),
+    '#title' => t('Lessons'),
+  );
+  
   $form['site_footer'] = array(
     '#default_value' => variable_get('site_footer','2011 Copyright PSU'),
     '#description' => t('This will be the footer for your course in ELMS'),

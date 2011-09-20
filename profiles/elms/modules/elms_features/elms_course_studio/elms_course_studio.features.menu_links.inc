@@ -18,7 +18,7 @@ function elms_course_studio_menu_default_menu_links() {
       ),
       'menu_icon' => array(
         'enable' => 0,
-        'path' => 'profiles/elms_content/modules/elms_core/elms_appbar/images/placeholder.png',
+        'path' => 'profiles/elms_content/modules/elms_features/elms_navigation/images/placeholder.png',
       ),
     ),
     'module' => 'menu',
@@ -40,7 +40,7 @@ function elms_course_studio_menu_default_menu_links() {
       ),
       'menu_icon' => array(
         'enable' => 0,
-        'path' => 'profiles/elms/modules/elms_core/elms_appbar/images/placeholder.png',
+        'path' => 'profiles/elms/modules/elms_features/elms_navigation/images/placeholder.png',
       ),
     ),
     'module' => 'menu',
@@ -62,7 +62,7 @@ function elms_course_studio_menu_default_menu_links() {
       ),
       'menu_icon' => array(
         'enable' => 0,
-        'path' => 'profiles/elms/modules/elms_core/elms_appbar/images/placeholder.png',
+        'path' => 'profiles/elms/modules/elms_features/elms_navigation/images/placeholder.png',
       ),
     ),
     'module' => 'menu',
