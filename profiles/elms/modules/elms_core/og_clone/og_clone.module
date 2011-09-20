@@ -100,7 +100,7 @@ function _og_clone_clone_form($form_id) {
   }
   //user roles
   $user_roles = user_roles(TRUE);
-  array_shift($user_roles);
+  //array_shift($user_roles);
   $form['user_roles'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Roles'),
@@ -275,12 +275,18 @@ function _og_clone_clone_form_submit($form, &$form_state) {
       }
     }
     //merge all values appropriately for a secure query rewrite
-    $query_vars = array_merge($query_vars, $user_roles);
+    //$query_vars = array_merge($query_vars, $user_roles);
     //query all nodes we want related to this group
-    $result = db_query(db_rewrite_sql("SELECT n.nid FROM {node} as n JOIN {og_ancestry} as oga ON oga.nid = n.nid JOIN {users_roles} as ur ON ur.uid = n.uid WHERE oga.group_nid=%d ". $type_query ." AND ur.rid IN (". db_placeholders($user_roles) .")"), $query_vars);
+    $result = db_query(db_rewrite_sql("SELECT n.nid, n.uid, ur.rid FROM {node} as n LEFT JOIN {users_roles} as ur ON ur.uid = n.uid JOIN {og_ancestry} as oga ON oga.nid = n.nid WHERE oga.group_nid=%d ". $type_query), $query_vars);
     //these are the nodes we need to replicate
     while ($val = db_fetch_array($result)) {
 	  $node = NULL;
+	  //account for user 1 and authenticated users by setting the role id to 2 which is drupal's authenticated user role
+	  if ($val['rid'] == NULL) {
+		  $val['rid'] = 2;
+	  }
+	  //verify we can copy this node based on roles selected
+	  if (in_array($val['rid'], $user_roles) || $val['uid'] == 1) {
 	  $node = node_load($val['nid']);
 	  //set some common values to null so this will create a new node
       $node->log = "Original node nid: ". $node->nid;
@@ -329,6 +335,7 @@ function _og_clone_clone_form_submit($form, &$form_state) {
       $node->book['menu_name'] = book_menu_name($node->book['bid']);
       //update outline for new book
       _book_update_outline($node);
+	}
 	}
   }
   return 1;
