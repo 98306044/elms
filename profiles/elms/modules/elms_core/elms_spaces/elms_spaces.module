@@ -654,8 +654,11 @@ function elms_spaces_workflow($op, $old_state, $new_state, $node) {
     }
     break;
 	case 'transition post':
-	//the pre hook changes the address name so we need to do a purl look up to go back otherwise it loses scope of where is it
-      purl_goto('node/'. $node->nid,array('purl' => array('disabled' => TRUE)));
+	  //the pre hook changes the address name so we need to do a purl look up to go back otherwise it loses scope of where is it
+      
+	  $_SESSION['destination'] = 'node/'. $node->nid;
+	    //purl_goto('node/'. $node->nid,array('purl' => array('disabled' => TRUE)));
+	  
     break;
   }
   return true;
