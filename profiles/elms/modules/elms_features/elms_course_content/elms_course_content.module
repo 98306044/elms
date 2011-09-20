@@ -3,6 +3,33 @@
 include_once('elms_course_content.features.inc');
 
 /**
+ * Implementation of (undocumented) hook_theme_registry_alter().
+ */
+function elms_course_content_theme_registry_alter(&$vars) {
+  //make book navigation function with a jump menu
+  $vars['book_navigation']['theme path'] = drupal_get_path('module','elms_course_content'); 
+  $vars['book_navigation']['path'] = drupal_get_path('module','elms_course_content');
+  $vars['book_navigation']['theme paths'] = array(0 => drupal_get_path('module','elms_course_content'));
+}
+
+/**
+ * Implementation of hook_init().
+ */
+function elms_course_content_init() {
+  drupal_add_css(drupal_get_path('module', 'elms_course_content') .'/css/style.css','theme');
+  //offer to continue where they left off if we can grab it
+  if (arg(0) == 'content' && module_exists('statistics')) {
+    $group = og_get_group_context();
+	global $user;
+	$result = db_query("SELECT {accesslog}.title,{accesslog}.path FROM {accesslog} JOIN {menu_links} ON {menu_links}.link_path = {accesslog}.path JOIN {book} ON {menu_links}.mlid = {book}.mlid JOIN {og_ancestry} ON {book}.nid={og_ancestry}.nid WHERE {accesslog}.uid=%d AND {og_ancestry}.group_nid=%d ORDER BY {accesslog}.timestamp DESC LIMIT 1", $user->uid, $group->nid);
+    $val = db_fetch_array($result);
+    if ($val['title'] != '') {
+      drupal_set_message('Continue where you left off? '. l(t($val['title']), $val['path']), 'elms-message');
+    }
+  }
+}
+
+/**
  * Implementation of hook_menu().
  */
 function elms_course_content_menu() {
@@ -17,4 +44,190 @@ function elms_course_content_menu() {
     'file' => 'elms_course_content.pages.inc',
   );
   return $items;
+}
+
+/**
+ * Implementation of hook_block().
+ */
+function elms_course_content_block($op = 'list', $delta = 0, $edit = array()) {
+  if ($op == 'list') {
+    $blocks[0] = array(
+      'info' => t('ELMS Left Nav'), 
+      'weight' => -10,
+      'status' => 0, 
+    );
+    return $blocks;
+  }
+  else if ($op == 'view') {
+    switch ($delta) {
+      case 0:
+        $block = _elms_course_content_nav();
+      break;
+    }
+    return $block;
+  }
+}
+
+/**
+ * Implementation of hook_link()
+ */
+function elms_course_content_link($type, $object, $teaser = FALSE) {
+  $links = array();
+  $print_option = variable_get('elms_print_options','both');
+  if ($type == 'node' && isset($object->book['plid']) && !$teaser && user_access('see printer-friendly version')) {
+	$parent = book_link_load($object->book['plid']);
+	//verify print setting
+	if ($print_option == 'print_lesson' || $print_option == 'print_course' && $object->book['bid'] != $parent['nid']) {
+      $links['book_print_lesson'] = array(
+      'href' => 'print/book/export/html/'. $parent['nid'],
+      'title' => '<img src="/sites/all/modules/print/icons/print_icon.gif" alt="Print Lesson" title="Print Lesson" width="16" height="16" class="print-icon" />',
+      'attributes' => array(
+        'title' => 'Display a printer-friendly version of this page.',
+        'class' => 'print-page-lesson',
+        'onclick' => 'window.open(this.href); return false',
+        'rel' => 'nofollow',
+      ),
+      'html' => 1,
+      );
+	}
+	//verify print setting
+	if ($print_option == 'print_course') {
+	  $links['book_print_course'] = array(
+      'href' => 'book/export/html/'. $object->book['bid'],
+      'title' => '<img src="/sites/all/modules/print/icons/print_icon.gif" alt="Print Course" title="Print Course" width="16" height="16" class="print-icon" />',
+      'attributes' => array(
+        'title' => 'Display a printer-friendly version of this page.',
+        'class' => 'print-page-lesson',
+        'onclick' => 'window.open(this.href); return false',
+        'rel' => 'nofollow',
+      ),
+      'html' => 1,
+      );
+	}
+  }
+  return $links;
+}
+
+/**
+ * Implementation of hook_link_alter()
+ */
+function elms_course_content_link_alter(&$links, $node, $comment = NULL) {
+  //check print setting
+  $print_option = variable_get('elms_print_options','both');
+  if ($print_option == 'none') {
+    unset($links['book_printer']);
+  }
+}
+
+//helper function for how we render the pager navigation
+function _elms_course_content_toc($bid, $exclude = array(), $depth_limit) {
+    $tree = menu_tree_all_data(book_menu_name($bid));
+    $toc = array();
+    _elms_course_content_toc_recurse($tree, '', $toc, $exclude, $depth_limit);
+    return $toc;
+  }
+//helper function for looping through a tree to build out the display  
+function _elms_course_content_toc_recurse($tree, $indent, &$toc, $exclude, $depth_limit) {
+  foreach ($tree as $data) {
+    if ($data['link']['depth'] > $depth_limit) {
+      // Don't iterate through any links on this level.
+      break;
+    }
+    if (!in_array($data['link']['mlid'], $exclude)) {
+      $toc[$data['link']['href']] = $indent .' '. truncate_utf8($data['link']['title'], 30, TRUE, TRUE);
+      if ($data['below']) {
+        _elms_course_content_toc_recurse($data['below'], $indent .'--', $toc, $exclude, $depth_limit);
+      }
+    }
+  }
+}
+
+//helper function for elms_course_content_block
+function _elms_course_content_nav() {
+  //get group nid
+  $group_node = og_get_group_context();
+  //figure out the course outline that's in this book
+  $config = array(
+    'delta' => -1,
+    'menu_name' => 'book-toc-'. $group_node->book_nid,
+    'parent_mlid' => $group_node->book_outline_mlid,
+    'admin_title' => 'Course Outline',
+    'sort' => 0,
+	'title_link' => 0,
+    'level' => 1,
+    'follow' => 0,
+    'depth' => 0,
+    'expanded' => 0,
+  );
+  $blockary = menu_tree_build($config);
+  $blockary['subject'] = 'Content';
+  $blockary['title'] = 'Content';
+  return $blockary;
+}
+
+/**
+ * Implementation of hook_elms_instructional_template().
+ */
+function elms_course_content_elms_instructional_template() {
+  $outline['default'] = array(
+   'title' => 'Default Outline',
+   0 => array(
+     'type' => 'page',
+     'title' => 'Lesson @i',
+   ),
+   1 => array(
+     'type' => 'duplicate',
+     'parent' => 0,
+   ),
+  );
+  $outline['topical_outline'] = array(
+	 'title' => 'Topical Lesson Outline',
+     0 => array(
+       'type' => 'folder',
+       'title' => 'Lesson @i',
+     ),
+	 1 => array(
+       'type' => 'page',
+       'title' => 'Introduction',
+       'parent' => 0,
+     ),
+	 2 => array(
+       'type' => 'page',
+       'title' => 'Lesson Content',
+       'parent' => 0,
+     ),
+	 3 => array(
+       'type' => 'page',
+       'title' => 'Wrap up',
+       'parent' => 0,
+     ),
+	 4 => array(
+	   'type' => 'duplicate',
+	   'parent' => 0,
+	 ),
+	 5 => array(
+       'type' => 'page',
+       'title' => 'Resources',
+     ),
+  );
+  return $outline;
+}
+
+/**
+ * Implementation of the elms_course_content hook
+ */
+function _elms_instructional_templates_get_instructional_template($template = 'list') {
+	return _elms_course_content_get_instructional_template($template);
+}
+function _elms_course_content_get_instructional_template($template = 'list') {
+  $ary = module_invoke_all('elms_instructional_template');
+  if ($template == 'list') {
+    $list = array('none' => '');
+    foreach($ary as $key => $params) {
+	  $list[$key] = $params['title'];
+    }
+    return $list;
+  }
+  unset($ary[$template]['title']);
+  return $ary[$template];
 }

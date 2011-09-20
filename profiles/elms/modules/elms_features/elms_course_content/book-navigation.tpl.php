@@ -3,10 +3,9 @@
   if(arg(0) == 'node') {
   $nid = arg(1);
   $group = og_get_group_context();
-  $options = _elms_helper_toc($book_id, array(), 100);
+  $options = _elms_course_content_toc($book_id, array(), 100);
   if (isset($group->nid)) {
     array_shift($options);
-    $options = array_merge(array('node/'. $group->nid => t('Home')),$options);
   }
   //find the current array item and advance the internal pointer to it
   $found_current = false;

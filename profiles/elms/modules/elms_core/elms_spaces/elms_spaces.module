@@ -25,9 +25,7 @@ function elms_spaces_init() {
  */
 function elms_spaces_menu() {
   $items = array();
-  //make sure this isn't a demo site, this will be removed in the future
-  if (!module_exists('demo')) {
-    $items['node/%/theme'] = array(
+  $items['node/%/theme'] = array(
     'title' => 'Theme Settings',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('_elms_spaces_theme_form'),
@@ -36,8 +34,7 @@ function elms_spaces_menu() {
     'access arguments' => array(),
     'file' => 'elms_spaces.theme.inc',
     'file path' => drupal_get_path('module','elms_spaces') .'/inc',
-    );
-  }
+  );
   return $items;
 }
 
@@ -119,9 +116,8 @@ function elms_spaces_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
       $space = spaces_load('og', $node->nid, TRUE);
       if ($space) {
         $space->controllers->variable->set('site_name', $node->title);
-        //set the front page to the homepage of the course
-        //$space->controllers->variable->set('site_frontpage', 'node/'. $node->nid);
-        $course = node_load($node->field_course_ref[0]['nid']);
+        //load the course node for the name space info
+		$course = node_load($node->field_course_ref[0]['nid']);
         //set slogan to the description of the course
         $space->controllers->variable->set('site_slogan', $course->field_course_title[0]['value']);
         //need to do extra step with purl rewrite to ensure it has the node and course name in in
@@ -426,7 +422,7 @@ function _elms_spaces_create_root($group, $template = NULL) {
   _book_update_outline($node);
   //see if we were passed an instructional template to use, should be
   if ($template != NULL) {
-   $id_template = _elms_instructional_templates_get_instructional_template($template);
+   $id_template = _elms_course_content_get_instructional_template($template);
   $id_template_tmp = $id_template;
   //loop through each item in the defined template and build it as a new book item
   foreach ($id_template_tmp as $key => $book_item) {

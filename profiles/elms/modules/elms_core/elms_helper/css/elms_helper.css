@@ -137,55 +137,7 @@ body.cke_show_borders {
  font-weight:bold;
  text-decoration:underline;
 }
-/* style the book navigation somewhat consistently across any theme */
-.elms_quick_jump{
- width: 30% !important;
- margin:0px;
- float:left;
- text-align:center;
-}
-.elms_quick_jump select{
- font-size:11px;
-}
-.elms_quick_jump label{
- font-size:10px;
- font-weight:bold;
-}
-.elms_page_next {
- font-size:11px;
- float:left;
- font-weight:bold;
- width: 30% !important;
- text-decoration:none;
- margin:10px;
-}
 
-.elms_page_previous {
- font-size:11px;
- float:left;
- font-weight:bold;
- width: 30% !important;
- text-decoration:none;
- margin:10px;
-}
-
-.book-navigation {
- float:left;
- width:100%;
-}
-
-.book-navigation .page-links {
- border-bottom: 0px;
- border-top: 1px solid #888;
- padding: 0px;
- text-align: center;
- width:100%;
-}
-
-/* remove homebox link we don't need */
-#homebox-edit-link {
-  display:none;
-}
 /* remove check key link we don't need */
 #og-reg-keys-join input[value="Check key"]{
   display:none;
@@ -194,51 +146,6 @@ body.cke_show_borders {
   width:120px;
 }
 
-/* right contextual navigation */
-#block-elms_helper-3 {
-float:right;
-width:210px;
-margin-left:5px;
-}
-
-/* navigational style form images */
-
-#node-form .form-radios {
-float:left;
-}
-#edit-field-navigation-value-dropdown-wrapper,
-#edit-field-navigation-value-dropdownactiveleft-wrapper,
-#edit-field-navigation-value-dropdownleft-wrapper,
-#edit-field-navigation-value-left-wrapper,
-#edit-field-navigation-value-activeleftleft-wrapper, 
-#edit-field-navigation-value-leftactiveright-wrapper {
-float:left;
-width:33%;
-}
-
-.navstyle-image{
- width:175px;
- height:132px;
-}
-
-#dropdown-image {
- background-image:url(../images/dropdown.png);
-}
-#dropdownactiveleft-image {
- background-image:url(../images/dropdownactiveleft.png);
-}
-#dropdownleft-image {
- background-image:url(../images/dropdownleft.png);
-}
-#left-image {
- background-image:url(../images/left.png);
-}
-#activeleftleft-image {
- background-image:url(../images/leftactiveleft.png);
-}
-#leftactiveright-image {
- background-image:url(../images/leftactiveright.png);
-}
 /* ___________ IE6 IFRAME FIX ________ */
 .ui-datepicker-cover {
   display: none; /*sorry for IE5*/

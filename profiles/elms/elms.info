@@ -82,7 +82,6 @@ dependencies[] = context_condition_theme
 ; ELMS
 dependencies[] = elms_appbar
 dependencies[] = elms_export_html
-dependencies[] = elms_instructional_templates
 dependencies[] = og_clone
 dependencies[] = elms_helper
 dependencies[] = elms_spaces

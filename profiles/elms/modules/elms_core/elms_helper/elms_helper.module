@@ -11,16 +11,8 @@ define('ELMS_VERSION', '6.x-1.0-alpha5');
  * Implementation of (undocumented) hook_theme_registry_alter().
  */
 function elms_helper_theme_registry_alter(&$vars) {
-  //hijack the node tpl
+  //hijack the node tpl away from organic groups
   array_splice($vars['node']['theme paths'], 2, 0, drupal_get_path('module', 'elms_helper'));
-  //make the username show up the way we want
-  $vars['username']['theme path'] = drupal_get_path('module','elms_helper'); 
-  $vars['username']['function'] = 'theme_username_elms';
-  $vars['username']['theme paths'] = array(0 => drupal_get_path('module','elms_helper'));
-  //make book navigation function with a jump menu
-  $vars['book_navigation']['theme path'] = drupal_get_path('module','elms_helper'); 
-  $vars['book_navigation']['path'] = drupal_get_path('module','elms_helper');
-  $vars['book_navigation']['theme paths'] = array(0 => drupal_get_path('module','elms_helper'));
 }
 /**
  * Implementation of hook_init().
@@ -33,13 +25,6 @@ function elms_helper_init() {
   drupal_add_css(drupal_get_path('module', 'elms_helper') .'/css/elms_helper.css','theme');
   drupal_add_css(drupal_get_path('module', 'jquery_ui') .'/jquery.ui/themes/redmond/redmond.css','module');
   drupal_add_js(drupal_get_path('module', 'elms_helper') .'/js/elms_helper.js');
-  //account for the content feature so it redirects past the book root, we don't want anyone accidentally changing it
-  if (arg(0) == 'content') {
-    $group = og_get_group_context();
-  $book = node_load($group->book_nid);
-    $childobj = book_next($book->book);
-  drupal_goto($childobj['link_path']);
-  }
   //account for possible og theme swap when using the outline designer
   if (arg(0) == 'outline_designer') {
     $book_node = node_load(arg(2));
@@ -79,14 +64,6 @@ function elms_helper_init() {
     $breadcrumb = array();
     $breadcrumb[] = l(t('Course Schedule'), 'node/'. $node->nid);
     drupal_set_breadcrumb($breadcrumb);
-      //see if this is the group homepage
-      if (arg(2) == '') {
-        $result = db_query("SELECT {accesslog}.title,{accesslog}.path FROM {accesslog} JOIN {menu_links} ON {menu_links}.link_path = {accesslog}.path JOIN {book} ON {menu_links}.mlid = {book}.mlid JOIN {og_ancestry} ON {book}.nid={og_ancestry}.nid WHERE {accesslog}.uid=%d AND {og_ancestry}.group_nid=%d ORDER BY {accesslog}.timestamp DESC LIMIT 1", $user->uid, $node->nid);
-        $val = db_fetch_array($result);
-        if ($val['title'] != '') {
-          drupal_set_message('Continue where you left off? '. l(t($val['title']),$val['path']),'elms-message');
-        }
-      }
     }
   else {
     $group = og_get_group_context();
@@ -103,14 +80,8 @@ function elms_helper_init() {
 	}
   }
   }
-  elseif(arg(0) == 'courses') {
-    //they're on the homepage of the site, ask if they want to go to the last course/page they accessed
-    $result = db_query("SELECT {accesslog}.title,{accesslog}.path FROM {accesslog} JOIN {menu_links} ON {menu_links}.link_path = {accesslog}.path JOIN {book} ON {menu_links}.mlid = {book}.mlid JOIN {og_ancestry} ON {book}.nid={og_ancestry}.nid WHERE {accesslog}.uid=%d ORDER BY {accesslog}.timestamp DESC LIMIT 1", $user->uid);
-    $val = db_fetch_array($result);
-    if ($val['title'] != '') {
-      drupal_set_message('Continue where you left off? '. l(t($val['title']),$val['path']),'elms-message');
-    }
-  }
+  
+  //REMOVE after featurization
   if (arg(0) == 'node') {
     $group = og_get_group_context();
 	if (isset($group->type)) {
@@ -169,27 +140,7 @@ function _elms_helper_outline_tab() {
  */
 function elms_helper_block($op = 'list', $delta = 0, $edit = array()) {
   if ($op == 'list') {
-    $blocks[0] = array(
-      'info' => t('ELMS Left Nav'), 
-      'weight' => -10, 
-      'status' => 0, 
-    );
-    $blocks[1] = array(
-      'info' => t('ELMS Header Nav'), 
-      'weight' => 0, 
-      'status' => 0, 
-    );
-    $blocks[2] = array(
-      'info' => t('ELMS Contextual Left Nav'), 
-      'weight' => -9, 
-      'status' => 0,
-    );
-    $blocks[3] = array(
-      'info' => t('ELMS Contextual Right Nav'), 
-      'weight' => 0, 
-      'status' => 0,
-    );
-  $blocks[4] = array(
+  $blocks[0] = array(
       'info' => t('ELMS Logged in'), 
       'weight' => 0, 
       'status' => 0,
@@ -198,19 +149,7 @@ function elms_helper_block($op = 'list', $delta = 0, $edit = array()) {
   }
   else if ($op == 'view') {
     switch ($delta) {
-      case 0:
-        $block = _elms_helper_nav('left');
-      break;
-      case 1:
-        $block = _elms_helper_nav('top');
-      break;
-      case 2:
-        $block = _elms_helper_nav('leftsub');
-      break;
-      case 3:
-        $block = _elms_helper_nav('right');
-      break;
-    case 4:
+    case 0:
       global $user;
     $group = og_get_group_context();
       if ($user->uid != 0) {
@@ -279,55 +218,9 @@ function elms_helper_form_alter(&$form, &$form_state, $form_id) {
 }
 
 /**
- * Implementation of hook_link()
- */
-function elms_helper_link($type, $object, $teaser = FALSE) {
-  $links = array();
-  $print_option = variable_get('elms_print_options','both');
-  if ($type == 'node' && isset($object->book['plid']) && !$teaser && user_access('see printer-friendly version')) {
-	$group = og_get_group_context();
-	$parent = book_link_load($object->book['plid']);
-	//verify print setting
-	if ($print_option == 'print_lesson' || $print_option == 'print_course' && $group->book_nid != $parent['nid']) {
-      $links['book_print_lesson'] = array(
-      'href' => 'print/book/export/html/'. $parent['nid'],
-      'title' => '<img src="/sites/all/modules/print/icons/print_icon.gif" alt="Print Lesson" title="Print Lesson" width="16" height="16" class="print-icon" />',
-      'attributes' => array(
-        'title' => 'Display a printer-friendly version of this page.',
-        'class' => 'print-page-lesson',
-        'onclick' => 'window.open(this.href); return false',
-        'rel' => 'nofollow',
-      ),
-      'html' => 1,
-      );
-	}
-	//verify print setting
-	if ($print_option == 'print_course') {
-	  $links['book_print_course'] = array(
-      'href' => 'book/export/html/'. $group->book_nid,
-      'title' => '<img src="/sites/all/modules/print/icons/print_icon.gif" alt="Print Course" title="Print Course" width="16" height="16" class="print-icon" />',
-      'attributes' => array(
-        'title' => 'Display a printer-friendly version of this page.',
-        'class' => 'print-page-lesson',
-        'onclick' => 'window.open(this.href); return false',
-        'rel' => 'nofollow',
-      ),
-      'html' => 1,
-      );
-	}
-  }
-  return $links;
-}
-
-/**
  * Implementation of hook_link_alter()
  */
 function elms_helper_link_alter(&$links, $node, $comment = NULL) {
-  //check print setting
-  $print_option = variable_get('elms_print_options','both');
-  if ($print_option == 'none') {
-    unset($links['book_printer']);
-  }
   //remove add book as it's confusing with outline designer in place
   if (isset($links['book_add_child'])) {
     unset($links['book_add_child']);
@@ -387,242 +280,6 @@ function elms_helper_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
   }
 }
 
-//helper function to contextually calculate the book used by the current group based on the naming conventions that we put in place
-function _elms_helper_nav($position = 'left') {
-  //get group nid
-  $group_node = og_get_group_context();
-  if (isset($group_node->nid)) {
-    //figure out the course outline that's in this book
-    $title = '';
-    $location = $group_node->field_navigation[0]['value'];
-    $config2 = array();
-    $render = FALSE;
-	$displaytitle = TRUE;
-    $config1 = array(
-    'delta' => -1,
-    'menu_name' => 'book-toc-'. $group_node->book_nid,
-    'parent_mlid' => $group_node->book_outline_mlid,
-    'admin_title' => 'ELMS Outline Top',
-    'sort' => 0
-    );
-  //a whole lot of conditionals as to if a block should render menu hierarchies or not based on if the setting has been set in the group/course node
-  switch ($position) {
-    case 'top':
-      switch ($location) {
-      case 'dropdown':
-        $config2 = array(
-        'title_link' => 0,
-        'level' => 1,
-        'follow' => 0,
-        'depth' => 0,
-        'expanded' => 1,
-        );
-        $render = TRUE;
-        $displaytitle = FALSE;
-      break;
-      case 'dropdownactiveleft':
-        $config2 = array(
-        'title_link' => 0,
-        'level' => 1,
-        'follow' => 0,
-        'depth' => 0,
-        'expanded' => 1,
-        );
-        $render = TRUE;
-        $displaytitle = FALSE;
-      break;
-      case 'dropdownleft':
-        $config2 = array(
-        'title_link' => 0,
-        'level' => 1,
-        'follow' => 0,
-        'depth' => 0,
-        'expanded' => 1,
-        );
-        $render = TRUE;
-        $displaytitle = FALSE;
-      break;
-      }
-    break;
-    case 'left':
-      switch ($location) {
-      case 'dropdownactiveleft':
-        $config2 = array(
-        'title_link' => 1,
-        'level' => 2,
-        'follow' => 'active',
-        'depth' => 1,
-        'expanded' => 0,
-        );
-        $render = TRUE;
-        $displaytitle = TRUE;
-      break;
-      case 'dropdownleft':
-        $blockary['title'] = '<none>';
-        $config2 = array(
-        'title_link' => 0,
-        'level' => 1,
-        'follow' => 0,
-        'depth' => 0,
-        'expanded' => 0,
-        );
-        $render = TRUE;
-        $displaytitle = FALSE;
-      break;
-      case 'left':
-        $config2 = array(
-        'title_link' => 0,
-        'level' => 1,
-        'follow' => 0,
-        'depth' => 0,
-        'expanded' => 0,
-        );
-        $render = TRUE;
-        $displaytitle = FALSE;
-		$title = 'Content';
-      break;
-      case 'activeleftleft':
-        $config2 = array(
-        'title_link' => 1,
-        'level' => 2,
-        'follow' => 'active',
-        'depth' => 1,
-        'expanded' => 0,
-        );
-        $render = TRUE;
-        $displaytitle = TRUE;
-      break;
-    case 'leftactiveright':
-        $config2 = array(
-        'title_link' => 0,
-        'level' => 1,
-        'follow' => 0,
-        'depth' => 2,
-        'expanded' => 0,
-        );
-        $render = TRUE;
-        $displaytitle = FALSE;
-      break;
-      }
-    break;
-  case 'leftsub':
-    switch ($location) {
-    case 'activeleftleft':
-      $config2 = array(
-        'title_link' => 0,
-        'level' => 1,
-        'follow' => 0,
-        'depth' => 1,
-        'expanded' => 0,
-      );
-      $render = TRUE;
-      $displaytitle = FALSE;
-      $title = 'Course Content';
-    break;  
-    }
-  break;
-  case 'right':
-    switch ($location) {
-  case 'leftactiveright':
-    $config2 = array(
-        'title_link' => 1,
-        'level' => 3,
-        'follow' => 0,
-        'depth' => 0,
-        'expanded' => 0,
-        );
-      $render = TRUE;
-      $displaytitle = TRUE;
-  break;
-  }
-  }
-  $config = array_merge($config1, $config2);
-  $blockary = menu_tree_build($config);
-  if (!$displaytitle) {
-    if($title == '') {
-      $blockary['title'] = '<none>';
-    }
-    else {
-	  $blockary['subject'] = $title;
-      $blockary['title'] = $title;
-    }
-  }
-  if ($render) {
-    return $blockary;
-  }
-  }
-  //display nothing for the block as it's failed our tests for rendering
-  return array();
-}
-
-//implementation of theme hook hijack -- takes all user names and if they have a role, adds it on (that way instructors show up as name (instructor)
-function theme_username_elms($object) {
-  if ($object->uid && $object->name) {
-  $result = db_query("SELECT name FROM {role} JOIN {users_roles} ON {users_roles}.rid = {role}.rid WHERE uid=%d",$object->uid);
-    $role = db_fetch_array($result);
-  if ($role['name'] != '') {
-    $role['name'] = ' ('. $role['name'] .')';
-  }
-    // Shorten the name when it is too long or it will break many tables.
-    if (drupal_strlen($object->name) > 20) {
-      $name = drupal_substr($object->name, 0, 15) . '...';
-    }
-    else {
-      $name = $object->name . $role['name'];
-    }
-
-    if (user_access('access user profiles')) {
-      $output = l($name, 'user/' . $object->uid, array('attributes' => array('title' => t('View user profile.'))));
-    }
-    else {
-      $output = check_plain($name);
-    }
-  }
-  else if ($object->name) {
-    // Sometimes modules display content composed by people who are
-    // not registered members of the site (e.g. mailing list or news
-    // aggregator modules). This clause enables modules to display
-    // the true author of the content.
-    if (!empty($object->homepage)) {
-      $output = l($object->name, $object->homepage, array('attributes' => array('rel' => 'nofollow')));
-    }
-    else {
-      $output = check_plain($object->name);
-    }
-
-    $output .= ' (' . t('not verified') . ')';
-  }
-  else {
-    $output = check_plain(variable_get('anonymous', t('Anonymous')));
-  }
-
-  return $output;
-}
-
-
-//helper function for how we render the pager navigation
-function _elms_helper_toc($bid, $exclude = array(), $depth_limit) {
-    $tree = menu_tree_all_data(book_menu_name($bid));
-    $toc = array();
-    _elms_helper_toc_recurse($tree, '', $toc, $exclude, $depth_limit);
-    return $toc;
-  }
-//helper function for looping through a tree to build out the display  
-function _elms_helper_toc_recurse($tree, $indent, &$toc, $exclude, $depth_limit) {
-  foreach ($tree as $data) {
-    if ($data['link']['depth'] > $depth_limit) {
-      // Don't iterate through any links on this level.
-      break;
-    }
-    if (!in_array($data['link']['mlid'], $exclude)) {
-      $toc[$data['link']['href']] = $indent .' '. truncate_utf8($data['link']['title'], 30, TRUE, TRUE);
-      if ($data['below']) {
-        _elms_helper_toc_recurse($data['below'], $indent .'--', $toc, $exclude, $depth_limit);
-      }
-    }
-  }
-}
-
 /**
  * Implementation of hook_content_extra_fields().
  */
@@ -643,21 +300,6 @@ function elms_helper_content_extra_fields($type_name) {
     'weight' => 1,
   );
   return $fields;
-}
-
-function elms_helper_elms_instructional_template() {
-  $outline['default'] = array(
-   'title' => 'Default Outline',
-   0 => array(
-     'type' => 'page',
-     'title' => 'Lesson @i',
-   ),
-   1 => array(
-     'type' => 'duplicate',
-     'parent' => 0,
-   ),
-  );
-  return $outline;
 }
 
 /**

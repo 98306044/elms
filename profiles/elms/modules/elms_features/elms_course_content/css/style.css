@@ -1,0 +1,44 @@
+/* style the book navigation somewhat consistently across any theme */
+.elms_quick_jump{
+ width: 30% !important;
+ margin:0px;
+ float:left;
+ text-align:center;
+}
+.elms_quick_jump select{
+ font-size:11px;
+}
+.elms_quick_jump label{
+ font-size:10px;
+ font-weight:bold;
+}
+.elms_page_next {
+ font-size:11px;
+ float:left;
+ font-weight:bold;
+ width: 30% !important;
+ text-decoration:none;
+ margin:10px;
+}
+
+.elms_page_previous {
+ font-size:11px;
+ float:left;
+ font-weight:bold;
+ width: 30% !important;
+ text-decoration:none;
+ margin:10px;
+}
+
+.book-navigation {
+ float:left;
+ width:100%;
+}
+
+.book-navigation .page-links {
+ border-bottom: 0px;
+ border-top: 1px solid #888;
+ padding: 0px;
+ text-align: center;
+ width:100%;
+}

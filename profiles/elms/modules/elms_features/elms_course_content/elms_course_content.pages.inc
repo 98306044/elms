@@ -21,16 +21,14 @@ function elms_course_content_settings() {
     ),
     '#default_value' => variable_get('elms_print_options','print'),
   );
-  if (module_exists('elms_instructional_templates')) {
-    $form['elms_content_outline'] = array(
-      '#description' => t('Select a content outline to initially work from.  This is not required to create a course but can help with rapid prototyping.'),
-      '#key_type_toggled' => '1',
-      '#type' => 'select',
-      '#options' => _elms_instructional_templates_get_instructional_template(),
-      '#multiple_toggle' => '1',
-      '#title' => t('Content Outline'),
-    );
-  }
+  $form['elms_content_outline'] = array(
+    '#description' => t('Select a content outline to work from.  This is not required to create a course but can help with rapid prototyping.'),
+    '#key_type_toggled' => '1',
+    '#type' => 'select',
+    '#options' => _elms_course_content_get_instructional_template(),
+    '#multiple_toggle' => '1',
+    '#title' => t('Content Outline'),
+  );
   $form['site_footer'] = array(
     '#default_value' => variable_get('site_footer','2011 Copyright PSU'),
     '#description' => t('This will be the footer for your course in ELMS'),
