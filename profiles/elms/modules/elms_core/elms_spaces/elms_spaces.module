@@ -60,9 +60,9 @@ function elms_spaces_form_alter(&$form, &$form_state, $form_id) {
     //always hide purl, they shouldn't need to know anything about it, it just happens
     $form['purl']['value']['#type'] = 'hidden';
     //because purl wants a url, generate a temporary, random one
-    //this has to be done because the nid hasn't been set yet and we can't submit the node until we have a PURL identifier yet the NID is supposed to be part of the address
+    //this has to be done because the nid hasn't been set yet and we can't submit the node until we have a PURL identifier yet the NID is supposed to be part of the address, once submitted the node will automatically change thing
     if (arg(1) == 'add') {
-      $form['purl']['value']['#default_value'] = '_dev_'. rand(1,1000);
+      $form['purl']['value']['#default_value'] = '_tmp_'. rand(1,1000);
     }
     else {
       $form['themes']['theme']['#default_value'] = 'chamfer';
@@ -650,7 +650,12 @@ function elms_spaces_workflow($op, $old_state, $new_state, $node) {
       if ($space) {
         $space->controllers->variable->set('elms_navigation_color', _elms_navigation_get_color($new_state));
       }
+	  //if we're on the workflow page direct back to course node
     }
+    break;
+	case 'transition post':
+	//the pre hook changes the address name so we need to do a purl look up to go back otherwise it loses scope of where is it
+      purl_goto('node/'. $node->nid,array('purl' => array('disabled' => TRUE)));
     break;
   }
   return true;
