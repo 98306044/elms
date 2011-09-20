@@ -67,16 +67,7 @@ function elms_spaces_form_alter(&$form, &$form_state, $form_id) {
       $form['purl']['value']['#default_value'] = '_dev_'. rand(1,1000);
     }
     else {
-      //account for content outline, we only want to be able to set it once
-	  //CHANGE featurization this will no longer be needed
-      if (arg(3) == 2 && _multistep_get_status(arg(1),2) == 'submitted') {
-        unset($form['field_instructional_template']);
-      }
-      //goofy setting the first time through to make sure chamfer is the default selected even though chamfer isn't the default theme used system wide
-	  //CHANGE allow for a global setting to select which theme is the default
-      if (arg(3) == 4 && _multistep_get_status(arg(1),4) == 'unsubmitted') {
-        $form['themes']['theme']['#default_value'] = 'chamfer';
-      }
+      $form['themes']['theme']['#default_value'] = 'chamfer';
     }
   }
 }
@@ -111,7 +102,7 @@ function elms_spaces_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
     if ($node->type == 'course') {
       _elms_spaces_course_default($node);
     }
-    //need this to run ONLY after the group node has been created and cause of multistep there isnt much work to do here
+	
     if (og_is_group_type($node->type)) {
       $space = spaces_load('og', $node->nid, TRUE);
       if ($space) {
@@ -133,41 +124,23 @@ function elms_spaces_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
     case 'update':
       //only add this in for group / course nodes
       if (og_is_group_type($node->type)) {
-        //need to run through the steps one at a time
-        $step = arg(3);
-        //see if this is the /theme page and ignore additional processing if it is
-        if (arg(2) == 'theme' || arg(2) == 'workflow') {
-          $step = 0;
-        }
-      switch ($step) {
-        //this only happens AFTER initial submission of the node (creating it)
-        //also need the blank case cause it could be a null step meaning step 1
-        case '':
-        case 1:
-          _multistep_update_status($node->nid,'submitted',1);
+		  
           $space = spaces_load('og', $node->nid, TRUE);
           if ($space) {
             $space->controllers->variable->set('site_name', $node->title);
-            //set the front page to the homepage of the course
-            $space->controllers->variable->set('site_frontpage', 'node/'. $node->nid);
             $course = node_load($group->field_course_ref[0]['nid']);
             //set slogan to the description of the course
             $space->controllers->variable->set('site_slogan', $course->field_course_description[0]['value']);
+			if (module_exists('webaccess')) {
+              $space->controllers->variable->set('webaccess_secure_site', $node->og_private);
+            }
           }
-        break;
-        //create the course outline, always removing the current one if its a rebuild
-        case 2:
-          _multistep_update_status($node->nid,'submitted',2);
           $space = spaces_load('og', $node->nid, TRUE);
           $root = db_result(db_query("SELECT {book}.nid FROM {og_ancestry} JOIN {book} ON {book}.nid = {og_ancestry}.nid WHERE group_nid=%d", $node->nid));
           //if no root was returned then create one as well as the instructional template selected if there is one
           if (!$root) {
             _elms_spaces_create_root($node, $node->field_instructional_template[0]['value']);
           }
-        break;
-        //create the schedule, always removing the current one if its a rebuild
-        case 3:
-          _multistep_update_status($node->nid,'submitted',3);
           //remove the current schedule and build a new one
           if (module_exists('elms_schedule') && ($node->field_schedule_to_build[0]['value'] != '')) {
             if ($node->field_schedule_to_build[0]['value'] == 'rebuild') {
@@ -197,40 +170,6 @@ function elms_spaces_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
           batch_set($batch);
           batch_process('node/'. $node->nid .'/edit/4');
         }
-      break;
-      //node is completed by multistep and sets the theme if there's a change
-      case 4:
-        _multistep_update_status($node->nid,'submitted',4);
-      break;
-      case 5:
-        _multistep_update_status($node->nid,'submitted',5);
-      break;
-      case 6:
-        _multistep_update_status($node->nid,'submitted',6);
-        $space = spaces_load('og', $node->nid, TRUE);
-        if ($space) {
-          //account for webaccess, making private courses force a webaccess prompt
-          if (module_exists('webaccess')) {
-            $space->controllers->variable->set('webaccess_secure_site', $node->og_private);
-          }  
-        }
-        $batch = array(
-          'title' => t('Verifying Access Permissions'),
-          'progress_message' => t('Completed job @current of @total.'),
-          'operations' => array(
-            array('_elms_spaces_node_access_rebuild_batch_operation', array($node)),
-		  ),
-          'init_message' => t('Building access permissions'),
-          'error_message' => t('An error has occured'),
-          'finished' => '_elms_spaces_duplicate_branch_finished',
-        );
-        batch_set($batch);
-        batch_process('node/'. $node->nid);
-      break;
-      //steps beyond what we've mapped, do nothing
-      default:
-      break;
-    }
   }
   break;
   //clean up all spaces overrides for the node
@@ -246,25 +185,6 @@ function _elms_spaces_duplicate_branch($node, $group, &$context) {
   global $user;
   //intial setting of the batch job
   if (!isset($context['sandbox']['progress'])) {
-  //figure out the print settings
-  switch ($group->field_print_options[0]['value']) {
-    case 'both':
-      $context['sandbox']['print_display'] = 1;
-      $context['sandbox']['print_pdf_display'] = 1;
-    break;
-    case 'print':  
-      $context['sandbox']['print_display'] = 1;
-      $context['sandbox']['print_pdf_display'] = 0;
-    break;
-    case 'pdf':
-      $context['sandbox']['print_display'] = 0;
-      $context['sandbox']['print_pdf_display'] = 1;
-    break;
-    default:
-      $context['sandbox']['print_display'] = 0;
-      $context['sandbox']['print_pdf_display'] = 0;
-    break;
-  }
   //get max
   $context['sandbox']['max'] = db_result(db_query("
     SELECT COUNT(mlid)
@@ -327,9 +247,6 @@ function _elms_spaces_duplicate_branch($node, $group, &$context) {
     //take into account uuid usage, needed for node_export_book module to work
     $dup_node->uuid = NULL;
     $dup_node->revision_uuid = NULL;
-    //use print setting default based on the group's setting
-    $dup_node->print_display = $context['sandbox']['print_display'];
-    $dup_node->print_pdf_display = $context['sandbox']['print_pdf_display'];
     //set to current uid
     $dup_node->uid = $user->uid;
     //make sure revision is 1
@@ -390,25 +307,6 @@ function _elms_spaces_create_root($group, $template = NULL) {
   $node->book['mlid'] = NULL;
   $node->title = $group->title .' - Course Outline';
   //settings based on group context in ELMS
-  //print settings based on those defined by the group
-  switch ($group->field_print_options[0]['value']) {
-      case 'both':
-        $node->print_display = 1;
-        $node->print_pdf_display = 1;
-      break;
-      case 'print':  
-      $node->print_display = 1;
-        $node->print_pdf_display = 0;
-      break;
-      case 'pdf':
-      $node->print_display = 0;
-        $node->print_pdf_display = 1;
-      break;
-      default:
-        $node->print_display = 0;
-        $node->print_pdf_display = 0;
-      break;
-    }
   //set group association
   $node->og_groups = array($group->nid => $group->nid);
   $node->og_groups_both = array($group->nid => $group->title);
@@ -700,13 +598,6 @@ Penn State is an Equal Opportunity Employer.";
     $space->controllers->variable->set('spaces_preset_og', 'og_private');
     $space->controllers->variable->set('webaccess_secure_site', 1);
   }
-  //set the multistep stuff so that it renders correctly after the fact
-  _multistep_update_status($group->nid,'submitted',1);
-  _multistep_update_status($group->nid,'submitted',2);
-  _multistep_update_status($group->nid,'submitted',3);
-  _multistep_update_status($group->nid,'submitted',4);
-  _multistep_update_status($group->nid,'submitted',5);
-  _multistep_update_status($group->nid,'submitted',6);
   //create the book root now that we have the group node finished
     _elms_spaces_create_root($group, 'default');
 }

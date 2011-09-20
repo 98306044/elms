@@ -6,74 +6,6 @@
 function elms_course_versions_content_default_fields() {
   $fields = array();
 
-  // Exported field: field_angel_string
-  $fields['version-field_angel_string'] = array(
-    'field_name' => 'field_angel_string',
-    'type_name' => 'version',
-    'display_settings' => array(
-      'weight' => '20',
-      'parent' => '',
-      'label' => array(
-        'format' => 'above',
-      ),
-      'teaser' => array(
-        'format' => 'default',
-        'exclude' => 1,
-      ),
-      'full' => array(
-        'format' => 'default',
-        'exclude' => 1,
-      ),
-      '5' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '4' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '2' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '3' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      'token' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-    ),
-    'widget_active' => '1',
-    'type' => 'text',
-    'required' => '0',
-    'multiple' => '1',
-    'module' => 'text',
-    'active' => '1',
-    'text_processing' => '0',
-    'max_length' => '',
-    'allowed_values' => '',
-    'allowed_values_php' => '',
-    'widget' => array(
-      'rows' => 5,
-      'size' => '60',
-      'multistep' => '6',
-      'default_value' => array(
-        '0' => array(
-          'value' => '',
-          '_error_element' => 'default_value_widget][field_angel_string][0][value',
-        ),
-      ),
-      'default_value_php' => NULL,
-      'label' => 'Angel String',
-      'weight' => '10',
-      'description' => 'This field should contain the "Angel Strings" or url component pertaining to the course sections in angel that you want to have access to this offering. For example, in https://cms.psu.edu/section/default.asp?id=MC_2006SPUP_RART_010_001 the part after "https://cms.psu.edu/section/default.asp?id=" is what we call the Angel String.  In this example it would be MC_2006SPUP_RART_010_001.  In the future this integration point will be more automated.',
-      'type' => 'text_textfield',
-      'module' => 'text',
-    ),
-  );
-
   // Exported field: field_campus
   $fields['version-field_campus'] = array(
     'field_name' => 'field_campus',
@@ -531,74 +463,6 @@ prototype|Build from Prototype Lesson / Course',
       'weight' => 0,
       'description' => 'How many lessons would you like to start with?',
       'type' => 'optionwidgets_select',
-      'module' => 'optionwidgets',
-    ),
-  );
-
-  // Exported field: field_navigation
-  $fields['version-field_navigation'] = array(
-    'field_name' => 'field_navigation',
-    'type_name' => 'version',
-    'display_settings' => array(
-      'weight' => '16',
-      'parent' => '',
-      'label' => array(
-        'format' => 'above',
-      ),
-      'teaser' => array(
-        'format' => 'default',
-        'exclude' => 1,
-      ),
-      'full' => array(
-        'format' => 'default',
-        'exclude' => 1,
-      ),
-      '4' => array(
-        'format' => 'default',
-        'exclude' => 1,
-      ),
-      '5' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '2' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '3' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      'token' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-    ),
-    'widget_active' => '1',
-    'type' => 'text',
-    'required' => '1',
-    'multiple' => '0',
-    'module' => 'text',
-    'active' => '1',
-    'text_processing' => '0',
-    'max_length' => '',
-    'allowed_values' => 'left|left
-activeleftleft|active left, left',
-    'allowed_values_php' => '',
-    'widget' => array(
-      'default_value' => array(
-        '0' => array(
-          'value' => 'left',
-        ),
-      ),
-      'default_value_php' => NULL,
-      'multistep' => '4',
-      'label' => 'Navigation Style',
-      'weight' => '6',
-      'description' => 'How should course navigation be handled?<br/>
-<strong>left</strong> - Display course outline on the left<br/>
-<strong>active left, left</strong> - Display two left blocks with the active page outline in one and the highest level in another',
-      'type' => 'optionwidgets_buttons',
       'module' => 'optionwidgets',
     ),
   );
@@ -1434,14 +1298,12 @@ reading|Reading',
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('Angel String');
   t('Campus');
   t('Course');
   t('Finals');
   t('Forming Week Structure');
   t('Instructional Template');
   t('Lessons');
-  t('Navigation Style');
   t('Number of Topics');
   t('Schedule Source');
   t('Schedule to Build');

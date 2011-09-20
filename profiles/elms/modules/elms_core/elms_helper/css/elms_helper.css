@@ -53,17 +53,6 @@ body.node-type-promo #block-block-1 .block-content {
  left:15%;
  position:fixed;
 }
-.multistep-buttons {
- padding:0px;
- margin:15px 0px 0px 0px;
-}
-#block-multistep-version.sticky {
- position:fixed;
- top:0px; padding:0px 5px 5px 5px;
- margin:0px -5px 0px -5px;
- background:transparent;
- z-index:100;
-}
 #progressbar_wrapper {
  height:50px;
  width:100%;

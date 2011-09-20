@@ -58,58 +58,6 @@ function elms_course_versions_fieldgroup_default_groups() {
     'fields' => array(),
   );
 
-  // Exported group: group_enrollment_management
-  $groups['version-group_enrollment_management'] = array(
-    'group_type' => 'standard',
-    'type_name' => 'version',
-    'group_name' => 'group_enrollment_management',
-    'label' => 'Enrollment Management',
-    'settings' => array(
-      'form' => array(
-        'style' => 'fieldset',
-        'description' => '',
-      ),
-      'display' => array(
-        'description' => '',
-        '5' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-        'teaser' => array(
-          'format' => 'fieldset',
-          'exclude' => 1,
-        ),
-        'full' => array(
-          'format' => 'fieldset',
-          'exclude' => 1,
-        ),
-        '4' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-        '2' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-        '3' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-        'token' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-        'label' => 'above',
-      ),
-      'multistep' => array(
-        'step' => '6',
-        'block' => 1,
-      ),
-    ),
-    'weight' => '9',
-    'fields' => array(),
-  );
-
   // Exported group: group_instructional_flow
   $groups['version-group_instructional_flow'] = array(
     'group_type' => 'standard',
@@ -334,64 +282,10 @@ function elms_course_versions_fieldgroup_default_groups() {
     ),
   );
 
-  // Exported group: group_theme
-  $groups['version-group_theme'] = array(
-    'group_type' => 'standard',
-    'type_name' => 'version',
-    'group_name' => 'group_theme',
-    'label' => 'Design',
-    'settings' => array(
-      'form' => array(
-        'style' => 'fieldset',
-        'description' => '',
-      ),
-      'display' => array(
-        'description' => '',
-        '5' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-        'teaser' => array(
-          'format' => 'fieldset',
-          'exclude' => 1,
-        ),
-        'full' => array(
-          'format' => 'fieldset',
-          'exclude' => 1,
-        ),
-        '4' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-        '2' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-        '3' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-        'token' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-        'label' => 'above',
-      ),
-      'multistep' => array(
-        'step' => '4',
-        'block' => 1,
-      ),
-    ),
-    'weight' => '5',
-    'fields' => array(),
-  );
-
   // Translatables
   // Included for use with string extractors like potx.
   t('Content');
   t('Content Outline');
-  t('Design');
-  t('Enrollment Management');
   t('Schedule');
   t('Section Info');
 
