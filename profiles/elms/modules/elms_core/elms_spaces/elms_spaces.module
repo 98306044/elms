@@ -59,8 +59,6 @@ function elms_spaces_form_alter(&$form, &$form_state, $form_id) {
   if ($form_id == 'version_node_form') {
     //always hide purl, they shouldn't need to know anything about it, it just happens
     $form['purl']['value']['#type'] = 'hidden';
-    //remove duplicate effort buttons
-    unset($form['buttons']['all']);
     //because purl wants a url, generate a temporary, random one
     //this has to be done because the nid hasn't been set yet and we can't submit the node until we have a PURL identifier yet the NID is supposed to be part of the address
     if (arg(1) == 'add') {
@@ -104,6 +102,8 @@ function elms_spaces_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
     }
 	
     if (og_is_group_type($node->type)) {
+	  //bump workflow state to dev automatically
+	  workflow_execute_transition($node, 3);
       $space = spaces_load('og', $node->nid, TRUE);
       if ($space) {
         $space->controllers->variable->set('site_name', $node->title);
@@ -600,4 +600,58 @@ Penn State is an Equal Opportunity Employer.";
   }
   //create the book root now that we have the group node finished
     _elms_spaces_create_root($group, 'default');
+}
+
+/**
+ * Implementation of hook_workflow().
+ *
+ * @param $op
+ *   The current workflow operation: 'transition pre' or 'transition post'.
+ * @param $old_state
+ *   The state ID of the current state.
+ * @param  $new_state
+ *   The state ID of the new state.
+ * @param $node
+ *   The node whose workflow state is changing.
+ */
+function elms_spaces_workflow($op, $old_state, $new_state, $node) {
+  switch ($op) {
+    case 'transition pre':
+      if ($old_state != $new_state) {
+        $course = node_load($node->field_course_ref[0]['nid']);
+        switch($new_state) {
+          case 3: //dev
+	      $address = $course->path .'_dev_'. $node->nid;
+	    break;
+	    case 4: //staging
+        case 5: //active
+	      $address = $course->path .'_'. $node->field_section_semester[0]['value'] . $node->field_section_year[0]['value'] . $node->field_campus[0]['value'] . $node->field_section_number[0]['value'];
+	    break;
+	    case 6: //archive
+	      $address = $course->path .'_archive_'. $node->nid;
+	    break;
+        case 7: //demo
+	    //will need to check reference to ensure there's only 1 demo
+	      $address = $course->path .'_demo';
+	    break;
+        case 8: //master
+	    //will need to check reference to ensure there's only 1 demo
+	      $address = $course->path .'_master';
+	    break;
+      }
+      $modifier = array(
+        'value' => $address,
+	    'provider' => 'spaces_og',
+        'id' => $node->nid,
+      );
+      purl_save($modifier);
+      drupal_set_message('Address has changed to reflect the change in Course Offering status from '. workflow_get_state_name($old_state) .' to '. workflow_get_state_name($new_state), 'warning');
+      $space = spaces_load('og', $node->nid, TRUE);
+      if ($space) {
+        $space->controllers->variable->set('elms_navigation_color', _elms_navigation_get_color($new_state));
+      }
+    }
+    break;
+  }
+  return true;
 }
