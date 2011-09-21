@@ -111,11 +111,21 @@ function _og_clone_clone_form($form_id) {
     '#default_value' => array_keys($user_roles),
   );
 
+// New Group name
+$form['group_new_name'] = array(
+  '#type' => 'textfield',
+	'#weight' => 2, 
+  '#description' => t('Enter a new group title for cloned group'),
+  '#title' => t('New Group Name'), 
+  '#maxlength' => 60, 
+  '#default_value' => $group->title . ' clone', 
+);
+
   //author field
   global $user;
   $form['author'] = array(
     '#type' => 'textfield',
-	'#weight' => 2, 
+	'#weight' => 3, 
     '#description' => t('Enter a user name here to make this the author of all content of this clone. By default you will be set as the author of all content since your cloned it.'),
     '#title' => t('Authored by'), 
     '#maxlength' => 60, 
@@ -125,7 +135,7 @@ function _og_clone_clone_form($form_id) {
   
   $form['submit'] = array(
     '#type' => 'submit',
-	'#weight' => 3,
+	'#weight' => 4,
   '#description' => t('This process will take some time based on how large the group is'),
     '#value' => t('Clone Group'),
     '#submit' => array('_og_clone_clone_form_submit'),
@@ -164,8 +174,9 @@ function _og_clone_clone_form_submit($form, &$form_state) {
     unset($group->nid);
     unset($group->vid);
     unset($group->revision_uid);
-    //append clone
-    $group->title .= ' clone';
+    //add group name
+	$group_new_name = $form_state['values']['group_new_name'];
+	$group->title = $group_new_name;
     //reset purl if it exists
     if (module_exists('purl')) {
       $group->purl = NULL;
