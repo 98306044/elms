@@ -120,7 +120,7 @@ function elms_spaces_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
 		$space->controllers->variable->set('spaces_features', array('elms_course_content' => 1));
         //need to do extra step with purl rewrite to ensure it has the node and course name in in
         $modifier = array(
-          'value' => $course->path .'_dev_'. $node->nid,
+          'value' => str_replace(' ', '', $course->title) .'_dev_'. $node->nid,
           'provider' => 'spaces_og',
           'id' => $node->nid,
         );
@@ -626,24 +626,22 @@ function elms_spaces_workflow($op, $old_state, $new_state, $node) {
     case 'transition pre':
       if ($old_state != $new_state) {
         $course = node_load($node->field_course_ref[0]['nid']);
+		//form path from the title of the course
+		$path = str_replace(' ', '', $course->title);
         switch($new_state) {
-          case 3: //dev
-	      $address = $course->path .'_dev_'. $node->nid;
+        case 3: //dev
+	      $address = $path .'_dev_'. $node->nid;
 	    break;
 	    case 4: //staging
         case 5: //active
-	      $address = $course->path .'_'. $node->field_section_semester[0]['value'] . $node->field_section_year[0]['value'] . $node->field_campus[0]['value'] . $node->field_section_number[0]['value'];
+	      $address = $path .'_'. $node->field_section_semester[0]['value'] . $node->field_section_year[0]['value'] . $node->field_campus[0]['value'] . $node->field_section_number[0]['value'];
 	    break;
 	    case 6: //archive
-	      $address = $course->path .'_archive_'. $node->nid;
+	      $address = $path .'_archive_'. $node->nid;
 	    break;
         case 7: //demo
 	    //will need to check reference to ensure there's only 1 demo
-	      $address = $course->path .'_demo';
-	    break;
-        case 8: //master
-	    //will need to check reference to ensure there's only 1 demo
-	      $address = $course->path .'_master';
+	      $address = $path .'_demo';
 	    break;
       }
       $modifier = array(
@@ -652,6 +650,7 @@ function elms_spaces_workflow($op, $old_state, $new_state, $node) {
         'id' => $node->nid,
       );
       purl_save($modifier);
+	  if ($old_state != 2);
       drupal_set_message('Address has changed to reflect the change in Course Offering status from '. workflow_get_state_name($old_state) .' to '. workflow_get_state_name($new_state), 'warning');
       $space = spaces_load('og', $node->nid, TRUE);
       if ($space) {

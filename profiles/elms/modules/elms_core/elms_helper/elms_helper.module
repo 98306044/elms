@@ -188,8 +188,6 @@ function elms_helper_form_alter(&$form, &$form_state, $form_id) {
     $form['purl']['value']['#description'] = "<font color='#CC0000'>Warning: Changing this will alter the current path of your course content / links.  This is only an issue if you have directly linked to pages in your course.</font><br/>". $form['purl']['value']['#description'];
   }
   if ($form_id == 'version_node_form') {
-  //stupid glitch hiding these items
-  unset($form['buttons']);
   unset($form['themes']['#collapsible']);
   //render theme without collapse box wrapper
   $form['themes']['#type'] = 'markup';

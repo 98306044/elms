@@ -19,9 +19,6 @@ background-image:none !important;
 #node-form .column-main {
  width:100%;
 }
-#homebox-buttons {
- display:none;	
-}
 
 body.node-type-promo {
  background-image:url(/sites/default/files/promo/watermark.png) !important;
