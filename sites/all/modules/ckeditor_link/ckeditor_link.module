@@ -140,6 +140,7 @@ function ckeditor_link_get_types() {
  * Implementation of hook_ckeditor_link_types().
  */
 function ckeditor_link_ckeditor_link_types() {
+  $types[] = array('type' => 'file', 'file' => 'includes/ckeditor_link.file.inc');
   $types[] = array('type' => 'node', 'file' => 'includes/ckeditor_link.node.inc');
 
   if (module_exists('taxonomy')) {

@@ -59,17 +59,21 @@ function ckeditor_link_ckeditor_link_menu_revert($path, &$langcode) {
  * Implementation of hook_ckeditor_link_TYPE_settings().
  */
 function ckeditor_link_ckeditor_link_menu_settings() {
-  $form['menu'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Menu items'),
-  );
-  $form['menu']['ckeditor_link_autocomplete_menus'] = array(
-    '#type' => 'checkboxes',
-    '#title' => t('Menus'),
-    '#options' => array('- any -' => t('<em>Any menu</em>')) + array_map('check_plain', menu_get_menus()),
-    '#default_value' => variable_get('ckeditor_link_autocomplete_menus', array()),
-    '#description' => t('Select the menus to be available as autocomplete suggestions.'),
-  );
+  $form = array();
+
+  if (module_exists('menu')) {
+    $form['menu'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Menu items'),
+    );
+    $form['menu']['ckeditor_link_autocomplete_menus'] = array(
+      '#type' => 'checkboxes',
+      '#title' => t('Menus'),
+      '#options' => array('- any -' => t('<em>Any menu</em>')) + array_map('check_plain', menu_get_menus()),
+      '#default_value' => variable_get('ckeditor_link_autocomplete_menus', array()),
+      '#description' => t('Select the menus to be available as autocomplete suggestions.'),
+    );
+  }
 
   return $form;
 }

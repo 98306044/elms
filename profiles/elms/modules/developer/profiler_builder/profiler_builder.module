@@ -96,7 +96,9 @@ function _profiler_builder_info_file(&$info, &$vars, &$drush) {
   }
   //variables
   $vars = "; Variables\n\n";
-  $result = db_query("SELECT name FROM {variable}");
+  //array of values we know to ignore automatically
+  $ignore_list = _profiler_builder_ignore_list();
+  $result = db_query("SELECT name FROM {variable} WHERE name NOT IN (". db_placeholders($ignore_list, 'text') .")", $ignore_list);
   while ($value = db_fetch_array($result)) {
     $val = variable_get($value['name'], '');
     if ($val != '') {
@@ -139,4 +141,21 @@ function _profiler_builder_info_file(&$info, &$vars, &$drush) {
     }
   }
   return 1;
+}
+
+//helper function to gather ignored values
+function _profiler_builder_ignore_list() {
+  return array(
+    'features_codecache',
+    'views_block_hashes',
+    'drupal_private_key',
+    'cache_content_flush_cache_block',
+	'cache_content_flush_cache_page',
+    'cache_flush_cache_update',
+	//TODO abstract into a hook as these are psu specific
+    'webaccess_cookie',
+    'webaccess_domain',
+    'webaccess_init_enable',
+    'webaccess_logout_url',
+  );
 }
