@@ -15,6 +15,7 @@ function elms_spaces_init() {
     drupal_add_js(drupal_get_path('module', 'elms_spaces') .'/elms_spaces.js');
   }
   drupal_add_js(drupal_get_path('module', 'elms_spaces') .'/elms_spaces_reorder.js');
+  
   //style the progress bar page for batch processes since we do a lot of them
   if (arg(0) == 'batch') {
   drupal_add_css(drupal_get_path('module', 'elms_spaces') .'/progress.css');  
@@ -100,7 +101,7 @@ function elms_spaces_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
     if ($node->type == 'course') {
       _elms_spaces_course_default($node);
     }
-	
+	//check for groups created
     if (og_is_group_type($node->type)) {
 	  //bump workflow state to dev automatically
 	  workflow_execute_transition($node, 3);
@@ -111,6 +112,12 @@ function elms_spaces_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
 		$course = node_load($node->field_course_ref[0]['nid']);
         //set slogan to the description of the course
         $space->controllers->variable->set('site_slogan', $course->field_course_title[0]['value']);
+		//set initial homepage to the content outline 
+		$space->controllers->variable->set('site_frontpage', 'content');
+		//set the initial path to the group created
+		$space->controllers->variable->set('site_frontpage_path', 'node/'. $node->nid);
+		//turn on our default area as content
+		$space->controllers->variable->set('spaces_features', array('elms_course_content' => 1));
         //need to do extra step with purl rewrite to ensure it has the node and course name in in
         $modifier = array(
           'value' => $course->path .'_dev_'. $node->nid,
@@ -321,9 +328,9 @@ function _elms_spaces_create_root($group, $template = NULL) {
   //see if we were passed an instructional template to use, should be
   if ($template != NULL) {
    $id_template = _elms_course_content_get_instructional_template($template);
-  $id_template_tmp = $id_template;
-  //loop through each item in the defined template and build it as a new book item
-  foreach ($id_template_tmp as $key => $book_item) {
+    $id_template_tmp = $id_template;
+    //loop through each item in the defined template and build it as a new book item
+    foreach ($id_template_tmp as $key => $book_item) {
     if ($book_item['type'] == 'duplicate') {
     //now replicate
     $backhalf = array_splice($id_template, $key);
@@ -656,7 +663,7 @@ function elms_spaces_workflow($op, $old_state, $new_state, $node) {
 	case 'transition post':
 	  //the pre hook changes the address name so we need to do a purl look up to go back otherwise it loses scope of where is it
       
-	  $_SESSION['destination'] = 'node/'. $node->nid;
+	  //$_SESSION['destination'] = 'node/'. $node->nid;
 	    //purl_goto('node/'. $node->nid,array('purl' => array('disabled' => TRUE)));
 	  
     break;

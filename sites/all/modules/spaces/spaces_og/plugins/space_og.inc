@@ -146,7 +146,7 @@ class space_og extends space_type_purl {
           // Otherwise route
           reset($node->og_groups);
 		  //PATCH to work with elms / og_clone
-		  if ($_GET['q'] != 'node/add/courses' && arg(0) != 'og_clone' && arg(0) != 'batch') {
+		  if ($_GET['q'] != 'node/add/course' && arg(0) != 'og_clone' && arg(0) != 'batch') {
             spaces_load('og', current($node->og_groups))->activate();
 		  }
 
