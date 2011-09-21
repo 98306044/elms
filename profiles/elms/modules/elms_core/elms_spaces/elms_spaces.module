@@ -629,7 +629,7 @@ function elms_spaces_workflow($op, $old_state, $new_state, $node) {
 		//form path from the title of the course
 		$path = str_replace(' ', '', $course->title);
         switch($new_state) {
-        case 3: //dev
+          case 3: //dev
 	      $address = $path .'_dev_'. $node->nid;
 	    break;
 	    case 4: //staging
