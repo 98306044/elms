@@ -1,4 +1,4 @@
-ELMS ICMS Distribution Alpha 4
+ELMS: Instruction Distribution Alpha 5
 Copyright (C) 2011  The Pennsylvania State University
 
 Bryan Ollendyke
@@ -24,28 +24,20 @@ You should have received a copy of the GNU General Public License along
 with this program; if not,  write to the Free Software Foundation,  Inc.,
 51 Franklin Street,  Fifth Floor,  Boston,  MA 02110-1301 USA.
 
-ELMS ICMS Alpha 4 is built on top of the Drupal CMS.  It is currently not production ready but is getting very close.  The features of this system are starting to be fully ironed out as discussions progress.  Modules and Libraries used as part of this distribution are licensed according to their local LICENSE / README files.  If you are interested in joining efforts in development please email elms@psu.edu.
+ELMS ICMS Alpha 5 is built on top of the Pressflow Distribution.  Pressflow is a performance optimized version of Drupal CMS.  It is very close to production ready.  The features of this system are starting to be fully ironed out as discussions progress.  Modules and Libraries used as part of this distribution are licensed according to their local LICENSE / README files.  If you are interested in joining efforts in development please email elms@psu.edu.
 
 ------------
 INSTALLATION
 ------------
-*Download the ELMS ICMS Alpha 4 distribution from https://drupal.psu.edu/
+*Download the ELMS ICMS Alpha 5 distribution from http://drupal.psu.edu/fserver
 *Unzip and go to the install.php page from a web-browser as you normally would when installing Drupal
-*Copy and rename /elms_icms/sites/default/default.settings.php to settings.php
 *Select ELMS ICMS radio bubble and run through the typical Drupal installation
-*You are now running ELMS ICMS Alpha 4, enjoy making courses!
-*Some sample course versions have been created to help visualize what's possible!
+*You are now running ELMS ICMS Alpha 5, enjoy making courses!
+*Make sure you reset your user account as an initial one has been created for you (admin/random password)
 
 ------------
 Known issues
 ------------
-*The workflow for promoting Versions of Courses to Offerings / demo sites / archived spaces hasn't been worked out fully
-*Some usability hiccups on different forms
-*Pages 5 and 6 of the Course Version form are there for demonstration of future functionality
-*Link Checker has not been implemented, a place holder link is there
-*HTML Export will produce nearly perfect files but doesn't download them, a way of tar'ing / zipping them needs to be added in
-*Node Import for moving books of material into ELMS has been removed for the time being until we have a clear way of doing this
-*Certain pages (such as automated version creation after creating a Course Space) can take a long time and need Batch API implemented
+*Link Checker and HTML Export aren't fully implemented
+*There is no way of importing content from previous versions of ELMS / Drupal running courses (yet)
 *There are certain admin pages where Batch Jobs (Drupal displays the progress bar to do something) will throw an error. This is still being investigated
-*There is no automated method of user management and getting students imported at this time, that API is being worked on either for Alpha 5 or when we move to a Beta
-
