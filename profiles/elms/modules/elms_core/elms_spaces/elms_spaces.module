@@ -53,7 +53,6 @@ function _elms_spaces_theme_access() {
 
 /**
  * Implementation of hook_form_alter()
- * this exists because it fires much later then elms helper and can override some things that helper cannot based on its weight
  */
 function elms_spaces_form_alter(&$form, &$form_state, $form_id) {
   //alter the version form
@@ -120,7 +119,7 @@ function elms_spaces_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
 		$space->controllers->variable->set('spaces_features', array('elms_course_content' => 1));
         //need to do extra step with purl rewrite to ensure it has the node and course name in in
         $modifier = array(
-          'value' => str_replace(' ', '', $course->title) .'_dev_'. $node->nid,
+          'value' => strtolower(str_replace(' ', '', $course->title)) .'_dev_'. $node->nid,
           'provider' => 'spaces_og',
           'id' => $node->nid,
         );
@@ -627,7 +626,7 @@ function elms_spaces_workflow($op, $old_state, $new_state, $node) {
       if ($old_state != $new_state) {
         $course = node_load($node->field_course_ref[0]['nid']);
 		//form path from the title of the course
-		$path = str_replace(' ', '', $course->title);
+		$path = strtolower(str_replace(' ', '', $course->title));
         switch($new_state) {
           case 3: //dev
 	      $address = $path .'_dev_'. $node->nid;
@@ -650,8 +649,9 @@ function elms_spaces_workflow($op, $old_state, $new_state, $node) {
         'id' => $node->nid,
       );
       purl_save($modifier);
-	  if ($old_state != 2);
-      drupal_set_message('Address has changed to reflect the change in Course Offering status from '. workflow_get_state_name($old_state) .' to '. workflow_get_state_name($new_state), 'warning');
+	  if ($old_state != 2) {
+        drupal_set_message('Address has changed to reflect the change in Course Offering status from '. workflow_get_state_name($old_state) .' to '. workflow_get_state_name($new_state), 'warning');
+	  }
       $space = spaces_load('og', $node->nid, TRUE);
       if ($space) {
         $space->controllers->variable->set('elms_navigation_color', _elms_navigation_get_color($new_state));
