@@ -1,0 +1,92 @@
+/* right side blocks */
+#elms_region_right {
+  background-color:#C63;
+  width:200px;
+  top:0px;
+  bottom:0px;
+  z-index:100;
+  right:-200px;
+  float:right;
+  position:fixed;
+  padding:0px;
+  margin:0px;
+}
+#elms_region_right .elms_region_block_title {
+  padding:5px;
+  margin:200px 0px 0px -60px;
+  -o-transform:  rotate(-90deg); /* opera specific */
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3); /* ie */
+  -webkit-transform: rotate(-90deg);
+  -moz-transform: rotate(-90deg);
+  display:block;
+  height: 20px;
+  width: 80px;
+  float:left;
+  cursor:pointer;
+  position:fixed;
+  font-size:14px;
+}
+#elms_region_right .elms_region_block_content {
+  padding:40px 0px 0px 0px;
+  margin:0px;
+  width:100%;
+  top:0px;
+  bottom:0px;
+  position:absolute;
+  z-index:101;
+}
+/* colors for the blocks on the right */
+#elms_region_right .elms_region_1 .elms_region_block_title {
+  margin-top:150px;
+}
+#elms_region_right .elms_region_2 .elms_region_block_title {
+  margin-top:240px;
+}
+#elms_region_right .elms_region_3 .elms_region_block_title {
+  margin-top:330px;
+}
+#elms_region_right .elms_region_4 .elms_region_block_title {
+  margin-top:420px;
+}
+#elms_region_right .elms_region_5 .elms_region_block_title {
+  margin-top:510px;
+}
+/* colors for the blocks on the right */
+#elms_region_right .elms_region_1 div {
+  background-color:#FC6;
+}
+#elms_region_right .elms_region_2 div {
+  background-color:#06F;
+}
+#elms_region_right .elms_region_3 div {
+  background-color:#3F6;
+}
+#elms_region_right .elms_region_4 div {
+  background-color:#C6C;
+}
+#elms_region_right .elms_region_5 div {
+  background-color:#444;
+}
+/* open / close block display */
+#elms_region_right .elms_region_toggle_open {
+ margin:100px 0px 0px -30px;
+ background-image: url('images/close.png');
+ background-repeat:no-repeat;
+ background-position:center;
+ background-color:#CCC;
+ width: 30px;
+ height:20px;
+ float:left;
+ cursor:pointer;
+}
+#elms_region_right .elms_region_toggle_closed {
+ margin:100px 0px 0px -30px;
+ background-image: url('images/open.png');
+ background-repeat:no-repeat;
+ background-position:center;
+ background-color:#CCC;
+ width: 30px;
+ height:20px;
+ float:left;
+ cursor:pointer;
+}

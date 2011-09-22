@@ -1,0 +1,5 @@
+name = ELMS Regions
+description = "Adds Regions that are cross theme compatible"
+core = 6.x
+package = ELMS
+version = "6.x-1.0-alpha5"
