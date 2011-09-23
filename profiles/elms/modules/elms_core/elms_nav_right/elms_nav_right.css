@@ -1,0 +1,92 @@
+/* right side blocks */
+#region_right {
+  background-color:#C63;
+  width:200px;
+  top:0px;
+  bottom:0px;
+  z-index:100;
+  right:-200px;
+  float:right;
+  position:fixed;
+  padding:0px;
+  margin:0px;
+}
+#region_right .region_block_title {
+  padding:5px;
+  margin:200px 0px 0px -60px;
+  -o-transform:  rotate(-90deg); /* opera specific */
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3); /* ie */
+  -webkit-transform: rotate(-90deg);
+  -moz-transform: rotate(-90deg);
+  display:block;
+  height: 20px;
+  width: 80px;
+  float:left;
+  cursor:pointer;
+  position:fixed;
+  font-size:14px;
+}
+#region_right .region_block_content {
+  padding:40px 0px 0px 0px;
+  margin:0px;
+  width:100%;
+  top:0px;
+  bottom:0px;
+  position:absolute;
+  z-index:101;
+}
+/* colors for the blocks on the right */
+#region_right .region_1 .region_block_title {
+  margin-top:150px;
+}
+#region_right .region_2 .region_block_title {
+  margin-top:240px;
+}
+#region_right .region_3 .region_block_title {
+  margin-top:330px;
+}
+#region_right .region_4 .region_block_title {
+  margin-top:420px;
+}
+#region_right .region_5 .region_block_title {
+  margin-top:510px;
+}
+/* colors for the blocks on the right */
+#region_right .region_1 div {
+  background-color:#FFAE00;
+}
+#region_right .region_2 div {
+  background-color:#0098FF;
+}
+#region_right .region_3 div {
+  background-color:#FF3B00;
+}
+#region_right .region_4 div {
+  background-color:#7FA100;
+}
+#region_right .region_5 div {
+  background-color:#6E00A3;
+}
+/* open / close block display */
+#region_right .region_toggle_open {
+ margin:100px 0px 0px -30px;
+ background-image: url('images/close.png');
+ background-repeat:no-repeat;
+ background-position:center;
+ background-color:#CCC;
+ width: 30px;
+ height:20px;
+ float:left;
+ cursor:pointer;
+}
+#region_right .region_toggle_closed {
+ margin:100px 0px 0px -30px;
+ background-image: url('images/open.png');
+ background-repeat:no-repeat;
+ background-position:center;
+ background-color:#CCC;
+ width: 30px;
+ height:20px;
+ float:left;
+ cursor:pointer;
+}

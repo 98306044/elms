@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ *   Add A right side region for ELMS 
+ */
+
+/**
+ * Implementation of hook_define_region().
+ */
+function elms_nav_right_define_region() {
+  $region['right'] = array(
+    'project' => 'elms_nav_right',
+	'js' => 'elms_nav_right.js',
+	'css' => 'elms_nav_right.css',
+  );
+  return $region;
+}
