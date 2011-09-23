@@ -3,3 +3,4 @@ description = "Adds right side region"
 core = 6.x
 package = ELMS
 version = "6.x-1.0-alpha5"
+dependencies[] = regions

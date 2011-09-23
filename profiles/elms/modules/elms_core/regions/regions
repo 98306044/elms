@@ -30,16 +30,15 @@ function elms_region_perm() {
  */
 function elms_region_init() {
   //add the css / js if the user can use any regions
+  drupal_add_js(drupal_get_path('module', 'elms_region') .'/elms_region.js');
+  drupal_add_css(drupal_get_path('module', 'elms_region') .'/elms_region.css');
   $access_region = FALSE;
   $list = _elms_region_list();
   foreach ($list as $region) {
     if (user_access('use '. $region .' region')) {
-      $access_region = TRUE;
+      drupal_add_js(drupal_get_path('module', 'elms_region') .'/elms_region.js');
+      drupal_add_css(drupal_get_path('module', 'elms_region') .'/elms_region.css');
     }
-  }
-  if ($access_region) {
-    drupal_add_js(drupal_get_path('module', 'elms_region') .'/elms_region.js');
-    drupal_add_css(drupal_get_path('module', 'elms_region') .'/elms_region.css');
   }
 }
 
@@ -127,5 +126,6 @@ function theme_elms_region($region_side) {
 //helper function to return an array of the available regions
 //this makes it easier to add additional ones if needed
 function _elms_region_list() {
+  $ary = module_invoke_all('define_region');
   return array('left', 'right');
 }
