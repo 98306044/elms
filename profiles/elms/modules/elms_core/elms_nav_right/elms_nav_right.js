@@ -1,31 +1,33 @@
 $(document).ready(function(){
   //block 1 is the default for an open
-  $('#elms_region_right .elms_region_1 .elms_region_block_content').css('display','block');
+  $('#regions_elms_nav_right .regions_1 .regions_block_content').css('display','block');
+  //establish the default state for the nav which is closed
+  $('#regions_elms_nav_right .regions_toggle').addClass('regions_toggle_closed');
   //when clicking the title, bring it to the front
-  $('#elms_region_right .elms_region_block_title').click(function(){
+  $('#regions_elms_nav_right .regions_block_title').click(function(){
 	//hide all block content
-	$('#elms_region_right .elms_region_block_content').css('display','none');
+	$('#regions_elms_nav_right .regions_block_content').css('display','none');
 	//show this one
-	$(this).parent().children('.elms_region_block_content').css('display','block');
+	$(this).parent().children('.regions_block_content').css('display','block');
 	//only expand based on clicking block titles, never collapse
-	if ($('#elms_region_right .elms_region_toggle').hasClass('elms_region_toggle_closed')) {
-	  $('#elms_region_right .elms_region_toggle').addClass('elms_region_toggle_open');
-	  $('#elms_region_right .elms_region_toggle').removeClass('elms_region_toggle_closed');
-	  $('#elms_region_right').animate({right:'0'}, 500);
+	if ($('#regions_elms_nav_right .regions_toggle').hasClass('regions_toggle_closed')) {
+	  $('#regions_elms_nav_right .regions_toggle').addClass('regions_toggle_open');
+	  $('#regions_elms_nav_right .regions_toggle').removeClass('regions_toggle_closed');
+	  $('#regions_elms_nav_right').animate({right:'0'}, 500);
 	}
   });
   //collapse based on toggle
-  $('#elms_region_right .elms_region_toggle').click(function(){
+  $('#regions_elms_nav_right .regions_toggle').click(function(){
 	//additional logic is to account for menu being opened by clicking a block title
-	if ($(this).hasClass('elms_region_toggle_closed')) {
-	  $(this).addClass('elms_region_toggle_open');
-	  $(this).removeClass('elms_region_toggle_closed');
-	  $('#elms_region_right').animate({right:'0'}, 500);
+	if ($(this).hasClass('regions_toggle_closed')) {
+	  $(this).addClass('regions_toggle_open');
+	  $(this).removeClass('regions_toggle_closed');
+	  $('#regions_elms_nav_right').animate({right:'0'}, 500);
 	}
 	else {
-	  $(this).addClass('elms_region_toggle_closed');
-	  $(this).removeClass('elms_region_toggle_open');
-	  $('#elms_region_right').animate({right:'-200'}, 500);
+	  $(this).addClass('regions_toggle_closed');
+	  $(this).removeClass('regions_toggle_open');
+	  $('#regions_elms_nav_right').animate({right:'-200'}, 500);
 	}
   });
 });

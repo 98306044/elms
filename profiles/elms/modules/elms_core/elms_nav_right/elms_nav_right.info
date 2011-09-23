@@ -1,6 +1,6 @@
 name = ELMS Navigation Right
-description = "Adds right side region"
+description = "Adds right side region for social interaction in ELMS"
 core = 6.x
-package = ELMS
+package = Regions
 version = "6.x-1.0-alpha5"
 dependencies[] = regions
