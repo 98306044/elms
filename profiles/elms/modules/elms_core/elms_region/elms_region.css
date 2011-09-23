@@ -53,19 +53,19 @@
 }
 /* colors for the blocks on the right */
 #elms_region_right .elms_region_1 div {
-  background-color:#FC6;
+  background-color:#FFAE00;
 }
 #elms_region_right .elms_region_2 div {
-  background-color:#06F;
+  background-color:#0098FF;
 }
 #elms_region_right .elms_region_3 div {
-  background-color:#3F6;
+  background-color:#FF3B00;
 }
 #elms_region_right .elms_region_4 div {
-  background-color:#C6C;
+  background-color:#7FA100;
 }
 #elms_region_right .elms_region_5 div {
-  background-color:#444;
+  background-color:#6E00A3;
 }
 /* open / close block display */
 #elms_region_right .elms_region_toggle_open {
