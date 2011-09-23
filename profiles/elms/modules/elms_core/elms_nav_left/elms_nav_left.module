@@ -1,5 +1,5 @@
 <?php
-// $Id: elms_nav_right.module
+// $Id: elms_nav_left.module
 //Copyright (C) 2011  The Pennsylvania State University
 //
 //Bryan Ollendyke
@@ -12,17 +12,17 @@
 //University Park,  PA 16802
 /**
  * @file
- *   Add a right side region for ELMS for containing social elements
+ *   Add a left side region to elms
  */
 
 /**
  * Implementation of hook_define_region().
  */
-function elms_nav_right_define_regions() {
-  $region['elms_nav_right'] = array(
-    'project' => 'elms_nav_right',
-	'js' => 'elms_nav_right.js',
-	'css' => 'elms_nav_right.css',
+function elms_nav_left_define_regions() {
+  $region['elms_nav_left'] = array(
+    'project' => 'elms_nav_left',
+	'js' => 'elms_nav_left.js',
+	'css' => 'elms_nav_left.css',
   );
   return $region;
 }

@@ -1,0 +1,12 @@
+/* right side blocks */
+#regions_elms_nav_top {
+  background-color:#06F;
+  top:0px;
+  left:0px;
+  right:0px;
+  z-index:101;
+  float:left;
+  position:fixed;
+  padding:0px;
+  margin:0px;
+}

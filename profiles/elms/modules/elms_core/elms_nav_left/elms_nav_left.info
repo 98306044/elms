@@ -1,0 +1,6 @@
+name = ELMS Navigation Left
+description = "Adds left side region for instructional designer tools in ELMS"
+core = 6.x
+package = Regions
+version = "6.x-1.0-alpha5"
+dependencies[] = regions

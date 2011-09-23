@@ -1,5 +1,5 @@
 <?php
-// $Id: elms_nav_right.module
+// $Id: elms_nav_top.module
 //Copyright (C) 2011  The Pennsylvania State University
 //
 //Bryan Ollendyke
@@ -18,11 +18,11 @@
 /**
  * Implementation of hook_define_region().
  */
-function elms_nav_right_define_regions() {
-  $region['elms_nav_right'] = array(
-    'project' => 'elms_nav_right',
-	'js' => 'elms_nav_right.js',
-	'css' => 'elms_nav_right.css',
+function elms_nav_top_define_regions() {
+  $region['elms_nav_top'] = array(
+    'project' => 'elms_nav_top',
+	'js' => 'elms_nav_top.js',
+	'css' => 'elms_nav_top.css',
   );
   return $region;
 }
