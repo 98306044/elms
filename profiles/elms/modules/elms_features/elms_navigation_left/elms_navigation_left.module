@@ -1,5 +1,8 @@
 <?php
-// $Id: elms_nav_left.module
+
+include_once('elms_navigation_left.features.inc');
+
+// $Id: elms_navigation_left.module
 //Copyright (C) 2011  The Pennsylvania State University
 //
 //Bryan Ollendyke
@@ -18,11 +21,11 @@
 /**
  * Implementation of hook_define_region().
  */
-function elms_nav_left_define_regions() {
-  $region['elms_nav_left'] = array(
-    'project' => 'elms_nav_left',
-	'js' => 'elms_nav_left.js',
-	'css' => 'elms_nav_left.css',
+function elms_navigation_left_define_regions() {
+  $region['elms_navigation_left'] = array(
+    'project' => 'elms_navigation_left',
+	'js' => 'elms_navigation_left.js',
+	'css' => 'elms_navigation_left.css',
   );
   return $region;
 }
@@ -30,7 +33,7 @@ function elms_nav_left_define_regions() {
 /**
  * Implementation of hook_block().
  */
-function elms_nav_left_block($op = 'list', $delta = 0, $edit = array()) {
+function elms_navigation_left_block($op = 'list', $delta = 0, $edit = array()) {
   if ($op == 'list') {
     $blocks[0] = array(
       'info' => t('System Level Navigation'),
@@ -53,13 +56,13 @@ function elms_nav_left_block($op = 'list', $delta = 0, $edit = array()) {
     switch ($delta) {
       case 0:
         $block['title'] = 'System';
-        $block['content'] = _elms_nav_left_system_block();
+        $block['content'] = _elms_navigation_left_system_block();
       break;
 	  case 1:
 	    $group = og_get_group_context();
 		if (isset($group->nid)) {
           $block['title'] = 'Course';
-          $block['content'] = _elms_nav_left_course_block($group);
+          $block['content'] = _elms_navigation_left_course_block($group);
 		}
       break;
 	  case 2:
@@ -75,7 +78,7 @@ function elms_nav_left_block($op = 'list', $delta = 0, $edit = array()) {
 }
 
 //helper function Course level tasks
-function _elms_nav_left_course_block($group) {
+function _elms_navigation_left_course_block($group) {
   //change the features of the course
   $output = theme('menu_item', l(t('Features'), 'node/'. $group->nid .'/features'), 0);
   //change the workflow status, this will need to be a custom page
@@ -90,7 +93,7 @@ function _elms_nav_left_course_block($group) {
 }
 
 //helper function System level tasks
-function _elms_nav_left_system_block() {
+function _elms_navigation_left_system_block() {
   //Create a new version of this course
   $output = theme('menu_item', l(t('Create New Course Version'), 'node/add/version/'. $group->field_course_ref[0]['nid'], array('purl' => array('disabled' => TRUE))), 0);
   //create a new course

@@ -1,5 +1,5 @@
 /* left side blocks */
-#regions_elms_nav_left {
+#regions_elms_navigation_left {
   background-color:#FFD;
   width:200px;
   top:0px;
@@ -13,7 +13,7 @@
   text-align:left;
   font-size:12px;
 }
-#regions_elms_nav_left .regions_pre_block_container {
+#regions_elms_navigation_left .regions_pre_block_container {
  position:fixed;
  margin:50% 0px 0px 200px;
  height: 20px;
@@ -26,35 +26,35 @@
  cursor:pointer;
  background-color:#666;
 }
-#regions_elms_nav_left li {
+#regions_elms_navigation_left li {
   list-style-type: none;
   list-style-image: none;
   padding: 2px 0px 2px 10px;
 }
-#regions_elms_nav_left li:hover {
+#regions_elms_navigation_left li:hover {
   background-color:#FC6;
 }
-#regions_elms_nav_left li a {
+#regions_elms_navigation_left li a {
   color:#666;
   text-decoration:none;
 }
-#regions_elms_nav_left .regions_block_title {
+#regions_elms_navigation_left .regions_block_title {
   font-size:16px;
   font-weight:bold;
   text-align:left;
 }
 /* colors for the blocks on the left */
-#regions_elms_nav_left .regions_1 {
+#regions_elms_navigation_left .regions_1 {
   background-color:#FFC;
   margin-top:100px;
 }
-#regions_elms_nav_left .regions_2 {
+#regions_elms_navigation_left .regions_2 {
   background-color:#FFB;
 }
-#regions_elms_nav_left .regions_3 {
+#regions_elms_navigation_left .regions_3 {
   background-color:#FFA;
 }
-#regions_elms_nav_left .workflow_state {
+#regions_elms_navigation_left .workflow_state {
   height: 20px;
   float: left;
   position: absolute;
@@ -63,7 +63,7 @@
   text-align: center;
   line-height:24px;
 }
-#regions_elms_nav_left #masquerade-block-1 {
+#regions_elms_navigation_left #masquerade-block-1 {
  margin-top:10px;	
 }
 .workflow_state_3 { /*development*/
@@ -83,9 +83,9 @@
 }
 
 /* open / close block display */
-#regions_elms_nav_left .regions_toggle_open {
+#regions_elms_navigation_left .regions_toggle_open {
  background-image: url('images/close.png');
 }
-#regions_elms_nav_left .regions_toggle_closed {
+#regions_elms_navigation_left .regions_toggle_closed {
  background-image: url('images/open.png');
 }
