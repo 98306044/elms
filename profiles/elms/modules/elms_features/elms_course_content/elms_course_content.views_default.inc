@@ -418,8 +418,6 @@ function elms_course_content_views_default_views() {
       'operator' => 'in',
       'value' => array(
         'folder' => 'folder',
-        'link' => 'link',
-        'page' => 'page',
       ),
       'group' => '0',
       'exposed' => FALSE,

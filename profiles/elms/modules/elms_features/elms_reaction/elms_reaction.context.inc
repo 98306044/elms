@@ -29,7 +29,7 @@ function elms_reaction_context_default_contexts() {
           'module' => 'views',
           'delta' => 'course_reaction_list-block_1',
           'region' => 'content',
-          'weight' => 0,
+          'weight' => -1,
         ),
       ),
     ),
@@ -74,6 +74,7 @@ function elms_reaction_context_default_contexts() {
         ),
       ),
     ),
+    'menu' => 'reactions',
   );
   $context->condition_mode = 1;
 

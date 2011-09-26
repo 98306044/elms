@@ -36,17 +36,11 @@ function elms_course_content_context_default_contexts() {
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
-        'elms_helper-2' => array(
-          'module' => 'elms_helper',
-          'delta' => 2,
-          'region' => 'left',
-          'weight' => 0,
-        ),
-        'elms_helper-0' => array(
-          'module' => 'elms_helper',
+        'elms_course_content-0' => array(
+          'module' => 'elms_course_content',
           'delta' => 0,
           'region' => 'left',
-          'weight' => 1,
+          'weight' => 0,
         ),
       ),
     ),
