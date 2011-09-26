@@ -30,7 +30,7 @@ function regions_help($path, $arg) {
 function regions_perm() {
   $list = _regions_list();
   foreach ($list as $key => $region) {
-    $perms[] = 'use '. $key .' region';
+    $perms[] = 'view '. $key .' region';
   }
   return $perms;
 }
@@ -42,7 +42,7 @@ function regions_init() {
   //pull all regions
   $list = _regions_list();
   foreach ($list as $machine_name => $region) {
-    //make sure the user has access to the region
+  //make sure the user has access to the region
   if (user_access('view '. $machine_name .' region')) {
     if (isset($region['js'])) {
         drupal_add_js(drupal_get_path('module', $region['project']) .'/'. $region['js']);
