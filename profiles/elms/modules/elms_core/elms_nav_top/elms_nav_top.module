@@ -79,31 +79,9 @@ function elms_nav_top_block($op = 'list', $delta = 0, $edit = array()) {
 
 //helper function to display current system path
 function _elms_nav_top_system_path() {
-  //add the site name first
-  $output = theme('menu_item', l(t(variable_get('site_name', '')), '<front>', array('purl' => array('disabled' => TRUE))), 0);
-  //see if we have a course node without loading the node
-  $nid = arg(1);
-  //verify this is an id
-  if ($nid != '') {
-    $type = db_result(db_query("SELECT type FROM {node} WHERE nid=%d", $nid));
-  }
-  else {
-	//we didn't get a node from arguments, this can occur within features in a group, check for that
-    $group = og_get_group_context();
-	if (isset($group->nid)) {
-	  $type = 'version';
-	}
-  }
-  //if this is a course, add the taxonomy and course name
-  if ($type == 'course') {
-    $val = db_fetch_array(db_query("SELECT n.title, td.name FROM {node} AS n JOIN {term_node} AS tn ON n.nid = tn.nid JOIN {term_data} AS td ON td.tid = tn.tid WHERE n.nid=%d", $nid));
-	//taxonomy  term used
-    $output.= theme('menu_item', l(t($val['name']), 'courses', array('purl' => array('disabled' => TRUE))), 0);
-	//course home
-    $output.= theme('menu_item', l(t($val['title']), 'node/'. $nid, array('purl' => array('disabled' => TRUE))), 0);
-  }
-  //if this is a version, get the info from the og_context
-  elseif ($type == 'version') {
+  //check for the simpliest case, this is part of a group
+  $group = og_get_group_context();
+  if (isset($group->nid)) {
 	//need to manually build the website's name because of strongarm being too good!
     $site_frontpage = unserialize(db_result(db_query("SELECT value FROM {variable} WHERE name='site_frontpage'")));
 	$site_name = unserialize(db_result(db_query("SELECT value FROM {variable} WHERE name='site_name'")));
@@ -118,9 +96,28 @@ function _elms_nav_top_system_path() {
     $output.= theme('menu_item', l(t($group->title), variable_get('site_frontpage', 'node/'. $group->nid)), 0);
   }
   else {
-	//add a courses link for simplicity
-	$output.= theme('menu_item', l(t('Courses'), 'courses', array('purl' => array('disabled' => TRUE))), 0);  
+	//add the site name first
+    $output = theme('menu_item', l(t(variable_get('site_name', '')), '<front>', array('purl' => array('disabled' => TRUE))), 0);  
+	//see if we have a course node without loading the node
+    $nid = arg(1);
+    //verify this is an id
+    if ($nid != '') {
+      $type = db_result(db_query("SELECT type FROM {node} WHERE nid=%d", $nid));
+    }
+	//if this is a course, add the taxonomy and course name
+    if ($type == 'course') {
+      $val = db_fetch_array(db_query("SELECT n.title, td.name FROM {node} AS n JOIN {term_node} AS tn ON n.nid = tn.nid JOIN {term_data} AS td ON td.tid = tn.tid WHERE n.nid=%d", $nid));
+	  //taxonomy  term used
+      $output.= theme('menu_item', l(t($val['name']), 'courses', array('purl' => array('disabled' => TRUE))), 0);
+	  //course home
+      $output.= theme('menu_item', l(t($val['title']), 'node/'. $nid, array('purl' => array('disabled' => TRUE))), 0);
+    }
+    else {
+	  //add a courses link for simplicity
+	  $output.= theme('menu_item', l(t('Courses'), 'courses', array('purl' => array('disabled' => TRUE))), 0);  
+    }
   }
+  
   return $output;
 }
 
