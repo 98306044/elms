@@ -68,7 +68,7 @@ function elms_nav_top_block($op = 'list', $delta = 0, $edit = array()) {
 		if (isset($user->picture)) {
 		  $rendername.= theme('imagecache', 'elms_nav_top', $user->picture, $user->name ."'s profile picture","'s profile picture");
 		}
-		$rendername.= ' '. $user->name;
+		$rendername.= '<span>'. $user->name .'</span>';
 	    $block['title'] = $rendername;
 		$block['regions_allow_html_title'] = true;
       break;
@@ -126,6 +126,6 @@ function _elms_nav_top_system_path() {
 
 //helper function to display notifications
 function _elms_nav_top_notifications() {
-  $output = 'nofitications';
+  $output = '';
   return $output;
 }
