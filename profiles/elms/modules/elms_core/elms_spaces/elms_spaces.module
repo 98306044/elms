@@ -11,14 +11,14 @@
  */
 function elms_spaces_init() {
   //only add these settings to the node/%theme page
-  if (arg(0) == 'node' && arg(2) == 'theme') {
+  if (arg(0) == 'theme') {
     drupal_add_js(drupal_get_path('module', 'elms_spaces') .'/elms_spaces.js');
   }
   drupal_add_js(drupal_get_path('module', 'elms_spaces') .'/elms_spaces_reorder.js');
   
   //style the progress bar page for batch processes since we do a lot of them
   if (arg(0) == 'batch') {
-  drupal_add_css(drupal_get_path('module', 'elms_spaces') .'/progress.css');  
+    drupal_add_css(drupal_get_path('module', 'elms_spaces') .'/progress.css');  
   }
 }
 /**
