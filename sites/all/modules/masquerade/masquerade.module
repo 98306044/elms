@@ -436,7 +436,7 @@ function masquerade_block_1($record) {
   global $user;
   $markup_value = '';
   if (isset($_SESSION['masquerading'])) {
-    $quick_switch_link[] = l(t('Switch back'), 'masquerade/unswitch', array('query' => array('token' => drupal_get_token('masquerade/unswitch')), 'purl' => array('disabled' => TRUE)));
+    $quick_switch_link[] = l(t('Switch back'), 'masquerade/unswitch', array('query' => array('token' => drupal_get_token('masquerade/unswitch'))));
     if ($user->uid > 0) {
       $markup_value = t('You are masquerading as <a href="@user-url">%masq_as</a>.', array('@user-url' => url('user/' . $user->uid), '%masq_as' => $user->name)) . theme('item_list', $quick_switch_link);
     }
