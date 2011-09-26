@@ -29,8 +29,8 @@ function regions_help($path, $arg) {
  */
 function regions_perm() {
   $list = _regions_list();
-  foreach ($list as $region) {
-    $perms[] = 'use '. $region .' region';
+  foreach ($list as $key => $region) {
+    $perms[] = 'use '. $key .' region';
   }
   return $perms;
 }
