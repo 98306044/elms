@@ -340,3 +340,27 @@ function elms_helper_feeds_set_target($account, $target, $value) {
   $account->{$target} = $value;
   return $account;
 }
+
+function _elms_helper_workflow_color($wid = 0) {
+  switch ($wid) {
+    case 3: //dev
+	  $color = '#ac3000';
+	break;
+	case 4: //staging
+	  $color = '#c0e6ff';
+	break;
+	case 5: //active
+	  $color = '#356090';
+	break;
+	case 6: //archive
+	  $color = '#e6e6d4';
+	break;
+	case 7: //demo
+	  $color = '#327944';
+	break;
+	case 0: //error
+	  $color = '';
+	break;
+  }
+  return $color;
+}

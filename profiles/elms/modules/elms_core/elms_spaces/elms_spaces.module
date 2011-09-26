@@ -555,19 +555,13 @@ function elms_spaces_workflow($op, $old_state, $new_state, $node) {
 	  if ($old_state != 2) {
         drupal_set_message('Address has changed to reflect the change in Course Offering status from '. workflow_get_state_name($old_state) .' to '. workflow_get_state_name($new_state), 'warning');
 	  }
-      $space = spaces_load('og', $node->nid, TRUE);
-      if ($space) {
-        $space->controllers->variable->set('elms_navigation_color', _elms_navigation_get_color($new_state));
-      }
 	  //if we're on the workflow page direct back to course node
     }
     break;
 	case 'transition post':
 	  //the pre hook changes the address name so we need to do a purl look up to go back otherwise it loses scope of where is it
-      
-	  //$_SESSION['destination'] = 'node/'. $node->nid;
-	    //purl_goto('node/'. $node->nid,array('purl' => array('disabled' => TRUE)));
-	  
+	  $_REQUEST['destination'] = 'node/'. $node->nid;
+	  //purl_goto('node/'. $node->nid,array('purl' => array('disabled' => TRUE)));
     break;
   }
   return true;

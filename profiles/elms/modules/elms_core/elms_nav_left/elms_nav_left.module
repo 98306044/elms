@@ -64,9 +64,10 @@ function elms_nav_left_block($op = 'list', $delta = 0, $edit = array()) {
       break;
 	  case 2:
 	    $group = og_get_group_context();
+		dpm($group);
 		if (isset($group->nid)) {
           $block['title'] = 'Actions';
-          $block['content'] = menu_local_tasks();
+          $block['content'] = '<span class="workflow_state_'. $group->_workflow .'"></span>'. menu_local_tasks();
 		}
       break;
     }
