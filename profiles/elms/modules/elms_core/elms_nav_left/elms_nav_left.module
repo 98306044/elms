@@ -102,7 +102,7 @@ function _elms_nav_left_system_block() {
   //add in the masquerade block area
   if (module_exists('masquerade')) {
     $block = module_invoke('masquerade', 'block', 'view', 0);
-    $output.= $block['title'] . $block['content'];
+    $output.= $block['content'];
   }
   return $output;
 }

@@ -120,11 +120,18 @@ function theme_regions($region_name) {
     else {
       $count++;
     }
+	dpm($block);
 	//build a unique key for this block for theming
     $key = $block->module .'_'. $block->delta;
     $blocks .= '<div class="regions_block regions_'. $count .'" id="regions_block_'. $key .'"><div class="regions_block_title">';
       if (!empty($block->subject)) {
-        $blocks .= $block->subject;
+		//allow for HTML titles based on intentional API inclusion
+		if ($block->region_allow_html_title) {
+          $blocks .= $block->title;
+		}
+		else {
+          $blocks .= $block->subject;
+		}
       }
       else {
         $blocks .= t('<no title>');

@@ -63,7 +63,14 @@ function elms_nav_top_block($op = 'list', $delta = 0, $edit = array()) {
 	    //manually load the usermenu menu so we can inject a new title
 	    $block = module_invoke('menu', 'block', 'view', 'menu-usermenu');
 		//now we can modify the title
-	    $block['title'] = 'bto108';
+		global $user;
+		$rendername = '';
+		if (isset($user->picture)) {
+		  $rendername.= theme('imagecache', 'elms_nav_top', $user->picture, $user->name ."'s profile picture","'s profile picture");
+		}
+		$rendername.= ' '. $user->name;
+	    $block['title'] = $rendername;
+		$block['region_allow_html_title'] = true;
       break;
     }
     return $block;

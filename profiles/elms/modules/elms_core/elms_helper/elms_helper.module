@@ -8,7 +8,7 @@
 define('ELMS_VERSION', '6.x-1.0-alpha5');
 
 /**
- * Implementation of (undocumented) hook_theme_registry_alter().
+ * Implementation of hook_theme_registry_alter().
  */
 function elms_helper_theme_registry_alter(&$vars) {
   //hijack the node tpl away from organic groups
