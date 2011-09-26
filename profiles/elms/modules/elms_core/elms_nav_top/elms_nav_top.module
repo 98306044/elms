@@ -70,7 +70,7 @@ function elms_nav_top_block($op = 'list', $delta = 0, $edit = array()) {
 		}
 		$rendername.= ' '. $user->name;
 	    $block['title'] = $rendername;
-		$block['region_allow_html_title'] = true;
+		$block['regions_allow_html_title'] = true;
       break;
     }
     return $block;

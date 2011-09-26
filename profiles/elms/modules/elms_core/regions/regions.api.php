@@ -3,9 +3,16 @@
 /**
  * @file
  * Hooks provided by Regions.
+ 
  */
 
 /**
+
+  * When defining blocks in regions you can use $block['regions_allow_html_title']
+  * This will render the block's title with $block->title instead of $block->subject
+  * Subject is sanitized where as title is not
+  * the most common use-case is pictures / images in place of titles.
+
  * Add regions to be created
  *
  * Allows other modules to define regions

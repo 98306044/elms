@@ -126,7 +126,7 @@ function theme_regions($region_name) {
     $blocks .= '<div class="regions_block regions_'. $count .'" id="regions_block_'. $key .'"><div class="regions_block_title">';
       if (!empty($block->subject)) {
 		//allow for HTML titles based on intentional API inclusion
-		if ($block->region_allow_html_title) {
+		if ($block->regions_allow_html_title) {
           $blocks .= $block->title;
 		}
 		else {
