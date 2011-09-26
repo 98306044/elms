@@ -2,7 +2,7 @@
 body {
  margin-top: 20px !important;	
 }
-#regions_elms_nav_top {
+#regions_elms_navigation_top {
   font:normal 11px "Lucida Grande",Verdana,sans-serif !important;
   background-color:#009;
   background:url(images/sprite.png) 0px -20px repeat-x;
@@ -20,11 +20,11 @@ body {
   line-height:20px;
 }
 
-#regions_elms_nav_top .regions_1 {
+#regions_elms_navigation_top .regions_1 {
   float:left;
   padding:0px 10px;
 }
-#regions_elms_nav_top .regions_1 .leaf {
+#regions_elms_navigation_top .regions_1 .leaf {
   list-style-image:none;
   list-style-position:inside;
   list-style-type:none;
@@ -34,41 +34,41 @@ body {
   padding:0px;
 }
 
-#regions_block_elms_nav_top_2 {
+#regions_block_elms_navigation_top_2 {
   float:right;
   line-height:20px;
   width:100px;
 }
-#regions_block_elms_nav_top_2 .regions_block_title {
+#regions_block_elms_navigation_top_2 .regions_block_title {
  cursor:pointer;
  text-align:right;
 }
-#regions_block_elms_nav_top_2 .regions_block_title span {
+#regions_block_elms_navigation_top_2 .regions_block_title span {
  padding:0px 10px;
 }
-#regions_block_elms_nav_top_2 .regions_block_title a {
+#regions_block_elms_navigation_top_2 .regions_block_title a {
  padding:0px 10px;
 }
-#regions_block_elms_nav_top_2 .regions_block_content{
+#regions_block_elms_navigation_top_2 .regions_block_content{
   display:none;
 }
-#regions_block_elms_nav_top_2 ul.menu {
+#regions_block_elms_navigation_top_2 ul.menu {
   background-color:#555;
   padding:0px;
   margin:0px;
 }
-#regions_block_elms_nav_top_2 ul.menu li{
+#regions_block_elms_navigation_top_2 ul.menu li{
   list-style-image:none;
   list-style-type:none;
   list-style-position:inside;
   padding:5px;
   width:100%;
 }
-#regions_block_elms_nav_top_2 ul.menu li:hover{
+#regions_block_elms_navigation_top_2 ul.menu li:hover{
   background-color:#777;
 }
 
-#regions_elms_nav_top .regions_3 {
+#regions_elms_navigation_top .regions_3 {
   float:right;
   padding:0px 10px;
 }
@@ -77,8 +77,8 @@ body {
  * Aggressive resets so we can achieve a consistent look in
  * hostile CSS environments.
  */
-#regions_elms_nav_top,
-#regions_elms_nav_top * {
+#regions_elms_navigation_top,
+#regions_elms_navigation_top * {
   margin:0px;
   padding:0px;
   border:0px;
@@ -89,7 +89,7 @@ body {
   text-align:left;
 }
 
-#regions_elms_nav_top div.regions_post_block_container {
+#regions_elms_navigation_top div.regions_post_block_container {
   position:fixed;
   left:0px;
   right:0px;
@@ -98,20 +98,20 @@ body {
   background:url(images/sprite.png) 0px -100px repeat-x;
 }
 
-#regions_elms_nav_top a {
+#regions_elms_navigation_top a {
   text-decoration:none;
   color:#fff;
 }
 
-#regions_elms_nav_top ul.links {
+#regions_elms_navigation_top ul.links {
   font: 11px/20px "Lucida Grande", Verdana, sans-serif;
 }
 
-#regions_elms_nav_top li:hover {
+#regions_elms_navigation_top li:hover {
  background-color:#666;
 }
 
-#regions_elms_nav_top li a.active {
+#regions_elms_navigation_top li a.active {
   text-shadow:#333 0px 1px 0px;
   background:url(images/sprite.png) 0px 0px repeat-x;
 }
