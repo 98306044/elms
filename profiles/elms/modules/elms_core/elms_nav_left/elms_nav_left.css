@@ -15,14 +15,16 @@
 }
 #regions_elms_nav_left .regions_pre_block_container {
  position:fixed;
- margin:200px 0px 0px 170px;
+ margin:50% 0px 0px 200px;
  height: 20px;
- width: 80px;
+ width: 30px;
+ background-repeat:no-repeat;
+ background-position:center;
  display:block;
  float:right;
  padding:5px;
  cursor:pointer;
- background-color:#F00;
+ background-color:#666;
 }
 #regions_elms_nav_left li {
   list-style-type: none;
@@ -59,6 +61,7 @@
   top: 20px;
   width: 200px;
   text-align: center;
+  line-height:24px;
 }
 #regions_elms_nav_left #masquerade-block-1 {
  margin-top:10px;	
@@ -77,4 +80,12 @@
 }
 .workflow_state_7 { /*demo*/
   background-color:#327944;
+}
+
+/* open / close block display */
+#regions_elms_nav_left .regions_toggle_open {
+ background-image: url('images/close.png');
+}
+#regions_elms_nav_left .regions_toggle_closed {
+ background-image: url('images/open.png');
 }
