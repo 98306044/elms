@@ -41,9 +41,13 @@ body {
 }
 #regions_block_elms_nav_top_2 .regions_block_title {
  cursor:pointer;
+ text-align:right;
 }
 #regions_block_elms_nav_top_2 .regions_block_title span {
- padding:0px 10px;	
+ padding:0px 10px;
+}
+#regions_block_elms_nav_top_2 .regions_block_title a {
+ padding:0px 10px;
 }
 #regions_block_elms_nav_top_2 .regions_block_content{
   display:none;

@@ -1,6 +1,6 @@
 /* left side blocks */
 #regions_elms_nav_left {
-  background-color:#FFC;
+  background-color:#FFD;
   width:200px;
   top:0px;
   bottom:0px;
@@ -10,48 +10,71 @@
   position:fixed;
   padding:0px;
   margin:0px;
+  text-align:left;
+  font-size:12px;
+}
+#regions_elms_nav_left .regions_pre_block_container {
+ position:fixed;
+ margin:200px 0px 0px 170px;
+ height: 20px;
+ width: 80px;
+ display:block;
+ float:right;
+ padding:5px;
+ cursor:pointer;
+ background-color:#F00;
+}
+#regions_elms_nav_left li {
+  list-style-type: none;
+  list-style-image: none;
+  padding: 2px 0px 2px 10px;
+}
+#regions_elms_nav_left li:hover {
+  background-color:#FC6;
+}
+#regions_elms_nav_left li a {
+  color:#666;
+  text-decoration:none;
 }
 #regions_elms_nav_left .regions_block_title {
-  padding:5px;
-  margin:200px 0px 0px 170px;
-  -o-transform:  rotate(90deg); /* opera specific */
-  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1); /* ie */
-  -webkit-transform: rotate(90deg);
-  -moz-transform: rotate(90deg);
-  display:block;
+  font-size:16px;
+  font-weight:bold;
+  text-align:left;
+}
+/* colors for the blocks on the left */
+#regions_elms_nav_left .regions_1 {
+  background-color:#FFC;
+  margin-top:100px;
+}
+#regions_elms_nav_left .regions_2 {
+  background-color:#FFB;
+}
+#regions_elms_nav_left .regions_3 {
+  background-color:#FFA;
+}
+#regions_elms_nav_left .workflow_state {
   height: 20px;
-  width: 80px;
-  float:right;
-  cursor:pointer;
-  position:fixed;
-  font-size:14px;
+  float: left;
+  position: absolute;
+  top: 20px;
+  width: 200px;
+  text-align: center;
 }
-#regions_elms_nav_left .regions_block_content {
-  padding:40px 0px 0px 0px;
-  margin:0px;
-  width:100%;
-  top:0px;
-  bottom:0px;
-  position:absolute;
-  z-index:101;
+#regions_elms_nav_left #masquerade-block-1 {
+ margin-top:10px;	
 }
-/* colors for the blocks on the left */
-#regions_elms_nav_left .regions_1 .regions_block_title {
-  margin-top:150px;
+.workflow_state_3 { /*development*/
+  background-color:#ac3000;
 }
-#regions_elms_nav_left .regions_2 .regions_block_title {
-  margin-top:240px;
+.workflow_state_4 { /*staging*/
+  background-color:#c0e6ff;
 }
-#regions_elms_nav_left .regions_3 .regions_block_title {
-  margin-top:330px;
+.workflow_state_5 { /*active*/
+  background-color:#356090;
 }
-/* colors for the blocks on the left */
-#regions_elms_nav_left .regions_1 div {
-  background-color:#FFC;
+.workflow_state_6 { /*archive*/
+  background-color:#e6e6d4;
 }
-#regions_elms_nav_left .regions_2 div {
-  background-color:#FFC;
-}
-#regions_elms_nav_left .regions_3 div {
-  background-color:#FFC;
+.workflow_state_7 { /*demo*/
+  background-color:#327944;
 }

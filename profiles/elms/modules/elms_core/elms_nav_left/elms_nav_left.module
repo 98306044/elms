@@ -64,10 +64,9 @@ function elms_nav_left_block($op = 'list', $delta = 0, $edit = array()) {
       break;
 	  case 2:
 	    $group = og_get_group_context();
-		dpm($group);
 		if (isset($group->nid)) {
           $block['title'] = 'Actions';
-          $block['content'] = '<span class="workflow_state_'. $group->_workflow .'"></span>'. menu_local_tasks();
+          $block['content'] = '<div class="workflow_state workflow_state_'. $group->_workflow .'">'. workflow_get_state_name($group->_workflow) .'</div>'. menu_local_tasks();
 		}
       break;
     }
@@ -78,24 +77,22 @@ function elms_nav_left_block($op = 'list', $delta = 0, $edit = array()) {
 //helper function Course level tasks
 function _elms_nav_left_course_block($group) {
   //change the features of the course
-  $output = theme('menu_item', l(t('Features'), 'features'), 0);
+  $output = theme('menu_item', l(t('Features'), 'node/'. $group->nid .'/features'), 0);
   //change the workflow status, this will need to be a custom page
-  $output.= theme('menu_item', l(t('Change Status'), 'change_status'), 0);
+  $output.= theme('menu_item', l(t('Change Status'), 'node/'. $group->nid .'/workflow'), 0);
   //use the custom theme form
   $output.= theme('menu_item', l(t('Theme'), 'theme'), 0);
   //export html option
-  $output.= theme('menu_item', l(t('HTML Export'), 'html_export'), 0);
+  $output.= theme('menu_item', l(t('HTML Export'), 'node/'. $group->nid .'/html_export'), 0);
   //Link back to the public Course Home
   $output.= theme('menu_item', l(t('Public Course Home'), 'node/'. $group->field_course_ref[0]['nid'], array('purl' => array('disabled' => TRUE))), 0);
-  //Create a new version of this course
-  $output.= theme('menu_item', l(t('Create New Course Version'), 'node/add/version/'. $group->field_course_ref[0]['nid'], array('purl' => array('disabled' => TRUE))), 0);
   return $output;
 }
 
 //helper function System level tasks
 function _elms_nav_left_system_block() {
-  //view all courses
-  $output = theme('menu_item',l(t('View Courses'), 'courses', array('purl' => array('disabled' => TRUE))), 0);
+  //Create a new version of this course
+  $output = theme('menu_item', l(t('Create New Course Version'), 'node/add/version/'. $group->field_course_ref[0]['nid'], array('purl' => array('disabled' => TRUE))), 0);
   //create a new course
   $output.= theme('menu_item',l(t('Create New Course'), 'node/add/course', array('purl' => array('disabled' => TRUE))), 0);
   //activation code admin

@@ -21,8 +21,8 @@
 function elms_nav_top_define_regions() {
   $region['elms_nav_top'] = array(
     'project' => 'elms_nav_top',
-	'js' => 'elms_nav_top.js',
-	'css' => 'elms_nav_top.css',
+  'js' => 'elms_nav_top.js',
+  'css' => 'elms_nav_top.css',
   );
   return $region;
 }
@@ -37,12 +37,12 @@ function elms_nav_top_block($op = 'list', $delta = 0, $edit = array()) {
       'weight' => 0,
       'status' => 0,
     );
-	$blocks[1] = array(
+  $blocks[1] = array(
       'info' => t('Notifications Container'),
       'weight' => 0,
       'status' => 0,
     );
-	$blocks[2] = array(
+  $blocks[2] = array(
       'info' => t('Top Nav User Menu Implementation'),
       'weight' => 0,
       'status' => 0,
@@ -55,22 +55,34 @@ function elms_nav_top_block($op = 'list', $delta = 0, $edit = array()) {
         $block['title'] = '<none>';
         $block['content'] = _elms_nav_top_system_path();
       break;
-	  case 1:
+      case 1:
         $block['title'] = '<none>';
         $block['content'] = _elms_nav_top_notifications();
       break;
-	  case 2:
-	    //manually load the usermenu menu so we can inject a new title
-	    $block = module_invoke('menu', 'block', 'view', 'menu-usermenu');
-		//now we can modify the title
-		global $user;
-		$rendername = '';
-		if (isset($user->picture)) {
-		  $rendername.= theme('imagecache', 'elms_nav_top', $user->picture, $user->name ."'s profile picture","'s profile picture");
-		}
-		$rendername.= '<span>'. $user->name .'</span>';
-	    $block['title'] = $rendername;
+      case 2:
+      //only show menu options for logged in users
+      global $user;
+      if (!isset($user->uid) || $user->uid == 0 || $user->uid == '') {
 		$block['regions_allow_html_title'] = true;
+        if (module_exists('webaccess')) {
+          $block['title'] = l(t('Login'),'login');
+        }
+        else {
+          $block['title'] = l(t('Login'),'user/login'); 
+        }
+		$block['content'] = ' ';
+      }
+      else {
+        //manually load the usermenu menu so we can inject a new title
+        $block = module_invoke('menu', 'block', 'view', 'menu-usermenu');
+        $rendername = '';
+        if (isset($user->picture)) {
+          $rendername.= theme('imagecache', 'elms_nav_top', $user->picture, $user->name ."'s profile picture","'s profile picture");
+        }
+        $rendername.= '<span>'. $user->name .'</span>';
+        $block['title'] = $rendername;
+        $block['regions_allow_html_title'] = true;
+      }
       break;
     }
     return $block;
@@ -82,39 +94,39 @@ function _elms_nav_top_system_path() {
   //check for the simpliest case, this is part of a group
   $group = og_get_group_context();
   if (isset($group->nid)) {
-	//need to manually build the website's name because of strongarm being too good!
+    //need to manually build the website's name because of strongarm being too good!
     $site_frontpage = unserialize(db_result(db_query("SELECT value FROM {variable} WHERE name='site_frontpage'")));
-	$site_name = unserialize(db_result(db_query("SELECT value FROM {variable} WHERE name='site_name'")));
-	$output = theme('menu_item', l(t($site_name), $site_frontpage, array('purl' => array('disabled' => TRUE))), 0);
+    $site_name = unserialize(db_result(db_query("SELECT value FROM {variable} WHERE name='site_name'")));
+    $output = theme('menu_item', l(t($site_name), $site_frontpage, array('purl' => array('disabled' => TRUE))), 0);
     $group = og_get_group_context();
     $val = db_fetch_array(db_query("SELECT n.title, td.name FROM {node} AS n JOIN {term_node} AS tn ON n.nid = tn.nid JOIN {term_data} AS td ON td.tid = tn.tid WHERE n.nid=%d", $group->field_course_ref[0]['nid']));
-	//add the courses listing with the name of the taxonomy term
+  //add the courses listing with the name of the taxonomy term
     $output.= theme('menu_item', l(t($val['name']), 'courses', array('purl' => array('disabled' => TRUE))), 0);
-	//add the course home
+  //add the course home
     $output.= theme('menu_item', l(t($val['title']), 'node/'. $group->field_course_ref[0]['nid'], array('purl' => array('disabled' => TRUE))), 0);
-	//add the current group homepage to the trail
+  //add the current group homepage to the trail
     $output.= theme('menu_item', l(t($group->title), variable_get('site_frontpage', 'node/'. $group->nid)), 0);
   }
   else {
-	//add the site name first
+  //add the site name first
     $output = theme('menu_item', l(t(variable_get('site_name', '')), '<front>', array('purl' => array('disabled' => TRUE))), 0);  
-	//see if we have a course node without loading the node
+  //see if we have a course node without loading the node
     $nid = arg(1);
     //verify this is an id
     if ($nid != '') {
       $type = db_result(db_query("SELECT type FROM {node} WHERE nid=%d", $nid));
     }
-	//if this is a course, add the taxonomy and course name
+  //if this is a course, add the taxonomy and course name
     if ($type == 'course') {
       $val = db_fetch_array(db_query("SELECT n.title, td.name FROM {node} AS n JOIN {term_node} AS tn ON n.nid = tn.nid JOIN {term_data} AS td ON td.tid = tn.tid WHERE n.nid=%d", $nid));
-	  //taxonomy  term used
+    //taxonomy  term used
       $output.= theme('menu_item', l(t($val['name']), 'courses', array('purl' => array('disabled' => TRUE))), 0);
-	  //course home
+    //course home
       $output.= theme('menu_item', l(t($val['title']), 'node/'. $nid, array('purl' => array('disabled' => TRUE))), 0);
     }
     else {
-	  //add a courses link for simplicity
-	  $output.= theme('menu_item', l(t('Courses'), 'courses', array('purl' => array('disabled' => TRUE))), 0);  
+      //add a courses link for simplicity
+      $output.= theme('menu_item', l(t('Courses'), 'courses', array('purl' => array('disabled' => TRUE))), 0);  
     }
   }
   

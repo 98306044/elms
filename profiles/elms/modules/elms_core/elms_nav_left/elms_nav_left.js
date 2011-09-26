@@ -1,14 +1,8 @@
 $(document).ready(function(){
-  //block 1 is the default for an open
-  $('#regions_elms_nav_left .regions_1 .regions_block_content').css('display','block');
   //establish the default state for the nav which is closed
   $('#regions_elms_nav_left .regions_pre_block_container').addClass('regions_toggle_closed');
   //when clicking the title, bring it to the front
-  $('#regions_elms_nav_left .regions_block_title').click(function(){
-	//hide all block content
-	$('#regions_elms_nav_left .regions_block_content').css('display','none');
-	//show this one
-	$(this).parent().children('.regions_block_content').css('display','block');
+  $('#regions_elms_nav_left .regions_pre_block_container').click(function(){
     //open this region if clicked on a tab, close if you do
 	if ($('#regions_elms_nav_left .regions_pre_block_container').hasClass('regions_toggle_closed')) {
 	  $('#regions_elms_nav_left .regions_pre_block_container').addClass('regions_toggle_open');
