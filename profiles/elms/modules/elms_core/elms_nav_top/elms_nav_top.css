@@ -1,12 +1,106 @@
 /* right side blocks */
+body {
+ margin-top: 20px !important;	
+}
 #regions_elms_nav_top {
-  background-color:#06F;
+  font:normal 11px/20px "Lucida Grande",Verdana,sans-serif !important;
+  background-color:#009;
+  background:url(images/sprite.png) 0px -20px repeat-x;
   top:0px;
   left:0px;
   right:0px;
-  z-index:101;
+  height:20px;
+  width: 100%;
+  z-index:100;
   float:left;
   position:fixed;
   padding:0px;
   margin:0px;
+  color:#ccc;
 }
+
+#regions_elms_nav_top .regions_1 {
+  float:left;
+}
+#regions_elms_nav_top .regions_1 .leaf {
+  list-style-image:none;
+  list-style-position:inside;
+  list-style-type:none;
+  border-right:2px #666 solid;
+  display:inline;
+  margin:0px;
+  padding:0px;
+}
+
+#regions_elms_nav_top .regions_2 {
+  float:right;
+}
+
+#regions_block_menu_menu-usermenu .regions_block_content{
+  display:none;
+}
+#regions_block_menu_menu-usermenu ul.menu {
+  background-color:#666;
+}
+#regions_block_menu_menu-usermenu ul.menu li{
+  list-style-image:none;
+  list-style-type:none;
+  list-style-position:inside;
+}
+
+#regions_elms_nav_top .regions_3 {
+  float:right;
+}
+
+
+/**
+ * Aggressive resets so we can achieve a consistent look in
+ * hostile CSS environments.
+ */
+#regions_elms_nav_top,
+#regions_elms_nav_top * {
+  margin:0px;
+  padding:0px;
+  border:0px;
+  outline:0px;
+  font-size:100%;
+  vertical-align:baseline;
+  line-height:inherit;
+  text-align:left;
+}
+
+/**
+ * Base styles
+ */
+
+#regions_elms_nav_top .collapsed { display:none; }
+
+#regions_elms_nav_top div.regions_post_block_container {
+  position:fixed;
+  left:0px;
+  right:0px;
+  top:20px;
+  height:10px;
+  background:url(images/sprite.png) 0px -100px repeat-x;
+  }
+
+#regions_elms_nav_top a {
+  text-decoration:none;
+  color:#fff;
+  }
+
+#regions_elms_nav_top ul.links {
+  /* Some themes (like Bartik) override the styling of ul.links
+for consistency when switching back and forth between themes
+we set the font again here */
+font: 11px/20px "Lucida Grande", Verdana, sans-serif;
+}
+
+#regions_elms_nav_top li:hover {
+background-color:#666;
+}
+
+#regions_elms_nav_top li a.active {
+  text-shadow:#333 0px 1px 0px;
+  background:url(images/sprite.png) 0px 0px repeat-x;
+  }

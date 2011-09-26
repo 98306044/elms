@@ -26,3 +26,84 @@ function elms_nav_top_define_regions() {
   );
   return $region;
 }
+
+/**
+ * Implementation of hook_block().
+ */
+function elms_nav_top_block($op = 'list', $delta = 0, $edit = array()) {
+  if ($op == 'list') {
+    $blocks[0] = array(
+      'info' => t('System Path'),
+      'weight' => 0,
+      'status' => 0,
+    );
+	$blocks[1] = array(
+      'info' => t('Notifications Container'),
+      'weight' => 0,
+      'status' => 0,
+    );
+    return $blocks;
+  }
+  else if ($op == 'view') {
+    switch ($delta) {
+      case 0:
+        $block['title'] = '<none>';
+        $block['content'] = _elms_nav_top_system_path();
+      break;
+	  case 1:
+        $block['title'] = '<none>';
+        $block['content'] = _elms_nav_top_notifications();
+      break;
+    }
+    return $block;
+  }
+}
+
+//helper function to display current system path
+function _elms_nav_top_system_path() {
+  //add the site name first
+  $output = theme('menu_item', l(t(variable_get('site_name', '')), '<front>', array('purl' => array('disabled' => TRUE))), 0);
+  //see if we have a course node without loading the node
+  $nid = arg(1);
+  //verify this is an id
+  if ($nid != '') {
+    $type = db_result(db_query("SELECT type FROM {node} WHERE nid=%d", $nid));
+  }
+  else {
+	//we didn't get a node from arguments, this can occur within features in a group, check for that
+    $group = og_get_group_context();
+	if (isset($group->nid)) {
+	  $type = 'version';
+	}
+  }
+  //if this is a course, add the taxonomy and course name
+  if ($type == 'course') {
+    $val = db_fetch_array(db_query("SELECT n.title, td.name FROM {node} AS n JOIN {term_node} AS tn ON n.nid = tn.nid JOIN {term_data} AS td ON td.tid = tn.tid WHERE n.nid=%d", $nid));
+	//taxonomy  term used
+    $output.= theme('menu_item', l(t($val['name']), 'courses', array('purl' => array('disabled' => TRUE))), 0);
+	//course home
+    $output.= theme('menu_item', l(t($val['title']), 'node/'. $nid, array('purl' => array('disabled' => TRUE))), 0);
+  }
+  //if this is a version, get the info from the og_context
+  elseif ($type == 'version') {
+    $group = og_get_group_context();
+    $val = db_fetch_array(db_query("SELECT n.title, td.name FROM {node} AS n JOIN {term_node} AS tn ON n.nid = tn.nid JOIN {term_data} AS td ON td.tid = tn.tid WHERE n.nid=%d", $group->field_course_ref[0]['nid']));
+	//add the courses listing with the name of the taxonomy term
+    $output.= theme('menu_item', l(t($val['name']), 'courses', array('purl' => array('disabled' => TRUE))), 0);
+	//add the course home
+    $output.= theme('menu_item', l(t($val['title']), 'node/'. $group->field_course_ref[0]['nid'], array('purl' => array('disabled' => TRUE))), 0);
+	//add the current group homepage to the trail
+    $output.= theme('menu_item', l(t($group->title), variable_get('site_frontpage', 'node/'. $group->nid)), 0);
+  }
+  else {
+	//add a courses link for simplicity
+	$output.= theme('menu_item', l(t('Courses'), 'courses', array('purl' => array('disabled' => TRUE))), 0);  
+  }
+  return $output;
+}
+
+//helper function to display notifications
+function _elms_nav_top_notifications() {
+  $output = 'nofitications';
+  return $output;
+}

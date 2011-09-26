@@ -10,6 +10,8 @@ kdb163@psu.edu
 12 Borland
 University Park,  PA 16802
 
+This module borrows from the Quickbar module -- http://drupal.org/project/quickbar
+
 **Imaging Credit**
 
 http://iconify.it

@@ -1,6 +1,6 @@
 /* left side blocks */
 #regions_elms_nav_left {
-  background-color:#99F;
+  background-color:#FFC;
   width:200px;
   top:0px;
   bottom:0px;
@@ -45,48 +45,13 @@
 #regions_elms_nav_left .regions_3 .regions_block_title {
   margin-top:330px;
 }
-#regions_elms_nav_left .regions_4 .regions_block_title {
-  margin-top:420px;
-}
-#regions_elms_nav_left .regions_5 .regions_block_title {
-  margin-top:510px;
-}
 /* colors for the blocks on the left */
 #regions_elms_nav_left .regions_1 div {
-  background-color:#FFAE00;
+  background-color:#FFC;
 }
 #regions_elms_nav_left .regions_2 div {
-  background-color:#0098FF;
+  background-color:#FFC;
 }
 #regions_elms_nav_left .regions_3 div {
-  background-color:#FF3B00;
-}
-#regions_elms_nav_left .regions_4 div {
-  background-color:#7FA100;
-}
-#regions_elms_nav_left .regions_5 div {
-  background-color:#6E00A3;
-}
-/* open / close block display */
-#regions_elms_nav_left .regions_toggle_open {
- margin:100px 0px 0px 170px;
- background-image: url('images/close.png');
- background-repeat:no-repeat;
- background-position:center;
- background-color:#CCC;
- width: 30px;
- height:20px;
- float:right;
- cursor:pointer;
-}
-#regions_elms_nav_left .regions_toggle_closed {
- margin:100px 0px 0px 170px;
- background-image: url('images/open.png');
- background-repeat:no-repeat;
- background-position:center;
- background-color:#CCC;
- width: 30px;
- height:20px;
- float:right;
- cursor:pointer;
+  background-color:#FFC;
 }

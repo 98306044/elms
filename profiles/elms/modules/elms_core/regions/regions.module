@@ -130,11 +130,7 @@ function theme_regions($region_name) {
       }
       $blocks .= '</div><div class="regions_block_content">'. $block->content .'</div></div>';
     }
-  //see if there was anything added, if there was then add an empty container in case of collapse / expands
-  if ($count != 0) {
-      $blocks .= '<div class="regions_toggle"></div>';
-  }
-  return '<div id="regions_'. $region_name .'"><div class="regions_block_container">'. $blocks .'</div></div>';
+  return '<div id="regions_'. $region_name .'"><div class="regions_pre_block_container"></div><div class="regions_block_container">'. $blocks .'</div><div class="regions_post_block_container"></div></div>';
 }
 
 //helper function to return an array of the available regions

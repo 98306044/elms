@@ -24,7 +24,6 @@ function elms_helper_init() {
   }
   drupal_add_css(drupal_get_path('module', 'elms_helper') .'/css/elms_helper.css','theme');
   drupal_add_css(drupal_get_path('module', 'jquery_ui') .'/jquery.ui/themes/redmond/redmond.css','module');
-  drupal_add_js(drupal_get_path('module', 'elms_helper') .'/js/elms_helper.js');
   //account for possible og theme swap when using the outline designer
   if (arg(0) == 'outline_designer') {
     $book_node = node_load(arg(2));
