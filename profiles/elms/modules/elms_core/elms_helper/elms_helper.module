@@ -117,50 +117,6 @@ function _elms_helper_outline_tab() {
 }
 
 /**
- * Implementation of hook_block().
- */
-function elms_helper_block($op = 'list', $delta = 0, $edit = array()) {
-  if ($op == 'list') {
-  $blocks[0] = array(
-      'info' => t('ELMS Logged in'), 
-      'weight' => 0, 
-      'status' => 0,
-    );
-    return $blocks;
-  }
-  else if ($op == 'view') {
-    switch ($delta) {
-    case 0:
-      global $user;
-    $group = og_get_group_context();
-      if ($user->uid != 0) {
-        $block['title'] = t('logged in');
-    }
-    else {
-      $block['title'] = t('log in');
-    }
-    $block['content'] = _elms_helper_loggedin_links($user->uid, $group);
-    break;
-    }
-    return $block;
-  }
-}
-
-
-//helper function for logged in items
-function _elms_helper_loggedin_links($uid, $group) {
-  $output = '';
-  //anonymous user and psu webaccess installed
-  if($uid == 0 && module_exists('webaccess')) {
-   $output.= theme('menu_item',l(t('Login'),'login', array('query' => array('destination' => '/courses/my'), 'icon'=> 'default', 'purl' => array('disabled' => TRUE))), 0);
-  }
-  //annonymous and non psu webaccess site
-  elseif($uid == 0) {
-    $output.= theme('menu_item',l(t('Login'),'user', array('query' => array('destination' => '/courses/my'), 'purl' => array('disabled' => TRUE))), 0);
-  }
-  return $output;
-}
-/**
  * Implementation of hook_form_alter()
  */
 function elms_helper_form_alter(&$form, &$form_state, $form_id) {
@@ -169,15 +125,13 @@ function elms_helper_form_alter(&$form, &$form_state, $form_id) {
     $form['purl']['value']['#description'] = "<font color='#CC0000'>Warning: Changing this will alter the current path of your course content / links.  This is only an issue if you have directly linked to pages in your course.</font><br/>". $form['purl']['value']['#description'];
   }
   if ($form_id == 'version_node_form') {
-  unset($form['themes']['#collapsible']);
-  //render theme without collapse box wrapper
-  $form['themes']['#type'] = 'markup';
-  $form['#content_extra_fields']['spaces_preset']['weight'] = 8;
+    //render theme without collapse box wrapper
+    $form['#content_extra_fields']['spaces_preset']['weight'] = 8;
     $form['title']['#description'] = t('Name and number of the course');
     //unset rubik which is used for administering the site
     unset($form['themes']['rubik']);
     unset($form['themes']['theme']['#options']['rubik']);
-    //unset sky / default theme
+    //unset default system theme
     unset($form['themes']['']);
     unset($form['themes']['theme']['#options']['']);
   }
