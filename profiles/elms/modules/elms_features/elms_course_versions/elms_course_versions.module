@@ -1,3 +1,18 @@
 <?php
 
 include_once('elms_course_versions.features.inc');
+
+/**
+ * Implementation of hook_form_alter()
+ */
+function elms_course_versions_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'version_node_form') {
+    $form['title']['#description'] = t('Name and number of the course');
+    //unset rubik which is used for administering the site
+    unset($form['themes']['rubik']);
+    unset($form['themes']['theme']['#options']['rubik']);
+    //unset default system theme
+    unset($form['themes']['']);
+    unset($form['themes']['theme']['#options']['']);
+  }
+}

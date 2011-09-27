@@ -120,20 +120,6 @@ function _elms_helper_outline_tab() {
  * Implementation of hook_form_alter()
  */
 function elms_helper_form_alter(&$form, &$form_state, $form_id) {
-  //if the course form is in edit mode, remove the course outline field, this could cause confusion for users if they tried to change it
-  if ($form_id == 'version_node_form' && arg(1) != 'add') {
-    $form['purl']['value']['#description'] = "<font color='#CC0000'>Warning: Changing this will alter the current path of your course content / links.  This is only an issue if you have directly linked to pages in your course.</font><br/>". $form['purl']['value']['#description'];
-  }
-  if ($form_id == 'version_node_form') {
-    $form['#content_extra_fields']['spaces_preset']['weight'] = 8;
-    $form['title']['#description'] = t('Name and number of the course');
-    //unset rubik which is used for administering the site
-    unset($form['themes']['rubik']);
-    unset($form['themes']['theme']['#options']['rubik']);
-    //unset default system theme
-    unset($form['themes']['']);
-    unset($form['themes']['theme']['#options']['']);
-  }
   if ($form_id == 'user_profile_form') {
     //remove change theme from view even if they have the permission, gives us granularity so they can set it in the group / course creation
     $form['theme_select']['#access'] = FALSE;
