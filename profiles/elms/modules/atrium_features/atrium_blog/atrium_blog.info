@@ -1,5 +1,4 @@
 core = "6.x"
-dependencies[] = "comment"
 dependencies[] = "context"
 dependencies[] = "features"
 dependencies[] = "nodereference"
