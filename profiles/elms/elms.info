@@ -27,9 +27,8 @@ dependencies[] = purl
 dependencies[] = masquerade
 dependencies[] = ucreate_og
 dependencies[] = advanced_help
-dependencies[] = appbar
 dependencies[] = backup_migrate
-dependencies[] = boxes
+dependencies[] = css_gzip
 dependencies[] = customerror
 dependencies[] = imce
 dependencies[] = imce_crop
@@ -38,12 +37,11 @@ dependencies[] = job_scheduler
 dependencies[] = jquery_colorpicker
 dependencies[] = libraries
 dependencies[] = lightbox2
-dependencies[] = module_filter
+dependencies[] = menu_block
 dependencies[] = options_element
 dependencies[] = stringoverrides
 dependencies[] = ucreate
 dependencies[] = unique_field
-dependencies[] = update_advanced
 dependencies[] = pathauto
 dependencies[] = statistics_advanced
 dependencies[] = auto_nodetitle
@@ -61,6 +59,12 @@ dependencies[] = og_defaults
 dependencies[] = spaces
 dependencies[] = spaces_ui
 dependencies[] = spaces_og
+; Core - required
+dependencies[] = block
+dependencies[] = filter
+dependencies[] = node
+dependencies[] = system
+dependencies[] = user
 ; Core - optional
 dependencies[] = book
 dependencies[] = color
@@ -69,7 +73,6 @@ dependencies[] = dblog
 dependencies[] = help
 dependencies[] = menu
 dependencies[] = path
-dependencies[] = php
 dependencies[] = profile
 dependencies[] = search
 dependencies[] = statistics
@@ -87,7 +90,6 @@ dependencies[] = features
 dependencies[] = atrium_members
 ; Context Extras
 dependencies[] = context_var
-dependencies[] = context_condition_theme
 ; ELMS
 dependencies[] = elms_appbar
 dependencies[] = elms_export_html
@@ -95,21 +97,25 @@ dependencies[] = elms_instructional_templates
 dependencies[] = og_clone
 dependencies[] = elms_helper
 dependencies[] = elms_spaces
+; Regions
+dependencies[] = elms_nav_left
+dependencies[] = elms_nav_right
+dependencies[] = elms_nav_top
+dependencies[] = regions
 ; ELMS Core
 dependencies[] = elms_course
 dependencies[] = elms_course_versions
 dependencies[] = elms_data_in
 dependencies[] = elms_data_out
-dependencies[] = elms_navigation
+dependencies[] = elms_navigation_left
+dependencies[] = elms_navigation_top
 dependencies[] = elms_roles
-; Media
-dependencies[] = jwplayermodule
 ; Accessible Content
 dependencies[] = accessible_content
 ; Administration
 dependencies[] = adminrole
+dependencies[] = module_filter
 dependencies[] = protect_critical_users
-dependencies[] = update_form_enhancement
 dependencies[] = admin
 ; User interface
 dependencies[] = ajax_load
@@ -118,7 +124,6 @@ dependencies[] = imce_wysiwyg
 dependencies[] = jquery_ui
 dependencies[] = wysiwyg
 dependencies[] = ckeditor_link
-dependencies[] = extlink
 dependencies[] = jquery_update
 dependencies[] = vertical_tabs
 ; CCK
@@ -143,9 +148,6 @@ dependencies[] = charts_graphs_bluff
 dependencies[] = charts_graphs
 ; Colorpicker
 dependencies[] = colorpicker
-; Content analysis
-dependencies[] = contentanalysis
-dependencies[] = readability
 ; Context
 dependencies[] = context
 dependencies[] = context_ui
@@ -159,7 +161,6 @@ dependencies[] = date
 dependencies[] = date_api
 dependencies[] = date_popup
 dependencies[] = date_timezone
-dependencies[] = date_tools
 ; Views
 dependencies[] = draggableviews
 dependencies[] = draggableviews_cck
@@ -194,14 +195,6 @@ dependencies[] = outline_designer
 dependencies[] = outline_designer_og
 ; Printer, e-mail and PDF versions
 dependencies[] = print
-; Util
-dependencies[] = dblog_clear
-dependencies[] = dblog_common
-dependencies[] = dblog_ext
-dependencies[] = dblog_filters
-dependencies[] = log_clear
-dependencies[] = module_weights
-dependencies[] = util
 ; Workflow
 dependencies[] = workflow
 ; Node form columns
