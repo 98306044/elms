@@ -52,7 +52,7 @@ function elms_course_content_menu() {
 function elms_course_content_block($op = 'list', $delta = 0, $edit = array()) {
   if ($op == 'list') {
     $blocks[0] = array(
-      'info' => t('ELMS Left Nav'), 
+      'info' => t('ELMS Course Content Nav'), 
       'weight' => -10,
       'status' => 0, 
     );
