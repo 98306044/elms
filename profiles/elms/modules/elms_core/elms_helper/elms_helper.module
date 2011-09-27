@@ -50,7 +50,7 @@ function elms_helper_init() {
     $node = node_load(arg(1));
     if(og_is_group_type($node->type)){
       og_set_theme($node);
-    $theme_settings = variable_get('theme_'. $node->og_theme .'_settings',array());
+      $theme_settings = variable_get('theme_'. $node->og_theme .'_settings',array());
     //add in custom font setting, a none file exists too
     drupal_add_css(drupal_get_path('module', 'elms_helper') .'/css/'. $theme_settings['font'] .'.css','theme');
     //add in custom css if this course has any
@@ -59,10 +59,6 @@ function elms_helper_init() {
     }
       og_set_group_context($node);
       og_set_language($node);
-    //set breadcrumb so there's no confuion on group homepage
-    $breadcrumb = array();
-    $breadcrumb[] = l(t('Course Schedule'), 'node/'. $node->nid);
-    drupal_set_breadcrumb($breadcrumb);
     }
   else {
     $group = og_get_group_context();
@@ -78,20 +74,6 @@ function elms_helper_init() {
       }
 	}
   }
-  }
-  
-  //REMOVE after featurization
-  if (arg(0) == 'node') {
-    $group = og_get_group_context();
-	if (isset($group->type)) {
-      if ($group->type == 'version' && arg(2) == 'edit') {
-	    drupal_add_js(drupal_get_path('module', 'elms_helper') .'/js/version_form.js');
-	  }
-	}
-    //version form
-    if (arg(1) == 'add' && arg(2) == 'version') {
-      drupal_add_js(drupal_get_path('module', 'elms_helper') .'/js/version_form.js');
-    }
   }
 }
 

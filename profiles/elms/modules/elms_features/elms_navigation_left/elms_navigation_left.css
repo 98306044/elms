@@ -1,11 +1,10 @@
 /* left side blocks */
 #regions_elms_navigation_left {
-  background-color:#FFD;
   width:200px;
   top:0px;
   bottom:0px;
   z-index:100;
-  left:-200px;
+  left:-180px;
   float:left;
   position:fixed;
   padding:0px;
@@ -15,9 +14,9 @@
 }
 #regions_elms_navigation_left .regions_pre_block_container {
  position:fixed;
- margin:50% 0px 0px 200px;
+ margin:250px 0px 0px 200px;
  height: 20px;
- width: 30px;
+ width: 24px;
  background-repeat:no-repeat;
  background-position:center;
  display:block;
@@ -35,7 +34,7 @@
   background-color:#FC6;
 }
 #regions_elms_navigation_left li a {
-  color:#666;
+  color:#333 !important;
   text-decoration:none;
 }
 #regions_elms_navigation_left .regions_block_title {
@@ -43,10 +42,14 @@
   font-weight:bold;
   text-align:left;
 }
+
+#regions_elms_navigation_left .regions_block {
+ padding:10px 0px 10px 10px;	
+}
 /* colors for the blocks on the left */
 #regions_elms_navigation_left .regions_1 {
   background-color:#FFC;
-  margin-top:100px;
+  margin-top:200px;
 }
 #regions_elms_navigation_left .regions_2 {
   background-color:#FFB;
@@ -56,10 +59,6 @@
 }
 #regions_elms_navigation_left .workflow_state {
   height: 20px;
-  float: left;
-  position: absolute;
-  top: 20px;
-  width: 200px;
   text-align: center;
   line-height:24px;
 }
@@ -67,7 +66,7 @@
  margin-top:10px;	
 }
 .workflow_state_3 { /*development*/
-  background-color:#ac3000;
+  background-color:#C66;
 }
 .workflow_state_4 { /*staging*/
   background-color:#c0e6ff;
@@ -84,8 +83,8 @@
 
 /* open / close block display */
 #regions_elms_navigation_left .regions_toggle_open {
- background-image: url('images/close.png');
+ background-image: url('images/open.png');
 }
 #regions_elms_navigation_left .regions_toggle_closed {
- background-image: url('images/open.png');
+ background-image: url('images/close.png');
 }

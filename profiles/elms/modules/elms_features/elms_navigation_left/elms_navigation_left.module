@@ -31,6 +31,15 @@ function elms_navigation_left_define_regions() {
 }
 
 /**
+ * Implementation of hook_form_alter()
+ */
+function elms_navigation_left_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'masquerade_block_1') {
+    $form['masquerade_user_field']['#size'] = 10;
+  }
+}
+
+/**
  * Implementation of hook_block().
  */
 function elms_navigation_left_block($op = 'list', $delta = 0, $edit = array()) {
@@ -69,7 +78,7 @@ function elms_navigation_left_block($op = 'list', $delta = 0, $edit = array()) {
 	    $group = og_get_group_context();
 		if (isset($group->nid)) {
           $block['title'] = 'Actions';
-          $block['content'] = '<div class="workflow_state workflow_state_'. $group->_workflow .'">'. workflow_get_state_name($group->_workflow) .'</div>'. menu_local_tasks();
+          $block['content'] = menu_local_tasks();
 		}
       break;
     }
@@ -79,25 +88,27 @@ function elms_navigation_left_block($op = 'list', $delta = 0, $edit = array()) {
 
 //helper function Course level tasks
 function _elms_navigation_left_course_block($group) {
+  //make the current workflow state as visible as possible
+	$output = theme('menu_item', l(t(workflow_get_state_name($group->_workflow)),  'node/'. $group->nid .'/workflow'), 0, '', FALSE, 'workflow_state workflow_state_'. $group->_workflow);
   //change the features of the course
-  $output = theme('menu_item', l(t('Features'), 'node/'. $group->nid .'/features'), 0);
-  //change the workflow status, this will need to be a custom page
-  $output.= theme('menu_item', l(t('Change Status'), 'node/'. $group->nid .'/workflow'), 0);
+  $output.= theme('menu_item', l(t('Change Features'), 'node/'. $group->nid .'/features'), 0);
+  //course outline
+  $output.= theme('menu_item', l(t('Outline Designer'), 'outline_designer/book/'. $group->book_nid), 0);
   //use the custom theme form
   $output.= theme('menu_item', l(t('Theme'), 'theme'), 0);
   //export html option
-  $output.= theme('menu_item', l(t('HTML Export'), 'node/'. $group->nid .'/html_export'), 0);
+  $output.= theme('menu_item', l(t('Export to HTML'), 'node/'. $group->nid .'/html_export'), 0);
   //Link back to the public Course Home
-  $output.= theme('menu_item', l(t('Public Course Home'), 'node/'. $group->field_course_ref[0]['nid'], array('purl' => array('disabled' => TRUE))), 0);
+  $output.= theme('menu_item', l(t('Public Course Page'), 'node/'. $group->field_course_ref[0]['nid'], array('purl' => array('disabled' => TRUE))), 0);
+  //Create a new version of this course
+  $output.= '<br />'. theme('menu_item', l(t('Create New Course Version'), 'node/add/version/'. $group->field_course_ref[0]['nid'], array('purl' => array('disabled' => TRUE))), 0);
   return $output;
 }
 
 //helper function System level tasks
 function _elms_navigation_left_system_block() {
-  //Create a new version of this course
-  $output = theme('menu_item', l(t('Create New Course Version'), 'node/add/version/'. $group->field_course_ref[0]['nid'], array('purl' => array('disabled' => TRUE))), 0);
   //create a new course
-  $output.= theme('menu_item',l(t('Create New Course'), 'node/add/course', array('purl' => array('disabled' => TRUE))), 0);
+  $output = theme('menu_item',l(t('Create New Course'), 'node/add/course', array('purl' => array('disabled' => TRUE))), 0);
   //activation code admin
   $output.= theme('menu_item',l(t('Activation Code Admin'), 'activation_codes', array('purl' => array('disabled' => TRUE))), 0);
   //add in the masquerade block area

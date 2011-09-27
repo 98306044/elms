@@ -13,12 +13,7 @@ background-image:none !important;
 .node-promo .column-main {
  width:100%;
 }
-#right .column-side {
- float:none;
-}
-#node-form .column-main {
- width:100%;
-}
+
 
 body.node-type-promo {
  background-image:url(/sites/default/files/promo/watermark.png) !important;

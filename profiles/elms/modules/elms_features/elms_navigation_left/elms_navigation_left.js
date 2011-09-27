@@ -12,7 +12,7 @@ $(document).ready(function(){
 	else {
 	  $('#regions_elms_navigation_left .regions_pre_block_container').addClass('regions_toggle_closed');
 	  $('#regions_elms_navigation_left .regions_pre_block_container').removeClass('regions_toggle_open');
-	  $('#regions_elms_navigation_left').animate({left:'-200'}, 500);
+	  $('#regions_elms_navigation_left').animate({left:'-180'}, 500);
 	}
   });
   //collapse based on toggle
