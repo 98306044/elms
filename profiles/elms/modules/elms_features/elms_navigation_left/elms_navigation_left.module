@@ -34,6 +34,7 @@ function elms_navigation_left_define_regions() {
  * Implementation of hook_form_alter()
  */
 function elms_navigation_left_form_alter(&$form, &$form_state, $form_id) {
+  //make the masquerade block display differently in the left hand menu to fit one line
   if ($form_id == 'masquerade_block_1') {
     $form['masquerade_user_field']['#size'] = 10;
   }
@@ -62,22 +63,21 @@ function elms_navigation_left_block($op = 'list', $delta = 0, $edit = array()) {
     return $blocks;
   }
   else if ($op == 'view') {
+	$group = og_get_group_context();
     switch ($delta) {
       case 0:
         $block['title'] = 'System';
-        $block['content'] = _elms_navigation_left_system_block();
+        $block['content'] = _elms_navigation_left_system_block($group);
       break;
 	  case 1:
-	    $group = og_get_group_context();
 		if (isset($group->nid)) {
           $block['title'] = 'Course';
           $block['content'] = _elms_navigation_left_course_block($group);
 		}
       break;
 	  case 2:
-	    $group = og_get_group_context();
 		if (isset($group->nid)) {
-          $block['title'] = 'Actions';
+          $block['title'] = 'Page';
           $block['content'] = menu_local_tasks();
 		}
       break;
@@ -89,26 +89,60 @@ function elms_navigation_left_block($op = 'list', $delta = 0, $edit = array()) {
 //helper function Course level tasks
 function _elms_navigation_left_course_block($group) {
   //make the current workflow state as visible as possible
-	$output = theme('menu_item', l(t(workflow_get_state_name($group->_workflow)),  'node/'. $group->nid .'/workflow'), 0, '', FALSE, 'workflow_state workflow_state_'. $group->_workflow);
+  $output = theme('menu_item', l(t(workflow_get_state_name($group->_workflow)),  'node/'. $group->nid .'/workflow', array('query' => 'destination='. $_GET['q'])), 0, '', FALSE, 'workflow_state workflow_state_'. $group->_workflow);
+  //take into account active features
+  $features = variable_get('spaces_features', array());
+  //loop through active features
+  foreach ($features as $fname => $status) {
+	//if it's active then see if we should add settings
+    if ($status) {
+	  switch ($fname) {
+        case 'elms_course_content':
+		  //course outline
+		  $output.= '<strong>Content</strong>';
+          $output.= theme('menu_item', l(t('Content Outline'), 'outline_designer/book/'. $group->book_nid), 0);
+		  $output.= theme('menu_item', l(t('Settings'), 'node/'. $group->nid .'/features/elms_course_content', array('query' => 'destination='. $_GET['q'])), 0);
+		break;
+		case 'elms_reaction':
+		  //course outline
+		  $output.= '<strong>Reactions</strong>';
+          $output.= theme('menu_item', l(t('Settings'), 'node/'. $group->nid .'/features/elms_reaction', array('query' => 'destination='. $_GET['q'])), 0);
+		break;
+		case 'elms_course_studio':
+		  //ELMS Reactions
+		  $output.= '<strong>Studio</strong>';
+          $output.= theme('menu_item', l(t('Settings'), 'node/'. $group->nid .'/features/elms_course_studio', array('query' => 'destination='. $_GET['q'])), 0);
+		break;
+		case 'elms_schedule':
+		  //ELMS Schedule
+		  $output.= '<strong>Schedule</strong>';
+          $output.= theme('menu_item', l(t('Settings'), 'node/'. $group->nid .'/features/elms_schedule', array('query' => 'destination='. $_GET['q'])), 0);
+		break;
+	  }
+	}
+  }
   //change the features of the course
-  $output.= theme('menu_item', l(t('Change Features'), 'node/'. $group->nid .'/features'), 0);
-  //course outline
-  $output.= theme('menu_item', l(t('Outline Designer'), 'outline_designer/book/'. $group->book_nid), 0);
+  $output.= theme('menu_item', l(t('Change Features'), 'node/'. $group->nid .'/features', array('query' => 'destination='. $_GET['q'])), 0);
   //use the custom theme form
   $output.= theme('menu_item', l(t('Theme'), 'theme'), 0);
-  //export html option
-  $output.= theme('menu_item', l(t('Export to HTML'), 'node/'. $group->nid .'/html_export'), 0);
-  //Link back to the public Course Home
-  $output.= theme('menu_item', l(t('Public Course Page'), 'node/'. $group->field_course_ref[0]['nid'], array('purl' => array('disabled' => TRUE))), 0);
-  //Create a new version of this course
-  $output.= '<br />'. theme('menu_item', l(t('Create New Course Version'), 'node/add/version/'. $group->field_course_ref[0]['nid'], array('purl' => array('disabled' => TRUE))), 0);
   return $output;
 }
 
 //helper function System level tasks
-function _elms_navigation_left_system_block() {
+function _elms_navigation_left_system_block($group = '') {
+  $output = '';
+  if (isset($group->nid)) {
+    //Link back to the public Course Home
+    $output.= theme('menu_item', l(t('Public Course Home'), 'node/'. $group->field_course_ref[0]['nid'], array('purl' => array('disabled' => TRUE))), 0);
+    //Create a new version of this course
+    $output.= theme('menu_item', l(t('Create New Course Version'), 'node/add/version/'. $group->field_course_ref[0]['nid'], array('purl' => array('disabled' => TRUE))), 0);
+    //export html option
+    $output.= theme('menu_item', l(t('Export to HTML'), 'node/'. $group->nid .'/html_export', array('query' => 'destination='. $_GET['q'])), 0);
+	//provide gap between next items
+    $output.= '<br />';
+  }
   //create a new course
-  $output = theme('menu_item',l(t('Create New Course'), 'node/add/course', array('purl' => array('disabled' => TRUE))), 0);
+  $output.= theme('menu_item',l(t('Create New Course'), 'node/add/course', array('purl' => array('disabled' => TRUE))), 0);
   //activation code admin
   $output.= theme('menu_item',l(t('Activation Code Admin'), 'activation_codes', array('purl' => array('disabled' => TRUE))), 0);
   //add in the masquerade block area
