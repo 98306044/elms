@@ -1,8 +1,0 @@
-name = "ELMS Navigation Right"
-description = "Adds right side region for social interaction in ELMS"
-core = 6.x
-package = "Regions"
-version = "6.x-1.0-alpha5"
-project = "elms_nav_right"
-project status url = "http://drupal.psu.edu/fserver"
-dependencies[] = regions

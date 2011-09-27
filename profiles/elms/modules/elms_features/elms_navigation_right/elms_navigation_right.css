@@ -1,5 +1,5 @@
 /* right side blocks */
-#regions_elms_nav_right {
+#regions_elms_navigation_right {
   background-color:#C63;
   width:200px;
   top:0px;
@@ -11,7 +11,7 @@
   padding:0px;
   margin:0px;
 }
-#regions_elms_nav_right .regions_block_title {
+#regions_elms_navigation_right .regions_block_title {
   padding:5px;
   margin:200px 0px 0px -60px;
   -o-transform:  rotate(-90deg); /* opera specific */
@@ -26,7 +26,7 @@
   position:fixed;
   font-size:14px;
 }
-#regions_elms_nav_right .regions_block_content {
+#regions_elms_navigation_right .regions_block_content {
   padding:40px 0px 0px 0px;
   margin:0px;
   width:100%;
@@ -36,39 +36,39 @@
   z-index:101;
 }
 /* colors for the blocks on the right */
-#regions_elms_nav_right .regions_1 .regions_block_title {
+#regions_elms_navigation_right .regions_1 .regions_block_title {
   margin-top:150px;
 }
-#regions_elms_nav_right .regions_2 .regions_block_title {
+#regions_elms_navigation_right .regions_2 .regions_block_title {
   margin-top:240px;
 }
-#regions_elms_nav_right .regions_3 .regions_block_title {
+#regions_elms_navigation_right .regions_3 .regions_block_title {
   margin-top:330px;
 }
-#regions_elms_nav_right .regions_4 .regions_block_title {
+#regions_elms_navigation_right .regions_4 .regions_block_title {
   margin-top:420px;
 }
-#regions_elms_nav_right .regions_5 .regions_block_title {
+#regions_elms_navigation_right .regions_5 .regions_block_title {
   margin-top:510px;
 }
 /* colors for the blocks on the right */
-#regions_elms_nav_right .regions_1 div {
+#regions_elms_navigation_right .regions_1 div {
   background-color:#FFAE00;
 }
-#regions_elms_nav_right .regions_2 div {
+#regions_elms_navigation_right .regions_2 div {
   background-color:#0098FF;
 }
-#regions_elms_nav_right .regions_3 div {
+#regions_elms_navigation_right .regions_3 div {
   background-color:#FF3B00;
 }
-#regions_elms_nav_right .regions_4 div {
+#regions_elms_navigation_right .regions_4 div {
   background-color:#7FA100;
 }
-#regions_elms_nav_right .regions_5 div {
+#regions_elms_navigation_right .regions_5 div {
   background-color:#6E00A3;
 }
 /* open / close block display */
-#regions_elms_nav_right .regions_toggle_open {
+#regions_elms_navigation_right .regions_toggle_open {
  margin:100px 0px 0px -30px;
  background-image: url('images/close.png');
  background-repeat:no-repeat;
@@ -79,7 +79,7 @@
  float:left;
  cursor:pointer;
 }
-#regions_elms_nav_right .regions_toggle_closed {
+#regions_elms_navigation_right .regions_toggle_closed {
  margin:100px 0px 0px -30px;
  background-image: url('images/open.png');
  background-repeat:no-repeat;

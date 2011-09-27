@@ -141,6 +141,16 @@ function _elms_navigation_left_system_block($group = '') {
 	//provide gap between next items
     $output.= '<br />';
   }
+  else {
+	$nid = arg(1);
+	$node = node_load($nid);
+	//see if this is a course landing page
+	if ($node->type == 'course') {
+      //create a new course
+      $output.= theme('menu_item',l(t('Create New Course Version'), 'node/add/version/'. $node->nid, array('purl' => array('disabled' => TRUE))), 0);
+      $output.= '<br />';
+	}
+  }
   //create a new course
   $output.= theme('menu_item',l(t('Create New Course'), 'node/add/course', array('purl' => array('disabled' => TRUE))), 0);
   //activation code admin

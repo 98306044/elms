@@ -1,4 +1,4 @@
-ELMS Nav Right
+ELMS Navigation Right
 Copyright (C) 2011  The Pennsylvania State University
 
 Bryan Ollendyke

@@ -63,8 +63,6 @@ function elms_spaces_form_alter(&$form, &$form_state, $form_id) {
     //this has to be done because the nid hasn't been set yet and we can't submit the node until we have a PURL identifier yet the NID is supposed to be part of the address, once submitted the node will automatically change thing
     if (arg(1) == 'add') {
       $form['purl']['value']['#default_value'] = '_tmp_'. rand(1,1000);
-    }
-    else {
       $form['themes']['theme']['#default_value'] = 'chamfer';
     }
   }
@@ -78,21 +76,12 @@ function elms_spaces_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
     case 'load':
     //for group nodes, load in the ID of the book outline
     if (og_is_group_type($node->type)) {
-      if (arg(2) == 'edit') {
-        //kill annoying status messages for editing course nodes
-        $_SESSION['messages'] = array();
-      }
 	  //there's only 1 book per group so load the id and store it in the node object
 	  //also store the outline mlid to avoid duplicate querying in the future
       $result = db_query("SELECT mlid,{book}.nid FROM {og_ancestry} JOIN {book} ON {book}.nid = {og_ancestry}.nid WHERE {book}.nid = {book}.bid AND group_nid=%d", $node->nid);
       $val = db_fetch_array($result);
       $node->book_outline_mlid = $val['mlid'];
       $node->book_nid = $val['nid'];
-      //only unset this on the schedule step of the group
-	  //CHANGE featurization this is no longer needed
-      if (arg(2) == 'edit' && arg(3) == 3) {
-        $node->field_schedule_to_build[0]['value'] = '';  
-      }
     }
   break;
   case 'insert':
@@ -117,6 +106,16 @@ function elms_spaces_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
 		$space->controllers->variable->set('site_frontpage_path', 'node/'. $node->nid);
 		//turn on our default area as content
 		$space->controllers->variable->set('spaces_features', array('elms_course_content' => 1));
+		//set webaccess state for strict per course settings
+		if (module_exists('webaccess')) {
+          $space->controllers->variable->set('webaccess_secure_site', $node->og_private);
+        }
+		//build course root since all courses come with content by default
+		//check for the default argument coming from the course creation form making a version
+		if (!isset($node->default_version)) {
+		  _elms_spaces_create_root($node, $node->field_instructional_template[0]['value']);
+		}
+		
         //need to do extra step with purl rewrite to ensure it has the node and course name in in
         $modifier = array(
           'value' => strtolower(str_replace(' ', '', $course->title)) .'_dev_'. $node->nid,
@@ -125,28 +124,8 @@ function elms_spaces_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
         );
         purl_save($modifier);
       }
-    }
-    break;
-    case 'update':
-      //only add this in for group / course nodes
-      if (og_is_group_type($node->type)) {
-		  
-          $space = spaces_load('og', $node->nid, TRUE);
-          if ($space) {
-            $space->controllers->variable->set('site_name', $node->title);
-            $course = node_load($group->field_course_ref[0]['nid']);
-            //set slogan to the description of the course
-            $space->controllers->variable->set('site_slogan', $course->field_course_description[0]['value']);
-			if (module_exists('webaccess')) {
-              $space->controllers->variable->set('webaccess_secure_site', $node->og_private);
-            }
-          }
-          $space = spaces_load('og', $node->nid, TRUE);
-          $root = db_result(db_query("SELECT {book}.nid FROM {og_ancestry} JOIN {book} ON {book}.nid = {og_ancestry}.nid WHERE group_nid=%d", $node->nid));
-          //if no root was returned then create one as well as the instructional template selected if there is one
-          if (!$root) {
-            _elms_spaces_create_root($node, $node->field_instructional_template[0]['value']);
-          }
+	  /*
+	  TODO: Move this code into the schedule module so that it can build schedules from that feature
           //remove the current schedule and build a new one
           if (module_exists('elms_schedule') && ($node->field_schedule_to_build[0]['value'] != '')) {
             if ($node->field_schedule_to_build[0]['value'] == 'rebuild') {
@@ -175,14 +154,14 @@ function elms_spaces_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
           );
           batch_set($batch);
           batch_process('node/'. $node->nid .'/edit/4');
-        }
-  }
-  break;
-  //clean up all spaces overrides for the node
-  //CHANGE need to check that this is a space / group or there's nothing to override
-  case 'delete':
-    db_query("DELETE FROM {spaces_overrides} WHERE id=%d",$node->nid);
-  break;
+		  */
+    }
+    break;
+    //clean up all spaces overrides for the node
+    //CHANGE need to check that this is a space / group or there's nothing to override
+    case 'delete':
+      db_query("DELETE FROM {spaces_overrides} WHERE id=%d",$node->nid);
+    break;
   }
 }
 
@@ -478,7 +457,9 @@ function _elms_spaces_course_default($course) {
   global $user;
   //creating a blank node
   $group = new StdClass();
-    $group->uid = $user->uid;
+  //setting this flag avoids a conflict with instructional outline auto creation
+  $group->default_version = 1;
+  $group->uid = $user->uid;
   //this title will change anyway on node insert
   $group->title = $course->title .' Master';
   $group->type = 'version';
