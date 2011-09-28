@@ -77,8 +77,21 @@ function elms_navigation_left_block($op = 'list', $delta = 0, $edit = array()) {
       break;
 	  case 2:
 		if (isset($group->nid)) {
+		  $node = node_load(arg(1));
           $block['title'] = 'Page';
           $block['content'] = menu_local_tasks();
+		  //check for node reference url links
+		  if (module_exists('nodereference_url')) {
+		    $tmp_ref_links = nodereference_url_build_all_links($node, 0);
+		    //if there are links then append them
+		    if (count($tmp_ref_links) != 0) {
+				$block['content'].= '<br/>';
+				//loop through and add the links for contextual reference to this material
+				foreach ($tmp_ref_links as $link) {
+				  $block['content'].= theme('menu_item', l(t($link['title']), $link['href'], array($link['query'], $link['attributes'])), 0);
+				}
+		    }
+		  }
 		}
       break;
     }
@@ -88,8 +101,7 @@ function elms_navigation_left_block($op = 'list', $delta = 0, $edit = array()) {
 
 //helper function Course level tasks
 function _elms_navigation_left_course_block($group) {
-  //make the current workflow state as visible as possible
-  $output = theme('menu_item', l(t(workflow_get_state_name($group->_workflow)),  'node/'. $group->nid .'/workflow', array('query' => 'destination='. $_GET['q'])), 0, '', FALSE, 'workflow_state workflow_state_'. $group->_workflow);
+  $output = '';
   //take into account active features
   $features = variable_get('spaces_features', array());
   //loop through active features
@@ -121,6 +133,9 @@ function _elms_navigation_left_course_block($group) {
 	  }
 	}
   }
+  //make the current workflow state as visible as possible
+  $output.= '<strong>Settings</strong>';
+  $output.= theme('menu_item', l(t(workflow_get_state_name($group->_workflow)),  'node/'. $group->nid .'/workflow', array('query' => 'destination='. $_GET['q'])), 0, '', FALSE, 'workflow_state workflow_state_'. $group->_workflow);
   //change the features of the course
   $output.= theme('menu_item', l(t('Change Features'), 'node/'. $group->nid .'/features', array('query' => 'destination='. $_GET['q'])), 0);
   //use the custom theme form
