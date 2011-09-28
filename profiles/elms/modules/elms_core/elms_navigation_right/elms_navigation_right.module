@@ -1,7 +1,4 @@
 <?php
-
-include_once('elms_navigation_right.features.inc');
-
 // $Id: elms_navigation_right.module
 //Copyright (C) 2011  The Pennsylvania State University
 //

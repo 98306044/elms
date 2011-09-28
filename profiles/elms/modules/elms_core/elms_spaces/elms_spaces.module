@@ -88,9 +88,13 @@ function elms_spaces_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
     //when a course is inserted we automatically create a version for it
     if ($node->type == 'course') {
       _elms_spaces_course_default($node);
+	  //remove messages on course insert since this will redirect to the space to work
+	  $_SESSION['messages'] = array();
     }
 	//check for groups created
     if (og_is_group_type($node->type)) {
+		//remove messages on course insert since this will redirect to the space to work
+	  $_SESSION['messages'] = array();
 	  //bump workflow state to dev automatically
 	  workflow_execute_transition($node, 3);
       $space = spaces_load('og', $node->nid, TRUE);
