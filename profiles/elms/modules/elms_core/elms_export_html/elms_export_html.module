@@ -185,7 +185,7 @@ function elms_export_html_settings_submit($form_id, $form_values) {
 			variable_set('clean_url',1);
 		}
 		//need to generate a list of modules and themes to copy as well as files directory except for html_export folder
-		drupal_set_message("If you don't see any errors the site was exported successfully! <a href='" . base_path() . substr($export_path,strpos($export_path,$dir)) . "/index.html' target='_blank'>Click</a> here to access the export. <a href='" . base_path() . substr($export_path,strpos($export_path,$dir)) . "/index.html' target='_blank'>Click</a> here to access an archive.");
+		drupal_set_message("If you don't see any errors the site was exported successfully! <a href='" . base_path() . substr($export_path,strpos($export_path,$dir)) . "/index.html' target='_blank'>Click</a> here to access the export.");
 }
 
 function _elms_export_html_copyr($source, $dest){
@@ -215,4 +215,3 @@ function _elms_export_html_copyr($source, $dest){
 	$dir->close();
 	return true;
 }
-
