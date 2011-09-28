@@ -13,6 +13,10 @@ function elms_spaces_init() {
   //only add these settings to the node/%theme page
   if (arg(0) == 'theme') {
     drupal_add_js(drupal_get_path('module', 'elms_spaces') .'/elms_spaces.js');
+  }  
+  //style the progress bar page for batch processes since we do a lot of them
+  if (arg(0) == 'batch') {
+    drupal_add_css(drupal_get_path('module', 'elms_spaces') .'/progress.css');  
   }
 }
 /**
@@ -43,6 +47,144 @@ function _elms_spaces_theme_access() {
   }
 
   return 1;
+}
+
+//helper function to duplicate a certain book structure.  this is similar to how the outline designer duplicates content but this will set the new group based on the node in question
+function _elms_spaces_duplicate_branch($node, $group, &$context) {
+  global $user;
+  //intial setting of the batch job
+  if (!isset($context['sandbox']['progress'])) {
+  //get max
+  $context['sandbox']['max'] = db_result(db_query("
+    SELECT COUNT(mlid)
+    FROM {menu_links}  
+    WHERE p1=%d
+    ORDER BY depth ASC, mlid ASC", $node->book['mlid']));
+  //build array for cycling through the batch
+  $context['sandbox']['mlid_list'] = array();
+  $result = db_query("
+    SELECT mlid
+    FROM {menu_links}  
+    WHERE p1=%d
+    ORDER BY depth ASC, mlid ASC", $node->book['mlid']);
+  while ($val = db_fetch_array($result)) {
+    $context['sandbox']['mlid_list'][] = $val['mlid'];
+  }
+  $context['sandbox']['mlid'] = array();
+  $context['sandbox']['progress'] = 0;
+  $context['sandbox']['map'] = array();
+  }
+  //build 10 at a time
+  $mlids[] = $context['sandbox']['mlid_list'][$context['sandbox']['progress']];
+  $mlids[] = $context['sandbox']['mlid_list'][$context['sandbox']['progress']+1];
+  $mlids[] = $context['sandbox']['mlid_list'][$context['sandbox']['progress']+2];
+  $mlids[] = $context['sandbox']['mlid_list'][$context['sandbox']['progress']+3];
+  $mlids[] = $context['sandbox']['mlid_list'][$context['sandbox']['progress']+4];
+  $mlids[] = $context['sandbox']['mlid_list'][$context['sandbox']['progress']+5];
+  $mlids[] = $context['sandbox']['mlid_list'][$context['sandbox']['progress']+6];
+  $mlids[] = $context['sandbox']['mlid_list'][$context['sandbox']['progress']+7];
+  $mlids[] = $context['sandbox']['mlid_list'][$context['sandbox']['progress']+8];
+  $mlids[] = $context['sandbox']['mlid_list'][$context['sandbox']['progress']+9];
+
+  $result = db_query("
+    SELECT nid
+    FROM {menu_links} 
+    JOIN {book} ON {book}.mlid = {menu_links}.mlid 
+    WHERE {menu_links}.mlid IN(%d,%d,%d,%d,%d,%d,%d,%d,%d,%d) 
+     ORDER BY depth ASC, {menu_links}.mlid ASC", $mlids[0], $mlids[1], $mlids[2], $mlids[3], $mlids[4], $mlids[5], $mlids[6], $mlids[7], $mlids[8], $mlids[9]);
+  while ($value = db_fetch_array($result)) {
+    $dup_node = node_load($value['nid']);
+    $current_nid = $dup_node->nid;
+    $old_nid = $dup_node->nid;
+    //remove public flag in case the outline duplicated had that flag
+    unset($dup_node->og_public);
+    unset($dup_node->og_private);
+    //kill off all groups from the array
+    $dup_node->og_groups = NULL;
+    $dup_node->og_groups_both = NULL;
+    //add in the newly created group
+    $dup_node->og_groups = array($group->nid => $group->nid);
+    $dup_node->og_groups_both = array($group->nid => $group->title);
+    //remove the factors that would make this the old node
+    $dup_node->path = NULL;
+    $dup_node->nid = NULL;
+    $dup_node->created = NULL;
+  //see if we want to wipe the content or bring it along
+  if ($group->field_create_outline_mode[0]['value'] == 'duplicate_structure') {
+      $dup_node->body = '';
+  }
+    //take into account uuid usage, needed for node_export_book module to work
+    $dup_node->uuid = NULL;
+    $dup_node->revision_uuid = NULL;
+    //set to current uid
+    $dup_node->uid = $user->uid;
+    //make sure revision is 1
+    $dup_node->revision = 1;
+    $old_mlid = $dup_node->book['mlid'];
+    $dup_node->book['mlid'] = NULL;
+    $dup_node->log = "ELMS replicated this off of the old node nid: $old_nid";
+    //if this doesn't have a parent it's the book root so change the title
+    if ($dup_node->book['plid'] == 0) {
+      $root = TRUE;
+      $dup_node->title = $group->title .' - Course Outline';
+    }
+    else {
+      $root = FALSE;
+    }
+    if (isset($context['sandbox']['map'][$dup_node->book['plid']]) ) {
+      $dup_node->book['plid'] = $context['sandbox']['map'][$dup_node->book['plid']];
+    }
+    //ensure there's no escalation even though it shouldn't be possible
+    if (node_access('create', $dup_node)) {
+      node_save($dup_node);
+    $context['message'] = 'Assembling Course Outline: Creating page '. $dup_node->title .' ('. ($context['sandbox']['max'] - $context['sandbox']['progress']) .' pages remaining)';
+      //store this new nid since it's the new book root
+      if ($root) {
+        $context['sandbox']['root_nid'] = $dup_node->nid;
+      }
+      $context['sandbox']['map'][$old_mlid] = $dup_node->book['mlid'];
+    }
+    $context['sandbox']['progress']++;
+  }
+  //this is the last run, make sure we move the book to it's new branch
+  if ($context['sandbox']['progress'] == $context['sandbox']['max']) {
+    //everything has been duplicated correctly, now move it to it's own book
+    $rootnode = node_load($context['sandbox']['root_nid']);
+    $rootnode->book['bid'] = $rootnode->nid;
+    $rootnode->book['menu_name'] = book_menu_name($rootnode->book['bid']);
+    //update outline for new book
+    _book_update_outline($rootnode);
+  }
+
+  // Multistep processing : report progress.
+  if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
+    //need to pass through the map that's been built
+    $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+  }
+}
+
+function _elms_spaces_duplicate_branch_finished($success, $results, $operations) {
+  if ($success) {
+    $message = t('Welcome to your course');
+    watchdog('elms', 'New course has been created');
+  }
+  else {
+    $message = t('Finished with errors, check the error log.');
+    watchdog('elms', 'There was an error during course creation');
+  }
+  drupal_set_message($message,'elms-message');
+}
+
+function _elms_spaces_rebuild_finished($success, $results, $operations) {
+  if ($success) {
+    $message = t('Schedule mapping successful! Make sure you verify dates and events are correct as this takes the start date of both and lines them up without adding or removing events.  This is a best guess and not guaranteed accurate.');
+    watchdog('elms', 'Schedule Rebuilt');
+  }
+  else {
+    $message = t('Finished with errors, check the error log.');
+    watchdog('elms', 'There was an error during schedule rebuild');
+  }
+  drupal_set_message($message,'elms-message');
 }
 
 /*
@@ -93,4 +235,68 @@ function _elms_spaces_node_access_rebuild_batch_operation($group, &$context) {
   og_node_access_needs_rebuild(FALSE);
     cache_clear_all();
   }
+}
+
+/**
+ * Implementation of hook_form_FORM_ID_alter().
+ */
+function elms_spaces_form_menu_edit_item_alter(&$form, &$form_state) {
+  $form['menu']['token']['token_help']['help'] = array(
+    '#value' => theme('token_help', array('global','node','user')),
+  );
+}
+
+/**
+ * Implementation of hook_workflow().
+ *
+ * @param $op
+ *   The current workflow operation: 'transition pre' or 'transition post'.
+ * @param $old_state
+ *   The state ID of the current state.
+ * @param  $new_state
+ *   The state ID of the new state.
+ * @param $node
+ *   The node whose workflow state is changing.
+ */
+function elms_spaces_workflow($op, $old_state, $new_state, $node) {
+  switch ($op) {
+    case 'transition pre':
+      if ($old_state != $new_state) {
+        $course = node_load($node->field_course_ref[0]['nid']);
+		//form path from the title of the course
+		$path = strtolower(str_replace(' ', '', $course->title));
+        switch($new_state) {
+          case 3: //dev
+	      $address = $path .'_dev_'. $node->nid;
+	    break;
+	    case 4: //staging
+        case 5: //active
+	      $address = $path .'_'. $node->field_section_semester[0]['value'] . $node->field_section_year[0]['value'] . $node->field_campus[0]['value'] . $node->field_section_number[0]['value'];
+	    break;
+	    case 6: //archive
+	      $address = $path .'_archive_'. $node->nid;
+	    break;
+        case 7: //demo
+	    //will need to check reference to ensure there's only 1 demo
+	      $address = $path .'_demo';
+	    break;
+      }
+      $modifier = array(
+        'value' => $address,
+	    'provider' => 'spaces_og',
+        'id' => $node->nid,
+      );
+      purl_save($modifier);
+	  if ($old_state != 2) {
+        drupal_set_message('Address has changed to reflect the change in Course Offering status from '. workflow_get_state_name($old_state) .' to '. workflow_get_state_name($new_state), 'warning');
+	  }
+	  //if we're on the workflow page direct back to course node
+    }
+    break;
+	case 'transition post':
+	  //the pre hook changes the address name so we need to do a purl look up to go back otherwise it loses scope of where is it
+	  $_REQUEST['destination'] = 'node/'. $node->nid;
+    break;
+  }
+  return true;
 }
