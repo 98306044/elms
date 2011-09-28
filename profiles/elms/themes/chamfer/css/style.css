@@ -13,9 +13,7 @@ font: 100% Tahoma, "Helvetica Nue", Helvetica, Verdana, Arial, sans-serif;
     url("../fonts/LeagueGothic.otf") format("opentype"),
     url("../fonts/LeagueGothic.svg#LeagueGothic") format("svg");
 }
-.form-region-main {
-  width:100% !important;
-}
+
 body, height {
 	height: 100%;
 	text-align:left;	

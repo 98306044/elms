@@ -5,7 +5,7 @@ ul.tabs {
 /* left side blocks */
 #regions_elms_navigation_left {
   width:200px;
-  top:100px;
+  top:50px;
   z-index:100;
   left:-180px;
   float:left;
@@ -14,6 +14,8 @@ ul.tabs {
   margin:0px;
   text-align:left;
   font-size:12px;
+  background-color:#009;
+  color:#ccc;
 }
 #regions_elms_navigation_left .regions_pre_block_container {
  position:static;
@@ -33,10 +35,10 @@ ul.tabs {
   height:20px;
 }
 #regions_elms_navigation_left li:hover {
-  background-color:#FC6;
+  background-color:#333;
 }
 #regions_elms_navigation_left li a {
-  color:#333 !important;
+  color:#ccc; !important;
   text-decoration:none;
   clear: both;
   float:left;
@@ -54,18 +56,17 @@ ul.tabs {
 }
 /* colors for the blocks on the left */
 #regions_elms_navigation_left .regions_1 {
-  background-color:#FFD;
+  background-color:#666;
 }
 #regions_elms_navigation_left .regions_2 {
-  background-color:#FF8;
+  background-color:#555;
 }
 #regions_elms_navigation_left .regions_3 {
-  background-color:#FFA;
+  background-color:#444;
 }
 #regions_elms_navigation_left .workflow_state {
   height: 20px;
-  text-align: center;
-  line-height:24px;
+  line-height:20px;
 }
 #regions_elms_navigation_left #masquerade-block-1 {
  margin-top:10px;	

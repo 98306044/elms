@@ -15,8 +15,16 @@ include_once('elms_navigation_top.features.inc');
 //University Park,  PA 16802
 /**
  * @file
- *   Add a right side region for ELMS for containing social elements
+ *   Add a top bar region for ELMS
  */
+
+/**
+ * Implementation of hook_init().
+ */
+function elms_navigation_top_init() {
+  //unset breadcrumbs because the top nav will handle them manually
+  //drupal_set_breadcrumb(array());
+}
 
 /**
  * Implementation of hook_define_region().
@@ -101,8 +109,6 @@ function _elms_navigation_top_system_path() {
     $site_frontpage = unserialize(db_result(db_query("SELECT value FROM {variable} WHERE name='site_frontpage'")));
     $site_name = unserialize(db_result(db_query("SELECT value FROM {variable} WHERE name='site_name'")));
     $output = theme('menu_item', l(t($site_name), $site_frontpage, array('purl' => array('disabled' => TRUE))), 0);
-	//add a courses link for simplicity
-    $output.= theme('menu_item', l(t('Courses'), 'courses', array('purl' => array('disabled' => TRUE))), 0);
     $val = db_fetch_array(db_query("SELECT n.title, td.name FROM {node} AS n JOIN {term_node} AS tn ON n.nid = tn.nid JOIN {term_data} AS td ON td.tid = tn.tid WHERE n.nid=%d", $group->field_course_ref[0]['nid']));
   //add the courses listing with the name of the taxonomy term
     $output.= theme('menu_item', l(t($val['name']), 'courses', array('purl' => array('disabled' => TRUE))), 0);
@@ -114,8 +120,6 @@ function _elms_navigation_top_system_path() {
   else {
     //add the site name first
     $output = theme('menu_item', l(t(variable_get('site_name', '')), '<front>', array('purl' => array('disabled' => TRUE))), 0);
-    //add a courses link for simplicity
-    $output.= theme('menu_item', l(t('Courses'), 'courses', array('purl' => array('disabled' => TRUE))), 0);
     //see if we have a course node without loading the node
     $nid = arg(1);
     //verify this is an id
@@ -127,11 +131,29 @@ function _elms_navigation_top_system_path() {
       $val = db_fetch_array(db_query("SELECT n.title, td.name FROM {node} AS n JOIN {term_node} AS tn ON n.nid = tn.nid JOIN {term_data} AS td ON td.tid = tn.tid WHERE n.nid=%d", $nid));
     //taxonomy  term used
       $output.= theme('menu_item', l(t($val['name']), 'courses', array('purl' => array('disabled' => TRUE))), 0);
-    //course home
-      $output.= theme('menu_item', l(t($val['title']), 'node/'. $nid, array('purl' => array('disabled' => TRUE))), 0);
+    }
+	else {
+	  $output.= theme('menu_item', l(t('All Courses'), 'courses', array('purl' => array('disabled' => TRUE))), 0);	
+	}
+  }
+  //unify everything that's not in the courses view
+  if (arg(0) != 'courses') {
+	//dig out current menu path based on whats active
+	$active_menu = menu_set_active_trail();
+	//pop off the home link
+	if ($active_menu[0]['title'] == 'Home') {
+      array_shift($active_menu);
+	}
+    //iterate each menu item and convert to valid breadcrumb
+    foreach($active_menu as $menu) {
+	  if (isset($menu['link_path'])) {
+	    $output.= theme('menu_item', l(t($menu['title']), $menu['link_path']), 0);
+	  }
+	  else {
+		$output.= theme('menu_item', l(t($menu['title']), $menu['href']), 0);
+	  }
     }
   }
-  
   return $output;
 }
 

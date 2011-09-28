@@ -154,7 +154,9 @@ function _elms_navigation_left_course_block($group) {
   //change the features of the course
   $output.= theme('menu_item', l(t('Change Features'), 'node/'. $group->nid .'/features', array('query' => 'destination='. $_GET['q'])), 0);
   //use the custom theme form
-  $output.= theme('menu_item', l(t('Theme'), 'theme'), 0);
+  $output.= theme('menu_item', l(t('Change Theme'), 'theme'), 0);
+  //use the custom theme form
+  $output.= theme('menu_item', l(t('Admin Settings'), 'node/'. $group->nid .'/edit', array('query' => 'destination='. $_GET['q'])), 0);
   return $output;
 }
 
