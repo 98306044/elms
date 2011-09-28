@@ -1,3 +1,64 @@
 <?php
 
 include_once('elms_course.features.inc');
+
+/**
+ * Implementation of hook_nodeapi().
+ */
+function elms_course_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
+  switch ($op) {
+    case 'load':
+    //for group nodes, load in the ID of the book outline
+    if (og_is_group_type($node->type)) {
+	  //there's only 1 book per group so load the id and store it in the node object
+	  //also store the outline mlid to avoid duplicate querying in the future
+      $result = db_query("SELECT mlid,{book}.nid FROM {og_ancestry} JOIN {book} ON {book}.nid = {og_ancestry}.nid WHERE {book}.nid = {book}.bid AND group_nid=%d", $node->nid);
+      $val = db_fetch_array($result);
+      $node->book_outline_mlid = $val['mlid'];
+      $node->book_nid = $val['nid'];
+    }
+  break;
+  case 'insert':
+    //when a course is inserted we automatically create a version for it
+    if ($node->type == 'course') {
+      _elms_course_create_default($node);
+    }
+    break;
+  }
+}
+
+//create a course version off of default settings
+function _elms_course_create_default($course) {
+  global $user;
+  //creating a blank node
+  $group = new StdClass();
+  //setting this flag avoids a conflict with instructional outline auto creation
+  $group->default_version = 1;
+  $group->uid = $user->uid;
+  //this title will change anyway on node insert
+  $group->title = $course->title .' Master';
+  $group->type = 'version';
+  $group->status = 1;
+  $group->log = 'Default settings used to create an initial course version';
+  $group->revision = 1;
+  $group->field_navigation[0]['value'] = 'left';
+  $group->field_footer[0]['value'] = "&copy; Copyright 2011 The Pennsylvania State University and its licensors. All rights reserved.<br />
+Penn State is an Equal Opportunity Employer.";
+  $group->field_scoring_method[0]['value'] = 'points';
+  //Set the course reference
+  $group->field_course_ref[0]['nid'] = $course->nid;
+  //set printing on by default
+  $group->field_print_options[0]['value'] = 'both';
+  //og settings
+  $group->theme = 'chamfer';
+  $group->og_theme = 'chamfer';
+  $group->og_description = '';
+  $group->og_private = 1;
+  $group->field_lesson_count[0]['value'] = 15;
+  //save node
+  node_save($group);
+  //create the book root now that we have the group node finished
+  if (module_exists('elms_course_content')) {
+    _elms_course_content_create_root($group, 'default');
+  }
+}
