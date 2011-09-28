@@ -158,6 +158,11 @@ function elms_helper_link_alter(&$links, $node, $comment = NULL) {
   if (isset($links['book_add_child'])) {
     unset($links['book_add_child']);
   }
+  //unset social media link
+  if (isset($links['feed_reader_field_associated_to'])) {
+    unset($links['feed_reader_field_associated_to']);
+  }
+  
   //shifts bookmarks if activated
   if (isset($links['flag-bookmarks'])) {
     $temp = $links['flag-bookmarks'];
@@ -177,7 +182,7 @@ function elms_helper_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
         $childobj = book_next($node->book);
     //if this user can't edit the node then skip it as we've already proven that it's blank
         if (!node_access('update',$node)) {
-          $_REQUEST['destination'] = $childobj['link_path'];
+          drupal_goto($childobj['link_path']);
         }
         else {
           drupal_set_message('This page will redirect to '. l(t($childobj['title']), $childobj['link_path']) .' for students.','elms-message');
