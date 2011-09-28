@@ -352,29 +352,6 @@ function _og_clone_clone_form_submit($form, &$form_state) {
   return 1;
 }
 
-//function _og_clone_clone_form_submit() {
-
-//}
-
-/**
-* helper function to start the batch job for og clone
-*/
-function _og_clone_start_batch_job($group_nid) {
-	$batch = array(
-	  'title' => t('Creating Course Outline'),
-	  'operations' => array(
-		array('_elms_spaces_duplicate_branch', array($group_nid)),
-		array('_elms_spaces_node_access_rebuild_batch_operation', array($group_nid))
-	  ),
-	  'progress_message' => t('Completed job @current of @total.'),
-	  'init_message' => t('Copying course structure'),
-	  'error_message' => t('An error has occured'),
-	  'finished' => '_elms_spaces_duplicate_branch_finished',
-	);
-	batch_set($batch);
-	batch_process('node/'. $node->nid .'/edit/4');
-}
-
 /**
 * helper function to get the groups of the current user
 */
