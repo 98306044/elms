@@ -75,7 +75,7 @@ class context_var_context_condition extends context_condition {
 		//go through each value pair and compare to drupal's current values
 		//because we use variable_get this will take into account strongarm / spaces
         foreach ($sys_array as $key => $value) {
-          $sys_var = variable_get($key,array());
+          $sys_var = variable_get($key, array());
           //check to see if this is an even deeper array
           if (strpos($value, ':') === false) {
 			//if the database value doesn't equal the context value, return false
