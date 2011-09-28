@@ -82,7 +82,7 @@ function elms_helper_init() {
  */
 function elms_helper_menu_alter(&$items) {
   //link outline access argument to tracker one, that way it's hidden from IDs
-  $items['node/%node/outline']['access callback'] = '_elms_helper_outline_tab';
+  $items['node/%node/outline']['type'] = MENU_CALLBACK;
   //remove some confusing pages from menu items
   $items['node/%/outline_designer']['type'] = MENU_CALLBACK;
   $items['og/activity']['type'] = MENU_CALLBACK;
@@ -103,17 +103,6 @@ function elms_helper_menu_alter(&$items) {
     $menu_item['access callback'] = 'user_access';
     $menu_item['access arguments'] = array('administer users');
   }
-}
-
-/**
- * Access helper function to remove the outline tab from the group page
- */
-function _elms_helper_outline_tab() {
-  $group_node = node_load(arg(1));
-  if(og_is_group_type($group_node->type)){
-    return false;
-  }
-  return user_access('administer book outlines');
 }
 
 /**
@@ -158,9 +147,13 @@ function elms_helper_link_alter(&$links, $node, $comment = NULL) {
   if (isset($links['book_add_child'])) {
     unset($links['book_add_child']);
   }
-  //unset social media link
+  //unset social media link as we'll be handling that in the page menu
   if (isset($links['feed_reader_field_associated_to'])) {
     unset($links['feed_reader_field_associated_to']);
+  }
+  $features = variable_get('spaces_features', array());
+  if (!isset($features['elms_reaction']) || !$features['elms_reaction']) {
+    unset($links['reaction_field_related_content']);
   }
   
   //shifts bookmarks if activated
