@@ -14,7 +14,7 @@ function _spaces_theme_theme_form($form_state, $feature = NULL) {
   if ($theme_form = system_theme_select_form(t('Changing the theme will reload the settings below.'), isset($form_state['values']['theme']) ? $form_state['values']['theme'] : $group->og_theme, 2)) {
     $theme_form['themes']['#weight'] = -8;
 	$theme_form['themes']['#collapsed'] = 1;
-	$theme_form['themes']['#title'] = t('Change Group Theme');
+	$theme_form['themes']['#title'] = t('Change Theme');
     $form += $theme_form;
   }
   //site logo
@@ -75,8 +75,8 @@ function _spaces_theme_theme_form($form_state, $feature = NULL) {
   $form['theme_settings'] = array(
   '#type' => 'fieldset',
   '#title' => t('Settings'),
-  '#collapsed' => FALSE,
-  '#collapsible' => FALSE,
+  '#collapsed' => TRUE,
+  '#collapsible' => TRUE,
   );
   //support for logo
   $form['theme_settings']['toggle_logo'] = array(
