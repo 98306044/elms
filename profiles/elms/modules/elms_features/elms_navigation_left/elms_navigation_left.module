@@ -24,8 +24,8 @@ include_once('elms_navigation_left.features.inc');
 function elms_navigation_left_define_regions() {
   $region['elms_navigation_left'] = array(
     'project' => 'elms_navigation_left',
-	'js' => 'elms_navigation_left.js',
-	'css' => 'elms_navigation_left.css',
+  'js' => 'elms_navigation_left.js',
+  'css' => 'elms_navigation_left.css',
   );
   return $region;
 }
@@ -50,12 +50,12 @@ function elms_navigation_left_block($op = 'list', $delta = 0, $edit = array()) {
       'weight' => 0,
       'status' => 0,
     );
-	$blocks[1] = array(
+    $blocks[1] = array(
       'info' => t('Course Level Navigation'),
       'weight' => 0,
       'status' => 0,
     );
-	$blocks[2] = array(
+    $blocks[2] = array(
       'info' => t('Actions Level Navigation'),
       'weight' => 0,
       'status' => 0,
@@ -63,40 +63,55 @@ function elms_navigation_left_block($op = 'list', $delta = 0, $edit = array()) {
     return $blocks;
   }
   else if ($op == 'view') {
-	$group = og_get_group_context();
+    $group = og_get_group_context();
     switch ($delta) {
       case 0:
         $block['title'] = 'System';
         $block['content'] = _elms_navigation_left_system_block($group);
       break;
-	  case 1:
-		if (isset($group->nid)) {
+      case 1:
+        if (isset($group->nid)) {
           $block['title'] = 'Course';
           $block['content'] = _elms_navigation_left_course_block($group);
-		}
+        }
       break;
-	  case 2:
-		if (isset($group->nid)) {
-		  $node = node_load(arg(1));
+      case 2:
+        if (isset($group->nid)) {
           $block['title'] = 'Page';
-          $block['content'] = menu_local_tasks();
-		  //check for node reference url links
-		  if (module_exists('nodereference_url')) {
-		    $tmp_ref_links = nodereference_url_build_all_links($node, 0);
-		    //if there are links then append them
-		    if (count($tmp_ref_links) != 0) {
-				$block['content'].= '<br/>';
-				//loop through and add the links for contextual reference to this material
-				foreach ($tmp_ref_links as $link) {
-				  $block['content'].= theme('menu_item', l(t($link['title']), $link['href'], array($link['query'], $link['attributes'])), 0);
-				}
-		    }
-		  }
-		}
+          $block['content'] = _elms_navigation_left_page_block();
+        }
       break;
     }
     return $block;
   }
+}
+
+//helper function Page level tasks
+function _elms_navigation_left_page_block(){
+  $output = menu_local_tasks();
+  $node = node_load(arg(1));
+  if (isset($node->nid)) {
+    //check for node reference url links
+	$tmp_ref_links = nodereference_url_build_all_links($node, 0);
+    $features = variable_get('spaces_features', array());
+	//account for reactions not being active
+    if (!isset($features['elms_reaction']) || !$features['elms_reaction']) {
+      unset($tmp_ref_links['reaction_field_related_content']);
+    }
+	//account for atrium reader not being active
+	if (!isset($features['atrium_reader']) || !$features['atrium_reader']) {
+      unset($tmp_ref_links['feed_reader_field_associated_to']);
+    }
+	//if there are links then append them
+	if (count($tmp_ref_links) != 0) {
+	  $output.= '<br/>';
+	  //loop through and add the links for contextual reference to this material
+	  foreach ($tmp_ref_links as $link) {
+		$output.= theme('menu_item', l(t($link['title']), $link['href'], array($link['query'], $link['attributes'])), 0);
+	  }
+    }
+  }
+  return $output;	
 }
 
 //helper function Course level tasks
@@ -106,32 +121,32 @@ function _elms_navigation_left_course_block($group) {
   $features = variable_get('spaces_features', array());
   //loop through active features
   foreach ($features as $fname => $status) {
-	//if it's active then see if we should add settings
+  //if it's active then see if we should add settings
     if ($status) {
-	  switch ($fname) {
+    switch ($fname) {
         case 'elms_course_content':
-		  //course outline
-		  $output.= '<strong>Content</strong>';
+      //course outline
+      $output.= '<strong>Content</strong>';
           $output.= theme('menu_item', l(t('Content Outline'), 'outline_designer/book/'. $group->book_nid), 0);
-		  $output.= theme('menu_item', l(t('Settings'), 'node/'. $group->nid .'/features/elms_course_content', array('query' => 'destination='. $_GET['q'])), 0);
-		break;
-		case 'elms_reaction':
-		  //course outline
-		  $output.= '<strong>Reactions</strong>';
+      $output.= theme('menu_item', l(t('Settings'), 'node/'. $group->nid .'/features/elms_course_content', array('query' => 'destination='. $_GET['q'])), 0);
+    break;
+    case 'elms_reaction':
+      //course outline
+      $output.= '<strong>Reactions</strong>';
           $output.= theme('menu_item', l(t('Settings'), 'node/'. $group->nid .'/features/elms_reaction', array('query' => 'destination='. $_GET['q'])), 0);
-		break;
-		case 'elms_course_studio':
-		  //ELMS Reactions
-		  $output.= '<strong>Studio</strong>';
+    break;
+    case 'elms_course_studio':
+      //ELMS Reactions
+      $output.= '<strong>Studio</strong>';
           $output.= theme('menu_item', l(t('Settings'), 'node/'. $group->nid .'/features/elms_course_studio', array('query' => 'destination='. $_GET['q'])), 0);
-		break;
-		case 'elms_schedule':
-		  //ELMS Schedule
-		  $output.= '<strong>Schedule</strong>';
+    break;
+    case 'elms_schedule':
+      //ELMS Schedule
+      $output.= '<strong>Schedule</strong>';
           $output.= theme('menu_item', l(t('Settings'), 'node/'. $group->nid .'/features/elms_schedule', array('query' => 'destination='. $_GET['q'])), 0);
-		break;
-	  }
-	}
+    break;
+    }
+  }
   }
   //make the current workflow state as visible as possible
   $output.= '<strong>Settings</strong>';
@@ -153,18 +168,18 @@ function _elms_navigation_left_system_block($group = '') {
     $output.= theme('menu_item', l(t('Create New Course Version'), 'node/add/version/'. $group->field_course_ref[0]['nid'], array('purl' => array('disabled' => TRUE))), 0);
     //export html option
     $output.= theme('menu_item', l(t('Export to HTML'), 'node/'. $group->nid .'/html_export', array('query' => 'destination='. $_GET['q'])), 0);
-	//provide gap between next items
+  //provide gap between next items
     $output.= '<br />';
   }
   else {
-	$nid = arg(1);
-	$node = node_load($nid);
-	//see if this is a course landing page
-	if ($node->type == 'course') {
+  $nid = arg(1);
+  $node = node_load($nid);
+  //see if this is a course landing page
+  if ($node->type == 'course') {
       //create a new course
       $output.= theme('menu_item',l(t('Create New Course Version'), 'node/add/version/'. $node->nid, array('purl' => array('disabled' => TRUE))), 0);
       $output.= '<br />';
-	}
+  }
   }
   //create a new course
   $output.= theme('menu_item',l(t('Create New Course'), 'node/add/course', array('purl' => array('disabled' => TRUE))), 0);
