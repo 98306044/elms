@@ -15,7 +15,20 @@ function elms_course_versions_form_alter(&$form, &$form_state, $form_id) {
     if (arg(1) == 'add') {
       $form['purl']['value']['#default_value'] = '_tmp_'. rand(1,1000);
       $form['themes']['theme']['#default_value'] = 'chamfer';
+	  //auto populate the descriptive field if we can
+	  $nid = arg(3);
+	  if (isset($nid)) {
+	    $node = node_load(arg(3));
+	    $form['og_description']['#value'] = $node->field_description[0]['value'];
+	  }
     }
+    $form['#content_extra_fields']['spaces_preset']['weight'] = 8;
+    //unset rubik which is used for administering the site
+    unset($form['themes']['rubik']);
+    unset($form['themes']['theme']['#options']['rubik']);
+    //unset default system theme
+    unset($form['themes']['']);
+    unset($form['themes']['theme']['#options']['']);
   }
 }
 

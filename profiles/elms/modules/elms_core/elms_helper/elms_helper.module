@@ -390,22 +390,6 @@ function elms_helper_form_alter(&$form, &$form_state, $form_id) {
   );
   }
   }
-  //version form, still need to move to its own place
-  if ($form_id == 'version_node_form') {
-    $nid = arg(3);
-	if (isset($nid)) {
-	  $node = node_load(arg(3));
-	  $form['og_description']['#value'] = $node->field_description[0]['value'];
-	}
-    $form['#content_extra_fields']['spaces_preset']['weight'] = 8;
-    $form['title']['#description'] = t('Name and number of the course');
-    //unset rubik which is used for administering the site
-    unset($form['themes']['rubik']);
-    unset($form['themes']['theme']['#options']['rubik']);
-    //unset default system theme
-    unset($form['themes']['']);
-    unset($form['themes']['theme']['#options']['']);
-  }
   if ($form_id == 'user_profile_form') {
     //remove change theme from view even if they have the permission, gives us granularity so they can set it in the group / course creation
     $form['theme_select']['#access'] = FALSE;

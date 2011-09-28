@@ -29,6 +29,8 @@ ul.tabs {
   list-style-type: none;
   list-style-image: none;
   padding: 2px 0px 2px 10px;
+  clear: both;
+  height:20px;
 }
 #regions_elms_navigation_left li:hover {
   background-color:#FC6;
@@ -36,6 +38,10 @@ ul.tabs {
 #regions_elms_navigation_left li a {
   color:#333 !important;
   text-decoration:none;
+  clear: both;
+  float:left;
+  height:20px;
+  width:100%;
 }
 #regions_elms_navigation_left .regions_block_title {
   font-size:16px;
@@ -48,10 +54,10 @@ ul.tabs {
 }
 /* colors for the blocks on the left */
 #regions_elms_navigation_left .regions_1 {
-  background-color:#FFC;
+  background-color:#FFD;
 }
 #regions_elms_navigation_left .regions_2 {
-  background-color:#FFB;
+  background-color:#FF8;
 }
 #regions_elms_navigation_left .regions_3 {
   background-color:#FFA;
