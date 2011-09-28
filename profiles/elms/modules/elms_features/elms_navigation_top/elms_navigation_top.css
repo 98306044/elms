@@ -20,10 +20,16 @@ body {
   line-height:20px;
 }
 
+#regions_elms_navigation_top .regions_block_content {
+ height:20px;	
+}
+
 #regions_elms_navigation_top .regions_1 {
   float:left;
   padding:0px 10px;
+  height:20px;
 }
+
 #regions_elms_navigation_top .regions_1 .leaf {
   list-style-image:none;
   list-style-position:inside;
@@ -32,6 +38,14 @@ body {
   display:inline;
   margin:0px;
   padding:0px;
+  height:20px;
+  float:left;
+}
+
+#regions_elms_navigation_top .regions_1 a {
+  height:20px;
+  padding:0px 5px;
+  float:left;
 }
 
 #regions_block_elms_navigation_top_2 {
@@ -84,9 +98,10 @@ body {
   border:0px;
   outline:0px;
   font-size:100%;
-  vertical-align:top;
+  vertical-align:middle;
   line-height:20px;
   text-align:left;
+  color:#ccc;
 }
 
 #regions_elms_navigation_top div.regions_post_block_container {
@@ -100,7 +115,7 @@ body {
 
 #regions_elms_navigation_top a {
   text-decoration:none;
-  color:#fff;
+  color:#ccc !important;
 }
 
 #regions_elms_navigation_top ul.links {
@@ -113,5 +128,5 @@ body {
 
 #regions_elms_navigation_top li a.active {
   text-shadow:#333 0px 1px 0px;
-  background:url(images/sprite.png) 0px 0px repeat-x;
+  background-color:#666;
 }
