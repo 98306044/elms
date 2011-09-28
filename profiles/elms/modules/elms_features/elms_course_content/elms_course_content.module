@@ -61,7 +61,10 @@ function elms_course_content_block($op = 'list', $delta = 0, $edit = array()) {
   else if ($op == 'view') {
     switch ($delta) {
       case 0:
-        $block = _elms_course_content_nav();
+	    //invoke the book module and then alter the title
+	    $block = module_invoke('book', 'block', 'view', 0);
+		$block['subject'] = t('Content Outline');
+		$block['title'] = t('Content Outline');
       break;
     }
     return $block;
@@ -140,29 +143,6 @@ function _elms_course_content_toc_recurse($tree, $indent, &$toc, $exclude, $dept
       }
     }
   }
-}
-
-//helper function for elms_course_content_block
-function _elms_course_content_nav() {
-  //get group nid
-  $group_node = og_get_group_context();
-  //figure out the course outline that's in this book
-  $config = array(
-    'delta' => -1,
-    'menu_name' => 'book-toc-'. $group_node->book_nid,
-    'parent_mlid' => $group_node->book_outline_mlid,
-    'admin_title' => 'Course Outline',
-    'sort' => 0,
-	'title_link' => 0,
-    'level' => 1,
-    'follow' => 0,
-    'depth' => 0,
-    'expanded' => 0,
-  );
-  $blockary = menu_tree_build($config);
-  $blockary['subject'] = 'Content';
-  $blockary['title'] = 'Content';
-  return $blockary;
 }
 
 /**
