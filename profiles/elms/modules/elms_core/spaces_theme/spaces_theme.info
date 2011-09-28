@@ -1,0 +1,9 @@
+; $Id: spaces_theme.info
+name = Spaces Theme
+description = Change theme and settings per Space
+package = Spaces
+version = 6.x-1.0-beta1
+core = "6.x"
+dependencies[] = og
+dependencies[] = spaces
+dependencies[] = spaces_og

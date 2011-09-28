@@ -1,0 +1,46 @@
+<?php
+// $Id: spaces_theme.module
+
+/**
+ * @file
+ * Spaces specific helper functions to help organize space specific settings / pages into their own area
+ */
+
+/**
+ * Implementation of hook_init()
+ */
+function spaces_theme_init() {
+  //only add these settings to the node/%theme page
+  if (arg(0) == 'theme') {
+    drupal_add_js(drupal_get_path('module', 'spaces_theme') .'/spaces_theme.js');
+  }
+}
+/**
+ * Implementation of hook_menu()
+ */
+function spaces_theme_menu() {
+  $items = array();
+  $items['theme'] = array(
+    'title' => 'Theme Settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('_spaces_theme_theme_form'),
+    'type' => MENU_NORMAL_ITEM,
+  'access callback' => '_spaces_theme_theme_access',
+    'access arguments' => array(),
+    'file' => 'spaces_theme.theme.inc',
+    'file path' => drupal_get_path('module','spaces_theme') .'/inc',
+  );
+  return $items;
+}
+
+//determine if someone can access the /theme page based on whether or not they have access to edit the space
+//CHANGE access method to that of features as this check is overkill
+function _spaces_theme_theme_access() {
+  global $user;
+  $node = og_get_group_context();
+  if (!og_is_group_type($node->type) || !user_access('edit own course content')) {
+    return 0;
+  }
+
+  return 1;
+}

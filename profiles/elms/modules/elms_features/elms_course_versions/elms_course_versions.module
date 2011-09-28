@@ -101,11 +101,11 @@ function elms_course_versions_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
             'progress_message' => t('Completed job @current of @total.'),
             'operations' => array(
               array($batch_call, array($node)),
-              array('_elms_spaces_node_access_rebuild_batch_operation', array($node)),
+              array('_elms_version_node_access_rebuild_batch_operation', array($node)),
             ),
             'init_message' => t('Loading schedule'),
             'error_message' => t('An error has occured'),
-            'finished' => '_elms_spaces_duplicate_branch_finished',
+            'finished' => '_elms_version_duplicate_branch_finished',
           );
           batch_set($batch);
           batch_process('node/'. $node->nid .'/edit/4');
