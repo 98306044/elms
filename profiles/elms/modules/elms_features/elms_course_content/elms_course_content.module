@@ -3,6 +3,28 @@
 include_once('elms_course_content.features.inc');
 
 /**
+ * Implementation of hook_nodeapi().
+ */
+function elms_course_content_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
+  switch ($op) {
+    case 'view':
+  //if the user is viewing a page with no content and has children goto first child
+      if ($node->type == 'folder' && $node->book['has_children'] == 1 && !strpos($_SERVER['SCRIPT_NAME'],'cron.php')) {
+        $childobj = book_next($node->book);
+    //if this user can't edit the node then skip it as we've already proven that it's blank
+        if (!node_access('update',$node)) {
+          drupal_goto($childobj['link_path']);
+        }
+        else {
+          drupal_set_message('This page will redirect to '. l(t($childobj['title']), $childobj['link_path']) .' for students.','elms-message');
+        }
+      }
+	break;
+  }
+}
+
+
+/**
  * Implementation of (undocumented) hook_theme_registry_alter().
  */
 function elms_course_content_theme_registry_alter(&$vars) {

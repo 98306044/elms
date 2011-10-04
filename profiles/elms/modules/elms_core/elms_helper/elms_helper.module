@@ -19,6 +19,7 @@ function elms_helper_theme_registry_alter(&$vars) {
  */
 function elms_helper_init() {
   global $user;
+  dpm($user);
   if (arg(2) == 'html_export' || arg(2) == 'check_links') {
     drupal_set_message(t('This is still in active development / future planned functionality.'),'warning');
   }
@@ -431,27 +432,6 @@ function elms_helper_link_alter(&$links, $node, $comment = NULL) {
 }
 
 /**
- * Implementation of hook_nodeapi().
- */
-function elms_helper_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
-  switch ($op) {
-    case 'view':
-  //if the user is viewing a page with no content and has children goto first child
-      if ($node->type == 'folder' && $node->book['has_children'] == 1 && !strpos($_SERVER['SCRIPT_NAME'],'cron.php')) {
-        $childobj = book_next($node->book);
-    //if this user can't edit the node then skip it as we've already proven that it's blank
-        if (!node_access('update',$node)) {
-          drupal_goto($childobj['link_path']);
-        }
-        else {
-          drupal_set_message('This page will redirect to '. l(t($childobj['title']), $childobj['link_path']) .' for students.','elms-message');
-        }
-      }
-	break;
-  }
-}
-
-/**
  * Implementation of hook_content_extra_fields().
  */
 function elms_helper_content_extra_fields($type_name) {
@@ -502,15 +482,30 @@ function elms_helper_ckeditor_link_autocomplete_alter(&$results, $string) {
 function elms_helper_feeds_user_processor_targets_alter(&$targets) {
   $targets['roles'] = array(
     'name' => t('Role ID'),
-    'description' => t('Profile: @name', array('@name' => $record->title)),
-    'callback' => 'elms_helper_feeds_set_target',
+    'description' => t('Set the user role system wide'),
+    'callback' => 'elms_helper_feeds_set_roles_target',
+  );
+  $targets['og_roles'] = array(
+    'name' => t('OG Role ID'),
+    'description' => t('Set the Organic Group Role ID, only useful when within a Space / OG context already.'),
+    'callback' => 'elms_helper_feeds_set_og_roles_target',
   );
 }
 
 /**
- * Set the user profile target after import.
+ * Set the user role target after import.
  */
-function elms_helper_feeds_set_target($account, $target, $value) {
+function elms_helper_feeds_set_roles_target($account, $target, $value) {
   $account->{$target} = $value;
+  return $account;
+}
+
+
+/**
+ * Set the user within the context of the current group.
+ */
+function elms_helper_feeds_set_og_roles_target($account, $target, $value) {
+  $group = og_get_group_context();
+  $account->og_roles[$group->nid]['og_role'] = $value;
   return $account;
 }
