@@ -1,0 +1,45 @@
+<?php
+// $Id: feeds_ridmap.module
+
+/**
+ * @file
+ * Allow for mapping imported RID values directly to user roles in drupal
+ */
+
+/**
+ * adds user target for role
+ */
+
+function feeds_ridmap_feeds_user_processor_targets_alter(&$targets) {
+  $targets['roles'] = array(
+    'name' => t('Role ID'),
+    'description' => t('Set the user role system wide'),
+    'callback' => 'feeds_ridmap_feeds_set_roles_target',
+  );
+  if (module_exists('og')) {
+    $targets['og_roles'] = array(
+      'name' => t('OG Role ID'),
+      'description' => t('Set the Organic Group Role ID, only useful when within a Space / OG context already.'),
+      'callback' => 'feeds_ridmap_feeds_set_og_roles_target',
+    );
+  }
+}
+
+/**
+ * Set the user role target after import.
+ */
+function feeds_ridmap_feeds_set_roles_target($account, $target, $value) {
+  $account->{$target} = $value;
+  return $account;
+}
+
+
+/**
+ * Set the user within the context of the current group.
+ */
+function feeds_ridmap_feeds_set_og_roles_target($account, $target, $value) {
+  //get the active group context and map from there
+  $group = og_get_group_context();
+  $account->og_roles[$group->nid]['og_role'] = $value;
+  return $account;
+}

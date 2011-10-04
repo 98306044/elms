@@ -5,4 +5,3 @@ package = ELMS
 version = ELMS_VERSION
 core = "6.x"
 dependencies[] = og
-dedependencies[] = menu_token
