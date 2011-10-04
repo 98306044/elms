@@ -36,7 +36,7 @@ function elms_navigation_left_define_regions() {
 function elms_navigation_left_form_alter(&$form, &$form_state, $form_id) {
   //make the masquerade block display differently in the left hand menu to fit one line
   if ($form_id == 'masquerade_block_1') {
-    $form['masquerade_user_field']['#size'] = 10;
+    $form['masquerade_user_field']['#size'] = 8;
   }
 }
 
