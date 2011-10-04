@@ -2,4 +2,7 @@
 name = "Profiler Builder"
 description = "Helper module for profiler to build distributions even faster"
 package = Development
-core = 6.x
+version = "6.x-1.0-alpha1"
+core = "6.x"
+project = "profiler_builder"
+project status url = "http://drupal.psu.edu/fserver"
