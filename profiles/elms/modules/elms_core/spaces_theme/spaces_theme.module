@@ -33,14 +33,8 @@ function spaces_theme_menu() {
   return $items;
 }
 
-//determine if someone can access the /theme page based on whether or not they have access to edit the space
-//CHANGE access method to that of features as this check is overkill
+//only allow group admins to access this page
 function _spaces_theme_theme_access() {
-  global $user;
-  $node = og_get_group_context();
-  if (!og_is_group_type($node->type) || !user_access('edit own course content')) {
-    return 0;
-  }
-
-  return 1;
+  $group = og_get_group_context();
+  return og_is_group_admin($group);
 }
