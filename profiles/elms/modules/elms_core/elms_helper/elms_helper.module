@@ -19,7 +19,6 @@ function elms_helper_theme_registry_alter(&$vars) {
  */
 function elms_helper_init() {
   global $user;
-  dpm($user);
   if (arg(2) == 'html_export' || arg(2) == 'check_links') {
     drupal_set_message(t('This is still in active development / future planned functionality.'),'warning');
   }
