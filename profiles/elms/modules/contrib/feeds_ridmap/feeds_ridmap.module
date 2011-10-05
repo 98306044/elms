@@ -38,7 +38,10 @@ function feeds_ridmap_feeds_user_processor_targets_alter(&$targets) {
  * Set the user role target after import.
  */
 function feeds_ridmap_feeds_set_roles_target($account, $target, $value) {
-  $account->{$target} = $value;
+  //get roles
+  $roles = user_roles(TRUE);
+  //map role to what came across and assign role array correctly
+  $account->roles = array_filter(array($value => $roles[$value]));
   return $account;
 }
 
@@ -47,8 +50,21 @@ function feeds_ridmap_feeds_set_roles_target($account, $target, $value) {
  * Set the user within the context of the current group.
  */
 function feeds_ridmap_feeds_set_og_roles_target($account, $target, $value) {
+  //get roles
+  $roles = user_roles(TRUE);
   //get the active group context and map from there
   $group = og_get_group_context();
   $account->og_roles[$group->nid]['og_role'] = $value;
   return $account;
+}
+
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ * estabilishes where to look for feeds tamper plugin
+ */
+function feeds_ridmap_ctools_plugin_directory($module, $plugin) {
+  if ($module == 'feeds_tamper') {
+    return 'plugins';
+  }
 }
