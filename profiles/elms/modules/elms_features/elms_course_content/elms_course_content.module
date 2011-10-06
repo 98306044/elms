@@ -20,7 +20,7 @@ function elms_course_content_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
           drupal_set_message('This page will redirect to '. l(t($childobj['title']), $childobj['link_path']) .' for students.','elms-message');
         }
       }
-	break;
+  break;
   }
 }*/
 
@@ -43,8 +43,8 @@ function elms_course_content_init() {
   //offer to continue where they left off if we can grab it
   if (arg(0) == 'course_content' && module_exists('statistics')) {
     $group = og_get_group_context();
-	global $user;
-	$result = db_query("SELECT {accesslog}.title,{accesslog}.path FROM {accesslog} JOIN {menu_links} ON {menu_links}.link_path = {accesslog}.path JOIN {book} ON {menu_links}.mlid = {book}.mlid JOIN {og_ancestry} ON {book}.nid={og_ancestry}.nid WHERE {accesslog}.uid=%d AND {og_ancestry}.group_nid=%d ORDER BY {accesslog}.timestamp DESC LIMIT 1", $user->uid, $group->nid);
+  global $user;
+  $result = db_query("SELECT {accesslog}.title,{accesslog}.path FROM {accesslog} JOIN {menu_links} ON {menu_links}.link_path = {accesslog}.path JOIN {book} ON {menu_links}.mlid = {book}.mlid JOIN {og_ancestry} ON {book}.nid={og_ancestry}.nid WHERE {accesslog}.uid=%d AND {og_ancestry}.group_nid=%d ORDER BY {accesslog}.timestamp DESC LIMIT 1", $user->uid, $group->nid);
     $val = db_fetch_array($result);
     if ($val['title'] != '') {
       drupal_set_message('Continue where you left off? '. l(t($val['title']), $val['path']), 'elms-message');
@@ -60,10 +60,10 @@ function elms_course_content_menu() {
   $items['course_content'] = array(
     'title' => 'Content',
     'page callback' => '_elms_course_content_root',
-	'access callback' => 'spaces_access_feature',
-	'access arguments' => array('view', 'elms_course_content'),
+    'access callback' => 'spaces_access_feature',
+    'access arguments' => array('view', 'elms_course_content'),
     'type' => MENU_NORMAL_ITEM,
-	'menu_name' => 'features',
+    'menu_name' => 'features',
     'file' => 'elms_course_content.pages.inc',
   );
   $items['features/elms_course_content'] = array(
@@ -93,10 +93,10 @@ function elms_course_content_block($op = 'list', $delta = 0, $edit = array()) {
   else if ($op == 'view') {
     switch ($delta) {
       case 0:
-	    //invoke the book module and then alter the title
-	    $block = module_invoke('book', 'block', 'view', 0);
-		$block['subject'] = t('Content');
-		$block['title'] = t('Content');
+      //invoke the book module and then alter the title
+      $block = module_invoke('book', 'block', 'view', 0);
+    $block['subject'] = t('Content');
+    $block['title'] = t('Content');
       break;
     }
     return $block;
@@ -110,9 +110,9 @@ function elms_course_content_link($type, $object, $teaser = FALSE) {
   $links = array();
   $print_option = variable_get('elms_print_options','both');
   if ($type == 'node' && isset($object->book['plid']) && !$teaser && user_access('see printer-friendly version')) {
-	$parent = book_link_load($object->book['plid']);
-	//verify print setting
-	if ($print_option == 'print_lesson' || $print_option == 'print_course' && $object->book['bid'] != $parent['nid']) {
+  $parent = book_link_load($object->book['plid']);
+  //verify print setting
+  if ($print_option == 'print_lesson' || $print_option == 'print_course' && $object->book['bid'] != $parent['nid']) {
       $links['book_print_lesson'] = array(
       'href' => 'print/book/export/html/'. $parent['nid'],
       'title' => '<img src="/sites/all/modules/print/icons/print_icon.gif" alt="Print Lesson" title="Print Lesson" width="16" height="16" class="print-icon" />',
@@ -124,10 +124,10 @@ function elms_course_content_link($type, $object, $teaser = FALSE) {
       ),
       'html' => 1,
       );
-	}
-	//verify print setting
-	if ($print_option == 'print_course') {
-	  $links['book_print_course'] = array(
+  }
+  //verify print setting
+  if ($print_option == 'print_course') {
+    $links['book_print_course'] = array(
       'href' => 'book/export/html/'. $object->book['bid'],
       'title' => '<img src="/sites/all/modules/print/icons/print_icon.gif" alt="Print Course" title="Print Course" width="16" height="16" class="print-icon" />',
       'attributes' => array(
@@ -138,7 +138,7 @@ function elms_course_content_link($type, $object, $teaser = FALSE) {
       ),
       'html' => 1,
       );
-	}
+  }
   }
   return $links;
 }
@@ -158,10 +158,10 @@ function elms_course_content_link_alter(&$links, $node, $comment = NULL) {
 function _elms_course_content_toc($bid, $exclude = array(), $depth_limit = 10) {
     $tree = menu_tree_all_data(book_menu_name($bid));
     $header = array(t('Table of Contents'));
-	$toc = array();
+  $toc = array();
     _elms_course_content_toc_recurse($tree, $toc, $exclude, $depth_limit);
     array_shift($toc);
-	return theme('table', $header, $toc, array('id' => 'course-outline'));
+  return theme('table', $header, $toc, array('id' => 'course-outline'));
 }
 //helper function for looping through a tree to build out the display  
 function _elms_course_content_toc_recurse($tree, &$toc, $exclude, $depth_limit) {
@@ -195,31 +195,31 @@ function elms_course_content_elms_instructional_template() {
    ),
   );
   $outline['topical_outline'] = array(
-	 'title' => 'Topical Lesson Outline',
+   'title' => 'Topical Lesson Outline',
      0 => array(
        'type' => 'folder',
        'title' => 'Lesson @i',
      ),
-	 1 => array(
+   1 => array(
        'type' => 'page',
        'title' => 'Introduction',
        'parent' => 0,
      ),
-	 2 => array(
+   2 => array(
        'type' => 'page',
        'title' => 'Content',
        'parent' => 0,
      ),
-	 3 => array(
+   3 => array(
        'type' => 'page',
        'title' => 'Wrap up',
        'parent' => 0,
      ),
-	 4 => array(
-	   'type' => 'duplicate',
-	   'parent' => 0,
-	 ),
-	 5 => array(
+   4 => array(
+     'type' => 'duplicate',
+     'parent' => 0,
+   ),
+   5 => array(
        'type' => 'page',
        'title' => 'Resources',
      ),
@@ -236,7 +236,7 @@ function _elms_course_content_get_instructional_template($template = 'list') {
   if ($template == 'list') {
     $list = array('none' => '');
     foreach($ary as $key => $params) {
-	  $list[$key] = $params['title'];
+    $list[$key] = $params['title'];
     }
     return $list;
   }
