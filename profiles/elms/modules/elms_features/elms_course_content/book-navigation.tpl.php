@@ -1,4 +1,4 @@
-<?php 
+<?php
   //find 1 level from the top
   if(arg(0) == 'node') {
   $nid = arg(1);
@@ -13,8 +13,10 @@
   if ($tree || $has_links): ?>
   <br/>
   <div id="book-navigation-<?php print $book_id; ?>" class="book-navigation">
-  <?php if ($tree && $book_id == $nid) {
-	  print $tree;
+  <?php 
+  //check for highest level, print table of contents if this is the case
+  if ($tree && $book_id == $nid) {
+    print _elms_course_content_toc($book_id);
   }
   if ($has_links): ?>
     <div class="page-links clear-block">
