@@ -7,8 +7,12 @@ function _spaces_theme_theme_form($form_state, $feature = NULL) {
   $dir = file_create_path(file_directory_path() .'/theme_favicons');
   file_check_directory($dir,  1);
   $group = og_get_group_context();
-  // Merge the saved variables and their default values
-  $settings = variable_get('theme_'. $group->og_theme .'_settings',array());
+  //get local overrides from the new theme if possible
+  $settings = variable_get('theme_'. $group->og_theme .'_settings', array());
+  //verify something was returned, otherwise pull from the global defaults
+  if (count($settings) == 0) {
+    $settings = variable_get('theme_settings', array());
+  }
   $form = array();
   //add in the theme selection form
   if ($theme_form = system_theme_select_form(t('Changing the theme will reload the settings below.'), isset($form_state['values']['theme']) ? $form_state['values']['theme'] : $group->og_theme, 2)) {
@@ -168,7 +172,12 @@ function _spaces_theme_theme_form_submit($form, &$form_state) {
   $theme = $form_state['values']['theme'];
   $space = spaces_load('og', $version->nid, TRUE);
   if ($space && $theme == $version->og_theme) {
-    $theme_array = variable_get('theme_'. $theme .'_settings',array());
+	//get local overrides from the new theme if possible
+    $theme_array = variable_get('theme_'. $theme .'_settings', array());
+    //verify something was returned, otherwise pull from the global defaults
+    if (count($theme_array) == 0) {
+      $theme_array = variable_get('theme_settings', array());
+    }
     foreach($form_state['values'] as $key => $val) {
       //filter out fields we don't care about
       switch ($key) {
@@ -181,7 +190,7 @@ function _spaces_theme_theme_form_submit($form, &$form_state) {
 	  case 'theme':
 	  break;
       default:
-      $theme_array[$key] = $val;
+        $theme_array[$key] = $val;
       break;
       }
     }
@@ -201,6 +210,15 @@ function _spaces_theme_theme_form_submit($form, &$form_state) {
   }
   else {
     $version->theme = $theme;
+	//get local overrides from the new theme if possible
+    $theme_array = variable_get('theme_'. $theme .'_settings', array());
+    //verify something was returned, otherwise pull from the global default
+    if (count($theme_array) == 0) {
+      $theme_array = variable_get('theme_settings', array());
+	  //this will help in setting defaults should they not exist
+	  $space->controllers->variable->set('theme_'. $theme .'_settings',$theme_array);
+    }
+	
     node_save($version); 
   }
   $ary = $_GET;
