@@ -42,16 +42,14 @@ function regions_init() {
   //pull all regions
   $list = _regions_list();
   foreach ($list as $machine_name => $region) {
-  //make sure the user has access to the region
-  if (user_access('view '. $machine_name .' region')) {
-    if (isset($region['js'])) {
-        drupal_add_js(drupal_get_path('module', $region['project']) .'/'. $region['js']);
+    //add any js that might be included in the definition
+	if (isset($region['js'])) {
+      drupal_add_js(drupal_get_path('module', $region['project']) .'/'. $region['js']);
     }
     //add any css that might be included in the definition
-      if (isset($region['css'])) {
+    if (isset($region['css'])) {
       drupal_add_css(drupal_get_path('module', $region['project']) .'/'. $region['css']);
     }
-  }
   }
 }
 

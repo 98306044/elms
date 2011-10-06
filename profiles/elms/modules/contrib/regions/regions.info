@@ -1,7 +1,8 @@
+; $Id: Regions
 name = "Regions"
 description = "API and scafolding to build regions that are cross theme compatible and can be used by Context."
 core = 6.x
 package = "Regions"
-version = "6.x-1.0-beta2"
+version = "6.x-1.0-beta3"
 project = "regions"
 project status url = "http://drupal.psu.edu/fserver"
