@@ -1,5 +1,22 @@
 <?php
 
+/**
+ * Redirect to the book root for this course
+ */
+function _elms_course_content_root() {
+  //get the group
+  $group = og_get_group_context();
+  //if we find a group node, take them to the book node's root
+  if (isset($group->book_nid)) {
+    drupal_goto('node/'. $group->book_nid);
+  }
+  //if it didn't find anything, default back to front page
+  else {
+	drupal_goto('<front>');  
+  }
+  return 1;
+}
+
 
 /**
  * Settings form for book feature.
