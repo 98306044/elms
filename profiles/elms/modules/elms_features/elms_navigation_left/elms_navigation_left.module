@@ -24,8 +24,8 @@ include_once('elms_navigation_left.features.inc');
 function elms_navigation_left_define_regions() {
   $region['elms_navigation_left'] = array(
     'project' => 'elms_navigation_left',
-  'js' => 'elms_navigation_left.js',
-  'css' => 'elms_navigation_left.css',
+    'js' => 'elms_navigation_left.js',
+    'css' => 'elms_navigation_left.css',
   );
   return $region;
 }
