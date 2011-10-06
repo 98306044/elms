@@ -39,11 +39,22 @@ function elms_course_versions_form_alter(&$form, &$form_state, $form_id) {
 function elms_course_versions_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
   //the group node makes no sense to load to users, redirect to the front-page
   switch ($op) {
-	case 'view':
-	if (og_is_group_type($node->type)) {
-	  drupal_goto('<front>');
-	}
-	break;
+	case 'presave':
+	  //detect a workflow change about to happen
+	  if (arg(2) == 'workflow' && $node->_workflow != $node->workflow) {
+		 $node->_purl_change = _elms_course_versions_get_purl($node);
+	  }
+    break;
+	case 'update':
+	  if (isset($node->_purl_change)) {
+	    $modifier = array(
+          'value' => $node->_purl_change,
+          'provider' => 'spaces_og',
+          'id' => $node->nid,
+        );
+        purl_save($modifier);
+      }
+    break;
 	case 'insert':
 	//check for groups created
     if (og_is_group_type($node->type)) {
@@ -87,7 +98,7 @@ function elms_course_versions_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
 		
         //need to do extra step with purl rewrite to ensure it has the node and course name in in
         $modifier = array(
-          'value' => strtolower(str_replace(' ', '', $course->title)) .'_dev_'. $node->nid,
+          'value' => _elms_course_versions_get_purl($node),
           'provider' => 'spaces_og',
           'id' => $node->nid,
         );
@@ -133,4 +144,34 @@ function elms_course_versions_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
 	  }
     break;
   }
+}
+
+//helper function to make modification of purl easier
+function _elms_course_versions_get_purl($node) {
+  $course = node_load($node->field_course_ref[0]['nid']);
+  $output = $course->title;
+  switch ($node->workflow) {
+	case 1:
+	case 2:
+	case 3: //initial states
+	  $output.= '_dev_'. $node->nid;
+	break;
+	case 4: //inactive
+      $output.= '_inactive_'. $node->nid;
+	break;
+	case 5: //offered
+	  $output.= '_offered_'. $node->nid;
+	break;
+	case 6: //archive
+	  $output.= '_archive_'. $node->nid;
+	break;
+	case 7: //Promo
+	  $output.= '_promo_'. $node->nid;
+	break;
+	case 8: //master
+	  $output.= '_master_'. $node->nid;
+	break;
+  }
+  $output = strtolower(str_replace(' ', '', $output));
+  return $output;
 }
