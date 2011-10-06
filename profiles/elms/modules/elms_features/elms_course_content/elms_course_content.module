@@ -60,7 +60,8 @@ function elms_course_content_menu() {
   $items['course_content'] = array(
     'title' => 'Content',
     'page callback' => '_elms_course_content_root',
-    'access arguments' => array('access content'), 
+	'access callback' => 'spaces_access_feature',
+	'access arguments' => array('view', 'elms_course_content'),
     'type' => MENU_NORMAL_ITEM,
 	'menu_name' => 'features',
     'file' => 'elms_course_content.pages.inc',
@@ -154,23 +155,25 @@ function elms_course_content_link_alter(&$links, $node, $comment = NULL) {
 }
 
 //helper function for how we render the pager navigation
-function _elms_course_content_toc($bid, $exclude = array(), $depth_limit) {
+function _elms_course_content_toc($bid, $exclude = array(), $depth_limit = 10) {
     $tree = menu_tree_all_data(book_menu_name($bid));
-    $toc = array();
-    _elms_course_content_toc_recurse($tree, '', $toc, $exclude, $depth_limit);
-    return $toc;
-  }
+    $header = array(t('Table of Contents'));
+	$toc = array();
+    _elms_course_content_toc_recurse($tree, $toc, $exclude, $depth_limit);
+    array_shift($toc);
+	return theme('table', $header, $toc, array('id' => 'course-outline'));
+}
 //helper function for looping through a tree to build out the display  
-function _elms_course_content_toc_recurse($tree, $indent, &$toc, $exclude, $depth_limit) {
+function _elms_course_content_toc_recurse($tree, &$toc, $exclude, $depth_limit) {
   foreach ($tree as $data) {
     if ($data['link']['depth'] > $depth_limit) {
       // Don't iterate through any links on this level.
       break;
     }
     if (!in_array($data['link']['mlid'], $exclude)) {
-      $toc[$data['link']['href']] = $indent .' '. truncate_utf8($data['link']['title'], 30, TRUE, TRUE);
+      $toc[] = array('data' => array(theme('indentation', $data['link']['depth']) . l(t($data['link']['title']), $data['link']['href'])));
       if ($data['below']) {
-        _elms_course_content_toc_recurse($data['below'], $indent .'--', $toc, $exclude, $depth_limit);
+        _elms_course_content_toc_recurse($data['below'], $toc, $exclude, $depth_limit);
       }
     }
   }
@@ -204,7 +207,7 @@ function elms_course_content_elms_instructional_template() {
      ),
 	 2 => array(
        'type' => 'page',
-       'title' => 'Lesson Content',
+       'title' => 'Content',
        'parent' => 0,
      ),
 	 3 => array(
