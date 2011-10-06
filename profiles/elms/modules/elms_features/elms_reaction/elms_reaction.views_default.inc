@@ -454,6 +454,88 @@ function elms_reaction_views_default_views() {
     'weight' => '0',
     'name' => 'menu-elms-reactions',
   ));
+  $handler = $view->new_display('page', 'All my Reactions', 'page_4');
+  $handler->override_option('filters', array(
+    'type' => array(
+      'operator' => 'in',
+      'value' => array(
+        'reaction' => 'reaction',
+      ),
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'type',
+      'table' => 'node',
+      'field' => 'type',
+      'relationship' => 'none',
+    ),
+    'field_reaction_feeling_value_many_to_one' => array(
+      'operator' => 'or',
+      'value' => array(),
+      'group' => '0',
+      'exposed' => TRUE,
+      'expose' => array(
+        'use_operator' => 0,
+        'operator' => 'field_reaction_feeling_value_many_to_one_op',
+        'identifier' => 'field_reaction_feeling_value_many_to_one',
+        'label' => 'Feeling',
+        'optional' => 1,
+        'single' => 1,
+        'remember' => 0,
+        'reduce' => 0,
+      ),
+      'id' => 'field_reaction_feeling_value_many_to_one',
+      'table' => 'node_data_field_reaction_feeling',
+      'field' => 'field_reaction_feeling_value_many_to_one',
+      'override' => array(
+        'button' => 'Override',
+      ),
+      'relationship' => 'none',
+      'reduce_duplicates' => 0,
+    ),
+    'uid_current' => array(
+      'operator' => '=',
+      'value' => '1',
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'uid_current',
+      'table' => 'users',
+      'field' => 'uid_current',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('access', array(
+    'type' => 'role',
+    'role' => array(
+      '2' => 2,
+    ),
+  ));
+  $handler->override_option('title', 'All My Reactions');
+  $handler->override_option('path', 'my_reactions');
+  $handler->override_option('menu', array(
+    'type' => 'normal',
+    'title' => 'My Reactions',
+    'description' => 'All reactions across courses',
+    'weight' => '0',
+    'name' => 'menu-usermenu',
+  ));
+  $handler->override_option('tab_options', array(
+    'type' => 'none',
+    'title' => '',
+    'description' => '',
+    'weight' => 0,
+    'name' => 'navigation',
+  ));
 
   $views[$view->name] = $view;
 

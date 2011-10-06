@@ -51,6 +51,8 @@ function elms_course_versions_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
 	  $_SESSION['messages'] = array();
 	  //bump workflow state to dev automatically
 	  workflow_execute_transition($node, 3);
+	  //set the theme variable defaults before we are strongarmed into this group
+	  $theme_ary = variable_get('theme_settings', array());
       $space = spaces_load('og', $node->nid, TRUE);
       if ($space) {
         $space->controllers->variable->set('site_name', $node->title);
@@ -59,11 +61,10 @@ function elms_course_versions_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
         //set slogan to the description of the course
         $space->controllers->variable->set('site_slogan', $course->field_course_title[0]['value']);
 		//set initial homepage to the content outline 
-		$space->controllers->variable->set('site_frontpage', 'course_contents');
+		$space->controllers->variable->set('site_frontpage', 'course_content');
 		//set the initial path to the group created
 		$space->controllers->variable->set('site_frontpage_path', 'node/'. $node->nid);
 		//establish default theme settings
-		$theme_ary = array();
 		$space->controllers->variable->set('theme_settings', $theme_ary);
 		//establish default theme settings for the selected theme
 		$space->controllers->variable->set('theme_'. $node->og_theme .'_settings', $theme_ary);

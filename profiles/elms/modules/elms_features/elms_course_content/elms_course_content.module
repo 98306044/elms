@@ -5,6 +5,7 @@ include_once('elms_course_content.features.inc');
 /**
  * Implementation of hook_nodeapi().
  */
+ /*
 function elms_course_content_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
   switch ($op) {
     case 'view':
@@ -21,7 +22,7 @@ function elms_course_content_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
       }
 	break;
   }
-}
+}*/
 
 
 /**
@@ -60,7 +61,8 @@ function elms_course_content_menu() {
     'title' => 'Content',
     'page callback' => '_elms_course_content_root',
     'access arguments' => array('access content'), 
-    'type' => MENU_CALLBACK,
+    'type' => MENU_NORMAL_ITEM,
+	'menu_name' => 'features',
     'file' => 'elms_course_content.pages.inc',
   );
   $items['features/elms_course_content'] = array(
@@ -225,9 +227,7 @@ function elms_course_content_elms_instructional_template() {
 /**
  * Implementation of the elms_course_content hook
  */
-function _elms_instructional_templates_get_instructional_template($template = 'list') {
-	return _elms_course_content_get_instructional_template($template);
-}
+
 function _elms_course_content_get_instructional_template($template = 'list') {
   $ary = module_invoke_all('elms_instructional_template');
   if ($template == 'list') {
