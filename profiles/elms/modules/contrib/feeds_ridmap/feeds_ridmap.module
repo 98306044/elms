@@ -1,5 +1,4 @@
 <?php
-// $Id: feeds_ridmap.module
 //Copyright (C) 2011  The Pennsylvania State University
 //
 //Bryan Ollendyke
@@ -55,9 +54,9 @@ function feeds_ridmap_feeds_set_og_roles_target($account, $target, $value) {
   //get the user id because it isn't set in the account object
   $uid = db_result(db_query("SELECT uid FROM {users} WHERE name='%s'", $account->name));
   if ($uid != 0 && $uid != '') {
-	//add the user to the group
-	og_save_subscription($group->nid, $uid, array('is_active' => 1));
-	//add the contextual user role
+    //add the user to the group
+    og_save_subscription($group->nid, $uid, array('is_active' => 1));
+    //add the contextual user role
     og_user_roles_role_add($group->nid, $uid, $value);
   }
   return $account;
