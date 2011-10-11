@@ -245,6 +245,8 @@ function elms_course_views_default_views() {
     'type' => 'none',
   ));
   $handler->override_option('title', 'Courses');
+  $handler->override_option('header_format', '5');
+  $handler->override_option('header_empty', 0);
   $handler->override_option('footer_format', '5');
   $handler->override_option('footer_empty', 0);
   $handler->override_option('empty_format', '2');
@@ -252,12 +254,6 @@ function elms_course_views_default_views() {
   $handler->override_option('use_pager', '1');
   $handler->override_option('style_plugin', 'fluid_grid');
   $handler = $view->new_display('page', 'View List', 'page_1');
-  $handler->override_option('header', '<?php
-if (user_access(\'create course content\')) {
-  print l(t(\'Add Course Space\'),\'node/add/course\');
-}');
-  $handler->override_option('header_format', '5');
-  $handler->override_option('header_empty', 1);
   $handler->override_option('style_options', array(
     'grouping' => 'tid',
     'advanced_layout' => array(
@@ -277,7 +273,7 @@ if (user_access(\'create course content\')) {
   $handler->override_option('path', 'courses');
   $handler->override_option('menu', array(
     'type' => 'normal',
-    'title' => 'View Courses',
+    'title' => 'All Courses',
     'description' => 'View a list of all courses',
     'weight' => '0',
     'name' => 'navigation',
@@ -485,16 +481,9 @@ if (user_access(\'create course content\')) {
   $handler = $view->new_display('page', 'My Courses List', 'page_4');
   $handler->override_option('relationships', array(
     'field_course_ref_nid' => array(
-      'label' => 'Course',
-      'required' => 1,
-      'delta' => -1,
       'id' => 'field_course_ref_nid',
       'table' => 'node_data_field_course_ref',
       'field' => 'field_course_ref_nid',
-      'override' => array(
-        'button' => 'Use default',
-      ),
-      'relationship' => 'none',
     ),
   ));
   $handler->override_option('fields', array(
@@ -656,47 +645,6 @@ if (user_access(\'create course content\')) {
       ),
       'relationship' => 'field_course_ref_nid',
     ),
-    'field_section_year_value' => array(
-      'label' => 'Academic Year',
-      'alter' => array(
-        'alter_text' => 0,
-        'text' => '',
-        'make_link' => 0,
-        'path' => '',
-        'link_class' => '',
-        'alt' => '',
-        'prefix' => '',
-        'suffix' => '',
-        'target' => '',
-        'help' => '',
-        'trim' => 0,
-        'max_length' => '',
-        'word_boundary' => 1,
-        'ellipsis' => 1,
-        'html' => 0,
-        'strip_tags' => 0,
-      ),
-      'empty' => '',
-      'hide_empty' => 0,
-      'empty_zero' => 0,
-      'link_to_node' => 0,
-      'label_type' => 'custom',
-      'format' => 'default',
-      'multiple' => array(
-        'group' => TRUE,
-        'multiple_number' => '',
-        'multiple_from' => '',
-        'multiple_reversed' => FALSE,
-      ),
-      'exclude' => 0,
-      'id' => 'field_section_year_value',
-      'table' => 'node_data_field_section_year',
-      'field' => 'field_section_year_value',
-      'override' => array(
-        'button' => 'Use default',
-      ),
-      'relationship' => 'none',
-    ),
     'field_section_semester_value' => array(
       'label' => 'Semester',
       'alter' => array(
@@ -738,8 +686,8 @@ if (user_access(\'create course content\')) {
       ),
       'relationship' => 'none',
     ),
-    'field_campus_value' => array(
-      'label' => 'Campus',
+    'field_section_year_value' => array(
+      'label' => 'Academic Year',
       'alter' => array(
         'alter_text' => 0,
         'text' => '',
@@ -762,7 +710,7 @@ if (user_access(\'create course content\')) {
       'hide_empty' => 0,
       'empty_zero' => 0,
       'link_to_node' => 0,
-      'label_type' => 'widget',
+      'label_type' => 'custom',
       'format' => 'default',
       'multiple' => array(
         'group' => TRUE,
@@ -771,9 +719,9 @@ if (user_access(\'create course content\')) {
         'multiple_reversed' => FALSE,
       ),
       'exclude' => 0,
-      'id' => 'field_campus_value',
-      'table' => 'node_data_field_campus',
-      'field' => 'field_campus_value',
+      'id' => 'field_section_year_value',
+      'table' => 'node_data_field_section_year',
+      'field' => 'field_section_year_value',
       'override' => array(
         'button' => 'Use default',
       ),
@@ -815,6 +763,47 @@ if (user_access(\'create course content\')) {
       'id' => 'field_section_number_value',
       'table' => 'node_data_field_section_number',
       'field' => 'field_section_number_value',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+    'field_campus_value' => array(
+      'label' => 'Campus',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'link_to_node' => 0,
+      'label_type' => 'widget',
+      'format' => 'default',
+      'multiple' => array(
+        'group' => TRUE,
+        'multiple_number' => '',
+        'multiple_from' => '',
+        'multiple_reversed' => FALSE,
+      ),
+      'exclude' => 0,
+      'id' => 'field_campus_value',
+      'table' => 'node_data_field_campus',
+      'field' => 'field_campus_value',
       'override' => array(
         'button' => 'Use default',
       ),
@@ -868,26 +857,6 @@ if (user_access(\'create course content\')) {
         'button' => 'Use default',
       ),
     ),
-    'sid' => array(
-      'operator' => 'in',
-      'value' => array(
-        '5' => '5',
-        '6' => '6',
-      ),
-      'group' => '0',
-      'exposed' => FALSE,
-      'expose' => array(
-        'operator' => FALSE,
-        'label' => '',
-      ),
-      'id' => 'sid',
-      'table' => 'workflow_node',
-      'field' => 'sid',
-      'override' => array(
-        'button' => 'Use default',
-      ),
-      'relationship' => 'none',
-    ),
   ));
   $handler->override_option('access', array(
     'type' => 'role',
@@ -907,9 +876,9 @@ if (user_access(\'create course content\')) {
       'tid' => 'tid',
       'field_course_title_value' => 'field_course_title_value',
       'field_course_name_value' => 'field_course_name_value',
-      'field_section_year_value' => 'field_section_year_value',
       'field_section_semester_value' => 'field_section_semester_value',
-      'field_campus_value' => 'field_campus_value',
+      'field_section_year_value' => 'field_section_semester_value',
+      'field_campus_value' => 'field_section_number_value',
       'field_section_number_value' => 'field_section_number_value',
     ),
     'info' => array(
@@ -928,11 +897,11 @@ if (user_access(\'create course content\')) {
         'sortable' => 0,
         'separator' => '',
       ),
-      'field_section_year_value' => array(
-        'sortable' => 0,
-        'separator' => '',
-      ),
       'field_section_semester_value' => array(
+        'sortable' => 0,
+        'separator' => ' ',
+      ),
+      'field_section_year_value' => array(
         'sortable' => 0,
         'separator' => '',
       ),
@@ -1496,7 +1465,9 @@ if (user_access(\'create course content\')) {
     'type' => 'none',
   ));
   $handler->override_option('title', 'Courses');
-  $handler->override_option('footer_format', '5');
+  $handler->override_option('header_format', '2');
+  $handler->override_option('header_empty', 0);
+  $handler->override_option('footer_format', '2');
   $handler->override_option('footer_empty', 0);
   $handler->override_option('empty_format', '2');
   $handler->override_option('items_per_page', 40);
@@ -1936,15 +1907,6 @@ if (user_access(\'create course content\')) {
     ),
   ));
   $handler->override_option('title', 'All Versions');
-  $handler->override_option('footer', '<?php
-if (user_access(\'create version content\')) {
-  print l(t(\'Create new Version of this Course\'),\'node/add/version/\'. arg(1));
-}');
-  $handler->override_option('empty', '<?php
-if (user_access(\'create version content\')) {
-  print l(t(\'Create a new Version of this Course\'),\'node/add/version/\'. arg(1));
-}');
-  $handler->override_option('empty_format', '5');
   $handler->override_option('style_options', array(
     'grouping' => '',
     'override' => 0,

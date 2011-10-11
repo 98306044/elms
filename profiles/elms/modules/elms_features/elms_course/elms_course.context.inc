@@ -57,7 +57,6 @@ function elms_course_context_default_contexts() {
         ),
       ),
     ),
-    'breadcrumb' => 'courses',
   );
   $context->condition_mode = 0;
 
