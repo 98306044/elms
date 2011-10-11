@@ -11,7 +11,7 @@ function elms_reaction_menu() {
     'title' => 'Settings',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('elms_reaction_settings'),
-    'access callback' => module_exists('spaces') ? 'spaces_access_admin' : 'user_access',
+    'access callback' => '_elms_reaction_access_check',
     'access arguments' => module_exists('spaces') ? array() : array('administer site configuration'),
     'type' => MENU_CALLBACK,
     'file' => 'elms_reaction.pages.inc',
@@ -26,5 +26,16 @@ function elms_reaction_link_alter(&$links, $node, $comment = NULL) {
   $features = variable_get('spaces_features', array());
   if (!isset($features['elms_reaction']) || !$features['elms_reaction']) {
     unset($links['reaction_field_related_content']);
+  }
+}
+
+
+//helper function for access verification
+function _elms_reaction_access_check() {
+  if (module_exists('spaces')) {
+    user_access('spaces_access_admin');
+  }
+  else {
+    return user_access('user_access');
   }
 }

@@ -1,6 +1,4 @@
 <?php
-// $Id: elms_helper.module
-
 /**
  * @file
  * UX improvements for the ELMS experience that we want
@@ -20,65 +18,65 @@ function elms_helper_theme_registry_alter(&$vars) {
 function elms_helper_init() {
   global $user;
   if (arg(2) == 'html_export' || arg(2) == 'check_links') {
-    drupal_set_message(t('This is still in active development / future planned functionality.'),'warning');
+    drupal_set_message(t('This is still in active development / future planned functionality.'), 'warning');
   }
-  drupal_add_css(drupal_get_path('module', 'elms_helper') .'/css/elms_helper.css','theme');
-  drupal_add_css(drupal_get_path('module', 'jquery_ui') .'/jquery.ui/themes/redmond/redmond.css','module');
+  drupal_add_css(drupal_get_path('module', 'elms_helper') .'/css/elms_helper.css', 'theme');
+  drupal_add_css(drupal_get_path('module', 'jquery_ui') .'/jquery.ui/themes/redmond/redmond.css', 'module');
   //account for possible og theme swap when using the outline designer
   if (arg(0) == 'outline_designer') {
     $book_node = node_load(arg(2));
     if (isset($book_node->og_groups)) {
-      foreach($book_node->og_groups as $groupnid) {
+      foreach ($book_node->og_groups as $groupnid) {
         $group_node = node_load($groupnid);
       }
-      if(og_is_group_type($group_node->type)){
+      if (og_is_group_type($group_node->type)) {
         og_set_theme($group_node);
-    $theme_settings = variable_get('theme_'. $group_node->og_theme .'_settings',array());
-    //add in custom font setting, a none file exists too
-    drupal_add_css(drupal_get_path('module', 'elms_helper') .'/css/'. $theme_settings['font'] .'.css','theme');
-    //add in custom css if this course has any
-    if (isset($theme_settings['extra_css_path']) && $theme_settings['extra_css_path'] != '' && $theme_settings['extra_css_use'] == 1) {
-      drupal_add_css($theme_settings['extra_css_path'], 'theme');
-    }
+        $theme_settings = variable_get('theme_'. $group_node->og_theme .'_settings', array());
+        //add in custom font setting, a none file exists too
+        drupal_add_css(drupal_get_path('module', 'elms_helper') .'/css/'. $theme_settings['font'] .'.css', 'theme');
+        //add in custom css if this course has any
+        if (isset($theme_settings['extra_css_path']) && $theme_settings['extra_css_path'] != '' && $theme_settings['extra_css_use'] == 1) {
+          drupal_add_css($theme_settings['extra_css_path'], 'theme');
+        }
         og_set_group_context($group_node);
         og_set_language($group_node);
       }
     }
   }
   //fixes glitch in other og projects where it forgets to set theme
-  if(arg(0) == 'node') {
+  if (arg(0) == 'node') {
     $node = node_load(arg(1));
-    if(og_is_group_type($node->type)){
+    if (og_is_group_type($node->type)) {
       og_set_theme($node);
-      $theme_settings = variable_get('theme_'. $node->og_theme .'_settings',array());
-    //add in custom font setting, a none file exists too
-    drupal_add_css(drupal_get_path('module', 'elms_helper') .'/css/'. $theme_settings['font'] .'.css','theme');
-    //add in custom css if this course has any
-    if ($theme_settings['extra_css_path'] != '' && $theme_settings['extra_css_use'] == 1) {
-      drupal_add_css($theme_settings['extra_css_path'], 'theme');
-    }
+      $theme_settings = variable_get('theme_'. $node->og_theme .'_settings', array());
+      //add in custom font setting, a none file exists too
+      drupal_add_css(drupal_get_path('module', 'elms_helper') .'/css/'. $theme_settings['font'] .'.css', 'theme');
+      //add in custom css if this course has any
+      if ($theme_settings['extra_css_path'] != '' && $theme_settings['extra_css_use'] == 1) {
+        drupal_add_css($theme_settings['extra_css_path'], 'theme');
+      }
       og_set_group_context($node);
       og_set_language($node);
     }
-  else {
-    $group = og_get_group_context();
-	if (isset($group->type)) {
-      $theme_settings = variable_get('theme_'. $group->og_theme .'_settings',array());
-      //add in custom font setting, a none file exists too
-	  if (isset($theme_settings['font'])) {
-        drupal_add_css(drupal_get_path('module', 'elms_helper') .'/css/'. $theme_settings['font'] .'.css','theme');
-	  }
-      //add in custom css if this course has any
-      if (isset($theme_settings['extra_css_path']) && $theme_settings['extra_css_path'] != '' && $theme_settings['extra_css_use'] == 1) {
-        drupal_add_css($theme_settings['extra_css_path'], 'theme');
+    else {
+      $group = og_get_group_context();
+      if (isset($group->type)) {
+        $theme_settings = variable_get('theme_'. $group->og_theme .'_settings', array());
+        //add in custom font setting, a none file exists too
+        if (isset($theme_settings['font'])) {
+          drupal_add_css(drupal_get_path('module', 'elms_helper') .'/css/'. $theme_settings['font'] .'.css', 'theme');
+        }
+        //add in custom css if this course has any
+        if (isset($theme_settings['extra_css_path']) && $theme_settings['extra_css_path'] != '' && $theme_settings['extra_css_use'] == 1) {
+          drupal_add_css($theme_settings['extra_css_path'], 'theme');
+        }
       }
-	}
-  }
+    }
   }
 }
 
 /**
- * Implementation of hook_menu_alter()
+ * Implementation of hook_menu_alter().
  */
 function elms_helper_menu_alter(&$items) {
   //link outline access argument to tracker one, that way it's hidden from IDs
@@ -86,309 +84,304 @@ function elms_helper_menu_alter(&$items) {
   //remove some confusing pages from menu items
   $items['node/%/outline_designer']['type'] = MENU_CALLBACK;
   $items['og/activity']['type'] = MENU_CALLBACK;
-  
   //add additional protection to user search functionality
   //we don't want ANYONE to be able to search for users
   //except for admins
- if (isset($items['search/user/%menu_tail'])) {
+  if (isset($items['search/user/%menu_tail'])) {
     $menu_item =& $items['search/user/%menu_tail'];
- 
     $menu_item['access callback'] = 'user_access';
     $menu_item['access arguments'] = array('administer users');
   }
- 
   if (isset($items['user/autocomplete'])) {
     $menu_item =& $items['user/autocomplete'];
- 
     $menu_item['access callback'] = 'user_access';
     $menu_item['access arguments'] = array('administer users');
   }
 }
 
 /**
- * Implementation of hook_form_alter()
+ * Implementation of hook_form_alter().
  */
 function elms_helper_form_alter(&$form, &$form_state, $form_id) {
   //hijack the spaces theme form and make it have ELMS specific stuff
   if ($form_id == '_spaces_theme_theme_form') {
-	//remove admin and default system theme
+    //remove admin and default system theme
     unset($form['themes']['theme']['#options']['rubik']);
     unset($form['themes']['']);
     unset($form['themes']['theme']['#options']['']);
-	//add in css options and chamfer specific code
-	//font selection
-  $options = array(
-  'none' => '- Use CSS Default -',
-  'georgia' => 'Georgia, serif',
-  'palatino' => '"Palatino Linotype", "Book Antiqua", Palatino, serif',
-  'times' => '"Times New Roman", Times, serif',
-  'arial' => 'Arial, Helvetica, sans-serif',
-  'arialblack' => 'Arial Black, Gadget, sans-serif',
-  'comic' => '"Comic Sans MS", cursive, sans-serif',
-  'impact' => 'Impact, Charcoal, sans-serif',
-  'lucidasans' => '"Lucida Sans Unicode", "Lucida Grande", sans-serif',
-  'tahoma' => 'Tahoma, Geneva, sans-serif',
-  'trebuchet' => '"Trebuchet MS", Helvetica, sans-serif',
-  'verdana' => 'Verdana, Geneva, sans-serif',
-  'courier' => '"Courier New", Courier, monospace',
-  'lucidaconsole' => '"Lucida Console", Monaco, monospace',
-  );
-  $form['font_contatiner'] = array(
-  '#type' => 'fieldset',
-  '#title' => t('Font / Style'),
-  '#collapsed' => TRUE,
-  '#collapsible' => TRUE,
-  );
-  $form['font_contatiner']['font'] = array(
-  '#type' => 'select',
-  '#options' => $options,
-  '#title' => t("Font"),
-  '#description' => 'Select a font for all content in the course version.  Leaving default will use whatever your theme has indicated.',
-  '#required' => TRUE,
-  '#default_value' => $settings['font'],
-  );
-  $form['font_contatiner']['extra_css_use'] = array(
-  '#type' => 'select',
-  '#title' => t('Use..'),
-  '#options' => array(0 => 'Theme CSS Only', 1 => 'Upload / File Path'),
-  '#default_value' => $settings['extra_css_use'],
-  );
-  $form['font_contatiner']['extra_css_path'] = array(
-  '#type' => 'textfield',
-  '#size' => '40',
-  '#title' => t("File Path"),
-  '#required' => FALSE,
-  '#default_value' => $settings['extra_css_path'],
-  );
-  $form['font_contatiner']['extra_css_upload'] = array(
-  '#type' => 'file',
-  '#size' => '10',
-  '#title' => t("Upload CSS File"),
-  '#description' => 'Upload your own CSS file for use in this course version',
-  '#required' => FALSE,
-  );
-  if ($form['themes']['theme']['#default_value'] == 'chamfer') {
-    drupal_add_js(drupal_get_path('theme', 'chamfer') .'/js/settings.js', 'theme');
+    //add in css options and chamfer specific code
+    //font selection
+    $options = array(
+      'none' => '- Use CSS Default -',
+      'georgia' => 'Georgia, serif',
+      'palatino' => '"Palatino Linotype", "Book Antiqua", Palatino, serif',
+      'times' => '"Times New Roman", Times, serif',
+      'arial' => 'Arial, Helvetica, sans-serif',
+      'arialblack' => 'Arial Black, Gadget, sans-serif',
+      'comic' => '"Comic Sans MS", cursive, sans-serif',
+      'impact' => 'Impact, Charcoal, sans-serif',
+      'lucidasans' => '"Lucida Sans Unicode", "Lucida Grande", sans-serif',
+      'tahoma' => 'Tahoma, Geneva, sans-serif',
+      'trebuchet' => '"Trebuchet MS", Helvetica, sans-serif',
+      'verdana' => 'Verdana, Geneva, sans-serif',
+      'courier' => '"Courier New", Courier, monospace',
+      'lucidaconsole' => '"Lucida Console", Monaco, monospace',
+    );
+    $form['font_contatiner'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Font / Style'),
+      '#collapsed' => TRUE,
+      '#collapsible' => TRUE,
+    );
+    $form['font_contatiner']['font'] = array(
+      '#type' => 'select',
+      '#options' => $options,
+      '#title' => t("Font"),
+      '#description' => 'Select a font for all content in the course version.  Leaving default will use whatever your theme has indicated.',
+      '#required' => TRUE,
+      '#default_value' => $settings['font'],
+    );
+    $form['font_contatiner']['extra_css_use'] = array(
+      '#type' => 'select',
+      '#title' => t('Use..'),
+      '#options' => array(0 => 'Theme CSS Only', 1 => 'Upload / File Path'),
+      '#default_value' => $settings['extra_css_use'],
+    );
+    $form['font_contatiner']['extra_css_path'] = array(
+      '#type' => 'textfield',
+      '#size' => '40',
+      '#title' => t("File Path"),
+      '#required' => FALSE,
+      '#default_value' => $settings['extra_css_path'],
+    );
+    $form['font_contatiner']['extra_css_upload'] = array(
+      '#type' => 'file',
+      '#size' => '10',
+      '#title' => t("Upload CSS File"),
+      '#description' => 'Upload your own CSS file for use in this course version',
+      '#required' => FALSE,
+    );
+    if ($form['themes']['theme']['#default_value'] == 'chamfer') {
+      drupal_add_js(drupal_get_path('theme', 'chamfer') .'/js/settings.js', 'theme');
       if (module_exists('jquery_colorpicker')) {
-        drupal_add_js(drupal_get_path('theme','chamfer') .'/js/jquery_colorpicker.js','theme');
+        drupal_add_js(drupal_get_path('theme', 'chamfer') .'/js/jquery_colorpicker.js', 'theme');
+      }
+      /*
+       * The default values for the theme variables. Make sure $defaults exactly
+       * matches the $defaults in the template.php file.
+       */
+      $color_array = array(
+        'default' => 'Default',
+        'mudbrown' => 'Mud Brown',
+        'silver' => 'Silver',
+        'formalgreen' => 'Formal Green',
+        'black' => 'Space Opera Black',
+        'custom' => 'Custom',
+      );
+      $defaults = array(
+        'chamfer_borders' => 1,
+        'chamfer_bgimage' => 0,
+        'chamfer_top_logo' => 1, //0,1 or 2 for off, clear or solid
+        'chamfer_top_link' => '',
+        'chamfer_bottom_logo' => 1, //0,1 or 2 for off, clear or solid
+        'chamfer_bottom_link' => '',
+        'chamfer_color_template' => 'default',
+        'chamfer_color_primary' => '000000',
+        'chamfer_color_secondary' => '000000',
+        'chamfer_color_header1' => '0099FF',
+        'chamfer_color_header2' => '00CCFF',
+        'chamfer_color_text' => '666666',
+        'chamfer_color_link' => '0099FF',
+        'chamfer_color_blocks' => 'E7E7E7',
+        'chamfer_color_blockstyle_link' => '6D6D6D',
+        'chamfer_color_blockstyle_bgcolor' => 'df5c5c',
+        'chamfer_color_blockstyle_linkhover' => 'FFFFFF',
+        'chamfer_color_footer_text' => 'FFFFFF',
+        'chamfer_color_footer_link' => '00CCFF',
+      );
+      $form['logo'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Site Banner'),
+        '#collapsed' => TRUE,
+        '#collapsible' => TRUE,
+      );
+      $form['logo']['default_logo'] = array(
+        '#type' => 'select',
+        '#title' => t('Use..'),
+        '#options' => array(1 => 'Default Banner', 0 => 'Upload / Path Below'),
+        '#default_value' => $settings['default_logo'],
+      );
+      $form['logo']['logo_path'] = array(
+        '#type' => 'textfield',
+        '#size' => '40',
+        '#title' => t("File Path"),
+        '#required' => FALSE,
+        '#default_value' => $settings['logo_path'],
+      );
+      $form['logo']['logo_upload'] = array(
+        '#type' => 'file',
+        '#size' => '10',
+        '#title' => t("Upload"),
+        '#description' => 'In Chamfer this will take the place of the site-banner (correct dimensions are 950px by 108px). File size must be less then 2M',
+        '#required' => FALSE,
+      );
+      // Create the form widgets using Forms API
+      $form['chamfer_color_template'] = array(
+        '#type' => 'select',
+        '#title' => t('Chamfer Template'),
+        '#description' => t('Use this color template'),
+        '#options' => $color_array,
+        '#default_value' => $settings['chamfer_color_template'],
+      );
+      if (module_exists('jquery_colorpicker')) {
+        $fieldtype = 'colorpicker';
+      }
+      else {
+        $fieldtype = 'textfield';
+      }
+      //page colors
+      $form['page'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Chamfer Page Settings'),
+        '#description' => t("Change page related colors"),
+        '#collapsed' => TRUE,
+        '#collapsible' => TRUE,
+      );
+      $form['page']['chamfer_bgimage'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Background Image'),
+        '#description' => t('Whether or not to show the background image'),
+        '#default_value' => $settings['chamfer_bgimage'],
+      );
+      $form['page']['chamfer_borders'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Include Borders'),
+        '#description' => t('Whether or not there should be a 10px border'),
+        '#default_value' => $settings['chamfer_borders'],
+      );
+      $form['page']['chamfer_color_primary'] = array(
+        '#type' => $fieldtype,
+        '#size' => 6,
+        '#maxlength' => 6,
+        '#title' => t('Background'),
+        '#description' => t('Color of the background'),
+        '#default_value' => $settings['chamfer_color_primary'],
+      );
+      $form['page']['chamfer_color_secondary'] = array(
+        '#type' => $fieldtype,
+        '#size' => 6,
+        '#maxlength' => 6,
+        '#title' => t('Secondary Background'),
+        '#description' => t('Color of the Inner background, the border and header / footer'),
+        '#default_value' => $settings['chamfer_color_secondary'],
+      );
+      //header
+      $form['header'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Chamfer Header Settings'),
+        '#description' => t('Change items in the header'),
+        '#collapsed' => TRUE,
+        '#collapsible' => TRUE,
+      );
+      $form['header']['chamfer_top_logo'] = array(
+        '#type' => 'select',
+        '#title' => t('Show Top Logo'),
+        '#description' => t('Display the logo at the top left of the interface'),
+        '#options' => array(0 => 'No', 1 => 'Logo 1', 2 => 'Logo 2'),
+        '#default_value' => $settings['chamfer_top_logo'],
+      );
+      $form['header']['chamfer_top_link'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Top Logo Link'),
+        '#description' => t('The link the logo should go to when clicked, leave blank for none'),
+        '#default_value' => $settings['chamfer_top_link'],
+      );
+      $form['header']['chamfer_color_header1'] = array(
+        '#type' => $fieldtype,
+        '#size' => 6,
+        '#maxlength' => 6,
+        '#title' => t('Site Title'),
+        '#description' => t('Color of the site title'),
+        '#default_value' => $settings['chamfer_color_header1'],
+      );
+      $form['header']['chamfer_color_header2'] = array(
+        '#type' => $fieldtype,
+        '#size' => 6,
+        '#maxlength' => 6,
+        '#title' => t('Site Slogan'),
+        '#description' => t('Color of the site slogan'),
+        '#default_value' => $settings['chamfer_color_header2'],
+      );
+      //content
+      $form['content'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Chamfer Content Settings'),
+        '#description' => t("Change content related colors"),
+        '#collapsed' => TRUE,
+        '#collapsible' => TRUE,
+      );
+      $form['content']['chamfer_color_text'] = array(
+        '#type' => $fieldtype,
+        '#size' => 6,
+        '#maxlength' => 6,
+        '#title' => t('Text'),
+        '#description' => t('Body of content text'),
+        '#default_value' => $settings['chamfer_color_text'],
+      );
+      $form['content']['chamfer_color_link'] = array(
+        '#type' => $fieldtype,
+        '#size' => 6,
+        '#maxlength' => 6,
+        '#title' => t('Links'),
+        '#description' => t('Color of content links'),
+        '#default_value' => $settings['chamfer_color_link'],
+      );
+      $form['content']['chamfer_color_blocks'] = array(
+        '#type' => $fieldtype,
+        '#size' => 6,
+        '#maxlength' => 6,
+        '#title' => t('Block background'),
+        '#description' => t('Background color of the block regions in the content'),
+        '#default_value' => $settings['chamfer_color_blocks'],
+      );
+      //footer
+      $form['footer'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Chamfer Footer Settings'),
+        '#description' => t('Change items in the footer'),
+        '#collapsed' => TRUE,
+        '#collapsible' => TRUE,
+      );
+      $form['footer']['chamfer_bottom_logo'] = array(
+        '#type' => 'select',
+        '#title' => t('Show Bottom Logo'),
+        '#description' => t('Display the logo at the top left of the interface'),
+        '#options' => array(0 => 'No', 1 => 'Logo 1', 2 => 'Logo 2'),
+        '#default_value' => $settings['chamfer_bottom_logo'],
+      );
+      $form['footer']['chamfer_bottom_link'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Bottom Logo Link'),
+        '#description' => t('The link the logo should go to when clicked, leave blank for none'),
+        '#default_value' => $settings['chamfer_bottom_link'],
+      );
+      $form['footer']['chamfer_color_footer_text'] = array(
+        '#type' => $fieldtype,
+        '#size' => 6,
+        '#maxlength' => 6,
+        '#title' => t('Footer text'),
+        '#description' => t('Color of the footer text'),
+        '#default_value' => $settings['chamfer_color_footer_text'],
+      );
+      $form['footer']['chamfer_color_footer_links'] = array(
+        '#type' => $fieldtype,
+        '#size' => 6,
+        '#maxlength' => 6,
+        '#title' => t('Footer links'),
+        '#description' => t('Color of the footer links'),
+        '#default_value' => $settings['chamfer_color_footer_links'],
+      );
     }
-  /*
-   * The default values for the theme variables. Make sure $defaults exactly
-   * matches the $defaults in the template.php file.
-   */
-  $color_array = array(
-   'default' => 'Default',
-   'mudbrown' => 'Mud Brown',
-   'silver' => 'Silver',
-   'formalgreen' => 'Formal Green',
-   'black' => 'Space Opera Black',
-   'custom' => 'Custom',
-  );
-  $defaults = array(
-  'chamfer_borders' => 1,
-  'chamfer_bgimage' => 0,
-  'chamfer_top_logo' => 1, //0,1 or 2 for off, clear or solid
-  'chamfer_top_link' => '',
-  'chamfer_bottom_logo' => 1, //0,1 or 2 for off, clear or solid
-  'chamfer_bottom_link' => '',
-  'chamfer_color_template' => 'default',
-  'chamfer_color_primary' => '000000',
-  'chamfer_color_secondary' => '000000',
-  'chamfer_color_header1' => '0099FF',
-  'chamfer_color_header2' => '00CCFF',
-  'chamfer_color_text' => '666666',
-  'chamfer_color_link' => '0099FF',
-  'chamfer_color_blocks' => 'E7E7E7',
-  'chamfer_color_blockstyle_link' => '6D6D6D',
-  'chamfer_color_blockstyle_bgcolor' => 'df5c5c',
-  'chamfer_color_blockstyle_linkhover' => 'FFFFFF',
-  'chamfer_color_footer_text' => 'FFFFFF',
-  'chamfer_color_footer_link' => '00CCFF',
-  );
-
-  $form['logo'] = array(
-  '#type' => 'fieldset',
-  '#title' => t('Site Banner'),
-  '#collapsed' => TRUE,
-  '#collapsible' => TRUE,
-  );
-  $form['logo']['default_logo'] = array(
-  '#type' => 'select',
-  '#title' => t('Use..'),
-  '#options' => array(1 => 'Default Banner', 0 => 'Upload / Path Below'),
-  '#default_value' => $settings['default_logo'],
-  );
-  $form['logo']['logo_path'] = array(
-  '#type' => 'textfield',
-  '#size' => '40',
-  '#title' => t("File Path"),
-  '#required' => FALSE,
-  '#default_value' => $settings['logo_path'],
-  );
-  $form['logo']['logo_upload'] = array(
-  '#type' => 'file',
-  '#size' => '10',
-  '#title' => t("Upload"),
-  '#description' => 'In Chamfer this will take the place of the site-banner (correct dimensions are 950px by 108px). File size must be less then 2M',
-  '#required' => FALSE,
-  );
-  // Create the form widgets using Forms API
-  $form['chamfer_color_template'] = array(
-    '#type' => 'select',
-    '#title' => t('Chamfer Template'),
-  '#description' => t('Use this color template'),
-  '#options' => $color_array,
-    '#default_value' => $settings['chamfer_color_template'],
-  );
-  if (module_exists('jquery_colorpicker')) {
-    $fieldtype = 'colorpicker';
-  }
-  else {
-    $fieldtype = 'textfield';
-  }
-  //page colors
-  $form['page'] = array(
-    '#type' => 'fieldset',
-  '#title' => t('Chamfer Page Settings'),
-  '#description' => t("Change page related colors"),
-  '#collapsed' => TRUE,
-  '#collapsible' => TRUE,
-  );
-  $form['page']['chamfer_bgimage'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Background Image'),
-  '#description' => t('Whether or not to show the background image'),
-    '#default_value' => $settings['chamfer_bgimage'],
-  );
-  $form['page']['chamfer_borders'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Include Borders'),
-  '#description' => t('Whether or not there should be a 10px border'),
-    '#default_value' => $settings['chamfer_borders'],
-  );
-  $form['page']['chamfer_color_primary'] = array(
-    '#type' => $fieldtype,
-  '#size' => 6,
-  '#maxlength' => 6,
-    '#title' => t('Background'),
-  '#description' => t('Color of the background'),
-    '#default_value' => $settings['chamfer_color_primary'],
-  );
-  $form['page']['chamfer_color_secondary'] = array(
-    '#type' => $fieldtype,
-  '#size' => 6,
-  '#maxlength' => 6,    
-  '#title' => t('Secondary Background'),
-  '#description' => t('Color of the Inner background, the border and header / footer'),
-    '#default_value' => $settings['chamfer_color_secondary'],
-  );
-  //header
-  $form['header'] = array(
-    '#type' => 'fieldset',
-  '#title' => t('Chamfer Header Settings'),
-  '#description' => t('Change items in the header'),
-  '#collapsed' => TRUE,
-  '#collapsible' => TRUE,
-  );
-  $form['header']['chamfer_top_logo'] = array(
-    '#type' => 'select',
-    '#title' => t('Show Top Logo'),
-  '#description' => t('Display the logo at the top left of the interface'),
-  '#options' => array(0 => 'No', 1 => 'Logo 1', 2 => 'Logo 2'),
-    '#default_value' => $settings['chamfer_top_logo'],
-  );
-  $form['header']['chamfer_top_link'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Top Logo Link'),
-  '#description' => t('The link the logo should go to when clicked, leave blank for none'),
-    '#default_value' => $settings['chamfer_top_link'],
-  );
-  $form['header']['chamfer_color_header1'] = array(
-    '#type' => $fieldtype,
-  '#size' => 6,
-  '#maxlength' => 6,    
-  '#title' => t('Site Title'),
-  '#description' => t('Color of the site title'),
-    '#default_value' => $settings['chamfer_color_header1'],
-  );
-  $form['header']['chamfer_color_header2'] = array(
-    '#type' => $fieldtype,
-  '#size' => 6,
-  '#maxlength' => 6,    
-  '#title' => t('Site Slogan'),
-  '#description' => t('Color of the site slogan'),
-    '#default_value' => $settings['chamfer_color_header2'],
-  );
-  //content
-  $form['content'] = array(
-    '#type' => 'fieldset',
-  '#title' => t('Chamfer Content Settings'),
-  '#description' => t("Change content related colors"),
-  '#collapsed' => TRUE,
-  '#collapsible' => TRUE,
-  );
-  $form['content']['chamfer_color_text'] = array(
-    '#type' => $fieldtype,
-  '#size' => 6,
-  '#maxlength' => 6,    
-  '#title' => t('Text'),
-  '#description' => t('Body of content text'),
-    '#default_value' => $settings['chamfer_color_text'],
-  );
-  $form['content']['chamfer_color_link'] = array(
-    '#type' => $fieldtype,
-  '#size' => 6,
-  '#maxlength' => 6,    
-  '#title' => t('Links'),
-  '#description' => t('Color of content links'),
-    '#default_value' => $settings['chamfer_color_link'],
-  );
-  $form['content']['chamfer_color_blocks'] = array(
-    '#type' => $fieldtype,
-  '#size' => 6,
-  '#maxlength' => 6,    
-  '#title' => t('Block background'),
-  '#description' => t('Background color of the block regions in the content'),
-    '#default_value' => $settings['chamfer_color_blocks'],
-  );
-  //footer
-  $form['footer'] = array(
-    '#type' => 'fieldset',
-  '#title' => t('Chamfer Footer Settings'),
-  '#description' => t('Change items in the footer'),
-  '#collapsed' => TRUE,
-  '#collapsible' => TRUE,
-  );
-  $form['footer']['chamfer_bottom_logo'] = array(
-    '#type' => 'select',
-    '#title' => t('Show Bottom Logo'),
-  '#description' => t('Display the logo at the top left of the interface'),
-  '#options' => array(0 => 'No', 1 => 'Logo 1', 2 => 'Logo 2'),
-    '#default_value' => $settings['chamfer_bottom_logo'],
-  );
-  $form['footer']['chamfer_bottom_link'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Bottom Logo Link'),
-  '#description' => t('The link the logo should go to when clicked, leave blank for none'),
-    '#default_value' => $settings['chamfer_bottom_link'],
-  );
-  $form['footer']['chamfer_color_footer_text'] = array(
-    '#type' => $fieldtype,
-  '#size' => 6,
-  '#maxlength' => 6,    
-  '#title' => t('Footer text'),
-  '#description' => t('Color of the footer text'),
-    '#default_value' => $settings['chamfer_color_footer_text'],
-  );
-  $form['footer']['chamfer_color_footer_links'] = array(
-    '#type' => $fieldtype,
-  '#size' => 6,
-  '#maxlength' => 6,    
-  '#title' => t('Footer links'),
-  '#description' => t('Color of the footer links'),
-  '#default_value' => $settings['chamfer_color_footer_links'],
-  );
-  }
   }
   if ($form_id == 'user_profile_form') {
     //remove change theme from view even if they have the permission, gives us granularity so they can set it in the group / course creation
@@ -397,16 +390,16 @@ function elms_helper_form_alter(&$form, &$form_state, $form_id) {
     $form['contact']['#access'] = FALSE;
   }
   //form modifications for js to work
-  if (strpos($form_id,'editview_node_form_') === 0) {
-   $form['title']['#attributes']['class'] = 'editview_title';
-   $form['field_due_date']['#attributes']['class'] = 'editview_date';
-   $form['field_content_ref']['#attributes']['class'] = 'editview_nid';
-   $form['field_task_link']['#attributes']['class'] = 'editview_task_link';
+  if (strpos($form_id, 'editview_node_form_') === 0) {
+    $form['title']['#attributes']['class'] = 'editview_title';
+    $form['field_due_date']['#attributes']['class'] = 'editview_date';
+    $form['field_content_ref']['#attributes']['class'] = 'editview_nid';
+    $form['field_task_link']['#attributes']['class'] = 'editview_task_link';
   }
 }
 
 /**
- * Implementation of hook_link_alter()
+ * Implementation of hook_link_alter().
  */
 function elms_helper_link_alter(&$links, $node, $comment = NULL) {
   //remove add book as it's confusing with outline designer in place
@@ -421,12 +414,11 @@ function elms_helper_link_alter(&$links, $node, $comment = NULL) {
   if (!isset($features['elms_reaction']) || !$features['elms_reaction']) {
     unset($links['reaction_field_related_content']);
   }
-  
   //shifts bookmarks if activated
   if (isset($links['flag-bookmarks'])) {
     $temp = $links['flag-bookmarks'];
     unset($links['flag-bookmarks']);
-    array_unshift($links,$temp);
+    array_unshift($links, $temp);
   }
 }
 

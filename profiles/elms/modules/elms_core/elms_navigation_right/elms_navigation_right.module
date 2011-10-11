@@ -1,5 +1,4 @@
 <?php
-// $Id: elms_navigation_right.module
 //Copyright (C) 2011  The Pennsylvania State University
 //
 //Bryan Ollendyke
@@ -21,8 +20,8 @@
 function elms_navigation_right_define_regions() {
   $region['elms_navigation_right'] = array(
     'project' => 'elms_navigation_right',
-	'js' => 'elms_navigation_right.js',
-	'css' => 'elms_navigation_right.css',
+    'js' => 'elms_navigation_right.js',
+    'css' => 'elms_navigation_right.css',
   );
   return $region;
 }

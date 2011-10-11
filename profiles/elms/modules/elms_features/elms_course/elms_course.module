@@ -20,7 +20,7 @@ function elms_course_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
 function _elms_course_create_default($course) {
   global $user;
   //creating a blank node
-  $group = new StdClass();
+  $group = new stdClass();
   //setting this flag avoids a conflict with instructional outline auto creation
   $group->default_version = 1;
   $group->uid = $user->uid;

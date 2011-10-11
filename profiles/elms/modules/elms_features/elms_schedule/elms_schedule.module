@@ -1,6 +1,4 @@
 <?php
-// $Id: elms_schedule.module
-//ELMS: Schedule - Build schedules for your course visually
 //Copyright (C) 2011  The Pennsylvania State University
 //
 //Bryan Ollendyke
@@ -28,7 +26,7 @@ function elms_schedule_menu() {
     'title' => 'Settings',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('elms_schedule_settings'),
-    'access callback' => module_exists('spaces') ? 'spaces_access_admin' : 'user_access',
+    'access callback' => '_elms_schedule_access_check',
     'access arguments' => module_exists('spaces') ? array() : array('administer site configuration'),
     'type' => MENU_CALLBACK,
     'file' => 'elms_schedule.pages.inc',
@@ -36,64 +34,74 @@ function elms_schedule_menu() {
   return $items;
 }
 
+
+//helper function for access verification
+function _elms_schedule_access_check() {
+  if (module_exists('spaces')) {
+    user_access('spaces_access_admin');
+  }
+  else {
+    return user_access('user_access');
+  }
+}
+
 /**
  * Implementation of (undocumented) hook_theme_registry_alter().
  */
 function elms_schedule_theme_registry_alter(&$vars) {
   //date all day label fix so it doesn't say "All day" for null values
-  $vars['date_all_day_label']['theme path'] = drupal_get_path('module','elms_schedule');
+  $vars['date_all_day_label']['theme path'] = drupal_get_path('module', 'elms_schedule');
   $vars['date_all_day_label']['function'] = '_elms_schedule_date_all_day_label';
-  $vars['date_all_day_label']['theme paths'] = array(0 => drupal_get_path('module','elms_schedule'));
+  $vars['date_all_day_label']['theme paths'] = array(0 => drupal_get_path('module', 'elms_schedule'));
   //schedule reorder view is now cross-theme
   $vars['views_view__course_schedule__page_2']['template'] = 'views-view--course-schedule--page-2';
-  $vars['views_view__course_schedule__page_2']['path'] = drupal_get_path('module','elms_schedule') .'/views';
+  $vars['views_view__course_schedule__page_2']['path'] = drupal_get_path('module', 'elms_schedule') .'/views';
   $vars['views_view__course_schedule__page_2']['arguments'] = array('view' => '');
   $vars['views_view__course_schedule__page_2']['original hook'] = 'views_view';
-  $vars['views_view__course_schedule__page_2']['include files'] = array(0 => './' . drupal_get_path('module','views') .'/theme/theme.inc');
+  $vars['views_view__course_schedule__page_2']['include files'] = array(0 => './' . drupal_get_path('module', 'views') .'/theme/theme.inc');
   $vars['views_view__course_schedule__page_2']['type'] = 'theme_engine';
-  $vars['views_view__course_schedule__page_2']['theme path'] = drupal_get_path('module','elms_schedule') .'/views';
-  $vars['views_view__course_schedule__page_2']['theme paths'] = array(0 => drupal_get_path('module','elms_schedule') .'/views');
+  $vars['views_view__course_schedule__page_2']['theme path'] = drupal_get_path('module', 'elms_schedule') .'/views';
+  $vars['views_view__course_schedule__page_2']['theme paths'] = array(0 => drupal_get_path('module', 'elms_schedule') .'/views');
   $vars['views_view__course_schedule__page_2']['preprocess functions'] = array(0 => 'template_preprocess', 1 => 'template_preprocess_views_view');
   //schedule edit view is now cross-theme
   $vars['views_view_unformatted__course_schedule__page_3']['template'] = 'views-view-unformatted--course-schedule--page-3';
-  $vars['views_view_unformatted__course_schedule__page_3']['path'] = drupal_get_path('module','elms_schedule') .'/views';
+  $vars['views_view_unformatted__course_schedule__page_3']['path'] = drupal_get_path('module', 'elms_schedule') .'/views';
   $vars['views_view_unformatted__course_schedule__page_3']['arguments'] = array('view' => '', 'options' => '', 'rows' => '', 'title' => '');
   $vars['views_view_unformatted__course_schedule__page_3']['original hook'] = 'views_view_unformatted';
-  $vars['views_view_unformatted__course_schedule__page_3']['include files'] = array(0 => './' . drupal_get_path('module','views') .'/theme/theme.inc');
+  $vars['views_view_unformatted__course_schedule__page_3']['include files'] = array(0 => './' . drupal_get_path('module', 'views') .'/theme/theme.inc');
   $vars['views_view_unformatted__course_schedule__page_3']['type'] = 'theme_engine';
-  $vars['views_view_unformatted__course_schedule__page_3']['theme path'] = drupal_get_path('module','elms_schedule') .'/views';
-  $vars['views_view_unformatted__course_schedule__page_3']['theme paths'] = array(0 => drupal_get_path('module','elms_schedule') .'/views');
+  $vars['views_view_unformatted__course_schedule__page_3']['theme path'] = drupal_get_path('module', 'elms_schedule') .'/views';
+  $vars['views_view_unformatted__course_schedule__page_3']['theme paths'] = array(0 => drupal_get_path('module', 'elms_schedule') .'/views');
   $vars['views_view_unformatted__course_schedule__page_3']['preprocess functions'] = array(0 => 'template_preprocess', 1 => 'template_preprocess_views_view_unformatted');
   //fields view that is now cross-theme
   $vars['views_view_fields__course_schedule__page_3']['template'] = 'views-view-fields--course-schedule--page-3';
-  $vars['views_view_fields__course_schedule__page_3']['path'] = drupal_get_path('module','elms_schedule') .'/views';
+  $vars['views_view_fields__course_schedule__page_3']['path'] = drupal_get_path('module', 'elms_schedule') .'/views';
   $vars['views_view_fields__course_schedule__page_3']['arguments'] = array('view' => '', 'options' => '', 'row' => '', 'field_alias' => '');
   $vars['views_view_fields__course_schedule__page_3']['original hook'] = 'views_view_fields';
-  $vars['views_view_fields__course_schedule__page_3']['include files'] = array(0 => './' . drupal_get_path('module','views') .'/theme/theme.inc');
+  $vars['views_view_fields__course_schedule__page_3']['include files'] = array(0 => './' . drupal_get_path('module', 'views') .'/theme/theme.inc');
   $vars['views_view_fields__course_schedule__page_3']['type'] = 'theme_engine';
-  $vars['views_view_fields__course_schedule__page_3']['theme path'] = drupal_get_path('module','elms_schedule') .'/views';
-  $vars['views_view_fields__course_schedule__page_3']['theme paths'] = array(0 => drupal_get_path('module','elms_schedule') .'/views');
-  $vars['views_view_fields__course_schedule__page_3']['preprocess functions'] = array(0 => 'template_preprocess', 1 => 'template_preprocess_views_view_fields');  
+  $vars['views_view_fields__course_schedule__page_3']['theme path'] = drupal_get_path('module', 'elms_schedule') .'/views';
+  $vars['views_view_fields__course_schedule__page_3']['theme paths'] = array(0 => drupal_get_path('module', 'elms_schedule') .'/views');
+  $vars['views_view_fields__course_schedule__page_3']['preprocess functions'] = array(0 => 'template_preprocess', 1 => 'template_preprocess_views_view_fields');
   //schedule view is now cross-theme
   $vars['views_view_unformatted__course_schedule__page_4']['template'] = 'views-view-unformatted--course-schedule--page-4';
-  $vars['views_view_unformatted__course_schedule__page_4']['path'] = drupal_get_path('module','elms_schedule') .'/views';
+  $vars['views_view_unformatted__course_schedule__page_4']['path'] = drupal_get_path('module', 'elms_schedule') .'/views';
   $vars['views_view_unformatted__course_schedule__page_4']['arguments'] = array('view' => '', 'options' => '', 'rows' => '', 'title' => '');
   $vars['views_view_unformatted__course_schedule__page_4']['original hook'] = 'views_view_unformatted';
-  $vars['views_view_unformatted__course_schedule__page_4']['include files'] = array(0 => './'. drupal_get_path('module','views') .'/theme/theme.inc');
+  $vars['views_view_unformatted__course_schedule__page_4']['include files'] = array(0 => './'. drupal_get_path('module', 'views') .'/theme/theme.inc');
   $vars['views_view_unformatted__course_schedule__page_4']['type'] = 'theme_engine';
-  $vars['views_view_unformatted__course_schedule__page_4']['theme path'] = drupal_get_path('module','elms_schedule') .'/views';
-  $vars['views_view_unformatted__course_schedule__page_4']['theme paths'] = array(0 => drupal_get_path('module','elms_schedule') .'/views');
+  $vars['views_view_unformatted__course_schedule__page_4']['theme path'] = drupal_get_path('module', 'elms_schedule') .'/views';
+  $vars['views_view_unformatted__course_schedule__page_4']['theme paths'] = array(0 => drupal_get_path('module', 'elms_schedule') .'/views');
   $vars['views_view_unformatted__course_schedule__page_4']['preprocess functions'] = array(0 => 'template_preprocess', 1 => 'template_preprocess_views_view_unformatted');
-  
   //fields view for schedule render is cross-theme
   $vars['views_view_fields__course_schedule__page_4']['template'] = 'views-view-fields--course-schedule--page-4';
-  $vars['views_view_fields__course_schedule__page_4']['path'] = drupal_get_path('module','elms_schedule') .'/views';
+  $vars['views_view_fields__course_schedule__page_4']['path'] = drupal_get_path('module', 'elms_schedule') .'/views';
   $vars['views_view_fields__course_schedule__page_4']['arguments'] = array('view' => '', 'options' => '', 'row' => '', 'field_alias' => '');
   $vars['views_view_fields__course_schedule__page_4']['original hook'] = 'views_view_fields';
-  $vars['views_view_fields__course_schedule__page_4']['include files'] = array(0 => './'. drupal_get_path('module','views') .'/theme/theme.inc');
+  $vars['views_view_fields__course_schedule__page_4']['include files'] = array(0 => './'. drupal_get_path('module', 'views') .'/theme/theme.inc');
   $vars['views_view_fields__course_schedule__page_4']['type'] = 'theme_engine';
-  $vars['views_view_fields__course_schedule__page_4']['theme path'] = drupal_get_path('module','elms_schedule') .'/views';
-  $vars['views_view_fields__course_schedule__page_4']['theme paths'] = array(0 => drupal_get_path('module','elms_schedule') .'/views');
+  $vars['views_view_fields__course_schedule__page_4']['theme path'] = drupal_get_path('module', 'elms_schedule') .'/views';
+  $vars['views_view_fields__course_schedule__page_4']['theme paths'] = array(0 => drupal_get_path('module', 'elms_schedule') .'/views');
   $vars['views_view_fields__course_schedule__page_4']['preprocess functions'] = array(0 => 'template_preprocess', 1 => 'template_preprocess_views_view_fields');
 }
 
@@ -111,23 +119,22 @@ function elms_schedule_help($path, $arg) {
 function elms_schedule_init() {
   //if we're in the schedule portion of the site then load correct css / js
   if (arg(0) == 'schedule') {
-	//edit for has a lot of special css / js to account for inline editor
+    //edit for has a lot of special css / js to account for inline editor
     if (arg(1) == 'edit') {
-	  //only add in date popup code if the module is turned on, some older versions of php don't like it
-	  if (module_exists('date_popup')) {
+      //only add in date popup code if the module is turned on, some older versions of php don't like it
+      if (module_exists('date_popup')) {
         drupal_add_css(drupal_get_path('module', 'date_popup') .'/themes/calendar.css');
         drupal_add_css(drupal_get_path('module', 'date_popup') .'/themes/datepicker.css');
         drupal_add_css(drupal_get_path('module', 'date_popup') .'/themes/timeentry.css');
       }
-      drupal_add_css(drupal_get_path('module', 'elms_schedule') .'/css/schedule_edit.css','theme');
+      drupal_add_css(drupal_get_path('module', 'elms_schedule') .'/css/schedule_edit.css', 'theme');
       drupal_add_js(drupal_get_path('module', 'elms_schedule') .'/js/schedule_edit.js');
-      automodal_add('.schedule_automodal', array('draggable' => FALSE,'automodalReload'=>TRUE));
-	}
-	//ignore outline and delete for the time being so we don't load needless files
-	elseif(arg(1) == 'outline' || arg(1) == 'delete') {
-    
+      automodal_add('.schedule_automodal', array('draggable' => FALSE, 'automodalReload' => TRUE));
     }
-	else {
+    //ignore outline and delete for the time being so we don't load needless files
+    elseif (arg(1) == 'outline' || arg(1) == 'delete') {
+    }
+    else {
       //only add in date popup code if the module is turned on, some older versions of php don't like it
       if (module_exists('date_popup')) {
         drupal_add_css(drupal_get_path('module', 'date_popup') .'/themes/calendar.css');
@@ -135,18 +142,18 @@ function elms_schedule_init() {
         drupal_add_css(drupal_get_path('module', 'date_popup') .'/themes/timeentry.css');
         jquery_ui_add('ui.progressbar');
       }
-      drupal_add_css(drupal_get_path('module', 'elms_schedule') .'/css/schedule.css','theme');
+      drupal_add_css(drupal_get_path('module', 'elms_schedule') .'/css/schedule.css', 'theme');
       drupal_add_js(drupal_get_path('module', 'elms_schedule') .'/js/schedule.js');
     }
   }
 }
 /**
- * Implementation of hook_form_alter()
+ * Implementation of hook_form_alter().
  */
 function elms_schedule_form_alter(&$form, $form_state, $form_id) {
   if (automodal_request_is_child() && filter_input(INPUT_GET, 'automodalClose', FILTER_VALIDATE_BOOLEAN)) {
   //hide the appbar via css for just things being popuped up via modalframe
-  drupal_add_css(drupal_get_path('module', 'elms_schedule') .'/css/hide_appbar.css','theme');
+  drupal_add_css(drupal_get_path('module', 'elms_schedule') .'/css/hide_appbar.css', 'theme');
   }
 }
 
@@ -161,13 +168,13 @@ function _elms_schedule_rebuild_schedule($group, &$context) {
   }
   elseif ($semester == 'summer2') {
     $semester = 'summer';
-  $summer = 2;
+    $summer = 2;
   }
   elseif ($semester == 'summer') {
     $summer = 'full';
   }
   else {
-    $summer = 0; 
+    $summer = 0;
   }
   if (module_exists('psu_schedule') && $group->field_schedule_source[0]['value'] == 'registrar') {
     $key_dates = _psu_schedule_get_schedule($semester, $year, $summer);
@@ -180,17 +187,9 @@ function _elms_schedule_rebuild_schedule($group, &$context) {
   $date_diff = '';
   //grab all the course events, ordered by date that are part of this group
   //we do checking upstream to ensure there are course events
-  $result = db_query("SELECT {node}.nid
-  FROM {draggableviews_structure} 
-  JOIN {node} ON {node}.nid = {draggableviews_structure}.nid
-  JOIN {og_ancestry} ON {og_ancestry}.nid = {draggableviews_structure}.nid
-  JOIN {content_type_course_event} ON {content_type_course_event}.vid = {node}.vid
-  WHERE {og_ancestry}.group_nid=%d AND {draggableviews_structure}.delta=1 
-  AND {draggableviews_structure}.view_name='course_schedule' 
-  AND {content_type_course_event}.field_due_date_value IS NOT NULL
-  ORDER BY {content_type_course_event}.field_due_date_value ASC", $group->nid);
-  while($event = db_fetch_array($result)) {
-  $node = NULL;
+  $result = db_query("SELECT {node}.nid FROM {draggableviews_structure} JOIN {node} ON {node}.nid = {draggableviews_structure}.nid JOIN {og_ancestry} ON {og_ancestry}.nid = {draggableviews_structure}.nid JOIN {content_type_course_event} ON {content_type_course_event}.vid = {node}.vid WHERE {og_ancestry}.group_nid=%d AND {draggableviews_structure}.delta=1 AND {draggableviews_structure}.view_name='course_schedule' AND {content_type_course_event}.field_due_date_value IS NOT NULL ORDER BY {content_type_course_event}.field_due_date_value ASC", $group->nid);
+  while ($event = db_fetch_array($result)) {
+    $node = NULL;
     $node = node_load($event['nid']);
     //we take the starting value of the course and figure out the difference between that day and the new starting value we're setting
     if ($date_diff == '') {
@@ -267,7 +266,7 @@ function _elms_schedule_build_schedule($group, &$context) {
     $context['sandbox']['key_dates'] = $key_dates;
     $context['sandbox']['current_date'] = $context['sandbox']['key_dates']['start'];
     //calculate number of weeks in the semester from finals date - start date
-    $context['sandbox']['num_weeks'] = date('W',$key_dates['finals']) - date('W',$key_dates['start']);
+    $context['sandbox']['num_weeks'] = date('W', $key_dates['finals']) - date('W', $key_dates['start']);
     //account for the topics based outline
     if ($sched_type == 'topic') {
       $context['sandbox']['level1'] = $topics;
@@ -294,8 +293,8 @@ function _elms_schedule_build_schedule($group, &$context) {
   }
   //as long as this isn't the max record, keep building them
   if ($context['sandbox']['current_record'] != $context['sandbox']['level1']) {
-  $single_day_event = false;
-  $week_event = false;
+  $single_day_event = FALSE;
+  $week_event = FALSE;
   $node1 = NULL;
     $node1 = _elms_schedule_clean_node();
     $node1->field_event_name[0]['value'] = $context['sandbox']['level1_name'] .' '. ($context['sandbox']['current_record']+1);
@@ -306,9 +305,9 @@ function _elms_schedule_build_schedule($group, &$context) {
   $node1->og_groups = array($group_nid => $group_nid);
     $node1->og_groups_both = array($group_nid => $group_title);
     //store the starting date as whatever we are currently on
-    $tmpdatestr = date('m/d/y',$context['sandbox']['current_date']);
+    $tmpdatestr = date('m/d/y', $context['sandbox']['current_date']);
     $node1->field_due_date[0] = array(
-      'value' => date('Y-m-d',$context['sandbox']['current_date']) .'T00:00:00',
+      'value' => date('Y-m-d', $context['sandbox']['current_date']) .'T00:00:00',
       'timezone' => date_default_timezone_name(),
       'timezone_db' => date_default_timezone_name(),
       'date_type' => 'date'
@@ -317,7 +316,7 @@ function _elms_schedule_build_schedule($group, &$context) {
   if ($sched_type != 'topic') {
     //see if this is a special week for further title modification
   foreach($context['sandbox']['key_dates'] as $key => $datestamp) {
-      if (date('W',$context['sandbox']['current_date']) == date('W',$datestamp)) {
+      if (date('W', $context['sandbox']['current_date']) == date('W', $datestamp)) {
       //this is a special week, make a modification to the way we normally create the items somehow
         switch($key) {
       //currently we don't do anything special for finals or end of semester here
@@ -334,12 +333,12 @@ function _elms_schedule_build_schedule($group, &$context) {
           case 'springbreak':
             $node1->field_event_name[0]['value'] = t('Spring Break');
       $node1->field_detail_text = array( 0 => array('value' => t('There are no classes this week')));
-      $week_event = true;
+      $week_event = TRUE;
           break;
           case 'thanksgiving':
             $node1->field_event_name[0]['value'] = t('Happy Thanksgiving!');
       $node1->field_detail_text = array( 0 => array('value' => t('There are no classes this week')));
-      $week_event = true;
+      $week_event = TRUE;
           break;
       default:
         //there's an event that isn't a week long during the active week so we need a flag to know to create an extra event with this container as a parent
@@ -363,7 +362,7 @@ function _elms_schedule_build_schedule($group, &$context) {
       $tmpdate = $context['sandbox']['key_dates']['end'];
     }
       $node1->field_end_date[0] = array(
-        'value' => date('Y-m-d',$tmpdate) .'T00:00:00',
+        'value' => date('Y-m-d', $tmpdate) .'T00:00:00',
         'timezone' => date_default_timezone_name(),
         'timezone_db' => date_default_timezone_name(),
         'date_type' => 'date'
@@ -382,7 +381,7 @@ function _elms_schedule_build_schedule($group, &$context) {
         $tmpdate = strtotime($tmpdatestr .' +'. ((7 * $context['sandbox']['level2'])-3) .'day');
     }
       $node1->field_end_date = array(0 => array(
-      'value' => date('Y-m-d',$tmpdate) .'T00:00:00',
+      'value' => date('Y-m-d', $tmpdate) .'T00:00:00',
       'timezone' => date_default_timezone_name(),
       'timezone_db' => date_default_timezone_name(),
       'date_type' => 'date'
@@ -424,7 +423,7 @@ function _elms_schedule_build_schedule($group, &$context) {
     break;
     }
     $node2->field_due_date[0] = array(
-    'value' => date('Y-m-d',$context['sandbox']['key_dates'][$single_day_event]) .'T00:00:00',
+    'value' => date('Y-m-d', $context['sandbox']['key_dates'][$single_day_event]) .'T00:00:00',
     'timezone' => date_default_timezone_name(),
     'timezone_db' => date_default_timezone_name(),
     'date_type' => 'date'
@@ -455,9 +454,9 @@ function _elms_schedule_build_schedule($group, &$context) {
   }
   
     for($j=0; $j<$num_sub_events; $j++) {
-    $week_event = false;
+    $week_event = FALSE;
     $node2 = NULL;
-    $single_day_event = false;
+    $single_day_event = FALSE;
       $node2 = _elms_schedule_clean_node();
       //for topic outlines we need an iterative name as well as the weeks of instruction label
       if ($sched_type == 'topic') {
@@ -465,7 +464,7 @@ function _elms_schedule_build_schedule($group, &$context) {
         $tmpcount = ($context['sandbox']['current_record']*$context['sandbox']['level2']) + ($j+1);
         $node2->field_event_name[0]['value'] .= ' '. $tmpcount;
     foreach($context['sandbox']['key_dates'] as $key => $datestamp) {
-          if (date('W',$context['sandbox']['current_date']) == date('W',$datestamp)) {
+          if (date('W', $context['sandbox']['current_date']) == date('W', $datestamp)) {
             //this is a special week, make a modification to the way we normally create the items somehow
             switch($key) {
       //currently we don't do anything special for finals or end of semester here
@@ -483,13 +482,13 @@ function _elms_schedule_build_schedule($group, &$context) {
               $node2->field_event_name[0]['value'] = t('Spring Break');
         $node2->field_detail_text = array( 0 => array('value' => t('There are no classes this week')));
         $node2->field_color = array(0 => array('value' => _elms_schedule_random_color()));
-        $week_event = true;
+        $week_event = TRUE;
             break;
             case 'thanksgiving':
               $node2->field_event_name[0]['value'] = t('Happy Thanksgiving');
         $node2->field_detail_text = array( 0 => array('value' => t('There are no classes this week')));
         $node2->field_color = array(0 => array('value' => _elms_schedule_random_color()));
-        $week_event = true;
+        $week_event = TRUE;
             break;
       default:
         //there's an event that isn't a week long during the active week so we need a flag to know to create an extra event with this container as a parent
@@ -500,12 +499,12 @@ function _elms_schedule_build_schedule($group, &$context) {
         }
       //add 4 days so we can get a complete week cycle, only screwy on summer session 2
     $node2->field_due_date[0] = array(
-        'value' => date('Y-m-d',$context['sandbox']['current_date']) .'T00:00:00',
+        'value' => date('Y-m-d', $context['sandbox']['current_date']) .'T00:00:00',
         'timezone' => date_default_timezone_name(),
         'timezone_db' => date_default_timezone_name(),
         'date_type' => 'date'
       );
-      $tmpdatestr = date('m/d/y',$context['sandbox']['current_date']);
+      $tmpdatestr = date('m/d/y', $context['sandbox']['current_date']);
     //in a topic based schedule only perform this for the very first week container
       if ($context['sandbox']['summer'] == 2 && $context['sandbox']['current_record'] == 0 && $j == 0) {
       $tmpdate = strtotime($tmpdatestr .' +2day');
@@ -520,7 +519,7 @@ function _elms_schedule_build_schedule($group, &$context) {
       $tmpdate = $context['sandbox']['key_dates']['end'];
     }
       $node2->field_end_date[0] = array(
-        'value' => date('Y-m-d',$tmpdate) .'T00:00:00',
+        'value' => date('Y-m-d', $tmpdate) .'T00:00:00',
         'timezone' => date_default_timezone_name(),
         'timezone_db' => date_default_timezone_name(),
         'date_type' => 'date'
@@ -591,7 +590,7 @@ function _elms_schedule_build_schedule($group, &$context) {
     break;
     }
     $node3->field_due_date[0] = array(
-    'value' => date('Y-m-d',$context['sandbox']['key_dates'][$single_day_event]) .'T00:00:00',
+    'value' => date('Y-m-d', $context['sandbox']['key_dates'][$single_day_event]) .'T00:00:00',
     'timezone' => date_default_timezone_name(),
     'timezone_db' => date_default_timezone_name(),
     'date_type' => 'date'
@@ -648,9 +647,9 @@ function _elms_schedule_build_schedule($group, &$context) {
     $node1->field_color = array(0 => array('value' => _elms_schedule_random_color()));
     $node1->og_groups = array($group_nid => $group_nid);
     $node1->og_groups_both = array($group_nid => $group_title);
-    $tmpdatestr = date('m/d/y',$context['sandbox']['key_dates']['finals']);
+    $tmpdatestr = date('m/d/y', $context['sandbox']['key_dates']['finals']);
     $node1->field_due_date[0] = array(
-        'value' => date('Y-m-d',$context['sandbox']['key_dates']['finals']) .'T00:00:00',
+        'value' => date('Y-m-d', $context['sandbox']['key_dates']['finals']) .'T00:00:00',
         'timezone' => date_default_timezone_name(),
         'timezone_db' => date_default_timezone_name(),
         'date_type' => 'date'
@@ -659,7 +658,7 @@ function _elms_schedule_build_schedule($group, &$context) {
     if ($context['sandbox']['semester'] != 'summer') {
       $tmpdate = strtotime($tmpdatestr .' +4day');
         $node1->field_end_date[0] = array(
-        'value' => date('Y-m-d',$tmpdate) .'T00:00:00',
+        'value' => date('Y-m-d', $tmpdate) .'T00:00:00',
         'timezone' => date_default_timezone_name(),
         'timezone_db' => date_default_timezone_name(),
         'date_type' => 'date'

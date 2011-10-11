@@ -3,7 +3,7 @@
 include_once('elms_course_versions.features.inc');
 
 /**
- * Implementation of hook_form_alter()
+ * Implementation of hook_form_alter().
  */
 function elms_course_versions_form_alter(&$form, &$form_state, $form_id) {
   //alter the version form
@@ -13,14 +13,14 @@ function elms_course_versions_form_alter(&$form, &$form_state, $form_id) {
     //because purl wants a url, generate a temporary, random one
     //this has to be done because the nid hasn't been set yet and we can't submit the node until we have a PURL identifier yet the NID is supposed to be part of the address, once submitted the node will automatically change thing
     if (arg(1) == 'add') {
-      $form['purl']['value']['#default_value'] = '_tmp_'. rand(1,1000);
+      $form['purl']['value']['#default_value'] = '_tmp_'. rand(1, 1000);
       $form['themes']['theme']['#default_value'] = 'chamfer';
-	  //auto populate the descriptive field if we can
-	  $nid = arg(3);
-	  if (isset($nid)) {
-	    $node = node_load(arg(3));
-	    $form['og_description']['#value'] = $node->field_description[0]['value'];
-	  }
+      //auto populate the descriptive field if we can
+      $nid = arg(3);
+      if (isset($nid)) {
+        $node = node_load(arg(3));
+        $form['og_description']['#value'] = $node->field_description[0]['value'];
+      }
     }
     $form['#content_extra_fields']['spaces_preset']['weight'] = 8;
     //unset rubik which is used for administering the site
@@ -39,15 +39,15 @@ function elms_course_versions_form_alter(&$form, &$form_state, $form_id) {
 function elms_course_versions_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
   //the group node makes no sense to load to users, redirect to the front-page
   switch ($op) {
-	case 'presave':
-	  //detect a workflow change about to happen
-	  if (arg(2) == 'workflow' && $node->_workflow != $node->workflow) {
-		 $node->_purl_change = _elms_course_versions_get_purl($node);
-	  }
+  case 'presave':
+    //detect a workflow change about to happen
+    if (arg(2) == 'workflow' && $node->_workflow != $node->workflow) {
+      $node->_purl_change = _elms_course_versions_get_purl($node);
+    }
     break;
-	case 'update':
-	  if (isset($node->_purl_change)) {
-	    $modifier = array(
+  case 'update':
+    if (isset($node->_purl_change)) {
+      $modifier = array(
           'value' => $node->_purl_change,
           'provider' => 'spaces_og',
           'id' => $node->nid,
@@ -55,57 +55,56 @@ function elms_course_versions_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
         purl_save($modifier);
       }
     break;
-	case 'insert':
-	//check for groups created
+  case 'insert':
+  //check for groups created
     if (og_is_group_type($node->type)) {
-	  //remove messages on course insert since this will redirect to the space to work
-	  $_SESSION['messages'] = array();
-	  //bump workflow state to dev automatically
-	  workflow_execute_transition($node, 3);
-	  //set the theme variable defaults before we are strongarmed into this group
-	  $theme_ary = variable_get('theme_settings', array());
-      $space = spaces_load('og', $node->nid, TRUE);
-      if ($space) {
-        $space->controllers->variable->set('site_name', $node->title);
-        //load the course node for the name space info
-		$course = node_load($node->field_course_ref[0]['nid']);
-        //set slogan to the description of the course
-        $space->controllers->variable->set('site_slogan', $course->field_course_title[0]['value']);
-		//set initial homepage to the content outline 
-		$space->controllers->variable->set('site_frontpage', 'course_content');
-		//set the initial path to the group created
-		$space->controllers->variable->set('site_frontpage_path', 'node/'. $node->nid);
-		//establish default theme settings
-		$space->controllers->variable->set('theme_settings', $theme_ary);
-		//establish default theme settings for the selected theme
-		$space->controllers->variable->set('theme_'. $node->og_theme .'_settings', $theme_ary);
-		//turn on our default area as content
-		$space->controllers->variable->set('spaces_features', array('elms_course_content' => 1));
-		//set some defaults for the version as they might not be set in the node form
-		if (isset($node->default_version)) {
-		  $space->controllers->variable->set('spaces_preset_og', 'og_private');
-		  $node->og_private = 1;
-		}
-		//set webaccess state for strict per course settings
-		if (module_exists('webaccess')) {
-          $space->controllers->variable->set('webaccess_secure_site', $node->og_private);
-        }
-		//build course root since all courses come with content by default
-		//check for the default argument coming from the course creation form making a version
-		if (!isset($node->default_version)) {
-		  _elms_course_content_create_root($node, $node->field_instructional_template[0]['value']);
-		}
-		
-        //need to do extra step with purl rewrite to ensure it has the node and course name in in
-        $modifier = array(
-          'value' => _elms_course_versions_get_purl($node),
-          'provider' => 'spaces_og',
-          'id' => $node->nid,
-        );
-        purl_save($modifier);
+    //remove messages on course insert since this will redirect to the space to work
+    $_SESSION['messages'] = array();
+    //bump workflow state to dev automatically
+    workflow_execute_transition($node, 3);
+    //set the theme variable defaults before we are strongarmed into this group
+    $theme_ary = variable_get('theme_settings', array());
+    $space = spaces_load('og', $node->nid, TRUE);
+    if ($space) {
+      $space->controllers->variable->set('site_name', $node->title);
+      //load the course node for the name space info
+      $course = node_load($node->field_course_ref[0]['nid']);
+      //set slogan to the description of the course
+      $space->controllers->variable->set('site_slogan', $course->field_course_title[0]['value']);
+      //set initial homepage to the content outline
+      $space->controllers->variable->set('site_frontpage', 'course_content');
+      //set the initial path to the group created
+      $space->controllers->variable->set('site_frontpage_path', 'node/'. $node->nid);
+      //establish default theme settings
+      $space->controllers->variable->set('theme_settings', $theme_ary);
+      //establish default theme settings for the selected theme
+      $space->controllers->variable->set('theme_'. $node->og_theme .'_settings', $theme_ary);
+      //turn on our default area as content
+      $space->controllers->variable->set('spaces_features', array('elms_course_content' => 1));
+      //set some defaults for the version as they might not be set in the node form
+      if (isset($node->default_version)) {
+        $space->controllers->variable->set('spaces_preset_og', 'og_private');
+        $node->og_private = 1;
       }
-	  /*
-	  TODO: Move this code into the schedule module so that it can build schedules from that feature
+      //set webaccess state for strict per course settings
+      if (module_exists('webaccess')) {
+        $space->controllers->variable->set('webaccess_secure_site', $node->og_private);
+      }
+      //build course root since all courses come with content by default
+      //check for the default argument coming from the course creation form making a version
+      if (!isset($node->default_version)) {
+        _elms_course_content_create_root($node, $node->field_instructional_template[0]['value']);
+      }
+      //need to do extra step with purl rewrite to ensure it has the node and course name in in
+      $modifier = array(
+        'value' => _elms_course_versions_get_purl($node),
+        'provider' => 'spaces_og',
+        'id' => $node->nid,
+      );
+      purl_save($modifier);
+    }
+    /*
+    TODO: Move this code into the schedule module so that it can build schedules from that feature
           //remove the current schedule and build a new one
           if (module_exists('elms_schedule') && ($node->field_schedule_to_build[0]['value'] != '')) {
             if ($node->field_schedule_to_build[0]['value'] == 'rebuild') {
@@ -133,15 +132,15 @@ function elms_course_versions_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
             'finished' => '_elms_version_duplicate_branch_finished',
           );
           batch_set($batch);
-          batch_process('node/'. $node->nid .'/edit/4');
-		  */
+          batch_process('node/' . $node->nid . '/edit/4');
+      */
     }
-	break;
-	case 'delete':
-	  //clean up all space overrides just to be safe
-	  if (og_is_group_type($node->type)) {
-        db_query("DELETE FROM {spaces_overrides} WHERE id=%d",$node->nid);
-	  }
+  break;
+  case 'delete':
+    //clean up all space overrides just to be safe
+    if (og_is_group_type($node->type)) {
+      db_query("DELETE FROM {spaces_overrides} WHERE id=%d", $node->nid);
+    }
     break;
   }
 }
@@ -151,27 +150,27 @@ function _elms_course_versions_get_purl($node) {
   $course = node_load($node->field_course_ref[0]['nid']);
   $output = $course->title;
   switch ($node->workflow) {
-	case 1:
-	case 2:
-	case 3: //initial states
-	  $output.= '_dev_'. $node->nid;
-	break;
-	case 4: //inactive
-      $output.= '_inactive_'. $node->nid;
-	break;
-	case 5: //offered
-	  $output.= '_offered_'. $node->nid;
-	break;
-	case 6: //archive
-	  $output.= '_archive_'. $node->nid;
-	break;
-	case 7: //Promo
-	  $output.= '_promo_'. $node->nid;
-	break;
-	case 8: //master
-	  $output.= '_master_'. $node->nid;
-	break;
+  case 1:
+  case 2:
+  case 3: //initial states
+    $output .= '_dev_'. $node->nid;
+  break;
+  case 4: //inactive
+    $output .= '_inactive_'. $node->nid;
+  break;
+  case 5: //offered
+    $output .= '_offered_'. $node->nid;
+  break;
+  case 6: //archive
+    $output .= '_archive_'. $node->nid;
+  break;
+  case 7: //Promo
+    $output .= '_promo_'. $node->nid;
+  break;
+  case 8: //master
+    $output .= '_master_'. $node->nid;
+  break;
   }
-  $output = strtolower(str_replace(' ', '', $output));
+  $output = drupal_strtolower(str_replace(' ', '', $output));
   return $output;
 }

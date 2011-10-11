@@ -1,8 +1,6 @@
 <?php
 
 include_once('elms_navigation_top.features.inc');
-
-// $Id: elms_navigation_top.module
 //Copyright (C) 2011  The Pennsylvania State University
 //
 //Bryan Ollendyke
@@ -13,18 +11,11 @@ include_once('elms_navigation_top.features.inc');
 //
 //12 Borland
 //University Park,  PA 16802
-/**
- * @file
- *   Add a top bar region for ELMS
- */
 
 /**
- * Implementation of hook_init().
+ * @file
+ * Add a top bar region for ELMS
  */
-function elms_navigation_top_init() {
-  //unset breadcrumbs because the top nav will handle them manually
-  //drupal_set_breadcrumb(array());
-}
 
 /**
  * Implementation of hook_define_region().
@@ -48,19 +39,19 @@ function elms_navigation_top_block($op = 'list', $delta = 0, $edit = array()) {
       'weight' => 0,
       'status' => 0,
     );
-  $blocks[1] = array(
+    $blocks[1] = array(
       'info' => t('Notifications Container'),
       'weight' => 0,
       'status' => 0,
     );
-  $blocks[2] = array(
+    $blocks[2] = array(
       'info' => t('Top Nav User Menu Implementation'),
       'weight' => 0,
       'status' => 0,
     );
     return $blocks;
   }
-  else if ($op == 'view') {
+  elseif ($op == 'view') {
     switch ($delta) {
       case 0:
         $block['title'] = '<none>';
@@ -74,25 +65,25 @@ function elms_navigation_top_block($op = 'list', $delta = 0, $edit = array()) {
       //only show menu options for logged in users
       global $user;
       if (!isset($user->uid) || $user->uid == 0 || $user->uid == '') {
-		$block['regions_allow_html_title'] = true;
+        $block['regions_allow_html_title'] = TRUE;
         if (module_exists('webaccess')) {
           $block['title'] = l(t('Login'), 'login', array('query' => 'destination=courses'));
         }
         else {
-          $block['title'] = l(t('Login'), 'user/login', array('query' => 'destination=courses')); 
+          $block['title'] = l(t('Login'), 'user/login', array('query' => 'destination=courses'));
         }
-		$block['content'] = ' ';
+        $block['content'] = ' ';
       }
       else {
         //manually load the usermenu menu so we can inject a new title
         $block = module_invoke('menu', 'block', 'view', 'menu-usermenu');
         $rendername = '';
         if (isset($user->picture)) {
-          $rendername.= theme('imagecache', 'elms_navigation_top', $user->picture, $user->name ."'s profile picture","'s profile picture");
+          $rendername .= theme('imagecache', 'elms_navigation_top', $user->picture, $user->name ."'s profile picture", "'s profile picture");
         }
-        $rendername.= '<span>'. $user->name .'</span>';
+        $rendername .= '<span>'. $user->name .'</span>';
         $block['title'] = $rendername;
-        $block['regions_allow_html_title'] = true;
+        $block['regions_allow_html_title'] = TRUE;
       }
       break;
     }
@@ -111,11 +102,11 @@ function _elms_navigation_top_system_path() {
     $output = theme('menu_item', l(t($site_name), $site_frontpage, array('purl' => array('disabled' => TRUE))), 0);
     $val = db_fetch_array(db_query("SELECT n.title, td.name FROM {node} AS n JOIN {term_node} AS tn ON n.nid = tn.nid JOIN {term_data} AS td ON td.tid = tn.tid WHERE n.nid=%d", $group->field_course_ref[0]['nid']));
   //add the courses listing with the name of the taxonomy term
-    $output.= theme('menu_item', l(t($val['name']), 'courses', array('purl' => array('disabled' => TRUE))), 0);
+    $output .= theme('menu_item', l(t($val['name']), 'courses', array('purl' => array('disabled' => TRUE))), 0);
   //add the course home
-    $output.= theme('menu_item', l(t($val['title']), 'node/'. $group->field_course_ref[0]['nid'], array('purl' => array('disabled' => TRUE))), 0);
+    $output .= theme('menu_item', l(t($val['title']), 'node/'. $group->field_course_ref[0]['nid'], array('purl' => array('disabled' => TRUE))), 0);
   //add the current group homepage to the trail
-    $output.= theme('menu_item', l(t($group->title), variable_get('site_frontpage', 'node/'. $group->nid)), 0);
+    $output .= theme('menu_item', l(t($group->title), variable_get('site_frontpage', 'node/'. $group->nid)), 0);
   }
   else {
     //add the site name first
@@ -130,28 +121,28 @@ function _elms_navigation_top_system_path() {
     if ($type == 'course') {
       $val = db_fetch_array(db_query("SELECT n.title, td.name FROM {node} AS n JOIN {term_node} AS tn ON n.nid = tn.nid JOIN {term_data} AS td ON td.tid = tn.tid WHERE n.nid=%d", $nid));
     //taxonomy  term used
-      $output.= theme('menu_item', l(t($val['name']), 'courses', array('purl' => array('disabled' => TRUE))), 0);
+      $output .= theme('menu_item', l(t($val['name']), 'courses', array('purl' => array('disabled' => TRUE))), 0);
     }
-	else {
-	  $output.= theme('menu_item', l(t('All Courses'), 'courses', array('purl' => array('disabled' => TRUE))), 0);	
-	}
+  else {
+    $output .= theme('menu_item', l(t('All Courses'), 'courses', array('purl' => array('disabled' => TRUE))), 0);
+  }
   }
   //unify everything that's not in the courses view
   if (arg(0) != 'courses') {
-	//dig out current menu path based on whats active
-	$active_menu = menu_set_active_trail();
-	//pop off the home link
-	if ($active_menu[0]['title'] == 'Home') {
+  //dig out current menu path based on whats active
+  $active_menu = menu_set_active_trail();
+  //pop off the home link
+  if ($active_menu[0]['title'] == 'Home') {
       array_shift($active_menu);
-	}
+  }
     //iterate each menu item and convert to valid breadcrumb
-    foreach($active_menu as $menu) {
-	  if (isset($menu['link_path'])) {
-	    $output.= theme('menu_item', l(t($menu['title']), $menu['link_path']), 0);
-	  }
-	  else {
-		$output.= theme('menu_item', l(t($menu['title']), $menu['href']), 0);
-	  }
+    foreach ($active_menu as $menu) {
+    if (isset($menu['link_path'])) {
+      $output .= theme('menu_item', l(t($menu['title']), $menu['link_path']), 0);
+    }
+    else {
+    $output .= theme('menu_item', l(t($menu['title']), $menu['href']), 0);
+    }
     }
   }
   return $output;

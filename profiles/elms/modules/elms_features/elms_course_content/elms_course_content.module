@@ -10,8 +10,8 @@ function elms_course_content_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
     case 'load':
     //for group nodes, load in the ID of the book outline
     if (og_is_group_type($node->type)) {
-	  //there's only 1 book per group so load the id and store it in the node object
-	  //also store the outline mlid to avoid duplicate querying in the future
+    //there's only 1 book per group so load the id and store it in the node object
+    //also store the outline mlid to avoid duplicate querying in the future
       $result = db_query("SELECT mlid,{book}.nid FROM {og_ancestry} JOIN {book} ON {book}.nid = {og_ancestry}.nid WHERE {book}.nid = {book}.bid AND group_nid=%d", $node->nid);
       $val = db_fetch_array($result);
       $node->book_outline_mlid = $val['mlid'];
@@ -27,24 +27,24 @@ function elms_course_content_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
  */
 function elms_course_content_theme_registry_alter(&$vars) {
   //make book navigation function with a jump menu
-  $vars['book_navigation']['theme path'] = drupal_get_path('module','elms_course_content'); 
-  $vars['book_navigation']['path'] = drupal_get_path('module','elms_course_content');
-  $vars['book_navigation']['theme paths'] = array(0 => drupal_get_path('module','elms_course_content'));
+  $vars['book_navigation']['theme path'] = drupal_get_path('module', 'elms_course_content');
+  $vars['book_navigation']['path'] = drupal_get_path('module', 'elms_course_content');
+  $vars['book_navigation']['theme paths'] = array(0 => drupal_get_path('module', 'elms_course_content'));
 }
 
 /**
  * Implementation of hook_init().
  */
 function elms_course_content_init() {
-  drupal_add_css(drupal_get_path('module', 'elms_course_content') .'/css/style.css','theme');
+  drupal_add_css(drupal_get_path('module', 'elms_course_content') .'/css/style.css', 'theme');
   //offer to continue where they left off if we can grab it
   if (arg(0) == 'course_content' && module_exists('statistics')) {
     $group = og_get_group_context();
   global $user;
-  $result = db_query("SELECT {accesslog}.title,{accesslog}.path FROM {accesslog} JOIN {menu_links} ON {menu_links}.link_path = {accesslog}.path JOIN {book} ON {menu_links}.mlid = {book}.mlid JOIN {og_ancestry} ON {book}.nid={og_ancestry}.nid WHERE {accesslog}.uid=%d AND {og_ancestry}.group_nid=%d ORDER BY {accesslog}.timestamp DESC LIMIT 1", $user->uid, $group->nid);
+  $result = db_query_range("SELECT {accesslog}.title,{accesslog}.path FROM {accesslog} JOIN {menu_links} ON {menu_links}.link_path = {accesslog}.path JOIN {book} ON {menu_links}.mlid = {book}.mlid JOIN {og_ancestry} ON {book}.nid={og_ancestry}.nid WHERE {accesslog}.uid=%d AND {og_ancestry}.group_nid=%d ORDER BY {accesslog}.timestamp DESC", array($user->uid, $group->nid), 1);
     $val = db_fetch_array($result);
     if ($val['title'] != '') {
-      drupal_set_message('Continue where you left off? '. l(t($val['title']), $val['path']), 'elms-message');
+      drupal_set_message(t('Continue where you left off? %link', array('%link' => l($val['title'], $val['path']))), 'elms-message');
     }
   }
 }
@@ -67,12 +67,22 @@ function elms_course_content_menu() {
     'title' => 'Settings',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('elms_course_content_settings'),
-    'access callback' => module_exists('spaces') ? 'spaces_access_admin' : 'user_access',
+    'access callback' => '_elms_course_content_access_check',
     'access arguments' => module_exists('spaces') ? array() : array('administer site configuration'),
     'type' => MENU_CALLBACK,
     'file' => 'elms_course_content.pages.inc',
   );
   return $items;
+}
+
+//helper function for access verification
+function _elms_course_content_access_check() {
+  if (module_exists('spaces')) {
+    user_access('spaces_access_admin');
+  }
+  else {
+    return user_access('user_access');
+  }
 }
 
 /**
@@ -81,13 +91,13 @@ function elms_course_content_menu() {
 function elms_course_content_block($op = 'list', $delta = 0, $edit = array()) {
   if ($op == 'list') {
     $blocks[0] = array(
-      'info' => t('ELMS Course Content Nav'), 
+      'info' => t('ELMS Course Content Nav'),
       'weight' => -10,
-      'status' => 0, 
+      'status' => 0,
     );
     return $blocks;
   }
-  else if ($op == 'view') {
+  elseif ($op == 'view') {
     switch ($delta) {
       case 0:
       //invoke the book module and then alter the title
@@ -101,11 +111,11 @@ function elms_course_content_block($op = 'list', $delta = 0, $edit = array()) {
 }
 
 /**
- * Implementation of hook_link()
+ * Implementation of hook_link().
  */
 function elms_course_content_link($type, $object, $teaser = FALSE) {
   $links = array();
-  $print_option = variable_get('elms_print_options','both');
+  $print_option = variable_get('elms_print_options', 'both');
   if ($type == 'node' && isset($object->book['plid']) && !$teaser && user_access('see printer-friendly version')) {
   $parent = book_link_load($object->book['plid']);
   //verify print setting
@@ -114,7 +124,7 @@ function elms_course_content_link($type, $object, $teaser = FALSE) {
       'href' => 'print/book/export/html/'. $parent['nid'],
       'title' => '<img src="/sites/all/modules/print/icons/print_icon.gif" alt="Print Lesson" title="Print Lesson" width="16" height="16" class="print-icon" />',
       'attributes' => array(
-        'title' => 'Display a printer-friendly version of this page.',
+        'title' => t('Display a printer-friendly version of this page.'),
         'class' => 'print-page-lesson',
         'onclick' => 'window.open(this.href); return false',
         'rel' => 'nofollow',
@@ -128,7 +138,7 @@ function elms_course_content_link($type, $object, $teaser = FALSE) {
       'href' => 'book/export/html/'. $object->book['bid'],
       'title' => '<img src="/sites/all/modules/print/icons/print_icon.gif" alt="Print Course" title="Print Course" width="16" height="16" class="print-icon" />',
       'attributes' => array(
-        'title' => 'Display a printer-friendly version of this page.',
+        'title' => t('Display a printer-friendly version of this page.'),
         'class' => 'print-page-lesson',
         'onclick' => 'window.open(this.href); return false',
         'rel' => 'nofollow',
@@ -141,11 +151,11 @@ function elms_course_content_link($type, $object, $teaser = FALSE) {
 }
 
 /**
- * Implementation of hook_link_alter()
+ * Implementation of hook_link_alter().
  */
 function elms_course_content_link_alter(&$links, $node, $comment = NULL) {
   //check print setting
-  $print_option = variable_get('elms_print_options','both');
+  $print_option = variable_get('elms_print_options', 'both');
   if ($print_option == 'none') {
     unset($links['book_printer']);
   }
@@ -160,7 +170,8 @@ function _elms_course_content_toc($bid, $exclude = array(), $depth_limit = 10) {
     array_shift($toc);
   return theme('table', $header, $toc, array('id' => 'course-outline'));
 }
-//helper function for looping through a tree to build out the display  
+
+//helper function for looping through a tree to build out the display
 function _elms_course_content_toc_recurse($tree, &$toc, $exclude, $depth_limit) {
   foreach ($tree as $data) {
     if ($data['link']['depth'] > $depth_limit) {
@@ -181,45 +192,45 @@ function _elms_course_content_toc_recurse($tree, &$toc, $exclude, $depth_limit) 
  */
 function elms_course_content_elms_instructional_template() {
   $outline['default'] = array(
-   'title' => 'Default Outline',
-   0 => array(
-     'type' => 'page',
-     'title' => 'Lesson @i',
-   ),
-   1 => array(
-     'type' => 'duplicate',
-     'parent' => 0,
-   ),
+    'title' => 'Default Outline',
+    0 => array(
+      'type' => 'page',
+      'title' => 'Lesson @i',
+    ),
+    1 => array(
+      'type' => 'duplicate',
+      'parent' => 0,
+    ),
   );
   $outline['topical_outline'] = array(
-   'title' => 'Topical Lesson Outline',
-     0 => array(
-       'type' => 'folder',
-       'title' => 'Lesson @i',
-     ),
-   1 => array(
-       'type' => 'page',
-       'title' => 'Introduction',
+    'title' => 'Topical Lesson Outline',
+      0 => array(
+        'type' => 'folder',
+        'title' => 'Lesson @i',
+      ),
+      1 => array(
+        'type' => 'page',
+        'title' => 'Introduction',
+        'parent' => 0,
+      ),
+      2 => array(
+        'type' => 'page',
+        'title' => 'Content',
+        'parent' => 0,
+      ),
+      3 => array(
+        'type' => 'page',
+        'title' => 'Wrap up',
+        'parent' => 0,
+      ),
+      4 => array(
+       'type' => 'duplicate',
        'parent' => 0,
-     ),
-   2 => array(
-       'type' => 'page',
-       'title' => 'Content',
-       'parent' => 0,
-     ),
-   3 => array(
-       'type' => 'page',
-       'title' => 'Wrap up',
-       'parent' => 0,
-     ),
-   4 => array(
-     'type' => 'duplicate',
-     'parent' => 0,
-   ),
-   5 => array(
+      ),
+      5 => array(
        'type' => 'page',
        'title' => 'Resources',
-     ),
+      ),
   );
   return $outline;
 }
@@ -232,7 +243,7 @@ function _elms_course_content_get_instructional_template($template = 'list') {
   $ary = module_invoke_all('elms_instructional_template');
   if ($template == 'list') {
     $list = array('none' => '');
-    foreach($ary as $key => $params) {
+    foreach ($ary as $key => $params) {
     $list[$key] = $params['title'];
     }
     return $list;
@@ -245,7 +256,7 @@ function _elms_course_content_get_instructional_template($template = 'list') {
 function _elms_course_content_create_root($group, $template = NULL) {
   global $user;
   //creating a blank node
-  $node = new StdClass();
+  $node = new stdClass();
   $node->uid = $user->uid;
   $node->type = 'folder';
   $node->status = 1;
@@ -277,12 +288,12 @@ function _elms_course_content_create_root($group, $template = NULL) {
     //now grab just the chunk to clone
     $clone_this = array_splice($id_template, $book_item['parent']);
     $clone_this[0]['origin'] = $book_item['parent'];
-    foreach($clone_this as $clone_key => $clone) {
+    foreach ($clone_this as $clone_key => $clone) {
       $clone_this[$clone_key]['clone'] = 1;
     }
     //remove the duplicate request and merge back together
     array_shift($backhalf);
-    for($i=0; $i<$group->field_lesson_count[0]['value']; $i++) {
+    for ($i=0; $i<$group->field_lesson_count[0]['value']; $i++) {
       $id_template = array_merge($id_template, $clone_this);
     }
     $id_template = array_merge($id_template, $backhalf);
@@ -292,7 +303,7 @@ function _elms_course_content_create_root($group, $template = NULL) {
   foreach ($id_template as $key => $book_item) {
     if (isset($book_item['origin'])) {
       $current_origin = $key;
-      $id_template[$key]['title'] = str_replace('@i',$count,$id_template[$key]['title']);
+      $id_template[$key]['title'] = str_replace('@i', $count, $id_template[$key]['title']);
       $count++;
     }
     if (isset($id_template[$key]['parent']) && isset($id_template[$key]['clone'])) {
@@ -301,7 +312,7 @@ function _elms_course_content_create_root($group, $template = NULL) {
   }
   //now we can run the loop that makes it all
   foreach ($id_template as $key => $book_item) {
-    $bookpage = new StdClass();
+    $bookpage = new stdClass();
     $bookpage->uid = $user->uid;
     //if we receive a duplication request, utilize the outline designer duplicate function
     //alter the array to have the correct values
@@ -328,5 +339,5 @@ function _elms_course_content_create_root($group, $template = NULL) {
     $nid_map[$key] = $bookpage->nid;
     }
   }
-  watchdog('elms', t('New book outline created for the course version'));
+  watchdog('elms', 'New book outline created for the course version');
 }

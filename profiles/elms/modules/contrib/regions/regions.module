@@ -1,5 +1,4 @@
 <?php
-// $Id: regions.module
 //Copyright (C) 2011  The Pennsylvania State University
 //
 //Bryan Ollendyke
@@ -10,9 +9,10 @@
 //
 //12 Borland
 //University Park,  PA 16802
+
 /**
  * @file
- *   Add regions to the screen that are cross-theme compliant
+ * Add regions to the screen that are cross-theme compliant
  */
 
 /**
@@ -43,7 +43,7 @@ function regions_init() {
   $list = _regions_list();
   foreach ($list as $machine_name => $region) {
     //add any js that might be included in the definition
-	if (isset($region['js'])) {
+    if (isset($region['js'])) {
       drupal_add_js(drupal_get_path('module', $region['project']) .'/'. $region['js']);
     }
     //add any css that might be included in the definition
@@ -62,7 +62,7 @@ function regions_footer($main = 0) {
   $output = '';
   foreach ($list as $machine_name => $region) {
     if (user_access('view '. $machine_name .' region')) {
-      $output.= theme('regions', $machine_name);
+      $output .= theme('regions', $machine_name);
     }
   }
   return $output;
@@ -74,7 +74,7 @@ function regions_footer($main = 0) {
 function regions_system_info_alter(&$info, $file) {
   if (isset($info['regions'])) {
     $list = _regions_list();
-	//add the regions into the definition typically only provided by the theme layer
+  //add the regions into the definition typically only provided by the theme layer
     foreach ($list as $machine_name => $region) {
       $info['regions'] += array('regions_'. $machine_name => t('Regions: @name', array('@name' => $machine_name)));
     }
@@ -118,17 +118,17 @@ function theme_regions($region_name) {
     else {
       $count++;
     }
-	//build a unique key for this block for theming
+  //build a unique key for this block for theming
     $key = $block->module .'_'. $block->delta;
     $blocks .= '<div class="regions_block regions_'. $count .'" id="regions_block_'. $key .'"><div class="regions_block_title">';
       if (!empty($block->subject)) {
-		//allow for HTML titles based on intentional API inclusion
-		if ($block->regions_allow_html_title) {
+    //allow for HTML titles based on intentional API inclusion
+    if ($block->regions_allow_html_title) {
           $blocks .= $block->title;
-		}
-		else {
+    }
+    else {
           $blocks .= $block->subject;
-		}
+    }
       }
       else {
         $blocks .= t('<no title>');
