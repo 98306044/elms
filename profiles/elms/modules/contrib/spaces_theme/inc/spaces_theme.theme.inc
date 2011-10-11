@@ -1,4 +1,10 @@
-<?php 
+<?php
+
+/**
+ * @file
+ * Implementation of the spaces theme form.
+ */
+
 // helper function for group theme settings
 function _spaces_theme_theme_form($form_state, $feature = NULL) {
   //create directories just in-case of first load
@@ -17,8 +23,8 @@ function _spaces_theme_theme_form($form_state, $feature = NULL) {
   //add in the theme selection form
   if ($theme_form = system_theme_select_form(t('Changing the theme will reload the settings below.'), isset($form_state['values']['theme']) ? $form_state['values']['theme'] : $group->og_theme, 2)) {
     $theme_form['themes']['#weight'] = -8;
-	$theme_form['themes']['#collapsed'] = 1;
-	$theme_form['themes']['#title'] = t('Change Theme');
+    $theme_form['themes']['#collapsed'] = 1;
+    $theme_form['themes']['#title'] = t('Change Theme');
     $form += $theme_form;
   }
   //site logo
@@ -126,21 +132,21 @@ function _spaces_theme_theme_form($form_state, $feature = NULL) {
 }
 //validate
 function _spaces_theme_theme_form_validate($form, &$form_state) {
-	$form_state['storage']['logo'] = '';
-	$form_state['storage']['favicon'] = '';
+    $form_state['storage']['logo'] = '';
+    $form_state['storage']['favicon'] = '';
     $dir = file_create_path(file_directory_path() .'/theme_logos');
-    $is_writable = file_check_directory($dir,  1);
+    $is_writable = file_check_directory($dir, 1);
     if ($is_writable) {
       $validators = array(
         'file_validate_is_image' => array(),
         'file_validate_size' => array(2000 * 1024),
       );
       if ($file = file_save_upload('logo_upload', $validators, $dir)) {
-        $form_state['storage']['logo'] = str_replace(' ','%20',$file->filepath);
-	  }
+        $form_state['storage']['logo'] = str_replace(' ', '%20', $file->filepath);
+      }
     }
     $dir = file_create_path(file_directory_path() .'/theme_favicons');
-    $is_writable = file_check_directory($dir,  1);
+    $is_writable = file_check_directory($dir, 1);
     if ($is_writable) {
       $validators = array(
         'file_validate_is_image' => array(),
@@ -148,21 +154,21 @@ function _spaces_theme_theme_form_validate($form, &$form_state) {
         'file_validate_size' => array(1000 * 1024),
       );
       if ($file = file_save_upload('favicon_upload', $validators, $dir)) {
-		$form_state['storage']['favicon'] = str_replace(' ','%20',$file->filepath);
+        $form_state['storage']['favicon'] = str_replace(' ', '%20', $file->filepath);
       }
-	}
-	//custom css
-	$dir = file_create_path(file_directory_path() .'/theme_custom_css');
-    $is_writable = file_check_directory($dir,  1);
+    }
+    //custom css
+    $dir = file_create_path(file_directory_path() .'/theme_custom_css');
+    $is_writable = file_check_directory($dir, 1);
     if ($is_writable) {
       $validators = array(
         'file_validate_size' => array(2 * 1024),
-		'file_validate_extensions' => array('css'),
+        'file_validate_extensions' => array('css'),
       );
       if ($file = file_save_upload('extra_css_upload', $validators, $dir)) {
-		$form_state['storage']['css'] = str_replace(' ','%20',$file->filepath);
+        $form_state['storage']['css'] = str_replace(' ', '%20', $file->filepath);
       }
-	}
+    }
 }
 
 //theme settings submit
@@ -172,13 +178,13 @@ function _spaces_theme_theme_form_submit($form, &$form_state) {
   $theme = $form_state['values']['theme'];
   $space = spaces_load('og', $version->nid, TRUE);
   if ($space && $theme == $version->og_theme) {
-	//get local overrides from the new theme if possible
+    //get local overrides from the new theme if possible
     $theme_array = variable_get('theme_'. $theme .'_settings', array());
     //verify something was returned, otherwise pull from the global defaults
     if (count($theme_array) == 0) {
       $theme_array = variable_get('theme_settings', array());
     }
-    foreach($form_state['values'] as $key => $val) {
+    foreach ($form_state['values'] as $key => $val) {
       //filter out fields we don't care about
       switch ($key) {
       case 'preset_generate':
@@ -186,43 +192,42 @@ function _spaces_theme_theme_form_submit($form, &$form_state) {
       case 'submit':
       case 'form_build_id':
       case 'form_token':
-      case 'form_id': 
-	  case 'theme':
-	  break;
+      case 'form_id':
+      case 'theme':
+      break;
       default:
         $theme_array[$key] = $val;
       break;
       }
     }
-	//if a theme logo / banner was uploaded, throw it in
-	if ($form_state['storage']['logo'] != '') {
+    //if a theme logo / banner was uploaded, throw it in
+    if ($form_state['storage']['logo'] != '') {
       $theme_array['logo_path'] = $form_state['storage']['logo'];
     }
-	//if favicon was uploaded, store the file path
-	if ($form_state['storage']['favicon'] != '') {
-		$theme_array['favicon_path'] = $form_state['storage']['favicon'];
-	}
-	//if CSS was uploaded, store the file path
-	if ($form_state['storage']['css'] != '') {
-	  $theme_array['extra_css_path'] = $form_state['storage']['css'];
-	}
-    $space->controllers->variable->set('theme_'. $theme .'_settings',$theme_array);
+    //if favicon was uploaded, store the file path
+    if ($form_state['storage']['favicon'] != '') {
+        $theme_array['favicon_path'] = $form_state['storage']['favicon'];
+    }
+    //if CSS was uploaded, store the file path
+    if ($form_state['storage']['css'] != '') {
+      $theme_array['extra_css_path'] = $form_state['storage']['css'];
+    }
+    $space->controllers->variable->set('theme_'. $theme .'_settings', $theme_array);
   }
   else {
     $version->theme = $theme;
-	//get local overrides from the new theme if possible
+    //get local overrides from the new theme if possible
     $theme_array = variable_get('theme_'. $theme .'_settings', array());
     //verify something was returned, otherwise pull from the global default
     if (count($theme_array) == 0) {
       $theme_array = variable_get('theme_settings', array());
-	  //this will help in setting defaults should they not exist
-	  $space->controllers->variable->set('theme_'. $theme .'_settings',$theme_array);
+      //this will help in setting defaults should they not exist
+      $space->controllers->variable->set('theme_'. $theme .'_settings', $theme_array);
     }
-	
-    node_save($version); 
+    node_save($version);
   }
   $ary = $_GET;
-  $ary['set'] = rand(10,100);
+  $ary['set'] = rand(10, 100);
   unset($ary['q']);
-  drupal_goto(drupal_get_path_alias($_GET['q']),$ary);
+  drupal_goto(drupal_get_path_alias($_GET['q']), $ary);
 }

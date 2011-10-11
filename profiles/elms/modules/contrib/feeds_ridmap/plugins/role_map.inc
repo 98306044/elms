@@ -4,7 +4,6 @@
  * @file
  * Allow for mapping values from an external roles system to drupal roles
  */
- 
 /**
  * feeds_tamper API definition for drupal role mapping
  */
@@ -27,8 +26,8 @@ function role_map_form($importer, $element_key, $settings) {
   foreach ($roles as $rid => $role) {
     $form['role_map_'. $rid] = array(
       '#type' => 'textfield',
-      '#title' => t('Map for '. $role .' (rid:'. $rid .')'),
-	  '#default_value' => isset($settings['role_map_'. $rid]) ? $settings['role_map_'. $rid] : ''
+      '#title' => t('Map for @role (rid: @rid)', array('@role' => $role, '@rid' => $rid)),
+      '#default_value' => isset($settings['role_map_'. $rid]) ? $settings['role_map_'. $rid] : ''
     );
   }
   return $form;
@@ -40,11 +39,10 @@ function role_map_form($importer, $element_key, $settings) {
 function role_map_callback($result, $item_key, $element_key, &$field, $settings) {
   //get all roles except anon
   $roles = user_roles(TRUE);
-  foreach($roles as $rid => $role) {
+  foreach ($roles as $rid => $role) {
     //if value matches setting entered, switch it to role ID
     if ($field == $settings['role_map_'. $rid]) {
       $field = $rid;
     }
   }
 }
-?>

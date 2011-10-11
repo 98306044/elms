@@ -12,7 +12,7 @@ function _elms_course_content_root() {
   }
   //if it didn't find anything, default back to front page
   else {
-	drupal_goto('<front>');  
+    drupal_goto('<front>');  
   }
   return 1;
 }
@@ -32,17 +32,17 @@ function elms_course_content_settings() {
     '#title' => t('Print Options'),
     '#options' => array(
       'print' => t('Print Page Only'),
-	  'print_lesson' => t('Print Lesson or Page'),
-	  'print_course' => t('Print Course, Lesson or Page'),
+      'print_lesson' => t('Print Lesson or Page'),
+      'print_course' => t('Print Course, Lesson or Page'),
       'none' => t('Can not print'),
     ),
-    '#default_value' => variable_get('elms_print_options','print'),
+    '#default_value' => variable_get('elms_print_options', 'print'),
   );
   $form['content'] = array(
     '#title' => t('Content Outline'),
-	'#type' => 'fieldset',
-	'#collapsed' => true,
-	'#collapsible' => true,
+    '#type' => 'fieldset',
+    '#collapsed' => TRUE,
+    '#collapsible' => TRUE,
   );
   $form['content']['elms_content_outline'] = array(
     '#description' => t('Select a content outline to work from.  This is not required to create a course but can help with rapid prototyping.'),
@@ -55,12 +55,12 @@ function elms_course_content_settings() {
   $form['content']['elms_content_lessons'] = array(
     '#description' => t('How many lessons would you like to start with?'),
     '#type' => 'select',
-    '#options' => array(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15),
+    '#options' => array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15),
     '#title' => t('Lessons'),
   );
   
   $form['site_footer'] = array(
-    '#default_value' => variable_get('site_footer','2011 Copyright PSU'),
+    '#default_value' => variable_get('site_footer', '2011 Copyright PSU'),
     '#description' => t('This will be the footer for your course in ELMS'),
     '#rows' => '3',
     '#cols' => '60',
