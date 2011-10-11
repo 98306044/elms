@@ -1,5 +1,0 @@
-name = "Context Variable"
-dependencies[] = "context"
-description = "Context condition: Show when site variable equals a defined value"
-package = "Context Extras"
-core = "6.x"
