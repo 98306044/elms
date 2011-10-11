@@ -169,24 +169,22 @@ function _elms_navigation_left_system_block($group = '') {
     //Create a new version of this course
     $output.= theme('menu_item', l(t('Create New Course Version'), 'node/add/version/'. $group->field_course_ref[0]['nid'], array('purl' => array('disabled' => TRUE))), 0);
     //export html option
-    $output.= theme('menu_item', l(t('Export to HTML'), 'node/'. $group->nid .'/html_export', array('query' => 'destination='. $_GET['q'])), 0);
+    //$output.= theme('menu_item', l(t('Export to HTML'), 'node/'. $group->nid .'/html_export', array('query' => 'destination='. $_GET['q'])), 0);
   //provide gap between next items
-    $output.= '<br />';
   }
   else {
-  $nid = arg(1);
-  $node = node_load($nid);
-  //see if this is a course landing page
-  if ($node->type == 'course') {
+    $nid = arg(1);
+    $node = node_load($nid);
+    //see if this is a course landing page
+    if ($node->type == 'course') {
       //create a new course
       $output.= theme('menu_item',l(t('Create New Course Version'), 'node/add/version/'. $node->nid, array('purl' => array('disabled' => TRUE))), 0);
-      $output.= '<br />';
-  }
+    }
   }
   //create a new course
   $output.= theme('menu_item',l(t('Create New Course'), 'node/add/course', array('purl' => array('disabled' => TRUE))), 0);
   //activation code admin
-  $output.= theme('menu_item',l(t('Activation Code Admin'), 'activation_codes', array('purl' => array('disabled' => TRUE))), 0);
+  //$output.= theme('menu_item',l(t('Activation Code Admin'), 'activation_codes', array('purl' => array('disabled' => TRUE))), 0);
   //add in the masquerade block area
   if (module_exists('masquerade')) {
     $block = module_invoke('masquerade', 'block', 'view', 0);
