@@ -1,0 +1,8 @@
+; $Id: context_var
+name = "Context: Variable"
+description = "Context condition: Show when site variables equal a defined value"
+core = 6.x
+package = "Context"
+version = "6.x-1.0-beta1"
+project = "context_var"
+project status url = "http://drupal.psu.edu/fserver"
