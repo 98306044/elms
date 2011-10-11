@@ -7,17 +7,6 @@ include_once('elms_course.features.inc');
  */
 function elms_course_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
   switch ($op) {
-    case 'load':
-    //for group nodes, load in the ID of the book outline
-    if (og_is_group_type($node->type)) {
-	  //there's only 1 book per group so load the id and store it in the node object
-	  //also store the outline mlid to avoid duplicate querying in the future
-      $result = db_query("SELECT mlid,{book}.nid FROM {og_ancestry} JOIN {book} ON {book}.nid = {og_ancestry}.nid WHERE {book}.nid = {book}.bid AND group_nid=%d", $node->nid);
-      $val = db_fetch_array($result);
-      $node->book_outline_mlid = $val['mlid'];
-      $node->book_nid = $val['nid'];
-    }
-  break;
   case 'insert':
     //when a course is inserted we automatically create a version for it
     if ($node->type == 'course') {
