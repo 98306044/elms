@@ -49,12 +49,6 @@ function elms_course_context_default_contexts() {
           'region' => 'right',
           'weight' => 1,
         ),
-        'views-baddb6f656d85554896d66c27169b3ec' => array(
-          'module' => 'views',
-          'delta' => 'baddb6f656d85554896d66c27169b3ec',
-          'region' => 'right',
-          'weight' => 2,
-        ),
       ),
     ),
   );
