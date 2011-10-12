@@ -170,6 +170,9 @@ function _elms_course_versions_get_purl($node) {
   case 8: //master
     $output .= '_master_'. $node->nid;
   break;
+  default:
+    $output .= '_dev_'. $node->nid;
+  break;
   }
   $output = drupal_strtolower(str_replace(' ', '', $output));
   return $output;
