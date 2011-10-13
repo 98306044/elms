@@ -6,3 +6,5 @@ package = "Workflow"
 version = "6.x-1.0-beta1"
 project = "workflow_purl"
 project status url = "http://drupal.psu.edu/fserver"
+dependencies[] = workflow
+dependencies[] = purl

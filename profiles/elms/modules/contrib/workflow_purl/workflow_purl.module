@@ -21,12 +21,15 @@
 function workflow_purl_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
   //the group node makes no sense to load to users, redirect to the front-page
   switch ($op) {
+	  case 'load':
+        $modifier = purl_load(array('id' => isset($node->nid) ? $node->nid : NULL, 'provider' => 'spaces_og'));
+        $node->purl = $modifier['value'];
+        break;
   case 'presave':
     //detect a workflow change about to happen
     if ($node->_workflow != $node->workflow) {
       $node->_purl_change = _workflow_purl_get_purl($node);
     }
-	dpm($node);
     break;
   case 'update':
     if (isset($node->_purl_change)) {
@@ -36,20 +39,26 @@ function workflow_purl_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
         'id' => $node->nid,
       );
       purl_save($modifier);
+	  $modifier = purl_load(array('id' => isset($node->nid) ? $node->nid : NULL, 'provider' => 'spaces_og'));
+      $node->purl = $modifier['value'];
+	  //set destination manually since purl changed and the old path no longer exists. this is the joy and pain of PURL
+	  //$node->purl = $node->_purl_change;
     }
-	dpm($node);
     break;
   case 'insert':
-  //check for groups created
-    if (og_is_group_type($node->type)) {
-		dpm($node);
-      //need to do extra step with purl rewrite to ensure it has the node and course name in in
-      $modifier = array(
-        'value' => _workflow_purl_get_purl($node),
-        'provider' => 'spaces_og',
-        'id' => $node->nid,
-      );
-      //purl_save($modifier);
+    //check for a workflow state existing on this node
+    if (isset($node->_workflow)) {
+      //verify that this workflow state has a purl map
+	  $purl_map = _workflow_purl_get_purl($node);
+	  //if purl_map is not false, set the modifier
+	  if ($purl_map != FALSE) {
+        $modifier = array(
+          'value' => $purl_map,
+          'provider' => 'spaces_og',
+          'id' => $node->nid,
+        );
+        purl_save($modifier);
+	  }
     }
   break;
   }
