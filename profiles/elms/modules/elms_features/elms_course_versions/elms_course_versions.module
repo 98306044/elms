@@ -37,24 +37,7 @@ function elms_course_versions_form_alter(&$form, &$form_state, $form_id) {
  * Implementation of hook_nodeapi().
  */
 function elms_course_versions_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
-  //the group node makes no sense to load to users, redirect to the front-page
   switch ($op) {
-  case 'presave':
-    //detect a workflow change about to happen
-    if ($node->_workflow != $node->workflow) {
-      $node->_purl_change = _elms_course_versions_get_purl($node);
-    }
-    break;
-  case 'update':
-    if (isset($node->_purl_change)) {
-      $modifier = array(
-          'value' => $node->_purl_change,
-          'provider' => 'spaces_og',
-          'id' => $node->nid,
-        );
-        purl_save($modifier);
-      }
-    break;
   case 'insert':
   //check for groups created
     if (og_is_group_type($node->type)) {
@@ -95,14 +78,6 @@ function elms_course_versions_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
       if (!isset($node->default_version)) {
         _elms_course_content_create_root($node, $node->field_instructional_template[0]['value']);
       }
-      //need to do extra step with purl rewrite to ensure it has the node and course name in in
-      $modifier = array(
-        'value' => _elms_course_versions_get_purl($node),
-        'provider' => 'spaces_og',
-        'id' => $node->nid,
-      );
-      purl_save($modifier);
-    }
     /*
     TODO: Move this code into the schedule module so that it can build schedules from that feature
           //remove the current schedule and build a new one
@@ -143,37 +118,4 @@ function elms_course_versions_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
     }
     break;
   }
-}
-
-//helper function to make modification of purl easier
-function _elms_course_versions_get_purl($node) {
-  $course = node_load($node->field_course_ref[0]['nid']);
-  $output = $course->title;
-  switch ($node->workflow) {
-  case 1:
-  case 2:
-  case 3: //initial states
-    $output .= '_dev_'. $node->nid;
-  break;
-  case 4: //inactive
-    $output .= '_inactive_'. $node->nid;
-  break;
-  case 5: //offered
-    $output .= '_offered_'. $node->nid;
-  break;
-  case 6: //archive
-    $output .= '_archive_'. $node->nid;
-  break;
-  case 7: //Promo
-    $output .= '_promo_'. $node->nid;
-  break;
-  case 8: //master
-    $output .= '_master_'. $node->nid;
-  break;
-  default:
-    $output .= '_dev_'. $node->nid;
-  break;
-  }
-  $output = drupal_strtolower(str_replace(' ', '', $output));
-  return $output;
 }
