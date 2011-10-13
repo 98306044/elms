@@ -56,14 +56,64 @@ ul.tabs {
 }
 /* colors for the blocks on the left */
 #regions_elms_navigation_left .regions_1 {
-  background-color:#666;
+  background-image:url(images/sidebarbgtop.png);
+  background-repeat:repeat-y;
 }
 #regions_elms_navigation_left .regions_2 {
-  background-color:#555;
+  background-image:url(images/sidebarbgmid.png);
+  background-repeat:repeat-y;
 }
 #regions_elms_navigation_left .regions_3 {
-  background-color:#444;
+  background-image:url(images/sidebarbgbtm.png);
+  background-repeat:repeat-y;
 }
+#regions_elms_navigation_left li, #regions_elms_navigation_left a, #regions_elms_navigation_left .regions_block_title {
+  background-position:right;
+  background-repeat:no-repeat;
+}
+#regions_elms_navigation_left .page_view {
+  background-image:url(images/view.png);
+}
+#regions_elms_navigation_left .page_edit {
+  background-image:url(images/edit.png);
+}
+#regions_elms_navigation_left .page_accessibility {
+  background-image:url(images/accessibility.png);
+}
+#regions_elms_navigation_left .page_track {
+  background-image:url(images/track.png);
+}
+#regions_elms_navigation_left .content_outline {
+  background-image:url(images/outline.png);
+}
+#regions_elms_navigation_left .public_home {
+  background-image:url(images/publichome.png);
+}
+#regions_elms_navigation_left .admin_settings {
+  background-image:url(images/admin.png);
+}
+#regions_elms_navigation_left .system {
+  background-image:url(images/system.png);
+}
+#regions_elms_navigation_left .export_html {
+  background-image:url(images/export.png);
+}
+#regions_elms_navigation_left .new_course_version {
+  background-image:url(images/newversion.png);
+}
+#regions_elms_navigation_left .new_course {
+  background-image:url(images/newcourse.png);	
+}
+#regions_block_elms_navigation_left_0 .regions_block_title {
+  background-image:url(images/system.png);
+}
+#regions_block_elms_navigation_left_1 .regions_block_title {
+  background-image:url(images/course.png);
+}
+#regions_block_elms_navigation_left_2 .regions_block_title {
+  background-image:url(images/page.png);
+}
+
 #regions_elms_navigation_left .workflow_state {
   height: 20px;
   line-height:20px;
