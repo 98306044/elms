@@ -320,13 +320,14 @@ function _og_clone_clone_form_submit($form, &$form_state) {
         //store old book
         $old_book = $node->book['bid'];
         //clear the book
-        $node->book = NULL;
+        $node->book = array();
+		$node->book['module'] = 'book';
         //if this is an empty parent then we have found the root, else map root
         if ($old_parent == 0) {
           $node->book['bid'] = 'new';
         }
         else {
-          $node->book['bid'] = $context['sandbox']['map'][$old_book];
+          $node->book['bid'] = $context['sandbox']['book_map'][$old_book];
         }
         //see if there's a match on a parent
         if (isset($context['sandbox']['map'][$old_parent]) ) {
@@ -335,8 +336,9 @@ function _og_clone_clone_form_submit($form, &$form_state) {
         }
         
         node_save($node);
-        //map old mlid to new one
+        //map old mlid and nid to new one
         $context['sandbox']['map'][$old_mlid] = $node->book['mlid'];
+		$context['sandbox']['book_map'][$old_book] = $node->book['bid'];
       }
       else {
         node_save($node);
