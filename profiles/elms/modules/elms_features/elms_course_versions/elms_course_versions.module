@@ -19,7 +19,7 @@ function elms_course_versions_form_alter(&$form, &$form_state, $form_id) {
       $nid = arg(3);
       if (isset($nid)) {
         $node = node_load(arg(3));
-        $form['og_description']['#value'] = $node->field_description[0]['value'];
+        $form['og_description']['#value'] = $node->field_course_title[0]['value'];
       }
     }
     $form['#content_extra_fields']['spaces_preset']['weight'] = 8;

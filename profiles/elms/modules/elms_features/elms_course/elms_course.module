@@ -41,8 +41,9 @@ Penn State is an Equal Opportunity Employer.";
   //og settings
   $group->theme = 'chamfer';
   $group->og_theme = 'chamfer';
-  $group->og_description = '';
   $group->og_private = 1;
+  //set the description to the title of the course
+  $group->og_description = $course->field_course_title[0]['value'];
   $group->field_lesson_count[0]['value'] = 15;
   //save node
   node_save($group);
