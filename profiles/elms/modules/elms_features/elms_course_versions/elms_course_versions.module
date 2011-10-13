@@ -3,22 +3,13 @@
 include_once('elms_course_versions.features.inc');
 
 /**
- * Implementation of hook_init().
- */
-function elms_course_versions_init() {
-  if (arg(0) == 'og_clone' || arg(0) == 'batch') {
-  //  purl_disable(TRUE);
-  }
-}
-
-/**
  * Implementation of hook_form_alter().
  */
 function elms_course_versions_form_alter(&$form, &$form_state, $form_id) {
   //alter the version form
   if ($form_id == 'version_node_form') {
     //always hide purl, they shouldn't need to know anything about it, it just happens
-    $form['purl']['value']['#type'] = 'hidden';
+    //$form['purl']['value']['#type'] = 'hidden';
     //because purl wants a url, generate a temporary, random one
     //this has to be done because the nid hasn't been set yet and we can't submit the node until we have a PURL identifier yet the NID is supposed to be part of the address, once submitted the node will automatically change thing
     if (arg(1) == 'add') {
@@ -40,7 +31,6 @@ function elms_course_versions_form_alter(&$form, &$form_state, $form_id) {
     unset($form['themes']['theme']['#options']['']);
   }
 }
-
 
 /**
  * Implementation of hook_nodeapi().

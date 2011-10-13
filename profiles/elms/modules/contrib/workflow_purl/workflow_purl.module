@@ -14,11 +14,14 @@
  * @file
  * Integrates workflow and purl
  */
-
+ 
+/**
+ * Implementation of hook_form_alter().
+ */
 function workflow_purl_form_alter(&$form, $form_state, $form_id) {
 // Add purl form.
   if ($form_id == 'workflow_tab_form') {
-    $form['purl'] = purl_form('spaces_og', isset($form['node']['#value']->nid) ? $form['node']['#value']->nid : NULL, isset($form_state['node_preview']) ? $form['node']['#value']->purl['value'] : $form['node']['#value']->purl);	
+    //$form['purl'] = purl_form('spaces_og', isset($form['node']['#value']->nid) ? $form['node']['#value']->nid : NULL, isset($form_state['node_preview']) ? $form['node']['#value']->purl['value'] : $form['node']['#value']->purl);
   }
 }
 
@@ -30,32 +33,21 @@ function workflow_purl_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
   switch ($op) {
   case 'presave':
     //detect a workflow change about to happen
-    //if ($node->_workflow != $node->workflow) {
-    //  $node->_purl_change = _workflow_purl_get_purl($node);
-	//  $node->purl = array('value' => $node->_purl_change);
-    //}
+    if ($node->_workflow != $node->workflow) {
+      $node->_purl_change = _workflow_purl_get_purl($node);
+    }
     break;
   case 'update':
-    /*if (isset($node->_purl_change)) {
+    if (isset($node->_purl_change)) {
       $modifier = array(
         'value' => $node->_purl_change,
         'provider' => 'spaces_og',
         'id' => $node->nid,
       );
       purl_save($modifier);
-	  // Save PURL modifier.
-        $modifier = array('provider' => 'spaces_og', 'id' => $node->nid);
-        if (is_array($node->purl) && !empty($node->purl['value'])) {
-          $modifier['value'] = $node->purl['value'];
-          purl_save($modifier);
-        }
-        else if (empty($node->purl)) {
-          $modifier['value'] = "{$node->type}-{$node->nid}";
-          purl_save($modifier);
-        }*/
 	  //set destination manually since purl changed and the old path no longer exists. this is the joy and pain of PURL
-	  //$node->purl = $node->_purl_change;
-    //}
+	  purl_goto('<front>', array('purl' => array('provider' => 'spaces_og', 'id' => $node->nid)));
+    }
     break;
   case 'insert':
     //check for a workflow state existing on this node
