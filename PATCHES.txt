@@ -12,13 +12,16 @@ Editable Fields
 -- similar to http://drupal.org/node/777870
 -- editablefields.js
 -- modified included js file to work with date popups
+
 Chamfer
 -- Accounted for Aria Landmarks
 -- Took into account ELMS environment where needed
 -- This will be rolled into the community version of Chamfer once ICMS is final
+
 Outline Designer
 -- Patch to block deleting of non-book items triggered by PURL
 -- This will be rolled into the community version of Outline Designer once ICMS is final
+
 Spaces OG
 -- http://drupal.org/node/1101738
 -- spaces/spaces_og/spaces_og.modules
