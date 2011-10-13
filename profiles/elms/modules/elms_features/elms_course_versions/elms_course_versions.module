@@ -41,7 +41,7 @@ function elms_course_versions_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
   switch ($op) {
   case 'presave':
     //detect a workflow change about to happen
-    if (arg(2) == 'workflow' && $node->_workflow != $node->workflow) {
+    if ($node->_workflow != $node->workflow) {
       $node->_purl_change = _elms_course_versions_get_purl($node);
     }
     break;

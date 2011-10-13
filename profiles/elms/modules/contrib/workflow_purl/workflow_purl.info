@@ -1,0 +1,8 @@
+; $Id: Workflow Purl
+name = "Workflow Purl Integration"
+description = "Provides the ability to change PURL value based on Workflow State changes."
+core = 6.x
+package = "Workflow"
+version = "6.x-1.0-beta1"
+project = "workflow_purl"
+project status url = "http://drupal.psu.edu/fserver"
