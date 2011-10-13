@@ -3,6 +3,15 @@
 include_once('elms_course_versions.features.inc');
 
 /**
+ * Implementation of hook_init().
+ */
+function elms_course_versions_init() {
+  //if ((arg(0) == 'node' && arg(1) == 'add' && arg(2) == 'version') || $_GET['q'] == 'node/add/course' || arg(0) == 'og_clone' || arg(0) == 'batch') {
+   // purl_disable(TRUE);
+  //}
+}
+
+/**
  * Implementation of hook_form_alter().
  */
 function elms_course_versions_form_alter(&$form, &$form_state, $form_id) {

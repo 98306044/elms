@@ -27,9 +27,6 @@ Spaces OG
 -- spaces/spaces_og/spaces_og.modules
 -- Helps improve user experience / performance around node access rebuilds
 
--- spaces/spaces_og/spaces_og/plugins/space_og.inc
--- accounted for elms / og_clone. Needed because we are loading nodes which would activate a space while outside of the context of the space itself. this causes major issues for spaces / drupal and usually results in code ending prematurly
-
 og_node_access
 -- Minor isset added to squelch a NOTICE in php error logs
 
