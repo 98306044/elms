@@ -14,16 +14,6 @@
  * @file
  * Integrates workflow and purl
  */
- 
-/**
- * Implementation of hook_form_alter().
- */
-function workflow_purl_form_alter(&$form, $form_state, $form_id) {
-// Add purl form.
-  if ($form_id == 'workflow_tab_form') {
-    //$form['purl'] = purl_form('spaces_og', isset($form['node']['#value']->nid) ? $form['node']['#value']->nid : NULL, isset($form_state['node_preview']) ? $form['node']['#value']->purl['value'] : $form['node']['#value']->purl);
-  }
-}
 
 /**
  * Implementation of hook_nodeapi().
