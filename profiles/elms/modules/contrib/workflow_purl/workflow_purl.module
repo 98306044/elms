@@ -24,32 +24,35 @@ function workflow_purl_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
   case 'presave':
     //detect a workflow change about to happen
     if ($node->_workflow != $node->workflow) {
-      $node->_purl_change = _elms_course_versions_get_purl($node);
+      $node->_purl_change = _workflow_purl_get_purl($node);
     }
+	dpm($node);
     break;
   case 'update':
     if (isset($node->_purl_change)) {
       $modifier = array(
-          'value' => $node->_purl_change,
-          'provider' => 'spaces_og',
-          'id' => $node->nid,
-        );
-        purl_save($modifier);
-      }
-    break;
-  case 'insert':
-  //check for groups created
-    if (og_is_group_type($node->type)) {
-      //need to do extra step with purl rewrite to ensure it has the node and course name in in
-      $modifier = array(
-        'value' => _elms_course_versions_get_purl($node),
+        'value' => $node->_purl_change,
         'provider' => 'spaces_og',
         'id' => $node->nid,
       );
       purl_save($modifier);
     }
+	dpm($node);
+    break;
+  case 'insert':
+  //check for groups created
+    if (og_is_group_type($node->type)) {
+		dpm($node);
+      //need to do extra step with purl rewrite to ensure it has the node and course name in in
+      $modifier = array(
+        'value' => _workflow_purl_get_purl($node),
+        'provider' => 'spaces_og',
+        'id' => $node->nid,
+      );
+      //purl_save($modifier);
     }
   break;
+  }
 }
 
 //helper function to make modification of purl easier
