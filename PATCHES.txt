@@ -36,3 +36,7 @@ dblog_filters
 jquery colorpicker
 -- Allow for inclusion in install profiles
 -- http://drupal.org/node/1283468#comment-5008268
+
+filefield
+-- Supressed ereg deprecated notice for PHP 5.3
+-- http://drupal.org/node/1155996
