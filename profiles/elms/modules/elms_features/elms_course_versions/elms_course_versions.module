@@ -13,8 +13,8 @@ function elms_course_versions_form_alter(&$form, &$form_state, $form_id) {
     //because purl wants a url, generate a temporary, random one
     //this has to be done because the nid hasn't been set yet and we can't submit the node until we have a PURL identifier yet the NID is supposed to be part of the address, once submitted the node will automatically change thing
     if (arg(1) == 'add') {
-      //set a random value initially
       $form['purl']['value']['#default_value'] = '_tmp_'. rand(1, 1000);
+      //set a random value initially
       $form['themes']['theme']['#default_value'] = 'chamfer';
       //auto populate the descriptive field if it isn't set
 	  if ($form['og_description']['#value'] == '') {

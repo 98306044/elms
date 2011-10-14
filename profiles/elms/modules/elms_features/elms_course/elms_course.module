@@ -7,11 +7,11 @@ include_once('elms_course.features.inc');
  */
 function elms_course_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
   switch ($op) {
-  case 'insert':
-    //when a course is inserted we automatically create a version for it
-    if ($node->type == 'course') {
-      _elms_course_create_default($node);
-    }
+    case 'insert':
+      //when a course is inserted we automatically create a version for it
+      if ($node->type == 'course') {
+        _elms_course_create_default($node);
+      }
     break;
   }
 }
