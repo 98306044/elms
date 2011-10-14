@@ -12,7 +12,7 @@
 
 /**
  * @file
- * Integrates workflow and purl
+ * Integrates workflow and purl; currently only works with spaces_og as the provider
  */
 
 /*
@@ -29,6 +29,7 @@ function workflow_purl_form_alter(&$form, &$form_state, $form_id) {
       '#default_value' => variable_get('workflow_purl_'. $form['sid']['#value'], ''),
       '#description' => t('Leave this blank to ignore purl integration for this workflow state'),
       '#weight' => -2,
+	  '#maxlength' => 200,
     );
     //list available system tokens for replacement
     $form['purl'] = array(
@@ -63,7 +64,7 @@ function workflow_purl_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
   //the group node makes no sense to load to users, redirect to the front-page
   switch ($op) {
   case 'presave':
-    //detect a workflow change about to happen
+    //detect a workflow change is about to happen
     if ($node->_workflow != $node->workflow) {
       $node->_purl_change = _workflow_purl_get_purl($node);
     }
