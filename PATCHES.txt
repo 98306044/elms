@@ -1,8 +1,5 @@
 This file is to keep track of the custom patches applied to make this stack work:
 --Pressflow Core--
-ereg for php 5.3
--- ereg throws a depricated warning for 5.3 which could cause issues for some people
--- http://drupal.org/node/883038
 Book Caching glitch
 -- sometimes book cache isn't refreshed correctly
 -- http://drupal.org/node/360377 patch fixes issue
@@ -13,11 +10,6 @@ Editable Fields
 -- editablefields.js
 -- modified included js file to work with date popups
 
-Chamfer
--- Accounted for Aria Landmarks
--- Took into account ELMS environment where needed
--- This will be rolled into the community version of Chamfer once ICMS is final
-
 Outline Designer
 -- Patch to block deleting of non-book items triggered by PURL
 -- This will be rolled into the community version of Outline Designer once ICMS is final
@@ -27,16 +19,6 @@ Spaces OG
 -- spaces/spaces_og/spaces_og.modules
 -- Helps improve user experience / performance around node access rebuilds
 
-og_node_access
--- Minor isset added to squelch a NOTICE in php error logs
-
-dblog_filters
--- Minor isset added to squelch a NOTICE in php error logs
-
 jquery colorpicker
 -- Allow for inclusion in install profiles
 -- http://drupal.org/node/1283468#comment-5008268
-
-filefield
--- Supressed ereg deprecated notice for PHP 5.3
--- http://drupal.org/node/1155996
