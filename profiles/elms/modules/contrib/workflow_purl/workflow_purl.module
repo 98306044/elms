@@ -21,20 +21,20 @@
 function workflow_purl_form_alter(&$form, &$form_state, $form_id) {
   if ($form_id == 'workflow_state_add_form') {
     //allow for saving of the purl integration variable
-	$form['#submit'] = array_merge(array('workflow_purl_form_submit'), $form['#submit']);
-	//set the value for the purl mapping to this specific workflow value
+    $form['#submit'] = array_merge(array('workflow_purl_form_submit'), $form['#submit']);
+    //set the value for the purl mapping to this specific workflow value
     $form['purl_integration'] = array(
       '#type' => 'textfield',
       '#title' => t('Purl Integration'),
       '#default_value' => variable_get('workflow_purl_'. $form['sid']['#value'], ''),
       '#description' => t('Leave this blank to ignore purl integration for this workflow state'),
-	  '#weight' => -2,
+      '#weight' => -2,
     );
-	//list available system tokens for replacement
-	$form['purl'] = array(
+    //list available system tokens for replacement
+    $form['purl'] = array(
       '#type' => 'fieldset',
       '#title' => t('Available Tokens'),
-	  '#description' => t('Not all of these will make sense given the context of the workflow change but most should.'),
+      '#description' => t('Not all of these will make sense given the context of the workflow change but most should.'),
       '#collapsed' => TRUE,
       '#collapsible' => TRUE,
       '#weight' => -1,
@@ -70,7 +70,7 @@ function workflow_purl_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
     break;
   case 'update':
     //verify that it's set AND that it's not empty
-	//_workflow_purl_get_purl returns FALSE if there's nothing to do
+    //_workflow_purl_get_purl returns FALSE if there's nothing to do
     if (isset($node->_purl_change) && $node->_purl_change != FALSE) {
       $modifier = array(
         'value' => $node->_purl_change,
@@ -106,11 +106,15 @@ function _workflow_purl_get_purl($node) {
   global $user;
   //get the workflow path change
   $purl_change = variable_get('workflow_purl_'. $node->workflow, '');
+  //account for no change
+  if ($purl_change == '') {
+    return FALSE;
+  }
   //build the replacement array
   $replacement_ary = array(
     'global' => NULL,
-	'user' => $user,
-	'node' => $node
+    'user' => $user,
+    'node' => $node
   );
   //apply tokens
   $purl_change = token_replace_multiple($purl_change, $replacement_ary);
