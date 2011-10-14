@@ -33,7 +33,7 @@ function elms_reaction_link_alter(&$links, $node, $comment = NULL) {
 //helper function for access verification
 function _elms_reaction_access_check() {
   if (module_exists('spaces')) {
-    user_access('spaces_access_admin');
+    return user_access('spaces_access_admin');
   }
   else {
     return user_access('user_access');
