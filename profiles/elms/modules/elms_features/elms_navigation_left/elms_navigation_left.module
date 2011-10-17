@@ -194,6 +194,7 @@ function _elms_navigation_left_system_block($group = '') {
   }
   //create a new course
   $output .= theme('menu_item', l(t('Create New Course'), 'node/add/course', array('purl' => array('disabled' => TRUE))), 0, '', FALSE, 'new_course');
+  $output .= theme('menu_item', l(t('Create Sandbox'), 'node/add/version/', array('purl' => array('disabled' => TRUE))), 0, '', FALSE, 'new_sandbox');
   //activation code admin
   //$output .= theme('menu_item', l(t('Activation Code Admin'), 'activation_codes', array('purl' => array('disabled' => TRUE))), 0);
   //add in the masquerade block area
