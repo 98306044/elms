@@ -14,8 +14,8 @@ ul.tabs {
   margin:0px;
   text-align:left;
   font-size:12px;
-  background-color:#009;
-  color:#ccc;
+  background-color:#999;
+  color:#222;
 }
 #regions_elms_navigation_left .regions_pre_block_container {
  position:static;
@@ -36,9 +36,13 @@ ul.tabs {
 }
 #regions_elms_navigation_left li:hover {
   background-color:#333;
+  color:#CCC !important;
+}
+#regions_elms_navigation_left li a:hover {
+  color:#CCC !important;
 }
 #regions_elms_navigation_left li a {
-  color:#ccc; !important;
+  color:#222 !important;
   text-decoration:none;
   clear: both;
   float:left;
@@ -119,15 +123,12 @@ ul.tabs {
   line-height:20px;
 }
 #regions_elms_navigation_left #masquerade-block-1 {
- margin-top:10px;	
+ margin-top:10px;
 }
-.workflow_state_3 { /*development*/
+.workflow_state_3 { /*sandbox*/
   background-color:#C66;
 }
-.workflow_state_4 { /*staging*/
-  background-color:#c0e6ff;
-}
-.workflow_state_5 { /*active*/
+.workflow_state_5 { /*offered*/
   background-color:#356090;
 }
 .workflow_state_6 { /*archive*/
@@ -135,6 +136,9 @@ ul.tabs {
 }
 .workflow_state_7 { /*demo*/
   background-color:#327944;
+}
+.workflow_state_10 { /*master*/
+  background-color:#AA5;
 }
 
 /* open / close block display */

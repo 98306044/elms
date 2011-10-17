@@ -125,6 +125,12 @@ function _elms_navigation_left_course_block($group) {
   $output = '';
   //take into account active features
   $features = variable_get('spaces_features', array());
+  //if course content active, add the outline designer link
+  if ($features['elms_course_content'] == 1) {
+    $output .= theme('menu_item', l(t('Content Outline'), 'outline_designer/book/'. $group->book_nid), 0, '', FALSE, 'content_outline');
+  }
+  /*
+  //TODO: this is overkill so most is commented out at this time
   //loop through active features
   foreach ($features as $fname => $status) {
     //if it's active then see if we should add settings
@@ -153,9 +159,9 @@ function _elms_navigation_left_course_block($group) {
         break;
       }
     }
-  }
+  }*/
   //make the current workflow state as visible as possible
-  $output .= '<strong>Settings</strong>';
+  //$output .= '<strong>Settings</strong>';
   $output .= theme('menu_item', l(t(workflow_get_state_name($group->_workflow)),  'node/'. $group->nid .'/workflow', array('query' => 'destination='. $_GET['q'])), 0, '', FALSE, 'workflow_state workflow_state_'. $group->_workflow);
   //change the features of the course
   $output .= theme('menu_item', l(t('Change Features'), 'node/'. $group->nid .'/features', array('query' => 'destination='. $_GET['q'])), 0, '', FALSE, 'change_features');
@@ -175,7 +181,7 @@ function _elms_navigation_left_system_block($group = '') {
     //Create a new version of this course
     $output .= theme('menu_item', l(t('Create New Course Version'), 'node/add/version/'. $group->field_course_ref[0]['nid'], array('purl' => array('disabled' => TRUE))), 0, '', FALSE, 'new_course_version');
     //export html option
-    $output .= theme('menu_item', l(t('Export to HTML'), 'node/'. $group->nid .'/html_export', array('query' => 'destination='. $_GET['q'])), 0, '', FALSE, 'export_html');
+    //$output .= theme('menu_item', l(t('Export to HTML'), 'node/'. $group->nid .'/html_export', array('query' => 'destination='. $_GET['q'])), 0, '', FALSE, 'export_html');
   }
   else {
     $nid = arg(1);
