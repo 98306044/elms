@@ -105,8 +105,14 @@ function workflow_purl_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
 //helper function to make modification of purl easier
 function _workflow_purl_get_purl($node) {
   global $user;
-  //get the workflow path change
-  $purl_change = variable_get('workflow_purl_'. $node->workflow, '');
+  //get the workflow path change, if workflow isn't set try _workflow
+  //_workflow is used for transition except on insert where its the only thing set
+  if (isset($node->workflow)) {
+    $purl_change = variable_get('workflow_purl_'. $node->workflow, '');
+  }
+  else {
+    $purl_change = variable_get('workflow_purl_'. $node->_workflow, '');  
+  }
   //account for no change
   if ($purl_change == '') {
     return FALSE;
@@ -119,7 +125,6 @@ function _workflow_purl_get_purl($node) {
   );
   //apply tokens
   $purl_change = token_replace_multiple($purl_change, $replacement_ary);
-  print $purl_change . "<br>";
   //all to lowercase as this is a path
   $purl_change = drupal_strtolower($purl_change);
   //remove all bad characters

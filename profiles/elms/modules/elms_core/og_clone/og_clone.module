@@ -181,6 +181,11 @@ function _og_clone_clone_form_submit($form, &$form_state) {
     if (module_exists('purl')) {
       $group->purl = NULL;
     }
+	//reset workflow if it exists
+    if (module_exists('workflow')) {
+      $group->workflow = NULL;
+      $group->_workflow = NULL;
+    }
     //account for statistics if its enabled
     if (module_exists('og_statistics')) {
       $group->og_statistics = NULL;
