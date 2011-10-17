@@ -28,20 +28,10 @@ function og_clone_menu() {
     'description' => 'Copy information related to an organic group to another one',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('_og_clone_clone_form'),
-    'access callback' => '_og_clone_access',
+	'access arguments' => array('clone organic groups'),
     'type' => MENU_NORMAL_ITEM,
    );
   return $items;
-}
-
-/**
-* helper function for assessing access to the path
-*/
-function _og_clone_access() {
-  if (user_access('clone organic groups')) {
-    return true;
-  }
-  return false;
 }
 
 /**
