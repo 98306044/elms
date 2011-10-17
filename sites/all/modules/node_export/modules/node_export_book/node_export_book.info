@@ -1,0 +1,11 @@
+; $Id$
+
+name = Node export book
+description = A way to export books with Node Export
+core = 6.x
+php = 5.0
+
+dependencies[] = node
+dependencies[] = node_export
+dependencies[] = book
+dependencies[] = uuid

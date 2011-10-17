@@ -1,0 +1,5 @@
+name = Node export - Organic groups
+description = Helps maintain relationships between nodes and their groups during Node export operations.
+dependencies[] = node_export
+core = 6.x
+package = "Node export"

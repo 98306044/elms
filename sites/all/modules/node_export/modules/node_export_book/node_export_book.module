@@ -1,0 +1,459 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ *   A way to export books with Node Export
+ */
+
+// Includes
+module_load_include('inc', 'node_export_book', 'node_export_book.uuid.temp');
+
+/**
+ * Implementation of hook_menu().
+ */
+function node_export_book_menu() {
+  $items = array();
+  $items['admin/content/book/export/%node'] = array(
+    'title' => 'Export Book',
+    'page callback' => '_node_export_book_run_export',
+    'page arguments' => array(4),
+    'access arguments' => array('export bulk nodes'),
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+ * Helper function to export a book
+ */
+function _node_export_book_run_export($book_node) {
+	$nids = array();
+	$result = db_query("SELECT nid FROM {book} WHERE bid=%d ORDER BY mlid ASC", $book_node->nid);
+	while($val = db_fetch_array($result)){
+	  	$nids[] = $val['nid'];
+	}
+	return node_export_bulk_operation($nids);
+}
+/**
+ * Implementation of hook_menu_alter().
+ */
+function node_export_book_menu_alter(&$callbacks) {
+  // Override the book admin page with a custom version that includes book deletion links.
+  $callbacks['admin/content/book']['page callback'] = 'node_export_book_export_book_admin_overview';
+}
+
+/**
+ * Menu callback.  Overrides the book_admin_overview at admin/content/book.
+ *
+ * @see node_export_book_menu_alter()
+ * @see book_admin_overview()
+ * if you have issues with the GUI not showing up, make sure that the weight of this module is higher then book_delete by using the util module
+ */
+function node_export_book_export_book_admin_overview() {
+  //since book_delete module takes a similar approach, account for it
+  if(module_exists('book_delete')) {
+    // Users must have access to delete all book nodes in order to safely delete a book.
+    if ((user_access('administer nodes') || user_access('delete any book content')) && user_access('export bulk nodes')) {
+      $rows = array();
+      foreach (book_get_books() as $book) {
+        $rows[] = array(l($book['title'], $book['href'], $book['options']), l(t('edit order and titles'), "admin/content/book/". $book['nid']), l(t('export book'), 'admin/content/book/export/'. $book['nid']), l(t('delete book'), 'admin/content/book/delete/'. $book['nid']));
+      }
+      $headers = array(t('Book'), t('Edit'), t('Export'), t('Delete'));
+      return theme('table', $headers, $rows);
+    }
+    else { // The user may not have access to delete all book nodes.  Show them the generic book admin page.
+      include_once('./'. drupal_get_path('module', 'book') .'/book.admin.inc');
+      return book_admin_overview();
+    }
+  }
+  else { //book_delete is not turned on
+    if (user_access('export bulk nodes')) {
+      $rows = array();
+      foreach (book_get_books() as $book) {
+	    $rows[] = array(l($book['title'], $book['href'], $book['options']), l(t('edit order and titles'), "admin/content/book/". $book['nid']), l(t('export book'), 'admin/content/book/export/'. $book['nid']));
+      }
+      $headers = array(t('Book'), t('Edit'), t('Export'));
+      return theme('table', $headers, $rows);
+    }
+  }
+}
+
+/**
+ * Implements hook_node_export_node_bulk_alter().
+ *
+ * Manipulate node array before bulk export or after bulk import.
+ *
+ * @param &$nodes
+ *   The node array to alter.
+ * @param $op
+ *   'import', 'after import', or 'export'.
+ * @ingroup hooks
+ */
+function node_export_book_node_export_node_bulk_alter(&$nodes, $op) {
+  switch ($op) {
+    case 'export':
+      _node_export_book_node_export_node_bulk_alter_export($nodes);
+      break;
+    case 'after import':
+      _node_export_book_node_export_node_bulk_alter_after_import($nodes);
+      break;
+  }
+}
+
+/**
+ * Manipulate node array before bulk export.
+ *
+ * @param &$nodes
+ *   The node array to alter.
+ */
+function _node_export_book_node_export_node_bulk_alter_export(&$nodes) {
+  // Create a UUID for the node if it doesn't already have one
+  foreach ($nodes as &$node) {
+    if (_node_export_book_is_empty(uuid_get_uuid('node', 'nid', $node->nid))) {
+      $node->uuid = uuid_set_uuid('node', 'nid', $node->nid);
+      node_save($node);
+    }
+  }
+}
+
+/**
+ * Manipulate node array after bulk import.
+ *
+ * @pre
+ *   All nodes in any books being exported have a UUID at $node->uuid.
+ *
+ * @param &$nodes
+ *   The node array to alter.
+ */
+function _node_export_book_node_export_node_bulk_alter_after_import(&$nodes) {
+  // First loop through the nodes: generate an incomplete menulink
+  foreach ($nodes as &$node) {
+    // Only work on nodes that are part of a book
+    if (!_node_export_book_is_empty($node->book)) {
+      // Create a book ID
+      $node->book['bid'] = _node_export_book_uuid_to_nid($node->book['#export_book_uuid']);
+
+      // Generate other information we will need to make a menuitem
+      $node->book['menu_name'] = book_menu_name($node->book['bid']);
+      $node->book['link_path'] = 'node/' . $node->nid;
+      $newbook = ($node->uuid == $node->book['#export_book_uuid']);
+      $node->book['link_title'] = $node->title;
+
+      // Now save this menuitem stub
+      $result = _node_export_book_install_book_set_outline($node, NULL, $node->book['weight'], $newbook);
+    }
+  }
+  // Second loop through the nodes: move the book item to the right place
+  foreach ($nodes as &$node) {
+    // Only work on nodes that are part of a book
+    if (!_node_export_book_is_empty($node->book)) {
+      // Generate the other information we will need
+      $parentmlid = _node_export_book_uuid_to_mlid($node->book['#export_parent_uuid']);
+      $newbook = ($node->uuid == $node->book['#export_book_uuid']);
+      // Now put the book in the right place
+      _node_export_book_install_book_set_outline($node, $parentmlid, $node->book['weight'], $newbook);
+    }
+  }
+}
+
+/*
+ * Implementation of hook_node_export_node_alter().
+ *
+ * Manipulate a node on import/export.
+ *
+ * @param &$node
+ *   The node to alter.
+ * @param $original_node
+ *   The unaltered node.
+ * @param $method
+ *   'export' for exports, and 'prepopulate' or 'save-edit' for imports
+ *   depending on the method used.
+ * @ingroup hooks
+ */
+function node_export_book_node_export_node_alter(&$node, $original_node, $method) {
+  switch ($method) {
+    case 'export':
+      _node_export_book_node_export_node_alter_export($node, $original_node);
+      break;
+    case 'prepopulate':
+      _node_export_book_node_export_node_alter_prepopulate($node, $original_node);
+  }
+}
+
+/**
+ * Manipulate a node on export.
+ *
+ * @pre
+ *   Each node should have a UUID registered with the UUID module. This should have been set in node_export_book_node_export_alter($op = export).
+ * @pre
+ *   Each node should have a weight in $node->book['weight']. This should have been set in node_export_book_node_export_alter($op = export).
+ *
+ * @post
+ *   Each node should have a book 
+ *
+ * @param &$node
+ *   The node to alter.
+ * @param $original_node
+ *   The unaltered node.
+ */
+function _node_export_book_node_export_node_alter_export(&$node, $original_node) {
+  // Output the parent node's UUID if applicable
+  if (property_exists($node, 'book') and array_key_exists('plid', $node->book) and !_node_export_book_is_empty($node->book['plid'])) {
+    $node->book['#export_parent_uuid'] = _node_export_book_mlid_to_uuid($node->book['plid']);
+  }
+
+  // Output the book's UUID if applicable
+  if (property_exists($node, 'book') and array_key_exists('bid', $node->book) and !_node_export_book_is_empty($node->book['bid'])) {
+    $node->book['#export_book_page'] = TRUE;
+    $node->book['#export_book_uuid'] = _node_export_book_nid_to_uuid($node->book['bid']);
+  }
+
+  // Now get rid of the other fields
+  // I've found that books can get partially populated if these are left as-is
+  foreach ($node->book as $key => $value) {
+    if (!($key == 'weight' or $key == '#export_parent_uuid' or $key == '#export_book_uuid' or $key == '#export_book_page')) {
+      unset($node->book[$key]);
+    }
+  }
+}
+
+/**
+ * Prepopulate a node before saving on import
+ *
+ * Basically, make sure that everything is as-expected for other functions
+ *
+ * @param &$node
+ *   The node to alter.
+ * @param $original_node
+ *   The unaltered node.
+ */
+function _node_export_book_node_export_node_alter_prepopulate(&$node, $original_node) {
+  // If the book UUID is invalid, and there's no parent UUID either, make this into a new book
+  if (!_node_export_book_is_empty($node->book['#export_book_uuid'])) {
+    $node->book['#export_book_uuid'] = $node->uuid;
+  }
+
+  // If the weight does not exist, then default to zero
+  if (!array_key_exists('weight', ($node->book))) {
+    $node->book['weight'] = 0;
+  }
+}
+
+/**
+ * Return the Node ID of a node with a given Menu Link ID.
+ *
+ *
+ * @param $mlid
+ *   The MLID of a node.
+ * @return The NID of the node with the given MLID; xor NULL if the MLID is not pointing to a node.
+ * @see menu_link_load()
+ */
+function _node_export_book_mlid_to_nid($mlid) {
+  $menu_item = menu_link_load($mlid);
+  $path = explode('/', $menu_item['link_path']);
+  if ($menu_item != FALSE and $path[0] == 'node' and array_key_exists(1, $path)) {
+    return $path[1];
+  }
+  else {
+    return NULL;
+  }
+}
+
+/**
+ * Return the Universally Unique ID of a node with a given Menu Link ID.
+ *
+ * @param $mlid
+ *   The MLID of a node.
+ * @return The UUID of the node with the given MLID; xor NULL if the node has not been assigned a UUID.
+ * @see node_load()
+ */
+function _node_export_book_mlid_to_uuid($mlid) {
+  $nid = _node_export_book_mlid_to_nid($mlid);
+  $node = node_load($nid, NULL, TRUE);
+  if ($node != FALSE and property_exists($node, 'uuid')) {
+    return $node->uuid;
+  }
+  else {
+    return NULL;
+  }
+}
+
+/**
+ * Return the Menu Link ID of a node with a given Node ID.
+ *
+ * @pre
+ *   The node must be in a book.
+ *
+ * @param $nid
+ *   The NID of a node.
+ * @return The MLID of the node with the given NID; xor NULL if the node has no book MLID (i.e.: is not in a book).
+ * @see node_load()
+ */
+function _node_export_book_nid_to_mlid($nid) {
+  $node = node_load($nid);
+  if ($node != FALSE and property_exists($node, 'book') and array_key_exists('mlid', $node->book) and !_node_export_book_is_empty($node->book['mlid'])) {
+    return $node->book['mlid'];
+  }
+  else {
+    return NULL;
+  }
+}
+
+/**
+ * Return the Universally Unique ID of a node with a given Node ID.
+ *
+ * @param $nid
+ *   The NID of a node.
+ * @return The UUID of the node with the given NID; xor (NULL if the node doesn't exist OR there the node has not been assigned a UUID yet).
+ * @see node_get_uuid()
+ */
+function _node_export_book_nid_to_uuid($nid) {
+  $uuid = uuid_get_uuid('node', 'nid', $nid);
+  if ($uuid != FALSE) {
+    return $uuid;
+  }
+  else {
+    return NULL;
+  }
+}
+
+/**
+ * Return the Node ID of a node with a given Universally-Unique ID.
+ *
+ * @param $uuid
+ *   The UUID of a node.
+ * @return The NID of the node with the given UUID; xor NULL if there are no nodes with that UUID.
+ * @see node_get_by_uuid()
+ */
+function _node_export_book_uuid_to_nid($uuid) {
+  $node = node_get_by_uuid($uuid);
+  if ($node != FALSE) {
+    return $node->nid;
+  }
+  else {
+    return NULL;
+  }
+}
+
+/**
+ * Return the Menu Link ID of a node with a given Universally-Unique ID.
+ *
+ * @param $uuid
+ *  The UUID of a node.
+ * @return The MLID of the node with the given UUID; xor NULL if there are no nodes with that UUID.
+ * @see node_get_by_uuid()
+ */
+function _node_export_book_uuid_to_mlid($uuid) {
+  $node = node_get_by_uuid($uuid);
+  if ($node != FALSE) {
+    return $node->book['mlid'];
+  }
+  else {
+    return NULL;
+  }
+}
+
+/**
+ * A wrapper function around the PHP language construct 'empty'.
+ *
+ * If one doesn't use the default PHP language construct exactly correctly, it
+ * will throw fatal '$var cannot be used in a write context' errors. Working
+ * around this makes my code messy. While this is more characters, it makes the
+ * code easier to understand.
+ *
+ * @param $var
+ *   The variable to test for emptiness.
+ * @return TRUE if the variable is empty
+ * @see http://www.php.net/manual/en/function.empty.php
+ */
+function _node_export_book_is_empty($var) {
+  return empty($var);
+}
+
+/**
+ * Sets outline information for a book page.
+ *
+ * Examples:
+ *   // Create this page a new book
+ *   $a_book = node_load(123); // assuming $a_book->type == 'book'
+ *   $a_book->book = array();  // Reset the book information
+ *   _node_export_book_install_book_set_outline($a_book, NULL, TRUE);
+ *
+ *   // Add a child page
+ *   $child = node_load(124);  // assuming $child->type == 'book'
+ *   $child->book = array();   // Reset the book information
+ *   _node_export_book_install_book_set_outline($child, $a_book->book['mlid']);
+ *
+ * @author James Andres (http://drupal.org/user/33827)
+ * @see http://drupal.org/node/601458
+ *
+ * @params $node
+ *  The book page node.
+ * @params $plid
+ *  Menu MLID of the item to be this page's parent.
+ * @params $weight
+ *  Sets the menu weight of this book.
+ * @params $reset
+ *  Make this node into a new book / page.  Clearing any old book outline
+ *  information.
+ */
+function _node_export_book_install_book_set_outline(&$node, $plid = NULL, $weight = 0, $reset = FALSE) {
+  // The object needs to at least be something that looks like a book page
+  if (!$reset && !is_array($node->book)) {
+    return FALSE;
+  }
+
+  // Resets the book
+  if ($reset) {
+    // Delete any existing information for this book
+    if ($node->book['mlid']) {
+      db_query("DELETE FROM {book} WHERE mlid = %d", $node->book['mlid']);
+      menu_link_delete($node->book['mlid']);
+    }
+    $node->book = array();
+    $node->book['bid']  = 'new';
+    $node->book['mlid'] = NULL;
+  }
+  // Makes this a child book page of a parent MLID
+  if (is_numeric($plid)) {
+    $parent = book_link_load($plid);
+    if ($parent && $parent['access']) {
+      $node->book['bid']       = $parent['bid'];
+      $node->book['plid']      = $parent['mlid'];
+      $node->book['menu_name'] = $parent['menu_name'];
+    }
+
+    // Set defaults.
+    $node->book += _book_link_defaults(!empty($node->nid) ? $node->nid : 'new');
+  }
+
+  // Set the weight
+  $node->book['weight'] = (int) $weight;
+
+  // Allow other modules to deal with the bid changing
+  if (isset($node->book['bid']) && !isset($node->book['original_bid'])) {
+    $node->book['original_bid'] = $node->book['bid'];
+  }
+
+  // Find the depth limit for the parent select
+  if (isset($node->book['bid']) && !isset($node->book['parent_depth_limit'])) {
+    $node->book['parent_depth_limit'] = _book_parent_depth_limit($node->book);
+  }
+
+  if (!empty($node->book['bid'])) {
+    if ($node->book['bid'] == 'new') {
+      // New nodes that are their own book.
+      $node->book['bid'] = $node->nid;
+    }
+    $node->book['nid'] = $node->nid;
+    $node->book['menu_name'] = book_menu_name($node->book['bid']);
+    return _book_update_outline($node);
+
+    // The following should now exist
+    //  * $node->book['bid']
+    //  * $node->book['mlid']
+    //  * $node->book['plid']
+  }
+  return NULL;
+}
