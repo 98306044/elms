@@ -41,8 +41,9 @@ function elms_course_versions_form_alter(&$form, &$form_state, $form_id) {
 function elms_course_versions_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
   switch ($op) {
   case 'insert':
-  //check for groups created
+    //check for groups created
     if (og_is_group_type($node->type)) {
+	
     //remove messages on course insert since this will redirect to the space to work
     $_SESSION['messages'] = array();
     //bump workflow state to dev automatically
@@ -51,7 +52,7 @@ function elms_course_versions_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
     $theme_ary = variable_get('theme_settings', array());
     $space = spaces_load('og', $node->nid, TRUE);
     if ($space) {
-      $space->controllers->variable->set('site_name', $node->title);
+      $space->controllers->variable->set('site_name', $course->title);
       //load the course node for the name space info
       $course = node_load($node->field_course_ref[0]['nid']);
       //set slogan to the description of the course
