@@ -2,7 +2,7 @@
 name = Feeds RID Map
 description = This module provides targets for Feeds module user import so that you can import user roles globally or per organic group
 package = Feeds
-version = "6.x-1.0-beta1"
+version = "6.x-1.0-beta2"
 core = "6.x"
 dependencies[] = feeds
 project = "feeds_ridmap"

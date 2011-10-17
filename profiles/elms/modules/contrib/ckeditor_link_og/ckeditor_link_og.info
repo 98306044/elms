@@ -2,7 +2,7 @@
 name = CKEditor Link for Organic Groups
 description = This module limits the results of the CKEditor Link project to just within the scope of the current group.  This allows authors of content to only select nodes within their current group they are working on instead of site wide (ckeditor link default).
 package = User interface
-version = "6.x-1.0-beta1"
+version = "6.x-1.0-beta2"
 core = "6.x"
 dependencies[] = ckeditor_link
 project = "ckeditor_link_og"
