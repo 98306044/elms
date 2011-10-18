@@ -29,7 +29,21 @@ function feeds_node_helper_feeds_node_processor_targets_alter(&$targets, $conten
     'description' => t('Map value to a node type'),
     'callback' => 'feeds_node_helper_feeds_set_type_target',
   );
+  $targets['uuid'] = array(
+    'name' => t('UUID'),
+    'description' => t('Map value to UUID field'),
+    'callback' => 'feeds_node_helper_feeds_set_uuid_target',
+  );
 }
+
+/**
+ * Set the node uuid from an external system.
+ */
+function feeds_node_helper_feeds_set_uuid_target($node, $target, $value) {
+  $node->uuid = $value;
+  return $node;
+}
+
 /**
  * Set the node type.
  */
@@ -47,9 +61,12 @@ function feeds_node_helper_feeds_set_book_target($node, $target, $value) {
   $node->book['bid'] = $group->book_nid;
   //load the parent UUID and store for the book this value for the time being, might need to use a temporary value
   $parentnode = node_get_by_uuid($value);
-  $node->book['plid'] = $parentnode->book['mlid'];
-  dpm($node);
+  dpm($value);
   dpm($parentnode);
+  if (!$parentnode) {
+	return $node;
+  }
+  $node->book['plid'] = $parentnode->book['mlid'];
   return $node;
 }
 
