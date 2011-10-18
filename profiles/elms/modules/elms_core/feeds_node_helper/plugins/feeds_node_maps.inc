@@ -12,12 +12,12 @@ $plugin = array(
   'callback' => 'feeds_node_maps_callback',
   'name' => 'Current User ID',
   'multi' => 'single',
-  'category' => 'Filter',
+  'category' => 'Transform',
   'description' => 'Set the value to the currently logged in user',
 );
 
 /**
- * Form for building the role map
+ * Form for building the user ID map, no options needed
  */
 function feeds_node_maps_form($importer, $element_key, $settings) {
   $form = array();

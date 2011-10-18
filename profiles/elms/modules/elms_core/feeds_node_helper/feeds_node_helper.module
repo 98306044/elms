@@ -33,13 +33,20 @@ function feeds_node_helper_feeds_set_book_target($node, $target, $value) {
   //TODO: This is very specific to the ELMS environment currently
   $group = og_get_group_context();
   $node->book['bid'] = $group->book_nid;
-  //select the parent's new node id then look up the plid
-  $item = db_result(db_query("SELECT * FROM {feeds_node_item} JOIN {book} ON {book}.nid = {feeds_node_item}.nid WHERE guid=%d ORDER BY imported", $value));
-  $node->book['plid'] = $item['mlid'];
-  dpm($node);
+  //store this value for the time being, might need to use a temporary value
+  $node->book['plid'] = $value;
   return $node;
 }
-
+/**
+ * Map correctly after import
+ */
+function feeds_node_helper_feeds_after_import(FeedsImporter $importer, FeedsSource $source) {
+  //the import will have a GUI which is a UUID, look up the transformation of UUID to nid in new system
+  //$item = db_result(db_query("SELECT * FROM {feeds_node_item} JOIN {book} ON {book}.nid = {feeds_node_item}.nid WHERE guid='%s'", $value));
+  dpm($importer);
+  dpm($source);
+  exit;
+}
 
 /**
  * Implements hook_ctools_plugin_directory().
