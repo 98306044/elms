@@ -24,6 +24,18 @@ function feeds_node_helper_feeds_node_processor_targets_alter(&$targets, $conten
     'description' => t('Create a book parent relationship'),
     'callback' => 'feeds_node_helper_feeds_set_book_target',
   );
+  $targets['type'] = array(
+    'name' => t('Node Type'),
+    'description' => t('Map value to a node type'),
+    'callback' => 'feeds_node_helper_feeds_set_type_target',
+  );
+}
+/**
+ * Set the node type.
+ */
+function feeds_node_helper_feeds_set_type_target($node, $target, $value) {
+  $node->type = $value;
+  return $node;
 }
 
 /**
@@ -33,19 +45,12 @@ function feeds_node_helper_feeds_set_book_target($node, $target, $value) {
   //TODO: This is very specific to the ELMS environment currently
   $group = og_get_group_context();
   $node->book['bid'] = $group->book_nid;
-  //store this value for the time being, might need to use a temporary value
-  $node->book['plid'] = $value;
+  //load the parent UUID and store for the book this value for the time being, might need to use a temporary value
+  $parentnode = node_get_by_uuid($value);
+  $node->book['plid'] = $parentnode->book['mlid'];
+  dpm($node);
+  dpm($parentnode);
   return $node;
-}
-/**
- * Map correctly after import
- */
-function feeds_node_helper_feeds_after_import(FeedsImporter $importer, FeedsSource $source) {
-  //the import will have a GUI which is a UUID, look up the transformation of UUID to nid in new system
-  //$item = db_result(db_query("SELECT * FROM {feeds_node_item} JOIN {book} ON {book}.nid = {feeds_node_item}.nid WHERE guid='%s'", $value));
-  dpm($importer);
-  dpm($source);
-  exit;
 }
 
 /**
