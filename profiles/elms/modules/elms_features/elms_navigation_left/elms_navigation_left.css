@@ -6,7 +6,7 @@ ul.tabs {
 #regions_elms_navigation_left {
   width:200px;
   top:50px;
-  z-index:100;
+  z-index:1000;
   left:-180px;
   float:left;
   position:fixed;
