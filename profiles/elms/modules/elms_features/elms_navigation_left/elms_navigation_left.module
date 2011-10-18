@@ -129,44 +129,16 @@ function _elms_navigation_left_course_block($group) {
   if ($features['elms_course_content'] == 1) {
     $output .= theme('menu_item', l(t('Content Outline'), 'outline_designer/book/'. $group->book_nid), 0, '', FALSE, 'content_outline');
   }
-  /*
-  //TODO: this is overkill so most is commented out at this time
-  //loop through active features
-  foreach ($features as $fname => $status) {
-    //if it's active then see if we should add settings
-    if ($status) {
-      switch ($fname) {
-        case 'elms_course_content':
-          //course outline
-          $output .= '<strong>Content</strong>';
-          $output .= theme('menu_item', l(t('Content Outline'), 'outline_designer/book/'. $group->book_nid), 0, '', FALSE, 'content_outline');
-          $output .= theme('menu_item', l(t('Settings'), 'node/'. $group->nid .'/features/elms_course_content', array('query' => 'destination='. $_GET['q'])), 0, '', FALSE, 'content_settings');
-        break;
-        case 'elms_reaction':
-          //course outline
-          $output .= '<strong>Reactions</strong>';
-          $output .= theme('menu_item', l(t('Settings'), 'node/'. $group->nid .'/features/elms_reaction', array('query' => 'destination='. $_GET['q'])), 0, '', FALSE, 'reaction_settings');
-        break;
-        case 'elms_course_studio':
-          //ELMS Reactions
-          $output .= '<strong>Studio</strong>';
-          $output .= theme('menu_item', l(t('Settings'), 'node/'. $group->nid .'/features/elms_course_studio', array('query' => 'destination='. $_GET['q'])), 0, '', FALSE, 'studio_settings');
-        break;
-        case 'elms_schedule':
-          //ELMS Schedule
-          $output .= '<strong>Schedule</strong>';
-          $output .= theme('menu_item', l(t('Settings'), 'node/'. $group->nid .'/features/elms_schedule', array('query' => 'destination='. $_GET['q'])), 0, '', FALSE, 'schedule_settings');
-        break;
-      }
-    }
-  }*/
   //make the current workflow state as visible as possible
-  //$output .= '<strong>Settings</strong>';
   $output .= theme('menu_item', l(t(workflow_get_state_name($group->_workflow)),  'node/'. $group->nid .'/workflow', array('query' => 'destination='. $_GET['q'])), 0, '', FALSE, 'workflow_state workflow_state_'. $group->_workflow);
   //change the features of the course
   $output .= theme('menu_item', l(t('Change Features'), 'node/'. $group->nid .'/features', array('query' => 'destination='. $_GET['q'])), 0, '', FALSE, 'change_features');
   //use the custom theme form
   $output .= theme('menu_item', l(t('Change Theme'), 'theme'), 0, '', FALSE, 'change_theme');
+  //user import
+  $output .= theme('menu_item', l(t('Import Users'), 'node/add/feed-user-import'), 0, '', FALSE, 'import_users');
+  //use the custom theme form
+  $output .= theme('menu_item', l(t('Import Content'), 'import/elms_node_import'), 0, '', FALSE, 'import_content');
   //use the custom theme form
   $output .= theme('menu_item', l(t('Admin Settings'), 'node/'. $group->nid .'/edit', array('query' => 'destination='. $_GET['q'])), 0, '', FALSE, 'admin_settings');
   return $output;
