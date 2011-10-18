@@ -1,4 +1,6 @@
-Copyright (C) 2011  The Pennsylvania State University
+ELMS: Regions
+Development Sponsored by The Pennsylvania State University
+ELMS is Copyright (C) 2008-2011  The Pennsylvania State University
 
 Bryan Ollendyke
 bto108@psu.edu
