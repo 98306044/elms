@@ -341,3 +341,24 @@ function _elms_course_content_create_root($group, $template = NULL) {
   }
   watchdog('elms', 'New book outline created for the course version');
 }
+
+/**
+ * adds target of the book associated to this feature
+ */
+function elms_course_content_feeds_node_processor_targets_alter(&$targets, $content_type) {
+  $targets['elms_book'] = array(
+    'name' => t('ELMS Book Root'),
+    'description' => t('Associate node to ELMS Course Content book node'),
+    'callback' => 'elms_course_content_feeds_set_elms_book_target',
+  );
+}
+/**
+ * Set the book to the group context
+ */
+function elms_course_content_feeds_set_elms_book_target($node, $target, $value) {
+  //we know in ELMS there is only 1 book for the group
+  $group = og_get_group_context();
+  //set the book root as the group's global book
+  $node->book['bid'] = $group->book_nid;
+  return $node;
+}

@@ -19,10 +19,10 @@
  */
 
 function feeds_node_helper_feeds_node_processor_targets_alter(&$targets, $content_type) {
-  $targets['book_map'] = array(
-    'name' => t('Book Parent'),
-    'description' => t('Create a book parent relationship'),
-    'callback' => 'feeds_node_helper_feeds_set_book_target',
+  $targets['uuid_book_parent'] = array(
+    'name' => t('UUID Book Parent'),
+    'description' => t('Create a book parent relationship based on UUID'),
+    'callback' => 'feeds_node_helper_feeds_set_uuid_book_parent_target',
   );
   $targets['type'] = array(
     'name' => t('Node Type'),
@@ -32,6 +32,11 @@ function feeds_node_helper_feeds_node_processor_targets_alter(&$targets, $conten
   $targets['uuid'] = array(
     'name' => t('UUID'),
     'description' => t('Map value to UUID field'),
+    'callback' => 'feeds_node_helper_feeds_set_uuid_target',
+  );
+  $targets['book_weight'] = array(
+    'name' => t('Book Weight'),
+    'description' => t('Map value to book weight'),
     'callback' => 'feeds_node_helper_feeds_set_uuid_target',
   );
 }
@@ -53,12 +58,18 @@ function feeds_node_helper_feeds_set_type_target($node, $target, $value) {
 }
 
 /**
- * Set the book parent after import.
+ * Set the book weight.
  */
-function feeds_node_helper_feeds_set_book_target($node, $target, $value) {
-  //TODO: This is very specific to the ELMS environment currently
-  $group = og_get_group_context();
-  $node->book['bid'] = $group->book_nid;
+function feeds_node_helper_feeds_set_weight_target($node, $target, $value) {
+  //set the weight based on what it was previously
+  $node->book['weight'] = $value;
+  return $node;
+}
+
+/**
+ * Set the book parent, this assumes a UUID look up.
+ */
+function feeds_node_helper_feeds_set_uuid_book_parent_target($node, $target, $value) {
   //load the parent from the UUID, it should have been created prior to creation
   $parentnode = node_get_by_uuid($value);
   if (!$parentnode) {
