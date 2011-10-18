@@ -1,0 +1,52 @@
+<?php
+//Copyright (C) 2011  The Pennsylvania State University
+//
+//Bryan Ollendyke
+//bto108@psu.edu
+//
+//Keith D. Bailey
+//kdb163@psu.edu
+//
+//12 Borland
+//University Park,  PA 16802
+/**
+ * @file
+ * Allow for mapping imported RID values directly to user roles in drupal
+ */
+
+/**
+ * adds user target for role
+ */
+
+function feeds_node_helper_feeds_node_processor_targets_alter(&$targets, $content_type) {
+  $targets['book_map'] = array(
+    'name' => t('Book Parent'),
+    'description' => t('Create a book parent relationship'),
+    'callback' => 'feeds_node_helper_feeds_set_book_target',
+  );
+}
+
+/**
+ * Set the book parent after import.
+ */
+function feeds_node_helper_feeds_set_book_target($node, $target, $value) {
+  //TODO: This is very specific to the ELMS environment currently
+  $group = og_get_group_context();
+  $node->book['bid'] = $group->book_nid;
+  //select the parent's new node id then look up the plid
+  $item = db_result(db_query("SELECT * FROM {feeds_node_item} JOIN {book} ON {book}.nid = {feeds_node_item}.nid WHERE guid=%d ORDER BY imported", $value));
+  $node->book['plid'] = $item['mlid'];
+  dpm($node);
+  return $node;
+}
+
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ * estabilishes where to look for feeds tamper plugin
+ */
+function feeds_node_helper_ctools_plugin_directory($module, $plugin) {
+  if ($module == 'feeds_tamper') {
+    return 'plugins';
+  }
+}

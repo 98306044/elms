@@ -1,0 +1,9 @@
+; $Id: feeds_node_helper.info
+name = Feeds Node Helper
+description = Provides some additionally useful importers for feeds
+package = Feeds
+version = "6.x-1.0-beta1"
+core = "6.x"
+dependencies[] = feeds
+project = "feeds_node_helper"
+project status url = "http://drupal.psu.edu/fserver"
