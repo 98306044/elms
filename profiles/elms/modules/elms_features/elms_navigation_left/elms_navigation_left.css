@@ -17,6 +17,11 @@ ul.tabs {
   background-color:#999;
   color:#222;
 }
+/* need to allow admin-toolbar to display higher then left nav if both are installed */
+div#admin-toolbar {
+ z-index:1001 !important;	
+}
+
 #regions_elms_navigation_left .regions_pre_block_container {
  position:static;
  height: 20px;
