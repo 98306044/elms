@@ -195,6 +195,8 @@ function _spaces_og_clone_clone_form_submit($form, &$form_state) {
     $group->uid = $author_id;
     //change the author name to match
     $group->name = $author;
+	//this is a flag that can be used by other modules to know that a clone was made
+	$group->space_og_clone = TRUE;
     node_save($group);
     //if spaces exists, verify that we copied the overrides correctly for that space
     if (module_exists('spaces')) {
@@ -324,8 +326,13 @@ function _spaces_og_clone_clone_form_submit($form, &$form_state) {
         $old_parent = $node->book['plid'];
         //store old book
         $old_book = $node->book['bid'];
+		//store weight
+		$old_weight = $node->book['weight'];
         //clear the book
         $node->book = array();
+		//need to maintain positioning at its level
+		$node->book['weight'] = $old_weight;
+		//needed so it doesn't fall into menu hell
 		$node->book['module'] = 'book';
         //if this is an empty parent then we have found the root, else map root
         if ($old_parent == 0) {
