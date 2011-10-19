@@ -286,12 +286,8 @@ function _spaces_og_clone_clone_form_submit($form, &$form_state) {
       }
     }
     //merge all values appropriately for a secure query rewrite
-    //$query_vars = array_merge($query_vars, $user_roles);
-    //query all nodes we want related to this group
     $result = db_query(db_rewrite_sql("SELECT n.nid, n.uid, ur.rid FROM {node} as n LEFT JOIN {users_roles} as ur ON ur.uid = n.uid JOIN {og_ancestry} as oga ON oga.nid = n.nid WHERE oga.group_nid=%d ". $type_query ." ORDER BY n.created ASC"), $query_vars);
     //these are the nodes we need to replicate
-	dpm($result);
-	dpm($query_vars);
     while ($val = db_fetch_array($result)) {
       $node = NULL;
       //account for user 1 and authenticated users by setting the role id to 2 which is drupal's authenticated user role
