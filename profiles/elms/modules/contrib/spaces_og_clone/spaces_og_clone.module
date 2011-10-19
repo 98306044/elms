@@ -170,16 +170,21 @@ function _spaces_og_clone_clone_form_submit($form, &$form_state) {
     $group->title = $group_new_name;
     //reset purl if it exists
     if (module_exists('purl')) {
-      $group->purl = NULL;
+      unset($group->purl);
     }
+	//reset UUID
+	if (module_exists('uuid')) {
+	    unset($group->uuid);
+		unset($group->revision_uuid); 
+	  }
 	//reset workflow if it exists
     if (module_exists('workflow')) {
-      $group->workflow = NULL;
-      $group->_workflow = NULL;
+      unset($group->workflow);
+      unset($group->_workflow);
     }
     //account for statistics if its enabled
     if (module_exists('og_statistics')) {
-      $group->og_statistics = NULL;
+      unset($group->og_statistics);
     }
     //silly og thing where og_theme doesn't save correctly unless defined as theme
     //only perform it if a theme was set though
@@ -245,7 +250,6 @@ function _spaces_og_clone_clone_form_submit($form, &$form_state) {
         drupal_write_record('spaces_overrides',$row);
       }
     }
-      $output .= '<p>'. t('Go to the <a href="@contact-page">contact page</a>.', array('@contact-page' => url('contact'))) .'</p>';
     drupal_set_message(t('Group Created successfully click to access <a href="@node">%title</a>', array('@node' => url('node/'. $group->nid), '%title' => $group->title)));
     //now copy all the content since we have a group we can copy into
     //if features were set, pull together the content types from cache
@@ -286,6 +290,8 @@ function _spaces_og_clone_clone_form_submit($form, &$form_state) {
     //query all nodes we want related to this group
     $result = db_query(db_rewrite_sql("SELECT n.nid, n.uid, ur.rid FROM {node} as n LEFT JOIN {users_roles} as ur ON ur.uid = n.uid JOIN {og_ancestry} as oga ON oga.nid = n.nid WHERE oga.group_nid=%d ". $type_query ." ORDER BY n.created ASC"), $query_vars);
     //these are the nodes we need to replicate
+	dpm($result);
+	dpm($query_vars);
     while ($val = db_fetch_array($result)) {
       $node = NULL;
       //account for user 1 and authenticated users by setting the role id to 2 which is drupal's authenticated user role
@@ -303,6 +309,11 @@ function _spaces_og_clone_clone_form_submit($form, &$form_state) {
       unset($node->create);
       unset($node->revision_uid);
       unset($node->og_groups_both);
+	  //reset UUID
+	  if (module_exists('uuid')) {
+	    unset($node->uuid);
+		unset($node->revision_uuid); 
+	  }
       $node->og_groups = array($group->nid => $group->nid);
       //change the user id to the one that the form dictates
       $node->uid = $author_id;
@@ -330,7 +341,6 @@ function _spaces_og_clone_clone_form_submit($form, &$form_state) {
           //map the new parent id based on the old mlid
           $node->book['plid'] = $context['sandbox']['map'][$old_parent];
         }
-        
         node_save($node);
         //map old mlid and nid to new one
         $context['sandbox']['map'][$old_mlid] = $node->book['mlid'];
