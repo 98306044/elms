@@ -22,3 +22,7 @@ Spaces OG
 jquery colorpicker
 -- Allow for inclusion in install profiles
 -- http://drupal.org/node/1283468#comment-5008268
+
+UUID
+-- Fixes a glitch in creation of UUIDs from an admin side
+-- http://drupal.org/node/1236768
