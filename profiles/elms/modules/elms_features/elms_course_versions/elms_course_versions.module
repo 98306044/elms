@@ -79,7 +79,7 @@ function elms_course_versions_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
       //build course root since all courses come with content by default
       //check for the default argument coming from the course creation form making a version
 	  
-      if (!isset($node->default_version) && !isset($group->space_og_clone)) {
+      if (!isset($node->default_version) && !isset($node->space_og_clone)) {
         _elms_course_content_create_root($node, $node->field_instructional_template[0]['value']);
       }
     /*
