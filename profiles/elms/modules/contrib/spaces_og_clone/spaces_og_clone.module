@@ -286,7 +286,9 @@ function _spaces_og_clone_clone_form_submit($form, &$form_state) {
       }
     }
     //merge all values appropriately for a secure query rewrite
-    $result = db_query(db_rewrite_sql("SELECT n.nid, n.uid, ur.rid FROM {node} as n LEFT JOIN {users_roles} as ur ON ur.uid = n.uid JOIN {og_ancestry} as oga ON oga.nid = n.nid WHERE oga.group_nid=%d ". $type_query ." ORDER BY n.created ASC"), $query_vars);
+	//extended join statement to account for book hierarchies that need replicated
+	//depth need to be loaded first or else there's a major issue of association
+    $result = db_query(db_rewrite_sql("SELECT n.nid, n.uid, ur.rid FROM {node} as n LEFT JOIN {book} as b ON b.nid=n.nid LEFT JOIN {menu_links} as ml ON ml.mlid=b.mlid LEFT JOIN {users_roles} as ur ON ur.uid = n.uid JOIN {og_ancestry} as oga ON oga.nid = n.nid WHERE oga.group_nid=%d ". $type_query ." ORDER BY ml.depth ASC"), $query_vars);
     //these are the nodes we need to replicate
     while ($val = db_fetch_array($result)) {
       $node = NULL;
