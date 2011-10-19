@@ -33,7 +33,6 @@ function feeds_node_helper_feeds_node_processor_targets_alter(&$targets, $conten
     'name' => t('UUID'),
     'description' => t('Map value to UUID field'),
     'callback' => 'feeds_node_helper_feeds_set_uuid_target',
-	'optional_unique' => TRUE,
   );
   $targets['book_weight'] = array(
     'name' => t('Book Weight'),
