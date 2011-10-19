@@ -73,9 +73,6 @@ function feeds_node_helper_feeds_set_weight_target($node, $target, $value) {
 function feeds_node_helper_feeds_set_uuid_book_parent_target($node, $target, $value) {
   //load the parent from the UUID, it should have been created prior to creation
   $parentnode = node_get_by_uuid($value);
-  dpm($parentnode);
-  dpm($node);
-  dpm($value);
   if (!$parentnode) {
 	return $node;
   }
