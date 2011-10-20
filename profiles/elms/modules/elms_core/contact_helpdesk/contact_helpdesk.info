@@ -1,8 +1,0 @@
-; $Id: Contact Helpdesk
-name = "Contact Helpdesk"
-description = "Adds functionality to the Contact form that can help with troubleshooting issues your users are having. Great information for managing a helpdesk."
-core = 6.x
-package = "Contact Helpdesk"
-version = "6.x-1.0-alpha1"
-project = "contact_helpdesk"
-project status url = "http://drupal.psu.edu/fserver"
