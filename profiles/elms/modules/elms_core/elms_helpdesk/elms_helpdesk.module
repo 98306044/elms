@@ -23,10 +23,27 @@
 function elms_helpdesk_form_alter(&$form, &$form_state, $form_id) {
   //trap for the contact page to perform the form alterations
   if ($form_id == 'contact_mail_page') {
-    dpm($form);
-	global $user;
+    global $user;
+	//additional step to load the user profile into the user object
+	profile_load_profile($user);
+	dpm($form);
 	dpm($user);
-	$form['name']['#default_value'] = 'cool';
+	//hide the input field for the email address and make it display as markup
+	$form['mail']['#type'] = 'markup';
+	$form['mail']['#value'] = 'This message will be sent as: '. $form['mail']['#default_value'];
+	//hide roles but this way it can be emailed and set to user's roles
+	$form['field_roles']['#type'] = 'hidden';
+	//parse the user's roles so we can send it to our staff
+	foreach ($user->roles as $key => $role) {
+	  //ignore authenticated user role
+	  if ($key != 2) {
+        $role_list .= $role .' ';
+	  }
+	}
+	//set the hidden field's value
+	$form['field_roles']['#default_value'] = $role_list;
+    //format name field to use profile fields in elms	
+	$form['name']['#default_value'] = $user->profile_first_name .' '. $user->profile_last_name .' ('. $user->name .')';
 	$form['name']['#disabled'] = TRUE;
   }
 }
