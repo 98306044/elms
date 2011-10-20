@@ -21,11 +21,13 @@
  */
 
 function feeds_ridmap_feeds_user_processor_targets_alter(&$targets) {
+  //add in the role ID map for associating to roles
   $targets['roles'] = array(
     'name' => t('Role ID'),
     'description' => t('Set the user role system wide'),
     'callback' => 'feeds_ridmap_feeds_set_roles_target',
   );
+  //add in an organic groups map if it exists
   if (module_exists('og')) {
     $targets['og_roles'] = array(
       'name' => t('OG Role ID'),

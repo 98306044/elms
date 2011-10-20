@@ -5,7 +5,7 @@
 }
 
 .node-promo, .node-course {
-background-image:none !important;	
+background-image:none !important;    
 }
 .node-promo .column-side {
  display:none;
@@ -19,23 +19,23 @@ body.node-type-promo {
  background-image:url(/sites/default/files/promo/watermark.png) !important;
  background-repeat:no-repeat !important;
  background-attachment:fixed !important;
- background-position:bottom right !important;	
+ background-position:bottom right !important;    
 }
 body.node-type-promo #page {
-	opacity:.8;
+    opacity:.8;
 }
 body.node-type-promo #footer {
-	opacity:.8;
+    opacity:.8;
 }
 
 body.node-type-promo #block-block-1 .block-content {
- text-align:center;	
+ text-align:center;    
 }
 
 .promo-image {
  float:left;
  display:inline;
- margin: 0px 0px 0px 6px;	
+ margin: 0px 0px 0px 6px;    
 }
 
 .dev-timer {
@@ -73,7 +73,7 @@ body.node-type-promo #block-block-1 .block-content {
  background-image:url('../images/pbar-ani.gif');
 }
 .ui-progressbar {
- height:30px;	
+ height:30px;    
 }
 .ui-progressbar-value {
  height:28px;
@@ -83,12 +83,12 @@ body.node-type-promo #block-block-1 .block-content {
 }
 .ui-datepicker-header select {
  position:relative;
- top:auto;	
+ top:auto;    
 }
 
 .form-region-main {
  width:auto !important;
- min-width:70%;	
+ min-width:70%;    
 }
 /* fix stupid purl / jquery colorpicker conflict */
 #colorSelector div {

@@ -109,6 +109,8 @@ function _profiler_builder_info_file(&$info, &$vars, &$drush) {
   //array of values we know to ignore automatically
   $ignore_list = _profiler_builder_ignore_list();
   $result = db_query("SELECT name FROM {variable} WHERE name NOT IN (". db_placeholders($ignore_list, 'text') .")", $ignore_list);
+  //really annoying function but we need to go into SUPER deeply nested values so that they can be fed into profiler correctly
+  //TODO: Probably a better way of doing this but this will work for now
   while ($value = db_fetch_array($result)) {
     $val = variable_get($value['name'], '');
     if ($val != '') {
@@ -162,7 +164,7 @@ function _profiler_builder_ignore_list() {
     'cache_content_flush_cache_block',
     'cache_content_flush_cache_page',
     'cache_flush_cache_update',
-    //TODO abstract into a hook as these are psu specific
+    //TODO: abstract into a hook as these are psu specific
     'webaccess_cookie',
     'webaccess_domain',
     'webaccess_init_enable',

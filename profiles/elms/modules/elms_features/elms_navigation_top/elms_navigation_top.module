@@ -22,6 +22,7 @@ include_once('elms_navigation_top.features.inc');
  * Implementation of hook_define_region().
  */
 function elms_navigation_top_define_regions() {
+  //implementation of the regions API
   $region['elms_navigation_top'] = array(
     'project' => 'elms_navigation_top',
     'js' => 'elms_navigation_top.js',
@@ -35,6 +36,7 @@ function elms_navigation_top_define_regions() {
  */
 function elms_navigation_top_block($op = 'list', $delta = 0, $edit = array()) {
   if ($op == 'list') {
+    //define custom blocks for the new global breadcrumb, notifications area and user menu
     $blocks[0] = array(
       'info' => t('System Path'),
       'weight' => 0,
@@ -67,6 +69,7 @@ function elms_navigation_top_block($op = 'list', $delta = 0, $edit = array()) {
       global $user;
       if (!isset($user->uid) || $user->uid == 0 || $user->uid == '') {
         $block['regions_allow_html_title'] = TRUE;
+        //account for PSU's custom login system or to use the drupal default
         if (module_exists('webaccess')) {
           $block['title'] = l(t('Login'), 'login', array('query' => 'destination=courses'));
         }
@@ -79,11 +82,17 @@ function elms_navigation_top_block($op = 'list', $delta = 0, $edit = array()) {
         //manually load the usermenu menu so we can inject a new title
         $block = module_invoke('menu', 'block', 'view', 'menu-usermenu');
         $rendername = '';
-        if (isset($user->picture)) {
+        //if the user has a custom picture then render it, otherwise render the default
+        if ($user->picture != NULL) {
           $rendername .= theme('imagecache', 'elms_navigation_top', $user->picture, $user->name ."'s profile picture", "'s profile picture");
         }
+        else {
+          $rendername .= theme('imagecache', 'elms_navigation_top', variable_get('user_picture_default', ''), $user->name ."'s profile picture", "'s profile picture");    
+        }
+        //wrap name to offset it from the piture
         $rendername .= '<span>'. $user->name .'</span>';
         $block['title'] = $rendername;
+        //invoke the region's HTML title passthrough so that the image renders w/ html as a title
         $block['regions_allow_html_title'] = TRUE;
       }
       break;
@@ -97,24 +106,24 @@ function _elms_navigation_top_system_path() {
   //check for the simpliest case, this is part of a group
   $group = og_get_group_context();
   if (isset($group->nid)) {
-    //need to manually build the website's name because of strongarm being too good!
+    //need to manually build the website's name and homepage because of strongarm being too good!
     $site_frontpage = unserialize(db_result(db_query("SELECT value FROM {variable} WHERE name='site_frontpage'")));
     $site_name = unserialize(db_result(db_query("SELECT value FROM {variable} WHERE name='site_name'")));
     $output = theme('menu_item', l(t($site_name), $site_frontpage, array('purl' => array('disabled' => TRUE))), 0);
-	//add the taxonomy of the course version if it has a course association
-	if ($group->field_course_ref[0]['nid'] != '') {
+    //add the taxonomy of the course version if it has a course association
+    if ($group->field_course_ref[0]['nid'] != '') {
       $val = db_fetch_array(db_query("SELECT n.title, td.name FROM {node} AS n JOIN {term_node} AS tn ON n.nid = tn.nid JOIN {term_data} AS td ON td.tid = tn.tid WHERE n.nid=%d", $group->field_course_ref[0]['nid']));
   //add the courses listing with the name of the taxonomy term
       $output .= theme('menu_item', l(t($val['name']), 'courses', array('purl' => array('disabled' => TRUE))), 0);
-	}
-	else {
+    }
+    else {
       //this isn't part of a course so add sandbox to the path
-	  $output .= theme('menu_item', l(t('Sandboxes'), 'courses/sandboxes', array('purl' => array('disabled' => TRUE))), 0);
-	}
+      $output .= theme('menu_item', l(t('Sandboxes'), 'courses/sandboxes', array('purl' => array('disabled' => TRUE))), 0);
+    }
   //add the course home if this version is part of a course
     if ($group->field_course_ref[0]['nid'] != '') {
       $output .= theme('menu_item', l(t($val['title']), 'node/'. $group->field_course_ref[0]['nid'], array('purl' => array('disabled' => TRUE))), 0);
-	}
+    }
   //add the current group homepage to the trail
     $output .= theme('menu_item', l(t($group->title), variable_get('site_frontpage', 'node/'. $group->nid)), 0);
   }
@@ -147,12 +156,12 @@ function _elms_navigation_top_system_path() {
   }
     //iterate each menu item and convert to valid breadcrumb
     foreach ($active_menu as $menu) {
-    if (isset($menu['link_path'])) {
-      $output .= theme('menu_item', l(t($menu['title']), $menu['link_path']), 0);
-    }
-    else {
-    $output .= theme('menu_item', l(t($menu['title']), $menu['href']), 0);
-    }
+      if (isset($menu['link_path'])) {
+        $output .= theme('menu_item', l(t($menu['title']), $menu['link_path']), 0);
+      }
+      else {
+        $output .= theme('menu_item', l(t($menu['title']), $menu['href']), 0);
+      }
     }
   }
   return $output;
@@ -161,5 +170,6 @@ function _elms_navigation_top_system_path() {
 //helper function to display notifications
 function _elms_navigation_top_notifications() {
   $output = '';
+  //need to invoke the elms notifications hook to determine what should render here
   return $output;
 }

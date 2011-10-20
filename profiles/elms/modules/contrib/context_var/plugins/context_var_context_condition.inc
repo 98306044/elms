@@ -31,6 +31,7 @@ class context_var_context_condition extends context_condition {
   function condition_form_submit($values) {
     $parsed = array();
     $items = explode("\n", $values);
+    //pull together the values that are of the form name|value and store them in an array
     if (!empty($items)) {
       foreach ($items as $v) {
         $v = trim($v);
@@ -48,9 +49,10 @@ class context_var_context_condition extends context_condition {
   function execute() {
     foreach (context_enabled_contexts() as $context) {
       if ($vars = $this->fetch_from_context($context, 'values')) {
-        //scan for the %theme value for replacement
+        //scan for the %theme value for replacement as a custom token
         if (module_exists('og')) {
           $group = og_get_group_context();
+          //we are in the context of a group, grab theme from there
           if (isset($group->type)) {
             $theme = $group->og_theme;
           }

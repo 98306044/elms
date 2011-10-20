@@ -23,6 +23,7 @@ function role_map_form($importer, $element_key, $settings) {
   $form = array();
   //get all roles except anon
   $roles = user_roles(TRUE);
+  //build out a form that allows the user to map values to internal roles listing
   foreach ($roles as $rid => $role) {
     $form['role_map_'. $rid] = array(
       '#type' => 'textfield',

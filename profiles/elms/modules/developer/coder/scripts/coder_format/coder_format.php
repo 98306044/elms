@@ -6,7 +6,7 @@
  * Coder format shell invocation script.
  *
  * @param $filepath
- * 	 One or more files or directories containing the source code to process. If
+ *      One or more files or directories containing the source code to process. If
  *   a directory is given, all files in that directory are processed recursively.
  *   Each file will be replaced with the formatted source code. Each original
  *   file is automatically backup to <filename>.coder.orig.

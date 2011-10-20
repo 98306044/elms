@@ -6,12 +6,12 @@ This API is fairly straight forward.  You can use it to get new book outlines au
 
 Here is the basic structure:
 $outline['YOUR_TEMPLATE_MACHINE_NAME'] = array(
-	 'title' => 'YOUR TEMPLATE NAME',
+     'title' => 'YOUR TEMPLATE NAME',
      0 => array(
        'type' => ,
        'title' => ,
        'link' => ,
-	   'parent' => 
+       'parent' => 
      ));
 
 --Acceptable values for type is link, page, folder, or duplicate
@@ -48,10 +48,10 @@ function YOURMODULENAME_elms_instructional_template() {
       'title' => t('Lesson @i'),
       'parent' => 1,
     ),
-	3 => array(
-	  'type' => 'duplicate',
-	  'parent' => 2,
-	),
+    3 => array(
+      'type' => 'duplicate',
+      'parent' => 2,
+    ),
   );
   return $outline;
 }

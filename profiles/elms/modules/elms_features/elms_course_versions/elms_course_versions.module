@@ -17,13 +17,13 @@ function elms_course_versions_form_alter(&$form, &$form_state, $form_id) {
       //set a random value initially
       $form['themes']['theme']['#default_value'] = 'chamfer';
       //auto populate the descriptive field if it isn't set
-	  if ($form['og_description']['#value'] == '') {
+      if ($form['og_description']['#value'] == '') {
         $nid = arg(3);
         if (isset($nid)) {
           $node = node_load(arg(3));
           $form['og_description']['#value'] = $node->field_course_title[0]['value'];
         }
-	  }
+      }
     }
     $form['#content_extra_fields']['spaces_preset']['weight'] = 8;
     //unset rubik which is used for administering the site
@@ -43,7 +43,7 @@ function elms_course_versions_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
   case 'insert':
     //check for groups created
     if (og_is_group_type($node->type)) {
-	
+    
     //remove messages on course insert since this will redirect to the space to work
     $_SESSION['messages'] = array();
     //bump workflow state to dev automatically
@@ -78,7 +78,7 @@ function elms_course_versions_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
       }
       //build course root since all courses come with content by default
       //check for the default argument coming from the course creation form making a version
-	  
+      
       if (!isset($node->default_version) && !isset($node->space_og_clone)) {
         _elms_course_content_create_root($node, $node->field_instructional_template[0]['value']);
       }

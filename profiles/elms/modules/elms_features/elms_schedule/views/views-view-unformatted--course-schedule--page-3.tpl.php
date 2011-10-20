@@ -13,16 +13,16 @@
  //then only store the values where a collapse is needed and style appropriately
   foreach($view->result as $key => $ary) {
     $tmpnid = $ary->nid;
-	$depth = -1;
+    $depth = -1;
     //calculate depth
-	while ($tmpnid != 0) {
-	  $last_nid = $tmpnid;
-	  $tmpnid = db_result(db_query("SELECT value FROM {draggableviews_structure} WHERE delta=1 AND view_name='course_schedule' AND nid=%d", $last_nid));
-	  $depth++;
-	}
-	if ($depth == 0) {
-	  $nids[$key] = $ary->nid;
-	}
+    while ($tmpnid != 0) {
+      $last_nid = $tmpnid;
+      $tmpnid = db_result(db_query("SELECT value FROM {draggableviews_structure} WHERE delta=1 AND view_name='course_schedule' AND nid=%d", $last_nid));
+      $depth++;
+    }
+    if ($depth == 0) {
+      $nids[$key] = $ary->nid;
+    }
   }
 ?>
 <?php if (!empty($title)): ?>
@@ -30,21 +30,21 @@
 <?php endif; ?>
 <?php
  if (isset($_POST['num_events']) && drupal_valid_token($_POST['user_token'])) {
-	$group = og_get_group_context();
-	global $user;
-	for($i=0; $i<$_POST['num_events']; $i++) {
-	  $node = _elms_schedule_clean_node();
+    $group = og_get_group_context();
+    global $user;
+    for($i=0; $i<$_POST['num_events']; $i++) {
+      $node = _elms_schedule_clean_node();
       $node->og_groups = array($group->nid => $group->nid);
       $node->og_groups_both = array($group->nid => $group->title);
       node_save($node);
-	  //get the current max weight since we add all new objects to the end
-	  $weight = db_result(db_query("SELECT MAX(value) FROM {draggableviews_structure} WHERE delta=0 AND view_name='%s'",$view->name));
-	  //insert the weight value
-	  db_query("INSERT INTO {draggableviews_structure}(view_name, nid, delta, value, args) VALUES('%s', %d, %d, %d, '%s')", $view->name, $node->nid, 0, ($weight+1), '');
-	  //insert that this has no parent at the moment
-	  db_query("INSERT INTO {draggableviews_structure}(view_name, nid, delta, value, args) VALUES('%s', %d, %d, %d, '%s')", $view->name, $node->nid, 1, 0, '');
-	}
-	drupal_goto('schedule/edit');
+      //get the current max weight since we add all new objects to the end
+      $weight = db_result(db_query("SELECT MAX(value) FROM {draggableviews_structure} WHERE delta=0 AND view_name='%s'",$view->name));
+      //insert the weight value
+      db_query("INSERT INTO {draggableviews_structure}(view_name, nid, delta, value, args) VALUES('%s', %d, %d, %d, '%s')", $view->name, $node->nid, 0, ($weight+1), '');
+      //insert that this has no parent at the moment
+      db_query("INSERT INTO {draggableviews_structure}(view_name, nid, delta, value, args) VALUES('%s', %d, %d, %d, '%s')", $view->name, $node->nid, 1, 0, '');
+    }
+    drupal_goto('schedule/edit');
  }
 ?>
 <div class="schedule_add_events_wrapper">
@@ -67,17 +67,17 @@
 </div>
 <?php
   foreach ($rows as $id => $row) {
-	if (isset($nids[$id])) {
-		if ($id != 0) {
+    if (isset($nids[$id])) {
+        if ($id != 0) {
           print '</div><div class="schedule_container"><div class="container_close"></div><div class="schedule_heading '. $classes[$id] .'">'. $row .'</div>';
-		}
-		else {
+        }
+        else {
           print '<div class="schedule_container"><div class="container_close"></div><div class="schedule_heading '. $classes[$id] .'">'. $row .'</div>';
-		}
-	}
-	else {
-	  print '<div class="schedule_row '. $classes[$id] .'">'. $row .'</div>';
-	}
+        }
+    }
+    else {
+      print '<div class="schedule_row '. $classes[$id] .'">'. $row .'</div>';
+    }
   }
 ?>
 </div>

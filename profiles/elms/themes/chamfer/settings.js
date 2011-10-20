@@ -17,15 +17,15 @@ color_templates['black'] = ['000000','000000','00CCFF', '00CCFF','666666','0099F
   $("#edit-chamfer-color-template").change(function(){
     if ($("#edit-chamfer-color-template").val() != 'custom') {
     $("#edit-chamfer-color-primary").val(color_templates[$("#edit-chamfer-color-template").val()][0]).keyup();
-	$("#edit-chamfer-color-secondary").val(color_templates[$("#edit-chamfer-color-template").val()][1]).keyup();
-	$("#edit-chamfer-color-header1").val(color_templates[$("#edit-chamfer-color-template").val()][2]).keyup();
-	$("#edit-chamfer-color-header2").val(color_templates[$("#edit-chamfer-color-template").val()][3]).keyup();
-	$("#edit-chamfer-color-text").val(color_templates[$("#edit-chamfer-color-template").val()][4]).keyup();
-	$("#edit-chamfer-color-link").val(color_templates[$("#edit-chamfer-color-template").val()][5]).keyup();
-	$("#edit-chamfer-color-blocks").val(color_templates[$("#edit-chamfer-color-template").val()][6]).keyup();
-	$("#edit-chamfer-color-footer-text").val(color_templates[$("#edit-chamfer-color-template").val()][7]).keyup();
-	$("#edit-chamfer-color-footer-links").val(color_templates[$("#edit-chamfer-color-template").val()][8]).keyup();
-	}
+    $("#edit-chamfer-color-secondary").val(color_templates[$("#edit-chamfer-color-template").val()][1]).keyup();
+    $("#edit-chamfer-color-header1").val(color_templates[$("#edit-chamfer-color-template").val()][2]).keyup();
+    $("#edit-chamfer-color-header2").val(color_templates[$("#edit-chamfer-color-template").val()][3]).keyup();
+    $("#edit-chamfer-color-text").val(color_templates[$("#edit-chamfer-color-template").val()][4]).keyup();
+    $("#edit-chamfer-color-link").val(color_templates[$("#edit-chamfer-color-template").val()][5]).keyup();
+    $("#edit-chamfer-color-blocks").val(color_templates[$("#edit-chamfer-color-template").val()][6]).keyup();
+    $("#edit-chamfer-color-footer-text").val(color_templates[$("#edit-chamfer-color-template").val()][7]).keyup();
+    $("#edit-chamfer-color-footer-links").val(color_templates[$("#edit-chamfer-color-template").val()][8]).keyup();
+    }
   });
 
 //trigger to make sure we set the menu to custom if any cells below are changed, also trap for non-hex values
@@ -35,54 +35,54 @@ $("#edit-chamfer-color-primary,#edit-chamfer-color-secondary,#edit-chamfer-color
     $("#edit-chamfer-color-template").val('custom');
   }
   else {
-	return false;	
+    return false;    
   }
 });
 //toggle borders
   $("#edit-chamfer-borders").change(function(){
     if ($('#border_wrapper').hasClass('main-border-10')) {
-		$('#border_wrapper, .footer').addClass('main-border-0').removeClass('main-border-10');
-	}else {
-		$('#border_wrapper, .footer').addClass('main-border-10').removeClass('main-border-0');
-	}
+        $('#border_wrapper, .footer').addClass('main-border-0').removeClass('main-border-10');
+    }else {
+        $('#border_wrapper, .footer').addClass('main-border-10').removeClass('main-border-0');
+    }
   });
 //toggle background image  
 $("#edit-chamfer-bgimage").change(function(){
     if ($('body').hasClass('bg-image')) {
-		$('body').removeClass('bg-image');
-	}else {
-		$('body').addClass('bg-image');
-	}
+        $('body').removeClass('bg-image');
+    }else {
+        $('body').addClass('bg-image');
+    }
   });
 //toggle top logo
   $("#edit-chamfer-top-logo").change(function(){
     if ($("#edit-chamfer-top-logo").val() == 0) {
-	  $("#top_logo").css('display','none');
-	}
-	else {
-	  $("#top_logo").css('display','block');
-	  if ($("#edit-chamfer-top-logo").val() == 1) {
-	    $("#top_logo").attr('src',$("#top_logo").attr('src').replace('logo_02.png','logo_01.png'));
-	  }
-	  else {
+      $("#top_logo").css('display','none');
+    }
+    else {
+      $("#top_logo").css('display','block');
+      if ($("#edit-chamfer-top-logo").val() == 1) {
+        $("#top_logo").attr('src',$("#top_logo").attr('src').replace('logo_02.png','logo_01.png'));
+      }
+      else {
         $("#top_logo").attr('src',$("#top_logo").attr('src').replace('logo_01.png','logo_02.png'));
-	  }
-	}
+      }
+    }
   });
 //toggle bottom logo
   $("#edit-chamfer-bottom-logo").change(function(){
-	if ($("#edit-chamfer-bottom-logo").val() == 0) {
-	  $("#bottom_logo").css('display','none');
-	}
-	else {
-	  $("#bottom_logo").css('display','inline');
-	  if ($("#edit-chamfer-bottom-logo").val() == 1) {
-	    $("#bottom_logo").attr('src',$("#bottom_logo").attr('src').replace('logo_02.png','logo_01.png'));
-	  }
-	  else {
+    if ($("#edit-chamfer-bottom-logo").val() == 0) {
+      $("#bottom_logo").css('display','none');
+    }
+    else {
+      $("#bottom_logo").css('display','inline');
+      if ($("#edit-chamfer-bottom-logo").val() == 1) {
+        $("#bottom_logo").attr('src',$("#bottom_logo").attr('src').replace('logo_02.png','logo_01.png'));
+      }
+      else {
         $("#bottom_logo").attr('src',$("#bottom_logo").attr('src').replace('logo_01.png','logo_02.png'));
-	  }
-	}
+      }
+    }
   });
 //toggle primary colors
   $("#edit-chamfer-color-primary").keyup(function(){
@@ -90,12 +90,12 @@ $("#edit-chamfer-bgimage").change(function(){
   });
 //toggle secondary colors
   $("#edit-chamfer-color-secondary").keyup(function(){
-	var color = chamfer_verifyhex('#edit-chamfer-color-secondary');
+    var color = chamfer_verifyhex('#edit-chamfer-color-secondary');
     $(".secondary-color").css('backgroundColor',color);
     $(".main-border-color").css('borderTopColor',color);
-	$(".main-border-color").css('borderBottomColor',color);
-	$(".main-border-color").css('borderLeftColor',color);
-	$(".main-border-color").css('borderRightColor',color);
+    $(".main-border-color").css('borderBottomColor',color);
+    $(".main-border-color").css('borderLeftColor',color);
+    $(".main-border-color").css('borderRightColor',color);
   });
 //toggle text color
   $("#edit-chamfer-color-text").keyup(function(){
@@ -133,10 +133,10 @@ $("#edit-chamfer-bgimage").change(function(){
 function chamfer_verifyhex(id){
   var input = $(id).val();
   if (input.length == 6 || input.length == 3) {
-	  $(id).css('backgroundColor','#' + input);
-	  return '#' + input;
+      $(id).css('backgroundColor','#' + input);
+      return '#' + input;
   } else {
-	$(id).css('backgroundColor','');
+    $(id).css('backgroundColor','');
     return '';
   }
 }

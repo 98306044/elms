@@ -55,7 +55,7 @@
 }
 
 .schedule_container {
- border:3px #CCC solid;	
+ border:3px #CCC solid;    
  margin-top:10px;
  -moz-border-radius: 15px;
  border-radius: 15px;
@@ -93,7 +93,7 @@
   text-decoration:none;
 }
 .schedule_task span.event_link:hover {
- color:#F00;	
+ color:#F00;    
 }
 .schedule_task h2 {
  font-size:18px;
@@ -118,7 +118,7 @@
 }
 
 .schedule_depth_0 #edit-field-due-date-0-value-timeEntry-popup-1 {
- display:none;	
+ display:none;    
 }
 
 .schedule_depth_1 {
@@ -142,7 +142,7 @@
 }
 .event_time {
  display:block;
- float:left;	
+ float:left;    
 }
 .schedule_points {
  position: relative;
@@ -160,10 +160,10 @@
  position:absolute;
 }
 .schedule_points .clicktoedit .field-field-score-value {
- text-alight:right;	
+ text-alight:right;    
 }
 #edit-field-score-value-0-value {
- width:40px;	
+ width:40px;    
 }
 .schedule_points_format {
 position: relative;
@@ -176,12 +176,12 @@ width:0px;
 }
 
 .schedule_spacer {
- margin:0px 5px;	
+ margin:0px 5px;    
 }
 .schedule_title {
  font-weight:normal;
  color:#222;
- display:block;	
+ display:block;    
 }
 
 .schedule_details {
@@ -205,7 +205,7 @@ width:0px;
 }
 
 .schedule_edit_type .field-field-event-type {
-  display:none;	
+  display:none;    
 }
 
 .schedule_edit_type select{
@@ -286,12 +286,12 @@ width:0px;
   background: none;
 }
 .schedule_edit_color .picker_button {
-  display:none;	
+  display:none;    
 }
 .schedule_edit_color .colorwrapper {
  left:inherit;
  top:inherit;
- margin:2px 0px 0px -150px;	
+ margin:2px 0px 0px -150px;    
 }
 .schedule_edit_color .colorpicker {
   display: none;
@@ -306,7 +306,7 @@ width:0px;
  padding:16px 0px 0px 0px;
  }
 .schedule_checkbox {
- float:right;	
+ float:right;    
 }
 .schedule_flag a{
  display:none;
@@ -330,7 +330,7 @@ width:0px;
  float:left;
  padding:14px;
  border:none;
- vertical-align:middle;	
+ vertical-align:middle;    
  position:absolute;
 }
 /* editable field view */
@@ -372,12 +372,12 @@ width:0px;
  display:none;
 }
 #edit-field-due-date-0-value-wrapper .description {
- display:none;	
+ display:none;    
 }
 
 #edit-field-end-date-0-value-wrapper label{
  display:none;
 }
 #edit-field-end-date-0-value-wrapper .description {
- display:none;	
+ display:none;    
 }

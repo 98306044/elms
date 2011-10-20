@@ -55,6 +55,7 @@ function context_var_context_plugins() {
  * Implementation of hook_init().
  */
 function context_var_init() {
+  //get the mapping of conditions and if they should execute
   $map = context_condition_map();
   if (!empty($map['context_var']) && $plugin = context_get_plugin('condition', 'context_var')) {
     $plugin->execute();

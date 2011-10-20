@@ -23,13 +23,13 @@
       <?php if ($prev_url && $prev_url != url('node/'. $book_id)) { ?>
         <a href="<?php print $prev_url; ?>" class="elms_page_previous" title="<?php print t('Go to previous page'); ?>"><?php print t('< Previous Page') ?></a>
       <?php }else{ ?>
-		<div class="elms_page_previous"></div>
-	  <?php } ?>
+        <div class="elms_page_previous"></div>
+      <?php } ?>
       <?php if ($next_url) { ?>
         <a href="<?php print $next_url; ?>" class="elms_page_next" title="<?php print t('Go to next page'); ?>"><?php print t('Next Page >'); ?></a>
       <?php }else{ ?>
-		<div class="elms_page_next"></div>
-	  <?php } ?>
+        <div class="elms_page_next"></div>
+      <?php } ?>
     </div>
     <?php endif; ?>
 

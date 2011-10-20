@@ -31,6 +31,7 @@ function regions_help($path, $arg) {
  */
 function regions_perm() {
   $list = _regions_list();
+  //generate a list of regions and the permissions for them
   foreach ($list as $key => $region) {
     $perms[] = 'view '. $key .' region';
   }
@@ -62,6 +63,7 @@ function regions_footer($main = 0) {
   //check for access to regions
   $list = _regions_list();
   $output = '';
+  //add the regions to the end of the site that the user has access to
   foreach ($list as $machine_name => $region) {
     if (user_access('view '. $machine_name .' region')) {
       $output .= theme('regions', $machine_name);
@@ -87,6 +89,7 @@ function regions_system_info_alter(&$info, $file) {
  * Implementation of hook_theme().
  */
 function regions_theme($existing, $type, $theme, $path) {
+  //defines theme_regions for use by themes should they want to override this
   return array(
     'regions' => array(
     'arguments' => array(
@@ -97,7 +100,7 @@ function regions_theme($existing, $type, $theme, $path) {
 }
 
 /**
- * Themes Regions.
+ * Themes Regions. This draws much inspiration from appbar module.
  */
 function theme_regions($region_name) {
   //Update the 'blocks' DB table with the blocks currently exported by modules.

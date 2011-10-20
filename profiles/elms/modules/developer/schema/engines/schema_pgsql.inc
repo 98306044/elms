@@ -40,7 +40,7 @@ function schema_pgsql_inspect($tbl_name = NULL) {
   // added to our array in the same order.
   //
   $sql = ('SELECT * FROM information_schema.COLUMNS '.
-	  'WHERE table_catalog=\'%s\' AND table_schema=current_schema()');
+      'WHERE table_catalog=\'%s\' AND table_schema=current_schema()');
   if (isset($tbl_name)) {
     $sql .= 'AND table_name = \'%s\' ';
   }

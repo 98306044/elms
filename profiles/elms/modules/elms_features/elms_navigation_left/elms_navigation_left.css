@@ -19,7 +19,7 @@ ul.tabs {
 }
 /* need to allow admin-toolbar to display higher then left nav if both are installed */
 div#admin-toolbar {
- z-index:1001 !important;	
+ z-index:1001 !important;    
 }
 
 #regions_elms_navigation_left .regions_pre_block_container {
@@ -61,7 +61,7 @@ div#admin-toolbar {
 }
 
 #regions_elms_navigation_left .regions_block {
- padding:10px 0px 10px 10px;	
+ padding:10px 0px 10px 10px;    
 }
 /* colors for the blocks on the left */
 #regions_elms_navigation_left .regions_1 {
@@ -111,7 +111,7 @@ div#admin-toolbar {
   background-image:url(images/newversion.png);
 }
 #regions_elms_navigation_left .new_course {
-  background-image:url(images/newcourse.png);	
+  background-image:url(images/newcourse.png);    
 }
 #regions_block_elms_navigation_left_0 .regions_block_title {
   background-image:url(images/system.png);

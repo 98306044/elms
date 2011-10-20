@@ -1,7 +1,7 @@
 /* CSS Document */
 
 #appbar_container {
- display:none !important;	
+ display:none !important;    
 }
 
 #views-bulk-operations-submit {
@@ -15,9 +15,9 @@
 
 body {
  color:#000 !important;
- background:#FFF !important;	
+ background:#FFF !important;    
 }
 
 th, td {
- background-color:transparent !important;	
+ background-color:transparent !important;    
 }

@@ -31,7 +31,7 @@ function workflow_purl_form_alter(&$form, &$form_state, $form_id) {
       '#default_value' => variable_get('workflow_purl_'. $form['sid']['#value'], ''),
       '#description' => t('Leave this blank to ignore purl integration for this workflow state'),
       '#weight' => -2,
-	  '#maxlength' => 200,
+      '#maxlength' => 200,
     );
     //list available system tokens for replacement
     $form['purl'] = array(

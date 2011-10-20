@@ -13,7 +13,7 @@ function elms_course_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
         //verify that we weren't told this is just a listing
         if ($node->field_listing_only[0]['value'] == NULL) {
           _elms_course_create_default($node);
-		}
+        }
       }
     break;
   }

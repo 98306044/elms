@@ -73,7 +73,7 @@ function feeds_node_helper_feeds_set_uuid_book_parent_target($node, $target, $va
   //load the parent from the UUID, it should have been created prior to creation
   $parentnode = node_get_by_uuid($value);
   if (!$parentnode) {
-	return $node;
+    return $node;
   }
   //associate the parent correctly now that we've loaded the node
   $node->book['plid'] = $parentnode->book['mlid'];

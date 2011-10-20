@@ -10,13 +10,13 @@
  */
  $specialblocks = theme_get_setting('chamfer_color_specialblock');
  if ($specialblocks == '') {
-	$specialblocks = array(); 
+    $specialblocks = array(); 
  }
  if (isset($block->bid) && in_array($block->bid, $specialblocks)) {
-	$block_style_class = ' block-minimal-menu'; 
+    $block_style_class = ' block-minimal-menu'; 
  }
  else {
-	$block_style_class = ''; 
+    $block_style_class = ''; 
  }
 ?>
 <div id="block-<?php print $block->module .'-'. $block->delta; ?>" class="block <?php print $block_style_class; ?>">

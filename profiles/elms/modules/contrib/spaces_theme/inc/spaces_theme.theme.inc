@@ -109,18 +109,21 @@ function _spaces_theme_theme_form($form_state, $feature = NULL) {
   '#description' => "Display the Slogan if the theme supports it",
   '#default_value' => $settings['toggle_slogan'],
   );
+  //ability to swap primary links out
   $form['theme_settings']['toggle_primary_links'] = array(
   '#type' => 'checkbox',
   '#title' => t("Primary Links"),
   '#description' => "Include primary links if the theme supports them",
   '#default_value' => $settings['toggle_primary_links'],
   );
+  //ability to swap secondary links out
   $form['theme_settings']['toggle_secondary_links'] = array(
   '#type' => 'checkbox',
   '#title' => t("Secondary Links"),
   '#description' => "Include secondary links if the theme supports them",
   '#default_value' => $settings['toggle_secondary_links'],
   );
+  //This needs to be added so that we can successfully submit images / files
   $form['#attributes'] = array('enctype' => "multipart/form-data");
   $form['submit'] = array(
     '#type' => 'submit',
@@ -130,10 +133,11 @@ function _spaces_theme_theme_form($form_state, $feature = NULL) {
   );
   return $form;
 }
-//validate
+//validate the form values
 function _spaces_theme_theme_form_validate($form, &$form_state) {
     $form_state['storage']['logo'] = '';
     $form_state['storage']['favicon'] = '';
+    //create the theme logo area and validate its size
     $dir = file_create_path(file_directory_path() .'/theme_logos');
     $is_writable = file_check_directory($dir, 1);
     if ($is_writable) {
@@ -145,12 +149,14 @@ function _spaces_theme_theme_form_validate($form, &$form_state) {
         $form_state['storage']['logo'] = str_replace(' ', '%20', $file->filepath);
       }
     }
+    //same operation but for the icon
     $dir = file_create_path(file_directory_path() .'/theme_favicons');
     $is_writable = file_check_directory($dir, 1);
     if ($is_writable) {
+      //this uses a validator developed for outline designer to force the image to 16x16
       $validators = array(
         'file_validate_is_image' => array(),
-        '_outline_designer_validate_image_resolution' => array('16x16'),
+        '_spaces_theme_validate_image_resolution' => array('16x16'),
         'file_validate_size' => array(1000 * 1024),
       );
       if ($file = file_save_upload('favicon_upload', $validators, $dir)) {
@@ -212,6 +218,7 @@ function _spaces_theme_theme_form_submit($form, &$form_state) {
     if ($form_state['storage']['css'] != '') {
       $theme_array['extra_css_path'] = $form_state['storage']['css'];
     }
+    //save theme settings to a local instance for this theme only
     $space->controllers->variable->set('theme_'. $theme .'_settings', $theme_array);
   }
   else {
@@ -227,7 +234,33 @@ function _spaces_theme_theme_form_submit($form, &$form_state) {
     node_save($version);
   }
   $ary = $_GET;
+  //need to add in a random value, it's silly as to why but this forces a cache refresh for the user so that their changes are reflected immediately as opposed to a few page loads from now
   $ary['set'] = rand(10, 100);
+  //set where we want things to go manually so that the random value can be appended
   unset($ary['q']);
   drupal_goto(drupal_get_path_alias($_GET['q']), $ary);
+}
+
+//used in validating that an icon upload is the correct size
+function _spaces_theme_validate_image_resolution(&$file, $dimensions) {
+  $errors = array();
+  // Check first that the file is an image.
+  if ($info = image_get_info($file->filepath)) {
+    // Check if the icon matches the given dimensions.
+    list($width, $height) = explode('x', $dimensions);
+    if ($info['width'] != $width || $info['height'] != $height) {
+      // Try to resize the image to fit the dimensions if it doesn't.
+      if (image_get_toolkit() && image_scale_and_crop($file->filepath, $file->filepath, $width, $height)) {
+        drupal_set_message(t('The image was resized to the allowed dimensions of %dimensions pixels.', array('%dimensions' => $dimensions)));
+        // Clear the cached filesize and refresh the image information.
+        clearstatcache();
+        $info = image_get_info($file->filepath);
+        $file->filesize = $info['file_size'];
+      }
+      else {
+        $errors[] = t('Image dimensions need to be %dimensions pixels.', array('%dimensions' => $maximum_dimensions));
+      }
+    }
+  }
+  return $errors;
 }

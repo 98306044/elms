@@ -26,9 +26,9 @@ $(document).ready(function(){
   });
   //hide / show the edit event button
   $(".views-row").hover(function(){
-	$(this).find('.clicktoedit').addClass('row-hover');
+    $(this).find('.clicktoedit').addClass('row-hover');
     $(this).find('.schedule_edit_event').css('visibility','visible');
-	$(this).find('.schedule_edit_link').css('visibility','visible');
+    $(this).find('.schedule_edit_link').css('visibility','visible');
   },function(){
     $(this).find('.clicktoedit').removeClass('row-hover');
     $(this).find('.schedule_edit_event').css('visibility','hidden');
@@ -43,7 +43,7 @@ $(document).ready(function(){
     if ($(this).parent().find('.schedule_flag a').html() == 'complete') {
       $(this).click();
       $('.'+ $(this).attr('id') +'_row').addClass('schedule_crossoff');
-	  //if this is an organizing unit collapse it
+      //if this is an organizing unit collapse it
       $(this).parent().parent().parent().parent().parent().find('.container_close:not(.container_closed)').click();
     }
   });

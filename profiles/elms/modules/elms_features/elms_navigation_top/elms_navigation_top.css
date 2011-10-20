@@ -1,6 +1,6 @@
 /* right side blocks */
 body {
- margin-top: 20px !important;	
+ margin-top: 20px !important;    
 }
 #regions_elms_navigation_top {
   font:normal 11px "Lucida Grande",Verdana,sans-serif !important;
@@ -21,7 +21,7 @@ body {
 }
 
 #regions_elms_navigation_top .regions_block_content {
- height:20px;	
+ height:20px;    
 }
 
 #regions_elms_navigation_top .regions_1 {

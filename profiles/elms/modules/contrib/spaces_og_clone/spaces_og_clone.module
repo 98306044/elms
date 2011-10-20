@@ -29,7 +29,7 @@ function spaces_og_clone_menu() {
     'description' => 'Copy information related to an organic group to another one',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('_spaces_og_clone_clone_form'),
-	'access arguments' => array('access spaces og clone'),
+    'access arguments' => array('access spaces og clone'),
     'type' => MENU_NORMAL_ITEM,
    );
   return $items;
@@ -40,9 +40,9 @@ function spaces_og_clone_menu() {
 */
 function _spaces_og_clone_clone_form($form_id) {
   $form = array();
-  //this is only nessecary if the patch wasn't applied to spaces/spaces_og/plugins/spaces_og.inc
   $group = og_get_group_context();
   if (isset($group->nid)) {
+    //TODO: Probably not needed to do but we redirect away from someone potentially being in a group to do the copy.  This has caused issues in the past so it's just to be safe.
     if (module_exists('purl')) {
       purl_goto('spaces_og_clone/'. $group->nid, array('purl' => array('disabled' => true)));
     }
@@ -62,6 +62,7 @@ function _spaces_og_clone_clone_form($form_id) {
     '#title' => t('Group to Clone'),
     '#options' => _spaces_og_clone_get_list(),
   );
+  //if there is a group id in the arguments then disable the dropdown and select it
   if (isset($group->nid)) {
     $form['group']['#disabled'] = '1';
     $form['group']['#default_value'] = $group->nid;
@@ -91,13 +92,12 @@ function _spaces_og_clone_clone_form($form_id) {
   }
   //user roles
   $user_roles = user_roles(TRUE);
-  //array_shift($user_roles);
   $form['user_roles'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Roles'),
     '#weight' => 1,
-    '#description' => t("Selet the user roles you want to include content from. Unchecking a role will exclude that role's content from the clone even if that Feature is being cloned above."),
-    '#required' => '1',
+    '#description' => t("Select the user roles you want to include content from. Unchecking a role will exclude that role's content from the clone even if that Feature is being cloned above."),
+    '#required' => TRUE,
     '#options' =>  $user_roles,
     '#default_value' => array_keys($user_roles),
   );
@@ -105,14 +105,14 @@ function _spaces_og_clone_clone_form($form_id) {
 // New Group name
 $form['group_new_name'] = array(
   '#type' => 'textfield',
-    '#weight' => 2, 
+  '#weight' => 2, 
   '#description' => t('Enter a new group title for cloned group'),
   '#title' => t('New Group Name'), 
   '#maxlength' => 60, 
   '#default_value' => $group->title . ' clone', 
 );
 
-  //author field
+  //author field, set the default value to the currently logged in user
   global $user;
   $form['author'] = array(
     '#type' => 'textfield',
@@ -136,10 +136,11 @@ $form['group_new_name'] = array(
 }
 
 /**
-* Implementation of hook_form_submit
+* Implementation of hook_form_submit().
 */
 function _spaces_og_clone_clone_form_submit($form, &$form_state) {
-    //intial setting of the batch job
+  //TODO: Need to implement the batch API for space replication, code is here for the most part but needs implemented
+  //intial setting of the batch job
   if (!isset($context['sandbox']['progress'])) {
   $context['sandbox']['mlid_list'] = array();
   /*$result = db_query("
@@ -172,12 +173,12 @@ function _spaces_og_clone_clone_form_submit($form, &$form_state) {
     if (module_exists('purl')) {
       unset($group->purl);
     }
-	//reset UUID
-	if (module_exists('uuid')) {
-	    unset($group->uuid);
-		unset($group->revision_uuid); 
-	  }
-	//reset workflow if it exists
+    //reset UUID
+    if (module_exists('uuid')) {
+        unset($group->uuid);
+        unset($group->revision_uuid); 
+      }
+    //reset workflow if it exists
     if (module_exists('workflow')) {
       unset($group->workflow);
       unset($group->_workflow);
@@ -195,8 +196,8 @@ function _spaces_og_clone_clone_form_submit($form, &$form_state) {
     $group->uid = $author_id;
     //change the author name to match
     $group->name = $author;
-	//this is a flag that can be used by other modules to know that a clone was made
-	$group->space_og_clone = TRUE;
+    //this is a flag that can be used by other modules to know that a clone was made
+    $group->space_og_clone = TRUE;
     node_save($group);
     //if spaces exists, verify that we copied the overrides correctly for that space
     if (module_exists('spaces')) {
@@ -288,8 +289,8 @@ function _spaces_og_clone_clone_form_submit($form, &$form_state) {
       }
     }
     //merge all values appropriately for a secure query rewrite
-	//extended join statement to account for book hierarchies that need replicated
-	//depth need to be loaded first or else there's a major issue of association
+    //extended join statement to account for book hierarchies that need replicated
+    //depth need to be loaded first or else there's a major issue of association
     $result = db_query(db_rewrite_sql("SELECT n.nid, n.uid, ur.rid FROM {node} as n LEFT JOIN {book} as b ON b.nid=n.nid LEFT JOIN {menu_links} as ml ON ml.mlid=b.mlid LEFT JOIN {users_roles} as ur ON ur.uid = n.uid JOIN {og_ancestry} as oga ON oga.nid = n.nid WHERE oga.group_nid=%d ". $type_query ." ORDER BY ml.depth ASC"), $query_vars);
     //these are the nodes we need to replicate
     while ($val = db_fetch_array($result)) {
@@ -309,11 +310,11 @@ function _spaces_og_clone_clone_form_submit($form, &$form_state) {
       unset($node->create);
       unset($node->revision_uid);
       unset($node->og_groups_both);
-	  //reset UUID
-	  if (module_exists('uuid')) {
-	    unset($node->uuid);
-		unset($node->revision_uuid); 
-	  }
+      //reset UUID
+      if (module_exists('uuid')) {
+        unset($node->uuid);
+        unset($node->revision_uuid); 
+      }
       $node->og_groups = array($group->nid => $group->nid);
       //change the user id to the one that the form dictates
       $node->uid = $author_id;
@@ -326,14 +327,14 @@ function _spaces_og_clone_clone_form_submit($form, &$form_state) {
         $old_parent = $node->book['plid'];
         //store old book
         $old_book = $node->book['bid'];
-		//store weight
-		$old_weight = $node->book['weight'];
+        //store weight
+        $old_weight = $node->book['weight'];
         //clear the book
         $node->book = array();
-		//need to maintain positioning at its level
-		$node->book['weight'] = $old_weight;
-		//needed so it doesn't fall into menu hell
-		$node->book['module'] = 'book';
+        //need to maintain positioning at its level
+        $node->book['weight'] = $old_weight;
+        //needed so it doesn't fall into menu hell
+        $node->book['module'] = 'book';
         //if this is an empty parent then we have found the root, else map root
         if ($old_parent == 0) {
           $node->book['bid'] = 'new';
@@ -349,7 +350,7 @@ function _spaces_og_clone_clone_form_submit($form, &$form_state) {
         node_save($node);
         //map old mlid and nid to new one
         $context['sandbox']['map'][$old_mlid] = $node->book['mlid'];
-		$context['sandbox']['book_map'][$old_book] = $node->book['bid'];
+        $context['sandbox']['book_map'][$old_book] = $node->book['bid'];
       }
       else {
         node_save($node);

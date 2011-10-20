@@ -19,14 +19,14 @@ $(document).ready(function(){
     if ($(this).parent().find('.schedule_flag a').html() == 'complete') {
       $(this).click();
       $('.'+ $(this).attr('id') +'_row').addClass('schedule_crossoff');
-	  Drupal.set_progressbar();
+      Drupal.set_progressbar();
     }
   });
   //if this is an organizing unit collapse it
   $('.schedule_heading .schedule_checkbox').each(function(){
-	if ($(this).parent().find('.schedule_flag a').html() == 'complete') {
+    if ($(this).parent().find('.schedule_flag a').html() == 'complete') {
       $(this).parent().parent().parent().parent().parent().find('.container_close:not(.container_closed)').click() ;
-	}
+    }
   });
   //if this is an organizing unit collapse it
   $(this).parent().parent().parent().parent().parent().find('.container_close:not(.container_closed)').click();
@@ -34,15 +34,15 @@ $(document).ready(function(){
   $('.schedule_heading .schedule_checkbox').click(function(){
     if ($(this).parent().find('.schedule_flag a').html() == 'incomplete') {
       $(this).parent().parent().parent().parent().parent().find('.container_close:not(.container_closed)').click();
-	  //if we click that a week is done, click everything done below it
-	  $(this).parent().parent().parent().parent().parent().find('.schedule_row .schedule_checkbox').each(function(){
-		if ($(this).parent().find('.schedule_flag a').html() == 'incomplete') {
+      //if we click that a week is done, click everything done below it
+      $(this).parent().parent().parent().parent().parent().find('.schedule_row .schedule_checkbox').each(function(){
+        if ($(this).parent().find('.schedule_flag a').html() == 'incomplete') {
           $(this).click();
           $('.'+ $(this).attr('id') +'_row').addClass('schedule_crossoff');
         }
-	  });
+      });
     }
-	Drupal.set_progressbar();
+    Drupal.set_progressbar();
   });
   $('.schedule_checkbox').click(function(){
     $(this).parent().find('.schedule_flag a').click();
@@ -54,7 +54,7 @@ $(document).ready(function(){
       //marked as incomplete, ungrey
       $('.'+ $(this).attr('id') +'_row').removeClass('schedule_crossoff');
     }
-	Drupal.set_progressbar();
+    Drupal.set_progressbar();
   });
   //stick the progressbar as the user scrolls
   var elTop = $('#progressbar_container').offset().top+10;
@@ -63,8 +63,8 @@ $(document).ready(function(){
     var windowTop = $(window).scrollTop();
     if (windowTop > elTop) {
       $('#progressbar_container').addClass('sticky');
-	  $('#progressbar_container').width(sticky_width);
-	}
+      $('#progressbar_container').width(sticky_width);
+    }
     else {
       $('#progressbar_container').removeClass('sticky');
     }
