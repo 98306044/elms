@@ -169,7 +169,7 @@ function _elms_navigation_top_system_path() {
 
 //helper function to display notifications
 function _elms_navigation_top_notifications() {
-  $output = '';
+  $output = theme('menu_item', l(t('Help'), 'contact', array('query' => 'destination='. $_GET['q'])), 0, '', FALSE, 'contact_form');
   //need to invoke the elms notifications hook to determine what should render here
   return $output;
 }
