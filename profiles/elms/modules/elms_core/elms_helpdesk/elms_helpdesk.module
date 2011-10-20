@@ -28,9 +28,8 @@ function elms_helpdesk_form_alter(&$form, &$form_state, $form_id) {
 	profile_load_profile($user);
 	dpm($form);
 	dpm($user);
-	//hide the input field for the email address and make it display as markup
-	$form['mail']['#type'] = 'markup';
-	$form['mail']['#value'] = 'This message will be sent as: '. $form['mail']['#default_value'];
+	//hide the input field for the email address
+	$form['mail']['#type'] = 'hidden';
 	//hide roles but this way it can be emailed and set to user's roles
 	$form['field_roles']['#type'] = 'hidden';
 	//parse the user's roles so we can send it to our staff
@@ -42,8 +41,30 @@ function elms_helpdesk_form_alter(&$form, &$form_state, $form_id) {
 	}
 	//set the hidden field's value
 	$form['field_roles']['#default_value'] = $role_list;
-    //format name field to use profile fields in elms	
-	$form['name']['#default_value'] = $user->profile_first_name .' '. $user->profile_last_name .' ('. $user->name .')';
-	$form['name']['#disabled'] = TRUE;
+	//add a heading describing who it will email currently
+	$form['markup']['#type'] = 'markup';
+	$form['markup']['#value'] = 'This message will be sent to: '. $user->profile_first_name .' '. $user->profile_last_name .' ('. $form['mail']['#default_value'] .')';
+	$form['markup']['#weight'] = -10;
+	//hide the copy message as it should email the person what they sent by default
+	$form['copy']['#default_value'] = TRUE;
+	$form['copy']['#type'] = 'hidden';
+    //format name field to use profile fields in elms
+	$form['name']['#type'] = 'hidden';
+	$form['name']['#value'] = $user->profile_first_name .' '. $user->profile_last_name .' ('. $form['mail']['#default_value'] .')';
+	$form['name']['#weight'] = -9;
+	//format the subject
+	$group = og_get_group_context();
+	if (isset($group->nid)) {
+	  //see if this is a sandbox or not
+	  if (isset($group->field_course_ref[0]['nid'])) {
+	    $course = node_load($group->field_course_ref[0]['nid']);	
+	    $form['subject']['#default_value'] = 'HELPDESK: Question about '. $course->title;
+	  }
+	  else {
+        $form['subject']['#default_value'] = 'HELPDESK: Question about '. $course->title;
+	  }
+	  $form['subject']['#default_value'] .= ' - '. $group->title;
+	  $form['subject']['#type'] = 'hidden';
+	}
   }
 }
