@@ -17,6 +17,17 @@
  * Adds functionality that's useful for running a helpdesk
  */
 
+
+
+/**
+ * Implementation of hook_form_alter().
+ */
+function elms_helpdesk_init() {
+  //add in the jquery but only for the contact form
+  if (arg(0) == 'contact') {
+    drupal_add_js(drupal_get_path('module', 'elms_helpdesk') .'elms_helpdesk.js');
+  }
+}
 /**
  * Implementation of hook_form_alter().
  */
@@ -68,7 +79,7 @@ function elms_helpdesk_form_alter(&$form, &$form_state, $form_id) {
 	}
     //add in geoip if its turned on
 	if (module_exists('geoip')) {
-	  dpm(geoip_country_code());	
+	  dpm(geoip_country_code());
 	}
   }
 }
