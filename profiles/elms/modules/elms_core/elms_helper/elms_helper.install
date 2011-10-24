@@ -16,3 +16,11 @@ function elms_helper_requirements($phase) {
   }
   return $requirements;
 }
+
+/**
+ * Implementation of hook_install().
+ */
+function elms_helper_install() {     
+  //change the weight so that alters fire after others
+  db_query("UPDATE {system} SET weight = 2 WHERE name = 'elms_helper'");
+}
