@@ -56,4 +56,44 @@ function detectBrowserFeatures() {
 }
 $(document).ready(function(){
  console.log(detectBrowserFeatures());
+ var bfeatures = detectBrowserFeatures();
+ var user_features = 'Screen Resolution: ' + bfeatures.res + "\n" + 'Enabled Plugins:' + "\n";
+  //detect functionality and print to user message if it exists
+  //PDFs
+  if (bfeatures.pdf == 1) {
+    user_features+= 'PDF' + "\n";
+  }
+  //Quicktime
+  if (bfeatures.qt == 1) {
+    user_features+= 'QuickTime' + "\n";
+  }
+  //Real Player
+  if (bfeatures.realp == 1) {
+    user_features+= 'Real Player' + "\n";
+  }
+  //windows media player
+  if (bfeatures.wma == 1) {
+    user_features+= 'Windows Media Player' + "\n";
+  }
+  //Adobe Director
+  if (bfeatures.dir == 1) {
+    user_features+= 'Adobe Director' + "\n";
+  }
+  //Adobe Flash
+  if (bfeatures.fla == 1) {
+    user_features+= 'Adobe Flash' + "\n";
+  }
+  //Java
+  if (bfeatures.java == 1) {
+    user_features+= 'Java' + "\n";
+  }
+  //Google Gears
+  if (bfeatures.gears == 1) {
+    user_features+= 'Google Gears' + "\n";
+  }
+  //Microsoft SilverLight
+  if (bfeatures.ag == 1) {
+    user_features+= 'Microsoft Silverlight' + "\n";
+  }
+  $('#edit-field-tech-details').val($('#edit-field-tech-details').val() + user_features);
 });

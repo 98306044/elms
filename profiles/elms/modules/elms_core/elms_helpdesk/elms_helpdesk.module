@@ -37,8 +37,6 @@ function elms_helpdesk_form_alter(&$form, &$form_state, $form_id) {
     global $user;
 	//additional step to load the user profile into the user object
 	profile_load_profile($user);
-	dpm($form);
-	dpm($user);
 	//hide the input field for the email address
 	$form['mail']['#type'] = 'hidden';
 	//hide roles but this way it can be emailed and set to user's roles
@@ -79,9 +77,10 @@ function elms_helpdesk_form_alter(&$form, &$form_state, $form_id) {
 	}
     //add in geoip if its turned on
 	if (module_exists('geoip')) {
-	  $form['message']['#value'] .= "-----Troubleshooting Information-----"."\n";
-	  $form['message']['#value'] .= "Country Code: ". geoip_country_code() ."\n";
-	  $form['message']['#value'] .= "Browser Details: "."\n";
+	  $form['field_tech_details']['#value'] .= "-----Troubleshooting Information-----"."\n";
+	  $form['field_tech_details']['#value'] .= "Country Code: ". geoip_country_code() ."\n";
 	}
+	//disable the tech details box as this shouldn't be modified
+	$form['field_tech_details']['#disabled'] = TRUE;
   }
 }
