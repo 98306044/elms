@@ -66,5 +66,9 @@ function elms_helpdesk_form_alter(&$form, &$form_state, $form_id) {
 	  $form['subject']['#default_value'] .= ' - '. $group->title;
 	  $form['subject']['#type'] = 'hidden';
 	}
+    //add in geoip if its turned on
+	if (module_exists('geoip')) {
+	  dpm(geoip_country_code());	
+	}
   }
 }
