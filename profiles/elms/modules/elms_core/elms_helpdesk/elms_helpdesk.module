@@ -77,10 +77,10 @@ function elms_helpdesk_form_alter(&$form, &$form_state, $form_id) {
 	}
     //add in geoip if its turned on
 	if (module_exists('geoip')) {
-	  $form['field_tech_details']['#value'] .= "-----Troubleshooting Information-----"."\n";
-	  $form['field_tech_details']['#value'] .= "Country Code: ". geoip_country_code() ."\n";
+	  $form['field_tech_details']['#value'] .= "Country: ". geoip_country_code() ."\n";
+	  $form['field_tech_details']['#value'] .= "Page: ". $_REQUEST['destination'] ."\n";
 	}
-	//disable the tech details box as this shouldn't be modified
-	$form['field_tech_details']['#disabled'] = TRUE;
+	//disable the tech details box as this shouldn't be modified by the user
+	//$form['field_tech_details']['#disabled'] = TRUE;
   }
 }
