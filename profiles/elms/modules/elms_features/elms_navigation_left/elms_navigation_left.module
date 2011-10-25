@@ -66,18 +66,18 @@ function elms_navigation_left_block($op = 'list', $delta = 0, $edit = array()) {
     $group = og_get_group_context();
     switch ($delta) {
       case 0:
-        $block['title'] = 'System';
+        $block['title'] = t('System');
         $block['content'] = _elms_navigation_left_system_block($group);
       break;
       case 1:
         if (isset($group->nid)) {
-          $block['title'] = 'Course';
+          $block['title'] = t('Course');
           $block['content'] = _elms_navigation_left_course_block($group);
         }
       break;
       case 2:
         if (isset($group->nid)) {
-          $block['title'] = 'Page';
+          $block['title'] = t('Page');
           $block['content'] = _elms_navigation_left_page_block();
         }
       break;
@@ -171,8 +171,6 @@ function _elms_navigation_left_system_block($group = '') {
   //create a new course
   $output .= theme('menu_item', l(t('Create New Course'), 'node/add/course', array('attributes' => array('title' => t('Create New Course')), 'purl' => array('disabled' => TRUE))), 0, '', FALSE, 'new_course');
   $output .= theme('menu_item', l(t('Create Sandbox'), 'node/add/version/', array('attributes' => array('title' => t('Create Sandbox')), 'purl' => array('disabled' => TRUE))), 0, '', FALSE, 'new_sandbox');
-  //activation code admin
-  //$output .= theme('menu_item', l(t('Activation Code Admin'), 'activation_codes', array('purl' => array('disabled' => TRUE))), 0);
   //add in the masquerade block area
   if (module_exists('masquerade')) {
     $block = module_invoke('masquerade', 'block', 'view', 0);

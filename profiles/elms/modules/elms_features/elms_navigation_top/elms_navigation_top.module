@@ -118,27 +118,27 @@ function _elms_navigation_top_system_path() {
     //need to manually build the website's name and homepage because of strongarm being too good!
     $site_frontpage = unserialize(db_result(db_query("SELECT value FROM {variable} WHERE name='site_frontpage'")));
     $site_name = unserialize(db_result(db_query("SELECT value FROM {variable} WHERE name='site_name'")));
-    $output = theme('menu_item', l(t($site_name), $site_frontpage, array('purl' => array('disabled' => TRUE))), 0);
+    $output = theme('menu_item', l(t($site_name), $site_frontpage, array('attributes' => array('title' => t('System Home')), 'purl' => array('disabled' => TRUE))), 0);
     //add the taxonomy of the course version if it has a course association
     if ($group->field_course_ref[0]['nid'] != '') {
       $val = db_fetch_array(db_query("SELECT n.title, td.name FROM {node} AS n JOIN {term_node} AS tn ON n.nid = tn.nid JOIN {term_data} AS td ON td.tid = tn.tid WHERE n.nid=%d", $group->field_course_ref[0]['nid']));
   //add the courses listing with the name of the taxonomy term
-      $output .= theme('menu_item', l(t($val['name']), 'courses', array('purl' => array('disabled' => TRUE))), 0);
+      $output .= theme('menu_item', l(t($val['name']), 'courses', array('attributes' => array('title' => t('Back to @unit course list', array('@unit' => $val['name']))), 'purl' => array('disabled' => TRUE))), 0);
     }
     else {
       //this isn't part of a course so add sandbox to the path
-      $output .= theme('menu_item', l(t('Sandboxes'), 'courses/sandboxes', array('purl' => array('disabled' => TRUE))), 0);
+      $output .= theme('menu_item', l(t('Sandboxes'), 'courses/sandboxes', array('attributes' => array('title' => t('List of all sandboxes')), 'purl' => array('disabled' => TRUE))), 0);
     }
   //add the course home if this version is part of a course
     if ($group->field_course_ref[0]['nid'] != '') {
-      $output .= theme('menu_item', l(t($val['title']), 'node/'. $group->field_course_ref[0]['nid'], array('purl' => array('disabled' => TRUE))), 0);
+      $output .= theme('menu_item', l(t($val['title']), 'node/'. $group->field_course_ref[0]['nid'], array('attributes' => array('title' => t('Public Course Listing')), 'purl' => array('disabled' => TRUE))), 0);
     }
   //add the current group homepage to the trail
     $output .= theme('menu_item', l(t($group->title), variable_get('site_frontpage', 'node/'. $group->nid), array('attributes' => array('title' => t($group->title)))), 0);
   }
   else {
     //add the site name first
-    $output = theme('menu_item', l(t(variable_get('site_name', '')), '<front>', array('attributes' => array('title' => t('Home')), 'purl' => array('disabled' => TRUE))), 0);
+    $output = theme('menu_item', l(t(variable_get('site_name', '')), '<front>', array('attributes' => array('title' => t('System Home')), 'purl' => array('disabled' => TRUE))), 0);
     //see if we have a course node without loading the node
     $nid = arg(1);
     //verify this is an id
@@ -185,6 +185,14 @@ function _elms_navigation_top_notifications() {
 
 //helper function to display page controls like book, print, and zoom
 function _elms_navigation_page_controls() {
-  
+  $output = '';
+  $output .= theme('menu_item', l(t('Print'), 'print', array('attributes' => array('title' => t('Print Page')))), 0, '', FALSE, 'elms_print_page');
+  $output .= theme('menu_item', l(t('back'), 'print', array('attributes' => array('title' => t('Previous Page')))), 0, '', FALSE, 'elms_last_page');
+  $output .= theme('menu_item', l(t('forward'), 'print', array('attributes' => array('title' => t('Next Page')))), 0, '', FALSE, 'elms_next_page');
+  $output .= theme('menu_item', l(t('toc'), 'print', array('attributes' => array('title' => t('Table of Contents')))), 0, '', FALSE, 'elms_book_toc');
+  $output .= theme('menu_item', l(t('zoom out'), 'print', array('attributes' => array('title' => t('Scale Out')))), 0, '', FALSE, 'elms_zoom_out');
+  $output .= theme('menu_item', l(t('zoom in'), 'print', array('attributes' => array('title' => t('Scale Page')))), 0, '', FALSE, 'elms_zoom_in');
+  $output .= theme('menu_item', l(t('zoom reset'), 'print', array('attributes' => array('title' => t('Reset Scale')))), 0, '', FALSE, 'elms_zoom_reset');
+
   return $output;
 }

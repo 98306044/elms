@@ -434,7 +434,7 @@ $(document).ready(function(){
     endTime = (new Date()).getTime();
     var duration = (endTime - startTime) / 1000;
 	//size of our sample file
-    var downloadSize = 71736;
+    var downloadSize = 30491;
 	//convert to bits
     var bitsLoaded = downloadSize * 8;
 	//calculate bits per sectond

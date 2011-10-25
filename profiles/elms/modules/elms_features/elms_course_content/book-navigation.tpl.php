@@ -4,7 +4,7 @@
   $nid = arg(1);
   //if active is the first child page to the previous item, remove the previous url
   if ($prev_depth < $active_depth) {
-    $prev_url = false;  
+    $prev_url = false;
   }
   //if active is the last child page in this branch and the next item is in a new branch, remove the next url
   if ($active_depth > $next_depth) {
