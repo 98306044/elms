@@ -52,6 +52,11 @@ function elms_navigation_top_block($op = 'list', $delta = 0, $edit = array()) {
       'weight' => 0,
       'status' => 0,
     );
+	$blocks[3] = array(
+      'info' => t('Page Controls'),
+      'weight' => 0,
+      'status' => 0,
+    );
     return $blocks;
   }
   elseif ($op == 'view') {
@@ -96,6 +101,10 @@ function elms_navigation_top_block($op = 'list', $delta = 0, $edit = array()) {
         $block['regions_allow_html_title'] = TRUE;
       }
       break;
+	  case 3:
+        $block['title'] = '<none>';
+        $block['content'] = _elms_navigation_page_controls();
+      break;
     }
     return $block;
   }
@@ -125,11 +134,11 @@ function _elms_navigation_top_system_path() {
       $output .= theme('menu_item', l(t($val['title']), 'node/'. $group->field_course_ref[0]['nid'], array('purl' => array('disabled' => TRUE))), 0);
     }
   //add the current group homepage to the trail
-    $output .= theme('menu_item', l(t($group->title), variable_get('site_frontpage', 'node/'. $group->nid)), 0);
+    $output .= theme('menu_item', l(t($group->title), variable_get('site_frontpage', 'node/'. $group->nid), array('attributes' => array('title' => t($group->title)))), 0);
   }
   else {
     //add the site name first
-    $output = theme('menu_item', l(t(variable_get('site_name', '')), '<front>', array('purl' => array('disabled' => TRUE))), 0);
+    $output = theme('menu_item', l(t(variable_get('site_name', '')), '<front>', array('attributes' => array('title' => t('Home')), 'purl' => array('disabled' => TRUE))), 0);
     //see if we have a course node without loading the node
     $nid = arg(1);
     //verify this is an id
@@ -140,10 +149,10 @@ function _elms_navigation_top_system_path() {
     if ($type == 'course') {
       $val = db_fetch_array(db_query("SELECT n.title, td.name FROM {node} AS n JOIN {term_node} AS tn ON n.nid = tn.nid JOIN {term_data} AS td ON td.tid = tn.tid WHERE n.nid=%d", $nid));
     //taxonomy  term used
-      $output .= theme('menu_item', l(t($val['name']), 'courses', array('purl' => array('disabled' => TRUE))), 0);
+      $output .= theme('menu_item', l(t($val['name']), 'courses', array('attributes' => array('title' => t('Back to @unit course list', array('@unit' => $val['name']))), 'purl' => array('disabled' => TRUE))), 0);
     }
   else {
-    $output .= theme('menu_item', l(t('All Courses'), 'courses', array('purl' => array('disabled' => TRUE))), 0);
+    $output .= theme('menu_item', l(t('All Courses'), 'courses', array('attributes' => array('title' => t('Back to course list')), 'purl' => array('disabled' => TRUE))), 0);
   }
   }
   //unify everything that's not in the courses view
@@ -157,10 +166,10 @@ function _elms_navigation_top_system_path() {
     //iterate each menu item and convert to valid breadcrumb
     foreach ($active_menu as $menu) {
       if (isset($menu['link_path'])) {
-        $output .= theme('menu_item', l(t($menu['title']), $menu['link_path']), 0);
+        $output .= theme('menu_item', l(t($menu['title']), $menu['link_path'], array('attributes' => array('title' => t($menu['title'])))), 0);
       }
       else {
-        $output .= theme('menu_item', l(t($menu['title']), $menu['href']), 0);
+		$output .= theme('menu_item', l(t($menu['title']), $menu['href'], array('attributes' => array('title' => t($menu['title'])))), 0);
       }
     }
   }
@@ -169,7 +178,13 @@ function _elms_navigation_top_system_path() {
 
 //helper function to display notifications
 function _elms_navigation_top_notifications() {
-  $output = theme('menu_item', l(t('Help'), 'contact', array('query' => 'destination='. $_GET['q'])), 0, '', FALSE, 'contact_form');
+  $output = theme('menu_item', l(t('Helpdesk'), 'contact', array('attributes' => array('title' => t('Contact Helpdesk')), 'query' => 'destination='. $_GET['q'])), 0, '', FALSE, 'contact_form');
   //need to invoke the elms notifications hook to determine what should render here
+  return $output;
+}
+
+//helper function to display page controls like book, print, and zoom
+function _elms_navigation_page_controls() {
+  
   return $output;
 }
