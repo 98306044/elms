@@ -15,18 +15,4 @@ $(document).ready(function(){
       $('#regions_elms_navigation_left').animate({left:'-180'}, 'fast');
     }
   });
-  //collapse based on toggle
-  $('#regions_elms_navigation_left .regions_toggle').click(function(){
-    //additional logic is to account for menu being opened by clicking a block title
-    if ($(this).hasClass('regions_toggle_closed')) {
-      $(this).addClass('regions_toggle_open');
-      $(this).removeClass('regions_toggle_closed');
-      $('#regions_elms_navigation_left').animate({left:'0'}, 'fast');
-    }
-    else {
-      $(this).addClass('regions_toggle_closed');
-      $(this).removeClass('regions_toggle_open');
-      $('#regions_elms_navigation_left').animate({left:'-200'}, 'fast');
-    }
-  });
 });

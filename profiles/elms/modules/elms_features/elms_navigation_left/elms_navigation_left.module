@@ -90,11 +90,15 @@ function elms_navigation_left_block($op = 'list', $delta = 0, $edit = array()) {
 function _elms_navigation_left_page_block() {
   $output = menu_local_tasks();
   //annoying but can't find a way into this layer at this time to add classes a good way
-  $output = preg_replace('/<a/', '<a class="page_view"', $output, 1);
-  $output = str_replace('/edit">', '/edit" class="page_edit">', $output);
-  $output = str_replace('/accessibility">', '/accessibility" class="page_accessibility">', $output);
-  $output = str_replace('/track">', '/track" class="page_track">', $output);
-  
+  $output = preg_replace('/<a/', '<a  title="'. t('View Content') .'" class="page_view"', $output, 1);
+  //add edit class
+  $output = str_replace('/edit">', '/edit" class="page_edit" title="'. t('Edit Content') .'">', $output);
+  //add accessibility class
+  $output = str_replace('/accessibility">', '/accessibility" class="page_accessibility" title="'. t('Accessibility Test') .'">', $output);
+  //add track class
+  $output = str_replace('/track">', '/track" class="page_track" title="'. t('Track') .'">', $output);
+  //add devel class -- admin/developer only
+  $output = str_replace('/devel">', '/devel" class="page_devel" title="'. t('Developer Node Debug') .'">', $output);
   $node = node_load(arg(1));
   if (isset($node->nid)) {
     //check for node reference url links
@@ -113,7 +117,7 @@ function _elms_navigation_left_page_block() {
       $output .= '<br/>';
       //loop through and add the links for contextual reference to this material
       foreach ($tmp_ref_links as $link) {
-        $output .= theme('menu_item', l(t($link['title']), $link['href'], array($link['query'], $link['attributes'])), 0);
+        $output .= theme('menu_item', l(t($link['title']), $link['href'], array('query' => $_GET['q'], 'attributes' => $link['attributes'])), 0);
       }
     }
   }
@@ -127,20 +131,20 @@ function _elms_navigation_left_course_block($group) {
   $features = variable_get('spaces_features', array());
   //if course content active, add the outline designer link
   if ($features['elms_course_content'] == 1) {
-    $output .= theme('menu_item', l(t('Content Outline'), 'outline_designer/book/'. $group->book_nid), 0, '', FALSE, 'content_outline');
+    $output .= theme('menu_item', l(t('Content Outline'), 'outline_designer/book/'. $group->book_nid, array('attributes' => array('title' => 'Content Outline'))), 0, '', FALSE, 'content_outline');
   }
   //make the current workflow state as visible as possible
-  $output .= theme('menu_item', l(t(workflow_get_state_name($group->_workflow)),  'node/'. $group->nid .'/workflow', array('query' => 'destination='. $_GET['q'])), 0, '', FALSE, 'workflow_state workflow_state_'. $group->_workflow);
+  $output .= theme('menu_item', l(t(workflow_get_state_name($group->_workflow)),  'node/'. $group->nid .'/workflow', array('query' => 'destination='. $_GET['q'], 'attributes' => array('title' => t('Course Status: @workflow', array('@workflow' => workflow_get_state_name($group->_workflow)))))), 0, '', FALSE, 'workflow_state workflow_state_'. $group->_workflow);
   //change the features of the course
-  $output .= theme('menu_item', l(t('Change Features'), 'node/'. $group->nid .'/features', array('query' => 'destination='. $_GET['q'])), 0, '', FALSE, 'change_features');
+  $output .= theme('menu_item', l(t('Change Features'), 'node/'. $group->nid .'/features', array('query' => 'destination='. $_GET['q'], 'attributes' => array('title' => 'Change Features'))), 0, '', FALSE, 'change_features');
   //use the custom theme form
-  $output .= theme('menu_item', l(t('Change Theme'), 'theme'), 0, '', FALSE, 'change_theme');
+  $output .= theme('menu_item', l(t('Change Theme'), 'theme', array('attributes' => array('title' => 'Change Theme'))), 0, '', FALSE, 'change_theme');
   //user import
-  $output .= theme('menu_item', l(t('Import Users'), 'node/add/feed-user-import'), 0, '', FALSE, 'import_users');
+  $output .= theme('menu_item', l(t('User Management'), 'node/add/feed-user-import', array('attributes' => array('title' => 'User Management'))), 0, '', FALSE, 'import_users');
   //use the custom theme form
-  $output .= theme('menu_item', l(t('Import Content'), 'import/elms_node_import'), 0, '', FALSE, 'import_content');
+  $output .= theme('menu_item', l(t('Import Content'), 'import/elms_node_import', array('attributes' => array('title' => 'Import Outline'))), 0, '', FALSE, 'import_content');
   //use the custom theme form
-  $output .= theme('menu_item', l(t('Admin Settings'), 'node/'. $group->nid .'/edit', array('query' => 'destination='. $_GET['q'])), 0, '', FALSE, 'admin_settings');
+  $output .= theme('menu_item', l(t('Admin Settings'), 'node/'. $group->nid .'/edit', array('query' => 'destination='. $_GET['q'], 'attributes' => array('title' => 'Admin Settings'))), 0, '', FALSE, 'admin_settings');
   return $output;
 }
 
@@ -149,11 +153,11 @@ function _elms_navigation_left_system_block($group = '') {
   $output = '';
   if (isset($group->nid)) {
     //Link back to the public Course Home
-    $output .= theme('menu_item', l(t('Public Course Home'), 'node/'. $group->field_course_ref[0]['nid'], array('purl' => array('disabled' => TRUE))), 0, '', FALSE, 'public_home');
+    $output .= theme('menu_item', l(t('Public Course Listing'), 'node/'. $group->field_course_ref[0]['nid'], array('attributes' => array('title' => t('Public Course Listing')), 'purl' => array('disabled' => TRUE))), 0, '', FALSE, 'public_home');
     //Create a new version of this course
-    $output .= theme('menu_item', l(t('Create New Course Version'), 'node/add/version/'. $group->field_course_ref[0]['nid'], array('purl' => array('disabled' => TRUE))), 0, '', FALSE, 'new_course_version');
+    $output .= theme('menu_item', l(t('Create New Course Version'), 'node/add/version/'. $group->field_course_ref[0]['nid'], array('attributes' => array('title' => t('Create New Course Version')), 'purl' => array('disabled' => TRUE))), 0, '', FALSE, 'new_course_version');
     //export html option
-    //$output .= theme('menu_item', l(t('Export to HTML'), 'node/'. $group->nid .'/html_export', array('query' => 'destination='. $_GET['q'])), 0, '', FALSE, 'export_html');
+    $output .= theme('menu_item', l(t('Export'), 'node/'. $group->nid .'/html_export', array('attributes' => array('title' => t('Export')), 'query' => 'destination='. $_GET['q'])), 0, '', FALSE, 'export_html');
   }
   else {
     $nid = arg(1);
@@ -161,12 +165,12 @@ function _elms_navigation_left_system_block($group = '') {
     //see if this is a course landing page
     if ($node->type == 'course') {
       //create a new course
-      $output .= theme('menu_item', l(t('Create New Course Version'), 'node/add/version/'. $node->nid, array('purl' => array('disabled' => TRUE))), 0, '', FALSE, 'new_course_version');
+      $output .= theme('menu_item', l(t('Create New Course Version'), 'node/add/version/'. $node->nid, array('attributes' => array('title' => t('Create New Course Version')), 'purl' => array('disabled' => TRUE))), 0, '', FALSE, 'new_course_version');
     }
   }
   //create a new course
-  $output .= theme('menu_item', l(t('Create New Course'), 'node/add/course', array('purl' => array('disabled' => TRUE))), 0, '', FALSE, 'new_course');
-  $output .= theme('menu_item', l(t('Create Sandbox'), 'node/add/version/', array('purl' => array('disabled' => TRUE))), 0, '', FALSE, 'new_sandbox');
+  $output .= theme('menu_item', l(t('Create New Course'), 'node/add/course', array('attributes' => array('title' => t('Create New Course')), 'purl' => array('disabled' => TRUE))), 0, '', FALSE, 'new_course');
+  $output .= theme('menu_item', l(t('Create Sandbox'), 'node/add/version/', array('attributes' => array('title' => t('Create Sandbox')), 'purl' => array('disabled' => TRUE))), 0, '', FALSE, 'new_sandbox');
   //activation code admin
   //$output .= theme('menu_item', l(t('Activation Code Admin'), 'activation_codes', array('purl' => array('disabled' => TRUE))), 0);
   //add in the masquerade block area

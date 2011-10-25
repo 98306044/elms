@@ -4,7 +4,7 @@ body {
 }
 #regions_elms_navigation_top {
   font:normal 11px "Lucida Grande",Verdana,sans-serif !important;
-  background-color:#009;
+  background-color:#000;
   background:url(images/sprite.png) 0px -20px repeat-x;
   top:0px;
   left:0px;
