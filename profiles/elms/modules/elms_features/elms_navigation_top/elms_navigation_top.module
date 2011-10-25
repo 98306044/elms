@@ -32,13 +32,32 @@ function elms_navigation_top_define_regions() {
 }
 
 /**
+ * Implementation of hook_theme_registry_alter().
+ */
+function elms_navigation_top_theme_registry_alter(&$theme_registry) {
+  //steal what should normally process the system messages so we can control their display
+  $theme_registry['status_messages']['function'] = '_elms_navigation_top_system_messages';
+}
+
+//helper function for capturing system messages
+function _elms_navigation_top_system_messages($display = NULL) {
+  /*foreach ($message as $key => $msg) {
+    $output .= $msg;
+	print_r($msg);
+  }
+  if (count($message) != 0) {
+    return "<div id=\"elms-navigation-top-messages-wrapper\">\n". $output ."\n</div>\n";
+  }*/
+}
+
+/**
  * Implementation of hook_init().
  */
 function elms_navigation_top_init() {
   $settings = array(
     'elms_navigation_top' => array(
-	  'factor' => 1,
-	)
+    'factor' => 1,
+  )
   );
   drupal_add_js($settings, 'setting');
 }
@@ -209,26 +228,26 @@ function _elms_navigation_page_controls() {
       if ($next = book_next($node->book)) {
         $output .= theme('menu_item', l('', $next['href'], array('attributes' => array('title' => t('Next Page')))), 0, '', FALSE, 'elms_next_page');
       }
-	  //add table of contents link
+    //add table of contents link
       if (isset($group->book_nid)) {
         $output .= theme('menu_item', l('', 'node/'. $group->book_nid, array('attributes' => array('title' => t('Table of Contents')))), 0, '', FALSE, 'elms_book_toc');
       }
-	  //check for node reference url links
+    //check for node reference url links
       $tmp_ref_links = nodereference_url_build_all_links($node, 0);
       $features = variable_get('spaces_features', array());
       //account for reactions not being active
       if (isset($features['elms_reaction']) && $features['elms_reaction']) {
-		$output .= theme('menu_item', l('', $tmp_ref_links['reaction_field_related_content']['href'], array('query' => $_GET['q'], 'attributes' => $tmp_ref_links['reaction_field_related_content']['attributes'])), 0, '', FALSE, 'elms_reactions');
+    $output .= theme('menu_item', l('', $tmp_ref_links['reaction_field_related_content']['href'], array('query' => $_GET['q'], 'attributes' => $tmp_ref_links['reaction_field_related_content']['attributes'])), 0, '', FALSE, 'elms_reactions');
       }
       //account for possible flags
-	  if (module_exists('flag')) {
-	    $flag_links = flag_link('node', $node);
-		//if this has flags then render them here
-		if (count($flag_links)) {
-		  foreach ($flag_links as $key => $flag) {
+    if (module_exists('flag')) {
+      $flag_links = flag_link('node', $node);
+    //if this has flags then render them here
+    if (count($flag_links)) {
+      foreach ($flag_links as $key => $flag) {
             $output .= theme('menu_item', $flag['title'], 0, '', FALSE, $key);
           }
-		}
+    }
       }
       //see if we should display the page print
       if (module_exists('print')) {
