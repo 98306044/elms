@@ -406,19 +406,19 @@ function elms_helper_link_alter(&$links, $node, $comment = NULL) {
   if (isset($links['book_add_child'])) {
     unset($links['book_add_child']);
   }
-  //unset social media link as we'll be handling that in the page menu
-  if (isset($links['feed_reader_field_associated_to'])) {
-    unset($links['feed_reader_field_associated_to']);
+  //get a list of anything associated to this and remove it
+  //we do this because the left side region pulls all links over there
+  $tmp_ref_links = nodereference_url_build_all_links($node, 0);
+  foreach ($tmp_ref_links as $key => $link) {
+      unset($links[$key]);
   }
-  $features = variable_get('spaces_features', array());
-  if (!isset($features['elms_reaction']) || !$features['elms_reaction']) {
-    unset($links['reaction_field_related_content']);
-  }
-  //shifts bookmarks if activated
-  if (isset($links['flag-bookmarks'])) {
-    $temp = $links['flag-bookmarks'];
-    unset($links['flag-bookmarks']);
-    array_unshift($links, $temp);
+  //unset all flags
+  $flag_links = flag_link('node', $node);
+  //if this has flags then render them here
+  if (count($flag_links)) {
+    foreach ($flag_links as $key => $flag) {
+      unset($links[$key]);
+    }
   }
 }
 

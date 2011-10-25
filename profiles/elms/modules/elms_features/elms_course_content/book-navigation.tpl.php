@@ -17,7 +17,7 @@
   //check for highest level, print table of contents if this is the case
   if ($tree && $book_id == $nid) {
     print _elms_course_content_toc($book_id);
-  }
+  }/*
   if ($has_links): ?>
     <div class="page-links clear-block">
       <?php if ($prev_url && $prev_url != url('node/'. $book_id)) { ?>
@@ -30,9 +30,9 @@
       <?php }else{ ?>
         <div class="elms_page_next"></div>
       <?php } ?>
-    </div>
+    </div>1
     <?php endif; ?>
-
+*/ ?>
   </div>
 <?php endif; 
   }

@@ -104,8 +104,8 @@ function _elms_navigation_left_page_block() {
     //check for node reference url links
     $tmp_ref_links = nodereference_url_build_all_links($node, 0);
     $features = variable_get('spaces_features', array());
-    //account for reactions not being active
-    if (!isset($features['elms_reaction']) || !$features['elms_reaction']) {
+    //account for reactions being active as this should go in the top menu
+    if (isset($features['elms_reaction']) && $features['elms_reaction']) {
       unset($tmp_ref_links['reaction_field_related_content']);
     }
     //account for atrium reader not being active
@@ -114,10 +114,9 @@ function _elms_navigation_left_page_block() {
     }
     //if there are links then append them
     if (count($tmp_ref_links) != 0) {
-      $output .= '<br/>';
       //loop through and add the links for contextual reference to this material
-      foreach ($tmp_ref_links as $link) {
-        $output .= theme('menu_item', l(t($link['title']), $link['href'], array('query' => $_GET['q'], 'attributes' => $link['attributes'])), 0);
+      foreach ($tmp_ref_links as $key => $link) {
+        $output .= theme('menu_item', l(t($link['title']), $link['href'], array('query' => $_GET['q'], 'attributes' => $link['attributes'])), 0, '', FALSE, $key);
       }
     }
   }
@@ -140,9 +139,9 @@ function _elms_navigation_left_course_block($group) {
   //use the custom theme form
   $output .= theme('menu_item', l(t('Change Theme'), 'theme', array('attributes' => array('title' => 'Change Theme'))), 0, '', FALSE, 'change_theme');
   //user import
-  $output .= theme('menu_item', l(t('User Management'), 'node/add/feed-user-import', array('attributes' => array('title' => 'User Management'))), 0, '', FALSE, 'import_users');
+  $output .= theme('menu_item', l(t('User Management'), 'node/add/feed-user-import', array('attributes' => array('title' => 'User Management'))), 0, '',	 FALSE, 'manage_users');
   //use the custom theme form
-  $output .= theme('menu_item', l(t('Import Content'), 'import/elms_node_import', array('attributes' => array('title' => 'Import Outline'))), 0, '', FALSE, 'import_content');
+  $output .= theme('menu_item', l(t('Import Content'), 'import/elms_node_import', array('attributes' => array('title' => 'Import Outline'))), 0, '', FALSE, 'manage_content');
   //use the custom theme form
   $output .= theme('menu_item', l(t('Admin Settings'), 'node/'. $group->nid .'/edit', array('query' => 'destination='. $_GET['q'], 'attributes' => array('title' => 'Admin Settings'))), 0, '', FALSE, 'admin_settings');
   return $output;
@@ -157,7 +156,7 @@ function _elms_navigation_left_system_block($group = '') {
     //Create a new version of this course
     $output .= theme('menu_item', l(t('Create New Course Version'), 'node/add/version/'. $group->field_course_ref[0]['nid'], array('attributes' => array('title' => t('Create New Course Version')), 'purl' => array('disabled' => TRUE))), 0, '', FALSE, 'new_course_version');
     //export html option
-    $output .= theme('menu_item', l(t('Export'), 'node/'. $group->nid .'/html_export', array('attributes' => array('title' => t('Export')), 'query' => 'destination='. $_GET['q'])), 0, '', FALSE, 'export_html');
+    $output .= theme('menu_item', l(t('Export'), 'node/'. $group->nid .'/html_export', array('attributes' => array('title' => t('Export')), 'query' => 'destination='. $_GET['q'])), 0, '', FALSE, 'export');
   }
   else {
     $nid = arg(1);
@@ -170,7 +169,7 @@ function _elms_navigation_left_system_block($group = '') {
   }
   //create a new course
   $output .= theme('menu_item', l(t('Create New Course'), 'node/add/course', array('attributes' => array('title' => t('Create New Course')), 'purl' => array('disabled' => TRUE))), 0, '', FALSE, 'new_course');
-  $output .= theme('menu_item', l(t('Create Sandbox'), 'node/add/version/', array('attributes' => array('title' => t('Create Sandbox')), 'purl' => array('disabled' => TRUE))), 0, '', FALSE, 'new_sandbox');
+  $output .= theme('menu_item', l(t('Create Sandbox'), 'node/add/version/', array('attributes' => array('title' => t('Create Sandbox')), 'purl' => array('disabled' => TRUE))), 0, '', FALSE, 'sandbox');
   //add in the masquerade block area
   if (module_exists('masquerade')) {
     $block = module_invoke('masquerade', 'block', 'view', 0);

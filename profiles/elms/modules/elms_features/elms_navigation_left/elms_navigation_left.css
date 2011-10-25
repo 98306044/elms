@@ -5,9 +5,9 @@ ul.tabs {
 /* left side blocks */
 #regions_elms_navigation_left {
   font:normal 11px "Lucida Grande",Verdana,sans-serif !important;
-  background-color:#000;
+  background-color:#333;
   width:210px;
-  top:60px;
+  top:50px;
   z-index:1000;
   left:-182px;
   float:left;
@@ -26,7 +26,7 @@ div#admin-toolbar {
 }
 
 #regions_elms_navigation_left .regions_pre_block_container {
- height: 20px;
+ height: 24px;
  width: 210px;
  background-repeat:no-repeat;
  background-position:right;
@@ -37,12 +37,33 @@ div#admin-toolbar {
 #regions_elms_navigation_left li {
   list-style-type: none;
   list-style-image: none;
-  padding: 2px 0px 2px 10px;
+  padding: 0px 0px 0px 10px;
   clear: both;
-  height:20px;
+  height:24px;
+  line-height:24px;
+}
+#regions_block_elms_navigation_left_2 li:hover {
+  background-image:url(images/sidebarmouseover.png);
+  background-repeat:repeat-y;
+  background-position:-10px;
+}
+
+#regions_block_elms_navigation_left_2 li.leaf a:hover {
+  background-image:url(images/sidebarmouseover.png);
+  background-repeat:repeat-y;
+  background-position:-20px;
+}
+#regions_block_elms_navigation_left_1 li a:hover {
+  background-image:url(images/sidebarmouseover.png);
+  background-repeat:repeat-y;
+  background-position:-20px;
+}
+#regions_block_elms_navigation_left_0 li a:hover {
+  background-image:url(images/sidebarmouseover.png);
+  background-repeat:repeat-y;
+  background-position:-20px;
 }
 #regions_elms_navigation_left li:hover {
-  background-color:#666;
   color:#CCC !important;
 }
 #regions_elms_navigation_left li a:hover {
@@ -57,8 +78,9 @@ div#admin-toolbar {
   text-decoration:none;
   clear: both;
   float:left;
-  height:20px;
+  height:24px;
   width:100%;
+  line-height:24px;
 }
 #regions_elms_navigation_left .regions_block_title {
   font-size:16px;
@@ -67,15 +89,11 @@ div#admin-toolbar {
   cursor:pointer;
   padding: 2px 0px 2px 10px;
   clear: both;
-  height:20px;
-}
-#regions_elms_navigation_left .regions_block_title:hover {
-  background-color:#666;
-  color:#CCC !important;
+  height:24px;
 }
 
 #regions_elms_navigation_left .regions_block {
- padding:10px 0px 10px 10px;    
+ padding:0px 0px 0px 10px;    
 }
 /* colors for the blocks on the left */
 #regions_elms_navigation_left .regions_1 {
@@ -100,6 +118,12 @@ div#admin-toolbar {
 #regions_elms_navigation_left .page_edit {
   background-image:url(images/edit.png);
 }
+#regions_elms_navigation_left .manage_users {
+  background-image:url(images/manage_users.png);
+}
+#regions_elms_navigation_left .manage_content {
+  background-image:url(images/manage_content.png);
+}
 #regions_elms_navigation_left .page_accessibility {
   background-image:url(images/accessibility.png);
 }
@@ -109,11 +133,19 @@ div#admin-toolbar {
 #regions_elms_navigation_left .page_devel {
   background-image:url(images/admin.png);
 }
+#regions_elms_navigation_left .feed_reader_field_associated_to {
+  background-image:url(images/social_media.png) !important;
+  background-position:right !important;
+  background-repeat:no-repeat !important;
+}
 #regions_elms_navigation_left .content_outline {
   background-image:url(images/outline.png);
 }
 #regions_elms_navigation_left .change_features {
   background-image:url(images/features.png);
+}
+#regions_elms_navigation_left .change_theme {
+  background-image:url(images/change_theme.png);
 }
 #regions_elms_navigation_left .public_home {
   background-image:url(images/publichome.png);
@@ -124,7 +156,10 @@ div#admin-toolbar {
 #regions_elms_navigation_left .system {
   background-image:url(images/system.png);
 }
-#regions_elms_navigation_left .export_html {
+#regions_elms_navigation_left .sandbox {
+  background-image:url(images/change_shape.png);
+}
+#regions_elms_navigation_left .export {
   background-image:url(images/export.png);
 }
 #regions_elms_navigation_left .new_course_version {
@@ -144,8 +179,8 @@ div#admin-toolbar {
 }
 
 #regions_elms_navigation_left .workflow_state {
-  height: 20px;
-  line-height:20px;
+  height: 24px;
+  line-height:24px;
 }
 #regions_elms_navigation_left #masquerade-block-1 {
  margin-top:10px;
@@ -168,8 +203,8 @@ div#admin-toolbar {
 
 /* open / close block display */
 #regions_elms_navigation_left .regions_toggle_open {
- background-image: url('images/open.png');
+ background-image: url(images/open.png);
 }
 #regions_elms_navigation_left .regions_toggle_closed {
- background-image: url('images/close.png');
+ background-image: url(images/close.png);
 }

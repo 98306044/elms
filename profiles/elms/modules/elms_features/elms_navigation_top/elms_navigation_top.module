@@ -32,6 +32,17 @@ function elms_navigation_top_define_regions() {
 }
 
 /**
+ * Implementation of hook_init().
+ */
+function elms_navigation_top_init() {
+  $settings = array(
+    'elms_navigation_top' => array(
+	  'factor' => 1,
+	)
+  );
+  drupal_add_js($settings, 'setting');
+}
+/**
  * Implementation of hook_block().
  */
 function elms_navigation_top_block($op = 'list', $delta = 0, $edit = array()) {
@@ -52,7 +63,7 @@ function elms_navigation_top_block($op = 'list', $delta = 0, $edit = array()) {
       'weight' => 0,
       'status' => 0,
     );
-	$blocks[3] = array(
+    $blocks[3] = array(
       'info' => t('Page Controls'),
       'weight' => 0,
       'status' => 0,
@@ -101,7 +112,7 @@ function elms_navigation_top_block($op = 'list', $delta = 0, $edit = array()) {
         $block['regions_allow_html_title'] = TRUE;
       }
       break;
-	  case 3:
+      case 3:
         $block['title'] = '<none>';
         $block['content'] = _elms_navigation_page_controls();
       break;
@@ -123,7 +134,7 @@ function _elms_navigation_top_system_path() {
     if ($group->field_course_ref[0]['nid'] != '') {
       $val = db_fetch_array(db_query("SELECT n.title, td.name FROM {node} AS n JOIN {term_node} AS tn ON n.nid = tn.nid JOIN {term_data} AS td ON td.tid = tn.tid WHERE n.nid=%d", $group->field_course_ref[0]['nid']));
   //add the courses listing with the name of the taxonomy term
-      $output .= theme('menu_item', l(t($val['name']), 'courses', array('attributes' => array('title' => t('Back to @unit course list', array('@unit' => $val['name']))), 'purl' => array('disabled' => TRUE))), 0);
+      $output .= theme('menu_item', l(t($val['name']), 'courses', array('attributes' => array('title' => t('@unit course list', array('@unit' => $val['name']))), 'purl' => array('disabled' => TRUE))), 0);
     }
     else {
       //this isn't part of a course so add sandbox to the path
@@ -149,27 +160,27 @@ function _elms_navigation_top_system_path() {
     if ($type == 'course') {
       $val = db_fetch_array(db_query("SELECT n.title, td.name FROM {node} AS n JOIN {term_node} AS tn ON n.nid = tn.nid JOIN {term_data} AS td ON td.tid = tn.tid WHERE n.nid=%d", $nid));
     //taxonomy  term used
-      $output .= theme('menu_item', l(t($val['name']), 'courses', array('attributes' => array('title' => t('Back to @unit course list', array('@unit' => $val['name']))), 'purl' => array('disabled' => TRUE))), 0);
+      $output .= theme('menu_item', l(t($val['name']), 'courses', array('attributes' => array('title' => t('@unit course list', array('@unit' => $val['name']))), 'purl' => array('disabled' => TRUE))), 0);
     }
-  else {
-    $output .= theme('menu_item', l(t('All Courses'), 'courses', array('attributes' => array('title' => t('Back to course list')), 'purl' => array('disabled' => TRUE))), 0);
-  }
+    else {
+      $output .= theme('menu_item', l(t('All Courses'), 'courses', array('attributes' => array('title' => t('Course list')), 'purl' => array('disabled' => TRUE))), 0);
+    }
   }
   //unify everything that's not in the courses view
   if (arg(0) != 'courses') {
-  //dig out current menu path based on whats active
-  $active_menu = menu_set_active_trail();
-  //pop off the home link
-  if ($active_menu[0]['title'] == 'Home') {
+    //dig out current menu path based on whats active
+    $active_menu = menu_set_active_trail();
+    //pop off the home link
+    if ($active_menu[0]['title'] == 'Home') {
       array_shift($active_menu);
-  }
+    }
     //iterate each menu item and convert to valid breadcrumb
     foreach ($active_menu as $menu) {
       if (isset($menu['link_path'])) {
         $output .= theme('menu_item', l(t($menu['title']), $menu['link_path'], array('attributes' => array('title' => t($menu['title'])))), 0);
       }
       else {
-		$output .= theme('menu_item', l(t($menu['title']), $menu['href'], array('attributes' => array('title' => t($menu['title'])))), 0);
+        $output .= theme('menu_item', l(t($menu['title']), $menu['href'], array('attributes' => array('title' => t($menu['title'])))), 0);
       }
     }
   }
@@ -185,13 +196,56 @@ function _elms_navigation_top_notifications() {
 //helper function to display page controls like book, print, and zoom
 function _elms_navigation_page_controls() {
   $output = '';
-  $output .= theme('menu_item', l('', 'print', array('attributes' => array('title' => t('Print Page')))), 0, '', FALSE, 'elms_print_page');
-  $output .= theme('menu_item', l('', 'print', array('attributes' => array('title' => t('Previous Page')))), 0, '', FALSE, 'elms_prev_page');
-  $output .= theme('menu_item', l('', 'print', array('attributes' => array('title' => t('Next Page')))), 0, '', FALSE, 'elms_next_page');
-  $output .= theme('menu_item', l(t('toc'), 'print', array('attributes' => array('title' => t('Table of Contents')))), 0, '', FALSE, 'elms_book_toc');
-  $output .= theme('menu_item', l('', 'print', array('attributes' => array('title' => t('Scale Out')))), 0, '', FALSE, 'elms_zoom_out');
-  $output .= theme('menu_item', l('', 'print', array('attributes' => array('title' => t('Scale Page')))), 0, '', FALSE, 'elms_zoom_in');
-  $output .= theme('menu_item', l('', 'print', array('attributes' => array('title' => t('Reset Scale')))), 0, '', FALSE, 'elms_zoom_reset');
-  $output .= theme('menu_item', l(t('Helpdesk'), 'contact', array('attributes' => array('title' => t('Contact Helpdesk')), 'query' => 'destination='. $_GET['q'])), 0, '', FALSE, 'elms_helpdesk');
+  $group = og_get_group_context();
+  //if we're not in a group we can skip most of theses
+  if (isset($group->nid)) {
+    if (ctype_digit(arg(1))) {
+      $node = node_load(arg(1));  
+      //if there is a previous page in this book link to it
+      if ($prev = book_prev($node->book)) {
+        $output .= theme('menu_item', l('', $prev['href'], array('attributes' => array('title' => t('Previous Page')))), 0, '', FALSE, 'elms_prev_page');
+      }
+      //if there is a next page in this book link to it
+      if ($next = book_next($node->book)) {
+        $output .= theme('menu_item', l('', $next['href'], array('attributes' => array('title' => t('Next Page')))), 0, '', FALSE, 'elms_next_page');
+      }
+	  //add table of contents link
+      if (isset($group->book_nid)) {
+        $output .= theme('menu_item', l('', 'node/'. $group->book_nid, array('attributes' => array('title' => t('Table of Contents')))), 0, '', FALSE, 'elms_book_toc');
+      }
+	  //check for node reference url links
+      $tmp_ref_links = nodereference_url_build_all_links($node, 0);
+      $features = variable_get('spaces_features', array());
+      //account for reactions not being active
+      if (isset($features['elms_reaction']) && $features['elms_reaction']) {
+		$output .= theme('menu_item', l('', $tmp_ref_links['reaction_field_related_content']['href'], array('query' => $_GET['q'], 'attributes' => $tmp_ref_links['reaction_field_related_content']['attributes'])), 0, '', FALSE, 'elms_reactions');
+      }
+      //account for possible flags
+	  if (module_exists('flag')) {
+	    $flag_links = flag_link('node', $node);
+		//if this has flags then render them here
+		if (count($flag_links)) {
+		  foreach ($flag_links as $key => $flag) {
+            $output .= theme('menu_item', $flag['title'], 0, '', FALSE, $key);
+          }
+		}
+      }
+      //see if we should display the page print
+      if (module_exists('print')) {
+        //weak check but if this is in a book then it can be printed in elms
+        if (isset($node->book['bid'])) {
+          $output .= theme('menu_item', l('', 'print/book/export/html/'. $node->nid, array('attributes' => array('title' => t('Print Page')))), 0, '', FALSE, 'elms_print_page');
+        }
+      }
+    }
+  }
+  //scaling options, weird looking but needed for anchor trigger
+  $output .= theme('menu_item', l('', '', array('fragment' => ' ', 'external' => TRUE, 'attributes' => array('title' => t('Scale Out')))), 0, '', FALSE, 'elms_zoom_out');
+  $output .= theme('menu_item', l('', '', array('fragment' => ' ', 'external' => TRUE,'attributes' => array('title' => t('Scale Page')))), 0, '', FALSE, 'elms_zoom_in');
+  $output .= theme('menu_item', l('', '', array('fragment' => ' ', 'external' => TRUE,'attributes' => array('title' => t('Reset Scale')))), 0, '', FALSE, 'elms_zoom_reset');
+  //contact the helpdesk if active
+  if (module_exists('elms_helpdesk')) {
+    $output .= theme('menu_item', l('', 'contact', array('attributes' => array('title' => t('Contact Helpdesk')), 'query' => 'destination='. $_GET['q'])), 0, '', FALSE, 'elms_helpdesk');
+  }
   return $output;
 }

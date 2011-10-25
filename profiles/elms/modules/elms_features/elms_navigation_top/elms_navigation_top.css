@@ -125,15 +125,16 @@ body {
 
 #regions_elms_navigation_top li a.active {
   text-shadow:#333 0px 1px 0px;
-  background-color:#666;
+}
+#regions_block_elms_navigation_top_0 li a.active {
+background-color:#666;	
 }
 
 #regions_block_elms_navigation_top_3 {
-  float:left;
+  float:right;
   margin-left:20px;
   line-height:20px;
   height:20px;
-  width:300px;
 }
 
 #regions_block_elms_navigation_top_3 li {
@@ -174,7 +175,20 @@ body {
   background-image:url(images/print.png);	
 }
 #regions_block_elms_navigation_top_3 .elms_book_toc {
-  background-image:url(images/booktoc.png);	
+  background-image:url(images/table_of_contents.png);	
+}
+#regions_block_elms_navigation_top_3 .elms_reactions {
+  background-image:url(images/reactions.png);
+}
+#regions_block_elms_navigation_top_3 .elms_helpdesk {
+  background-image:url(images/helpdesk.png);
+}
+#regions_block_elms_navigation_top_3 .flag-bookmarks {
+  background-image:url(images/bookmark.png);
+}
+/* always hide the flag state change message when in the top bar */
+#regions_block_elms_navigation_top_3 .flag-message {
+ display:none !important;	
 }
 #regions_block_elms_navigation_top_3 a:hover {
  background-color:transparent;
@@ -195,7 +209,6 @@ body {
   list-style-type:none;
   display:inline;
   margin:0px;
-  padding:0px 0px;
   height:20px;
   float:left;
 }
