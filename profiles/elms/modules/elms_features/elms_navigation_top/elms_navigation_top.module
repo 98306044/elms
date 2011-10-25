@@ -178,7 +178,6 @@ function _elms_navigation_top_system_path() {
 
 //helper function to display notifications
 function _elms_navigation_top_notifications() {
-  $output = theme('menu_item', l(t('Helpdesk'), 'contact', array('attributes' => array('title' => t('Contact Helpdesk')), 'query' => 'destination='. $_GET['q'])), 0, '', FALSE, 'contact_form');
   //need to invoke the elms notifications hook to determine what should render here
   return $output;
 }
@@ -186,13 +185,13 @@ function _elms_navigation_top_notifications() {
 //helper function to display page controls like book, print, and zoom
 function _elms_navigation_page_controls() {
   $output = '';
-  $output .= theme('menu_item', l(t('Print'), 'print', array('attributes' => array('title' => t('Print Page')))), 0, '', FALSE, 'elms_print_page');
-  $output .= theme('menu_item', l(t('back'), 'print', array('attributes' => array('title' => t('Previous Page')))), 0, '', FALSE, 'elms_last_page');
-  $output .= theme('menu_item', l(t('forward'), 'print', array('attributes' => array('title' => t('Next Page')))), 0, '', FALSE, 'elms_next_page');
+  $output .= theme('menu_item', l('', 'print', array('attributes' => array('title' => t('Print Page')))), 0, '', FALSE, 'elms_print_page');
+  $output .= theme('menu_item', l('', 'print', array('attributes' => array('title' => t('Previous Page')))), 0, '', FALSE, 'elms_prev_page');
+  $output .= theme('menu_item', l('', 'print', array('attributes' => array('title' => t('Next Page')))), 0, '', FALSE, 'elms_next_page');
   $output .= theme('menu_item', l(t('toc'), 'print', array('attributes' => array('title' => t('Table of Contents')))), 0, '', FALSE, 'elms_book_toc');
-  $output .= theme('menu_item', l(t('zoom out'), 'print', array('attributes' => array('title' => t('Scale Out')))), 0, '', FALSE, 'elms_zoom_out');
-  $output .= theme('menu_item', l(t('zoom in'), 'print', array('attributes' => array('title' => t('Scale Page')))), 0, '', FALSE, 'elms_zoom_in');
-  $output .= theme('menu_item', l(t('zoom reset'), 'print', array('attributes' => array('title' => t('Reset Scale')))), 0, '', FALSE, 'elms_zoom_reset');
-
+  $output .= theme('menu_item', l('', 'print', array('attributes' => array('title' => t('Scale Out')))), 0, '', FALSE, 'elms_zoom_out');
+  $output .= theme('menu_item', l('', 'print', array('attributes' => array('title' => t('Scale Page')))), 0, '', FALSE, 'elms_zoom_in');
+  $output .= theme('menu_item', l('', 'print', array('attributes' => array('title' => t('Reset Scale')))), 0, '', FALSE, 'elms_zoom_reset');
+  $output .= theme('menu_item', l(t('Helpdesk'), 'contact', array('attributes' => array('title' => t('Contact Helpdesk')), 'query' => 'destination='. $_GET['q'])), 0, '', FALSE, 'elms_helpdesk');
   return $output;
 }

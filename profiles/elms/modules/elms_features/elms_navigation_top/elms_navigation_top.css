@@ -63,7 +63,7 @@ body {
   height: 30px;
 }
 #regions_block_elms_navigation_top_2 ul.menu li:hover{
-  background-color:#777;
+  background-color:#666;
 }
 
 #regions_block_elms_navigation_top_1 {
@@ -144,9 +144,44 @@ body {
   margin:0px;
   padding:0px 0px;
   height:20px;
+  width:20px;
   float:left;
+  background-position:right;
+  background-repeat:no-repeat;
+}
+#regions_block_elms_navigation_top_3 a {
+  width:20px;
+  height:20px;
 }
 
+/* icons for the top items */
+#regions_block_elms_navigation_top_3 .elms_zoom_in {
+  background-image:url(images/zoomin.png);	
+}
+#regions_block_elms_navigation_top_3 .elms_zoom_out {
+  background-image:url(images/zoomout.png);	
+}
+#regions_block_elms_navigation_top_3 .elms_zoom_reset {
+  background-image:url(images/zoomreset.png);	
+}
+#regions_block_elms_navigation_top_3 .elms_next_page {
+  background-image:url(images/nextpage.png);	
+}
+#regions_block_elms_navigation_top_3 .elms_prev_page {
+  background-image:url(images/prevpage.png);	
+}
+#regions_block_elms_navigation_top_3 .elms_print_page {
+  background-image:url(images/print.png);	
+}
+#regions_block_elms_navigation_top_3 .elms_book_toc {
+  background-image:url(images/booktoc.png);	
+}
+#regions_block_elms_navigation_top_3 a:hover {
+ background-color:transparent;
+}
+#regions_block_elms_navigation_top_3 li:hover {
+ background-color:#666;
+}
 #regions_block_elms_navigation_top_0 a {
   height:20px;
   float:left;
