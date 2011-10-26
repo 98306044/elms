@@ -327,7 +327,7 @@ function elms_navigation_top_map_notification() {
     'default' => array(
       'title' => 'Message',
       'icon' => base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/status.png',
-      'bar_icon' => base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/status_bar.png',
+      'bar_icon' => base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/default_bar.png',
     ),
     'status' => array(
       'title' => 'Status',
