@@ -237,7 +237,7 @@ background-color:#666;
 }
 #regions_block_elms_navigation_top_1 .regions_block_content {
   display:none;
-  width:200px;
+  width:300px;
   top:20px;
   border-left:solid 2px #444;
   border-right:solid 1px #444;
@@ -249,9 +249,25 @@ background-color:#666;
 .elms_nav_top_row {
   border-bottom:solid 1px #444;
   width:100%;
-  height:50px;
+  min-height:50px;
   float:left;
   padding:2px;
+}
+#regions_elms_navigation_top .elms_nav_top_msg_bar_icon {
+ width:20px;
+ height:20px;
+ float:left;
+ background-position:center;
+ background-repeat:no-repeat;
+}
+#regions_elms_navigation_top .elms_nav_top_msg_bar_icon_count {
+ width:20px;
+ height:20px;
+ color:#CCC;
+ text-align:right;
+ padding:2px;
+ font-weight:bold;
+ font-size:14px;
 }
 #regions_elms_navigation_top .elms_nav_top_icon {
   float:left;
@@ -266,6 +282,7 @@ background-color:#666;
 #regions_elms_navigation_top .elms_nav_top_msg {
   padding-left:5px;
   float:left;
+  width:260px;
 }
 
 #regions_elms_navigation_top .elms_nav_top_msg_title{
@@ -276,5 +293,4 @@ background-color:#666;
 
 #regions_elms_navigation_top .elms_nav_top_msg_text{
   font-size: 10px;
-  line-height:10px;
 }
