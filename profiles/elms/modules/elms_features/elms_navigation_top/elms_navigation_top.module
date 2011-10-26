@@ -41,6 +41,9 @@ function elms_navigation_top_init() {
     )
   );
   drupal_set_message('cool thing happened', 'elms');
+  drupal_set_message('This is a status message', 'status');
+  drupal_set_message('error message here', 'error');
+  drupal_set_message('WARNING WILL ROBINSON', 'warning');
   drupal_add_js($settings, 'setting');
 }
 /**
@@ -259,8 +262,6 @@ function _elms_navigation_top_notifications() {
     $content = '';
     //get a map of all known values
     $map = _elms_navigation_top_get_map();
-    dpm($messages);
-	dpm($map);
     foreach ($messages as $key => $message) {
       //see if we have a map, if not use default
       if (isset($map[$key])) {
@@ -270,10 +271,12 @@ function _elms_navigation_top_notifications() {
         $mkey = 'default';
       }
 	  //block title as icons
-	  $title .= '<img src="'. $map[$mkey]['bar_icon'] .'" title="'. $map[$mkey]['title'] .'Notification click for more details" alt="'. $map[$mkey]['title'] .'Notification click for more details"/>';
+	  $title .= '<img src="'. $map[$mkey]['bar_icon'] .'" title="'. $map[$mkey]['title'] .' Notification click for more details" alt="'. $map[$mkey]['title'] .' Notification click for more details" class="elms_nav_top_msg_bar_icon"/>';
 	  //block content area
-	  $content .= '<div class="elms_top_nav_msg">'. $map[$mkey]['title'] .'</div><div class="elms_top_nav_msg">'. $message .'</div>';
+	  $content .= '<div class="elms_nav_top_row"><img src="'. $map[$mkey]['icon'] .'" title="'. $map[$mkey]['title'] .' Notification click for more details" alt="'. $map[$mkey]['title'] .' Notification click for more details" class="elms_nav_top_icon"/><div class="elms_nav_top_msg"><div class="elms_nav_top_msg_title">'. $map[$mkey]['title'] .'</div><div class="elms_nav_top_msg_text">'. $message[0] .'</div></div></div>';
     }
+	//add arrow to right side to indicate this can be opened
+	$title .= '<img src="'. base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/arrow_down.png" alt="Click to see notifications" class="elms_nav_top_arrow">';
     $block = array('title' => $title, 'content' => $content);
   }
   return $block;
@@ -294,6 +297,11 @@ function elms_navigation_top_map_notification() {
       'title' => 'Status',
       'icon' => base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/status.png',
       'bar_icon' => base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/status_bar.png',
+    ),
+	'warning' => array(
+      'title' => 'Warning',
+      'icon' => base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/warning.png',
+      'bar_icon' => base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/warning_bar.png',
     ),
 	'error' => array(
       'title' => 'Error',

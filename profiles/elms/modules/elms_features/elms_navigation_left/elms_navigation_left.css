@@ -5,7 +5,7 @@ ul.tabs {
 /* left side blocks */
 #regions_elms_navigation_left {
   font:normal 11px "Lucida Grande",Verdana,sans-serif !important;
-  background-color:#333;
+  background-color:#222;
   width:210px;
   top:50px;
   z-index:1000;
