@@ -32,33 +32,15 @@ function elms_navigation_top_define_regions() {
 }
 
 /**
- * Implementation of hook_theme_registry_alter().
- */
-function elms_navigation_top_theme_registry_alter(&$theme_registry) {
-  //steal what should normally process the system messages so we can control their display
-  $theme_registry['status_messages']['function'] = '_elms_navigation_top_system_messages';
-}
-
-//helper function for capturing system messages
-function _elms_navigation_top_system_messages($display = NULL) {
-  /*foreach ($message as $key => $msg) {
-    $output .= $msg;
-	print_r($msg);
-  }
-  if (count($message) != 0) {
-    return "<div id=\"elms-navigation-top-messages-wrapper\">\n". $output ."\n</div>\n";
-  }*/
-}
-
-/**
  * Implementation of hook_init().
  */
 function elms_navigation_top_init() {
   $settings = array(
     'elms_navigation_top' => array(
-    'factor' => 1,
-  )
+      'factor' => 1,
+    )
   );
+  drupal_set_message('cool thing happened', 'elms');
   drupal_add_js($settings, 'setting');
 }
 /**
@@ -96,8 +78,11 @@ function elms_navigation_top_block($op = 'list', $delta = 0, $edit = array()) {
         $block['content'] = _elms_navigation_top_system_path();
       break;
       case 1:
-        $block['title'] = '<none>';
-        $block['content'] = _elms_navigation_top_notifications();
+        $block = _elms_navigation_top_notifications();
+		//if we got a title then bother adding the regions integration
+		if (isset($block['title'])) {
+		  $block['regions_allow_html_title'] = TRUE;
+		}
       break;
       case 2:
       //only show menu options for logged in users
@@ -206,12 +191,6 @@ function _elms_navigation_top_system_path() {
   return $output;
 }
 
-//helper function to display notifications
-function _elms_navigation_top_notifications() {
-  //need to invoke the elms notifications hook to determine what should render here
-  return $output;
-}
-
 //helper function to display page controls like book, print, and zoom
 function _elms_navigation_page_controls() {
   $output = '';
@@ -267,4 +246,66 @@ function _elms_navigation_page_controls() {
     $output .= theme('menu_item', l('', 'contact', array('attributes' => array('title' => t('Contact Helpdesk')), 'query' => 'destination='. $_GET['q'])), 0, '', FALSE, 'elms_helpdesk');
   }
   return $output;
+}
+
+/**
+ * Helper function to retrieves system messages.
+ */
+function _elms_navigation_top_notifications() {
+  $block = array();
+  //get all messages and unset them for the session
+  $messages = drupal_get_messages(NULL, TRUE);
+  if (!empty($messages)) {
+    $content = '';
+    //get a map of all known values
+    $map = _elms_navigation_top_get_map();
+    dpm($messages);
+	dpm($map);
+    foreach ($messages as $key => $message) {
+      //see if we have a map, if not use default
+      if (isset($map[$key])) {
+        $mkey = $key;
+      }
+      else {
+        $mkey = 'default';
+      }
+	  //block title as icons
+	  $title .= '<img src="'. $map[$mkey]['bar_icon'] .'" title="'. $map[$mkey]['title'] .'Notification click for more details" alt="'. $map[$mkey]['title'] .'Notification click for more details"/>';
+	  //block content area
+	  $content .= '<div class="elms_top_nav_msg">'. $map[$mkey]['title'] .'</div><div class="elms_top_nav_msg">'. $message .'</div>';
+    }
+    $block = array('title' => $title, 'content' => $content);
+  }
+  return $block;
+}
+
+/**
+ * Implementation of hook_map_notification().
+ */
+function elms_navigation_top_map_notification() {
+  //provide defaults for drupal
+  $map = array(
+    'default' => array(
+      'title' => 'Status',
+      'icon' => base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/status.png',
+      'bar_icon' => base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/status_bar.png',
+    ),
+    'status' => array(
+      'title' => 'Status',
+      'icon' => base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/status.png',
+      'bar_icon' => base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/status_bar.png',
+    ),
+	'error' => array(
+      'title' => 'Error',
+      'icon' => base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/error.png',
+      'bar_icon' => base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/error_bar.png',
+    ),
+  );
+  return $map;
+}
+
+//helper function that builds the notifications map
+function _elms_navigation_top_get_map() {
+  $map = module_invoke_all('map_notification');
+  return $map;
 }
