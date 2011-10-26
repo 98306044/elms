@@ -40,10 +40,8 @@ function elms_navigation_top_init() {
       'factor' => 1,
     )
   );
-  drupal_set_message('cool thing happened', 'elms', FALSE);
-  drupal_set_message('This is a status message', 'status', FALSE);
-  drupal_set_message('error message here', 'error', FALSE);
-  drupal_set_message('WARNING WILL ROBINSON', 'warning', FALSE);
+  drupal_set_message('Browser is Chrome and should be something else!', 'browser-version', FALSE);
+  drupal_set_message('I hate your flash!', 'browser-flash', FALSE);
   drupal_add_js($settings, 'setting');
 }
 /**
@@ -82,10 +80,10 @@ function elms_navigation_top_block($op = 'list', $delta = 0, $edit = array()) {
       break;
       case 1:
         $block = _elms_navigation_top_notifications();
-		//if we got a title then bother adding the regions integration
-		if (isset($block['title'])) {
-		  $block['regions_allow_html_title'] = TRUE;
-		}
+        //if we got a title then bother adding the regions integration
+        if (isset($block['title'])) {
+          $block['regions_allow_html_title'] = TRUE;
+        }
       break;
       case 2:
       //only show menu options for logged in users
@@ -258,12 +256,30 @@ function _elms_navigation_top_notifications() {
   $block = array();
   //get all messages and unset them for the session
   $messages = drupal_get_messages();
+  //need a separater container for title mapping
+  $title_messages = $messages;
   //dpm($messages);
-  if (!empty($messages)) {	
+  if (!empty($messages)) {    
     $content = '';
     //get a map of all known values
     $map = _elms_navigation_top_get_map();
-    foreach ($messages as $key => $message_group) {
+    //account for parent items which reduces redundancy in the UI
+    foreach ($title_messages as $key => $message_group) {
+      //if this item actually has a parent, move it's status messages in there
+      if (isset($map[$key]['parent'])) {
+		//test to see if this item came across itself to merge under, otherwise 
+		if (isset($title_messages[$map[$key]['parent']])) {
+          $title_messages[$map[$key]['parent']] = array_merge($title_messages[$map[$key]['parent']], $message_group);
+		}
+		else {
+          //this is basically just a push of the value into its parent
+          $title_messages[$map[$key]['parent']] = $message_group;
+		}
+        unset($title_messages[$key]);
+      }
+    }
+    //build out the title bar
+    foreach ($title_messages as $key => $message_group) {
       //see if we have a map, if not use default
       if (isset($map[$key])) {
         $type = $key;
@@ -271,21 +287,32 @@ function _elms_navigation_top_notifications() {
       else {
         $type = 'default';
       }
-	  //if there are multiple messages then place a count indicator
-	  $msg_count = '';
-	  if (count($message_group) > 1) {
+      //if there are multiple messages then place a count indicator
+      $msg_count = '';
+      if (count($message_group) > 1) {
         $msg_count = '<div class="elms_nav_top_msg_bar_icon_count">'. count($message_group) .'</div>';
-	  }
-	  //block title as icons
-	  $title .= '<div class="elms_nav_top_msg_bar_icon" style="background-image:url('. $map[$type]['bar_icon'] .')" title="'. $map[$type]['title'] .' Notification click for more details" alt="'. $map[$type]['title'] .' Notification click for more details">'. $msg_count .'</div>';
-	  //loop through as messages are grouped by type
-	  foreach ($message_group as $message) {
-	    //block content area
-	    $content .= '<div class="elms_nav_top_row"><img src="'. $map[$type]['icon'] .'" title="'. $map[$type]['title'] .' Notification click for more details" alt="'. $map[$type]['title'] .' Notification click for more details" class="elms_nav_top_icon"/><div class="elms_nav_top_msg"><div class="elms_nav_top_msg_title">'. $map[$type]['title'] .'</div><div class="elms_nav_top_msg_text">'. $message .'</div></div></div>';
-	  }
+      }
+      //block title as icons
+      $title .= '<div class="elms_nav_top_msg_bar_icon" style="background-image:url('. $map[$type]['bar_icon'] .')" title="'. $map[$type]['title'] .' Notification click for more details" alt="'. $map[$type]['title'] .' Notification click for more details">'. $msg_count .'</div>';
     }
-	//add arrow to right side to indicate this can be opened
-	$title .= '<img src="'. base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/arrow_down.png" alt="Click to see notifications" class="elms_nav_top_arrow">';
+    //build out the message array
+    foreach ($messages as $key => $message_group) {
+	  //see if we have a map, if not use default
+      if (isset($map[$key])) {
+        $type = $key;
+      }
+      else {
+        $type = 'default';
+      }
+      //loop through as messages are grouped by type
+      foreach ($message_group as $message) {
+        //block content area
+        $content .= '<div class="elms_nav_top_row"><img src="'. $map[$type]['icon'] .'" title="'. $map[$type]['title'] .' Notification click for more details" alt="'. $map[$type]['title'] .' Notification click for more details" class="elms_nav_top_icon"/><div class="elms_nav_top_msg"><div class="elms_nav_top_msg_title">'. $map[$type]['title'] .'</div><div class="elms_nav_top_msg_text">'. $message .'</div></div></div>';
+      }
+    }
+    //add arrow to right side to indicate this can be opened
+    $title .= '<img src="'. base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/arrow_down.png" alt="Click to see notifications" class="elms_nav_top_arrow">';
+	//construct the block for display
     $block = array('title' => $title, 'content' => $content);
   }
   return $block;
@@ -307,15 +334,30 @@ function elms_navigation_top_map_notification() {
       'icon' => base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/status.png',
       'bar_icon' => base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/status_bar.png',
     ),
-	'warning' => array(
+    'warning' => array(
       'title' => 'Warning',
       'icon' => base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/warning.png',
       'bar_icon' => base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/warning_bar.png',
     ),
-	'error' => array(
+    'error' => array(
       'title' => 'Error',
       'icon' => base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/error.png',
       'bar_icon' => base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/error_bar.png',
+    ),
+    'browser' => array(
+      'title' => 'Error',
+      'icon' => base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/warning.png',
+      'bar_icon' => base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/warning_bar.png',
+    ),
+    'browser-version' => array(
+      'title' => 'Browser version unsupported',
+      'icon' => base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/warning.png',
+      'parent' => 'browser',
+    ),
+    'browser-flash' => array(
+      'title' => 'Flash out of date',
+      'icon' => base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/error.png',
+      'parent' => 'browser',
     ),
   );
   return $map;
