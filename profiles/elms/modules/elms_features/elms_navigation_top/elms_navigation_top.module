@@ -254,8 +254,14 @@ function _elms_navigation_page_controls() {
  */
 function _elms_navigation_top_notifications() {
   $block = array();
+  global $user;
   //get all messages and unset them for the session
-  $messages = drupal_get_messages();
+  if ($user->uid == 1) {
+    $messages = drupal_get_messages(NULL, FALSE);
+  }
+  else {
+    $messages = drupal_get_messages();
+  }
   //need a separater container for title mapping
   $title_messages = $messages;
   //dpm($messages);
