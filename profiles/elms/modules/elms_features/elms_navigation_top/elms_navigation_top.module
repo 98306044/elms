@@ -91,12 +91,7 @@ function elms_navigation_top_block($op = 'list', $delta = 0, $edit = array()) {
       if (!isset($user->uid) || $user->uid == 0 || $user->uid == '') {
         $block['regions_allow_html_title'] = TRUE;
         //account for PSU's custom login system or to use the drupal default
-        if (module_exists('webaccess')) {
-          $block['title'] = l(t('Login'), 'login', array('query' => 'destination=courses'));
-        }
-        else {
-          $block['title'] = l(t('Login'), 'user/login', array('query' => 'destination=courses'));
-        }
+        $block['title'] = l(t('Login'), 'user/login');
         $block['content'] = ' ';
       }
       else {
