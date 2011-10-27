@@ -52,11 +52,21 @@ function elms_course_versions_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
     $theme_ary = variable_get('theme_settings', array());
     $space = spaces_load('og', $node->nid, TRUE);
     if ($space) {
-      $space->controllers->variable->set('site_name', $course->title);
       //load the course node for the name space info
-      $course = node_load($node->field_course_ref[0]['nid']);
+	  if (!empty($node->field_course_ref[0]['nid'])) {
+        $course = node_load($node->field_course_ref[0]['nid']);
+		$course_name = $course->title;
+		$course_title = $course->field_course_title[0]['value'];
+	  }
+	  else {
+		//if this is a sandbox then there won't be a value here so use the node's
+		$course_name = $node->title;
+		$course_title = $node->og_description;
+	  }
+	  //site the site name
+	  $space->controllers->variable->set('site_name', $course_name);
       //set slogan to the description of the course
-      $space->controllers->variable->set('site_slogan', $course->field_course_title[0]['value']);
+      $space->controllers->variable->set('site_slogan', $course_title);
       //set initial homepage to the content outline
       $space->controllers->variable->set('site_frontpage', 'course_content');
       //set the initial path to the group created
