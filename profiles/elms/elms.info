@@ -1,5 +1,5 @@
 name = ELMS
-description = <img src="sites/default/files/elms.png"/> e-Learning Instructional Content Management System
+description = <img src="profiles/elms/images/elms.png" alt="ELMS wordart" title="ELMS wordart" /> e-Learning Instructional Content Management System
 core = 6.x
 theme = cube
 
@@ -128,8 +128,6 @@ dependencies[] = elms_navigation_left
 dependencies[] = elms_navigation_top
 dependencies[] = elms_roles
 dependencies[] = elms_course_versions
-; Media
-dependencies[] = jwplayermodule
 ; Accessible Content
 dependencies[] = accessible_content
 ; Administration
@@ -202,4 +200,3 @@ dependencies[] = workflow
 dependencies[] = workflow_purl
 ; Node form columns
 dependencies[] = nodeformcols
-
