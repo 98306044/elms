@@ -2,6 +2,7 @@
 name = "ELMS Helpdesk"
 description = "Adds functionality to the Contact form that can help with troubleshooting issues users are having. Great for managing a helpdesk in ELMS."
 core = 6.x
+package = "ELMS Core"
 version = "6.x-1.0-alpha1"
 project = "elms_helpdesk"
 project status url = "http://drupal.psu.edu/fserver"
