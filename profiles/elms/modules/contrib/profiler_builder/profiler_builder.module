@@ -101,7 +101,7 @@ function _profiler_builder_info_file(&$info, &$vars, &$drush) {
   foreach ($data as $package => $projects) {
     $info .= '; '. $package ."\n";
     foreach ($projects as $project => $version) {
-      $info .= 'dependencies[] = '. $project ."\n";
+      $info .= 'dependencies[] = "'. $project .'"'."\n";
     }
   }
   //variables
@@ -122,26 +122,26 @@ function _profiler_builder_info_file(&$info, &$vars, &$drush) {
                 foreach ($ary_val2 as $key3 => $ary_val3) {
                   if (is_array($ary_val3)) {
                     foreach ($ary_val3 as $key4 => $ary_val4) {
-                      $vars .= 'variables['. $value['name'] .']['. $key .']['. $key2 .']['. $key3 .']['. $key4 .'] = '. $ary_val4 ."\n";
+                      $vars .= 'variables['. $value['name'] .']['. $key .']['. $key2 .']['. $key3 .']['. $key4 .'] = "'. $ary_val4 .'"'."\n";
                     }
                   }
                   else {
-                    $vars .= 'variables['. $value['name'] .']['. $key .']['. $key2 .']['. $key3 .'] = '. $ary_val3 ."\n";
+                    $vars .= 'variables['. $value['name'] .']['. $key .']['. $key2 .']['. $key3 .'] = "'. $ary_val3 .'"'."\n";
                   }
                 }
               }
               else {
-                $vars .= 'variables['. $value['name'] .']['. $key .']['. $key2 .'] = '. $ary_val2 ."\n";
+                $vars .= 'variables['. $value['name'] .']['. $key .']['. $key2 .'] = "'. $ary_val2 .'"'."\n";
               }
             }
           }
           else {
-            $vars .= 'variables['. $value['name'] .']['. $key .'] = '. $ary_val ."\n";
+            $vars .= 'variables['. $value['name'] .']['. $key .'] = "'. $ary_val .'"'."\n";
           }
         }
       }
       else {
-        $vars .= 'variables['. $value['name'] .'] = '. $val ."\n";
+        $vars .= 'variables['. $value['name'] .'] = "'. $val .'"'."\n";
       }
     }
   }
