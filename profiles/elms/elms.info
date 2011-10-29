@@ -1,24 +1,24 @@
-name = ELMS
-description = <img src="profiles/elms/images/elms.png" alt="ELMS wordart" title="ELMS wordart" /> e-Learning Instructional Content Management System
-core = 6.x
-theme = cube
+name = "ELMS"
+description = '<img src="profiles/elms/images/elms.png" alt="ELMS wordart" title="ELMS wordart" /> e-Learning Instructional Content Management System'
+core = "6.x"
+theme = "cube"
 
 ; Auto generate 1st user account
-users[admin][uid] = 1
-users[admin][name] = admin
-users[admin][mail] = localhost@localhost.localhost
-users[admin][roles] = administrator
-users[admin][status] = 1
+users[admin][uid] = "1"
+users[admin][name] = "admin"
+users[admin][mail] = "localhost@localhost.localhost"
+users[admin][roles] = "administrator"
+users[admin][status] = "1"
 
 ;Terms to create
-terms[department][name] = Department 1
-terms[department][vid] = 1
-terms[department][name] = Department 2
-terms[department][vid] = 2
-terms[department][name] = Department 3
-terms[department][vid] = 3
-terms[department][name] = Department 4
-terms[department][vid] = 4
+terms[department1][name] = "Department 1"
+terms[department1][vid] = "1"
+terms[department2][name] = "Department 2"
+terms[department2][vid] = "1"
+terms[department3][name] = "Department 3"
+terms[department3][vid] = "1"
+terms[department4][name] = "Department 4"
+terms[department4][vid] = "1"
 
 ; Other
 dependencies[] = strongarm
