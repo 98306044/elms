@@ -14,11 +14,11 @@ users[admin][status] = 1
 terms[department][name] = Department 1
 terms[department][vid] = 1
 terms[department][name] = Department 2
-terms[department][vid] = 1
+terms[department][vid] = 2
 terms[department][name] = Department 3
-terms[department][vid] = 1
+terms[department][vid] = 3
 terms[department][name] = Department 4
-terms[department][vid] = 1
+terms[department][vid] = 4
 
 ; Other
 dependencies[] = strongarm
@@ -181,6 +181,23 @@ dependencies[] = nodeformcols
 ; Atrium Features
 dependencies[] = atrium_blog
 dependencies[] = atrium_reader
+; ELMS Core
+dependencies[] = elms_helper
+dependencies[] = elms_course
+dependencies[] = elms_course_versions
+dependencies[] = elms_navigation_left
+dependencies[] = elms_navigation_top
+dependencies[] = elms_roles
+dependencies[] = elms_navigation_right
+dependencies[] = elms_helpdesk
+; ELMS
+dependencies[] = elms_course_content
+dependencies[] = elms_course_studio
+dependencies[] = elms_reaction
+dependencies[] = elms_schedule
+dependencies[] = elms_export_html
+dependencies[] = elms_data_out
+dependencies[] = elms_course_content_export
 ; Variables
 
 variables[accessibility_guideline_accessibility_guideline] = "1578"
