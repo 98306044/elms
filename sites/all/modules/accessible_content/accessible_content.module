@@ -10,7 +10,18 @@
 *
 */
 function accessible_content_include_library() {
-  $result = @include_once('sites/all/libraries/quail/quail/quail.php');
+  global $profile;
+  // to determine the profile.
+  if (!isset($profile)) {
+    $profile = variable_get('install_profile', 'default');
+  }
+  //test the install profile location first
+  $result = @include_once('profiles/$profile/libraries/quail/quail/quail.php');
+  //if it wasn't found, then test the sites all location
+  if (!$result) {
+    $result = @include_once('sites/all/libraries/quail/quail/quail.php');
+  }
+ 
   if ($result) {
     module_load_include('inc', 'accessible_content', 'accessible_content.quail');
     module_load_include('inc', 'accessible_content', 'accessible_content.theme');
