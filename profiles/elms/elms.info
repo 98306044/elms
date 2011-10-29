@@ -78,13 +78,6 @@ dependencies[] = statistics
 dependencies[] = taxonomy
 dependencies[] = update
 ; Features
-dependencies[] = atrium_blog
-dependencies[] = atrium_reader
-dependencies[] = elms_course_content
-dependencies[] = elms_course_content_export
-dependencies[] = elms_course_studio
-dependencies[] = elms_reaction
-dependencies[] = elms_schedule
 dependencies[] = features
 ; User interface
 dependencies[] = ckeditor_link_og
@@ -111,18 +104,6 @@ dependencies[] = feeds_tamper_ui
 dependencies[] = feeds_xpathparser
 ; Regions
 dependencies[] = regions
-; ELMS
-dependencies[] = elms_export_html
-dependencies[] = elms_helper
-; ELMS Core
-dependencies[] = elms_navigation_right
-dependencies[] = elms_course
-dependencies[] = elms_data_out
-dependencies[] = elms_navigation_left
-dependencies[] = elms_navigation_top
-dependencies[] = elms_roles
-dependencies[] = elms_helpdesk
-dependencies[] = elms_course_versions
 ; Accessible Content
 dependencies[] = accessible_content
 ; Administration
@@ -197,7 +178,9 @@ dependencies[] = workflow
 dependencies[] = workflow_purl
 ; Node form columns
 dependencies[] = nodeformcols
-
+; Atrium Features
+dependencies[] = atrium_blog
+dependencies[] = atrium_reader
 ; Variables
 
 variables[accessibility_guideline_accessibility_guideline] = "1578"
