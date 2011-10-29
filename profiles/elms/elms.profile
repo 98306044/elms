@@ -60,7 +60,7 @@ function elms_install() {
  * Helper function to install workflow states.
  */
 function _elms_workflow_query() {
-  db_query("INSERT INTO {workflows} VALUES ('Status', 'author,3,6', 'a:3:{s:16:\"comment_log_node\";i:1;s:15:\"comment_log_tab\";i:1;s:13:\"name_as_title\";i:1;}')");
+  db_query("INSERT INTO {workflows} VALUES ('1', 'Status', 'author,3,6', 'a:3:{s:16:\"comment_log_node\";i:1;s:15:\"comment_log_tab\";i:1;s:13:\"name_as_title\";i:1;}')");
   //insert the content type association
   db_query("INSERT INTO {workflow_type_map} VALUES ('accessibility_guideline', '0'), ('accessibility_test', '0'), ('blog', '0'), ('course', '0'), ('course_event', '0'), ('feed_reader', '0'), ('feed_user_import', '0'), ('folder', '0'), ('link', '0'), ('page', '0'), ('promo', '0'), ('reaction', '0'), ('studio_submission', '0'), ('version', '1')");
   //define the workflow states
