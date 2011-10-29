@@ -24,8 +24,6 @@ function elms_install() {
   $picture_path = file_create_path(variable_get('user_picture_path', 'pictures'));
   file_check_directory($picture_path, 1, 'user_picture_path');
   
-   node_access_rebuild();
-
   // Rebuild key tables/caches
   drupal_flush_all_caches();
 
