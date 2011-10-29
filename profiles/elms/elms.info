@@ -3,13 +3,6 @@ description = '<img src="profiles/elms/images/elms.png" alt="ELMS wordart" title
 core = "6.x"
 theme = "cube"
 
-; Auto generate 1st user account
-users[admin][uid] = "1"
-users[admin][name] = "admin"
-users[admin][mail] = "localhost@localhost.localhost"
-users[admin][roles] = "administrator"
-users[admin][status] = "1"
-
 ;Terms to create
 terms[department1][name] = "Department 1"
 terms[department1][vid] = "1"
