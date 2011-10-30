@@ -9,48 +9,6 @@ function elms_reaction_context_default_contexts() {
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
-  $context->name = 'elms_reaction-content-list';
-  $context->description = 'Position blocks on the page for a reaction to content';
-  $context->tag = 'ELMS Reaction';
-  $context->conditions = array(
-    'context_og_condition_group_type' => array(
-      'values' => array(
-        'version' => 'version',
-      ),
-      'options' => array(
-        'node_form' => 0,
-      ),
-    ),
-  );
-  $context->reactions = array(
-    'block' => array(
-      'blocks' => array(
-        'views-course_reaction_list-block_1' => array(
-          'module' => 'views',
-          'delta' => 'course_reaction_list-block_1',
-          'region' => 'content',
-          'weight' => 0,
-        ),
-        'formblock-reaction' => array(
-          'module' => 'formblock',
-          'delta' => 'reaction',
-          'region' => 'content',
-          'weight' => 1,
-        ),
-      ),
-    ),
-  );
-  $context->condition_mode = 0;
-
-  // Translatables
-  // Included for use with string extractors like potx.
-  t('ELMS Reaction');
-  t('Position blocks on the page for a reaction to content');
-  $export['elms_reaction-content-list'] = $context;
-
-  $context = new stdClass;
-  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
-  $context->api_version = 3;
   $context->name = 'elms_reaction-navigation';
   $context->description = 'Provide navigation if primary links are in use';
   $context->tag = 'ELMS Reaction';
