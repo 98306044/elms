@@ -18,16 +18,18 @@ function elms_course_fieldgroup_default_groups() {
         'description' => '',
       ),
       'display' => array(
-        'description' => '',
-        '5' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
+        'weight' => '11',
+        'label' => 'above',
         'teaser' => array(
           'format' => 'fieldset',
-          'exclude' => 0,
+          'exclude' => 1,
         ),
         'full' => array(
+          'format' => 'fieldset',
+          'exclude' => 1,
+        ),
+        'description' => '',
+        '5' => array(
           'format' => 'fieldset',
           'exclude' => 0,
         ),
@@ -47,16 +49,67 @@ function elms_course_fieldgroup_default_groups() {
           'format' => 'fieldset',
           'exclude' => 0,
         ),
-        'label' => 'above',
       ),
     ),
-    'weight' => '8',
+    'weight' => '11',
     'fields' => array(
-      '0' => 'field_course_title',
-      '1' => 'field_description',
-      '2' => 'field_course_promotion',
-      '3' => 'field_sample_syllabus',
+      '0' => 'field_description',
+      '1' => 'field_course_promotion',
+      '2' => 'field_prerequisites',
+      '3' => 'field_listing_only',
       '4' => 'field_course_link',
+    ),
+  );
+
+  // Exported group: group_documentation
+  $groups['course-group_documentation'] = array(
+    'group_type' => 'standard',
+    'type_name' => 'course',
+    'group_name' => 'group_documentation',
+    'label' => 'Documentation',
+    'settings' => array(
+      'form' => array(
+        'style' => 'fieldset_collapsed',
+        'description' => 'Add files either to facilitate communication with faculty or students.',
+      ),
+      'display' => array(
+        'weight' => '9',
+        'label' => 'above',
+        'teaser' => array(
+          'format' => 'fieldset',
+          'exclude' => 1,
+        ),
+        'full' => array(
+          'format' => 'fieldset',
+          'exclude' => 1,
+        ),
+        'description' => '',
+        '5' => array(
+          'format' => 'fieldset',
+          'exclude' => 0,
+        ),
+        '4' => array(
+          'format' => 'fieldset',
+          'exclude' => 0,
+        ),
+        '2' => array(
+          'format' => 'fieldset',
+          'exclude' => 0,
+        ),
+        '3' => array(
+          'format' => 'fieldset',
+          'exclude' => 0,
+        ),
+        'token' => array(
+          'format' => 'fieldset',
+          'exclude' => 0,
+        ),
+      ),
+    ),
+    'weight' => '9',
+    'fields' => array(
+      '0' => 'field_sample_materials',
+      '1' => 'field_faculty_resources',
     ),
   );
 
@@ -65,23 +118,25 @@ function elms_course_fieldgroup_default_groups() {
     'group_type' => 'standard',
     'type_name' => 'course',
     'group_name' => 'group_requirements',
-    'label' => 'Requirements',
+    'label' => 'Technical Requirements',
     'settings' => array(
       'form' => array(
         'style' => 'fieldset_collapsed',
-        'description' => 'Tell students what is required in order to take this course.  General course accessibility can be defined here to tell those with special needs what to expect from this course.  This can also help offset technical requirement issues after a course launches.',
+        'description' => 'List the technical requirements so that they can be checked against the user prior to them taking the course.  This can offset headaches that would arise after course launch.',
       ),
       'display' => array(
-        'description' => '',
-        '5' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
+        'weight' => '10',
+        'label' => 'above',
         'teaser' => array(
           'format' => 'fieldset',
-          'exclude' => 0,
+          'exclude' => 1,
         ),
         'full' => array(
+          'format' => 'fieldset',
+          'exclude' => 1,
+        ),
+        'description' => '',
+        '5' => array(
           'format' => 'fieldset',
           'exclude' => 0,
         ),
@@ -101,22 +156,20 @@ function elms_course_fieldgroup_default_groups() {
           'format' => 'fieldset',
           'exclude' => 0,
         ),
-        'label' => 'above',
       ),
     ),
-    'weight' => '9',
+    'weight' => '10',
     'fields' => array(
-      '0' => 'field_accessibility_rating',
-      '1' => 'field_supported_browsers',
-      '2' => 'field_required_plugins',
-      '3' => 'field_prerequisites',
+      '0' => 'field_supported_browsers',
+      '1' => 'field_required_plugins',
     ),
   );
 
   // Translatables
   // Included for use with string extractors like potx.
   t('Additional Settings');
-  t('Requirements');
+  t('Documentation');
+  t('Technical Requirements');
 
   return $groups;
 }

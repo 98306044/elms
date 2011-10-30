@@ -1479,37 +1479,34 @@ function elms_course_views_default_views() {
     'sticky' => 0,
     'order' => 'asc',
     'columns' => array(
-      'field_section_semester_value' => 'field_section_semester_value',
-      'field_section_year_value' => 'field_section_semester_value',
-      'field_campus_value' => 'field_section_semester_value',
-      'field_section_number_value' => 'field_section_semester_value',
-      'private' => 'private',
+      'title' => 'title',
+      'nid' => 'nid',
+      'nothing' => 'nothing',
+      'nothing_1' => 'nothing',
+      'delete_node' => 'nothing',
     ),
     'info' => array(
-      'field_section_semester_value' => array(
+      'title' => array(
         'sortable' => 0,
+        'separator' => '',
+      ),
+      'nid' => array(
+        'sortable' => 0,
+        'separator' => '',
+      ),
+      'nothing' => array(
         'separator' => ' ',
       ),
-      'field_section_year_value' => array(
-        'sortable' => 0,
+      'nothing_1' => array(
         'separator' => '',
       ),
-      'field_campus_value' => array(
-        'sortable' => 0,
-        'separator' => '',
-      ),
-      'field_section_number_value' => array(
-        'sortable' => 0,
-        'separator' => '',
-      ),
-      'private' => array(
-        'sortable' => 0,
+      'delete_node' => array(
         'separator' => '',
       ),
     ),
     'default' => '-1',
   ));
-  $handler = $view->new_display('block', 'Course Versions Block', 'block_1');
+  $handler = $view->new_display('block', 'Master Block', 'block_1');
   $handler->override_option('fields', array(
     'nid' => array(
       'label' => 'Nid',
@@ -1585,38 +1582,6 @@ function elms_course_views_default_views() {
         'button' => 'Use default',
       ),
     ),
-    'state' => array(
-      'label' => 'Status',
-      'alter' => array(
-        'alter_text' => 0,
-        'text' => '',
-        'make_link' => 0,
-        'path' => '',
-        'link_class' => '',
-        'alt' => '',
-        'prefix' => '',
-        'suffix' => '',
-        'target' => '',
-        'help' => '',
-        'trim' => 0,
-        'max_length' => '',
-        'word_boundary' => 1,
-        'ellipsis' => 1,
-        'html' => 0,
-        'strip_tags' => 0,
-      ),
-      'empty' => '',
-      'hide_empty' => 0,
-      'empty_zero' => 0,
-      'exclude' => 0,
-      'id' => 'state',
-      'table' => 'workflow_states',
-      'field' => 'state',
-      'override' => array(
-        'button' => 'Use default',
-      ),
-      'relationship' => 'none',
-    ),
     'private' => array(
       'label' => 'OER',
       'alter' => array(
@@ -1656,7 +1621,7 @@ function elms_course_views_default_views() {
       'alter' => array(
         'text' => 'offer',
         'make_link' => 1,
-        'path' => 'node/[nid]',
+        'path' => 'node/[nid]/workflow',
         'link_class' => '',
         'alt' => 'Offer Course off of this Version',
         'prefix' => '',
@@ -1687,7 +1652,7 @@ function elms_course_views_default_views() {
       'alter' => array(
         'text' => 'duplicate',
         'make_link' => 1,
-        'path' => 'og_clone/[nid]',
+        'path' => 'spaces_og_clone/[nid]',
         'link_class' => '',
         'alt' => 'Duplicate this Course Version',
         'prefix' => '',
@@ -1706,37 +1671,6 @@ function elms_course_views_default_views() {
       'empty_zero' => 0,
       'exclude' => 0,
       'id' => 'nothing_1',
-      'table' => 'views',
-      'field' => 'nothing',
-      'override' => array(
-        'button' => 'Use default',
-      ),
-      'relationship' => 'none',
-    ),
-    'nothing' => array(
-      'label' => 'archive',
-      'alter' => array(
-        'text' => 'archive',
-        'make_link' => 1,
-        'path' => 'node/[nid]/workflow',
-        'link_class' => '',
-        'alt' => 'Archive this Course Version',
-        'prefix' => '',
-        'suffix' => '',
-        'target' => '',
-        'help' => '',
-        'trim' => 0,
-        'max_length' => '',
-        'word_boundary' => 1,
-        'ellipsis' => 1,
-        'html' => 0,
-        'strip_tags' => 0,
-      ),
-      'empty' => '',
-      'hide_empty' => 0,
-      'empty_zero' => 0,
-      'exclude' => 0,
-      'id' => 'nothing',
       'table' => 'views',
       'field' => 'nothing',
       'override' => array(
@@ -1882,7 +1816,7 @@ function elms_course_views_default_views() {
     'sid' => array(
       'operator' => 'in',
       'value' => array(
-        '3' => '3',
+        '10' => '10',
       ),
       'group' => '0',
       'exposed' => FALSE,
@@ -1906,7 +1840,7 @@ function elms_course_views_default_views() {
       '6' => 6,
     ),
   ));
-  $handler->override_option('title', 'All Versions');
+  $handler->override_option('title', 'Master Versions');
   $handler->override_option('style_options', array(
     'grouping' => '',
     'override' => 0,
@@ -2105,7 +2039,7 @@ function elms_course_views_default_views() {
   ));
   $handler->override_option('block_description', '');
   $handler->override_option('block_caching', -1);
-  $handler = $view->new_display('block', 'Tour course block', 'block_4');
+  $handler = $view->new_display('block', 'Promo block', 'block_4');
   $handler->override_option('fields', array(
     'view_node' => array(
       'label' => '',
@@ -2200,7 +2134,7 @@ function elms_course_views_default_views() {
   $handler->override_option('style_options', array());
   $handler->override_option('block_description', '');
   $handler->override_option('block_caching', -1);
-  $handler = $view->new_display('block', 'Course Offerings Block', 'block_3');
+  $handler = $view->new_display('block', 'Active Block', 'block_3');
   $handler->override_option('fields', array(
     'field_section_semester_value' => array(
       'label' => 'Section',
@@ -2439,6 +2373,299 @@ function elms_course_views_default_views() {
       'operator' => 'in',
       'value' => array(
         '5' => '5',
+      ),
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'sid',
+      'table' => 'workflow_node',
+      'field' => 'sid',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('title', 'Active Offerings');
+  $handler->override_option('style_options', array(
+    'grouping' => '',
+    'override' => 0,
+    'sticky' => 0,
+    'order' => 'asc',
+    'columns' => array(
+      'field_section_semester_value' => 'field_section_semester_value',
+      'field_section_year_value' => 'field_section_semester_value',
+      'field_campus_value' => 'field_section_semester_value',
+      'field_section_number_value' => 'field_section_semester_value',
+      'private' => 'private',
+    ),
+    'info' => array(
+      'field_section_semester_value' => array(
+        'sortable' => 0,
+        'separator' => ' ',
+      ),
+      'field_section_year_value' => array(
+        'sortable' => 0,
+        'separator' => '',
+      ),
+      'field_campus_value' => array(
+        'sortable' => 0,
+        'separator' => '',
+      ),
+      'field_section_number_value' => array(
+        'sortable' => 0,
+        'separator' => '',
+      ),
+      'private' => array(
+        'sortable' => 0,
+        'separator' => '',
+      ),
+    ),
+    'default' => '-1',
+  ));
+  $handler->override_option('block_description', '');
+  $handler->override_option('block_caching', -1);
+  $handler = $view->new_display('block', 'Archive Block', 'block_5');
+  $handler->override_option('fields', array(
+    'field_section_semester_value' => array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'link_to_node' => 1,
+      'label_type' => 'none',
+      'format' => 'default',
+      'multiple' => array(
+        'group' => TRUE,
+        'multiple_number' => '',
+        'multiple_from' => '',
+        'multiple_reversed' => FALSE,
+      ),
+      'exclude' => 0,
+      'id' => 'field_section_semester_value',
+      'table' => 'node_data_field_section_semester',
+      'field' => 'field_section_semester_value',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+    'field_section_year_value' => array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'link_to_node' => 1,
+      'label_type' => 'none',
+      'format' => 'default',
+      'multiple' => array(
+        'group' => TRUE,
+        'multiple_number' => '',
+        'multiple_from' => '',
+        'multiple_reversed' => FALSE,
+      ),
+      'exclude' => 0,
+      'id' => 'field_section_year_value',
+      'table' => 'node_data_field_section_year',
+      'field' => 'field_section_year_value',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+    'field_campus_value' => array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'link_to_node' => 1,
+      'label_type' => 'none',
+      'format' => 'default',
+      'multiple' => array(
+        'group' => TRUE,
+        'multiple_number' => '',
+        'multiple_from' => '',
+        'multiple_reversed' => FALSE,
+      ),
+      'exclude' => 0,
+      'id' => 'field_campus_value',
+      'table' => 'node_data_field_campus',
+      'field' => 'field_campus_value',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+    'field_section_number_value' => array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'link_to_node' => 1,
+      'label_type' => 'none',
+      'format' => 'default',
+      'multiple' => array(
+        'group' => TRUE,
+        'multiple_number' => '',
+        'multiple_from' => '',
+        'multiple_reversed' => FALSE,
+      ),
+      'exclude' => 0,
+      'id' => 'field_section_number_value',
+      'table' => 'node_data_field_section_number',
+      'field' => 'field_section_number_value',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+    'private' => array(
+      'label' => 'OER',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'type' => 'yes-no',
+      'not' => 1,
+      'exclude' => 0,
+      'id' => 'private',
+      'table' => 'og',
+      'field' => 'private',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('filters', array(
+    'status' => array(
+      'operator' => '=',
+      'value' => '1',
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'status',
+      'table' => 'node',
+      'field' => 'status',
+      'relationship' => 'none',
+    ),
+    'type' => array(
+      'operator' => 'in',
+      'value' => array(
+        'version' => 'version',
+      ),
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'type',
+      'table' => 'node',
+      'field' => 'type',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+    'sid' => array(
+      'operator' => 'in',
+      'value' => array(
         '6' => '6',
       ),
       'group' => '0',
@@ -2456,7 +2683,640 @@ function elms_course_views_default_views() {
       'relationship' => 'none',
     ),
   ));
-  $handler->override_option('title', 'Course Offerings');
+  $handler->override_option('title', 'Past Offerings');
+  $handler->override_option('block_description', '');
+  $handler->override_option('block_caching', -1);
+  $handler = $view->new_display('block', 'Sandbox Block', 'block_6');
+  $handler->override_option('fields', array(
+    'title' => array(
+      'label' => 'Title',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'link_to_node' => 1,
+      'spaces' => array(
+        'frontpage' => 1,
+        'type' => 'spaces_og',
+      ),
+      'exclude' => 0,
+      'id' => 'title',
+      'table' => 'node',
+      'field' => 'title',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+    'nid' => array(
+      'label' => 'ID',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'link_to_node' => 1,
+      'spaces' => array(
+        'frontpage' => 1,
+        'type' => 'spaces_og',
+      ),
+      'exclude' => 0,
+      'id' => 'nid',
+      'table' => 'node',
+      'field' => 'nid',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+    'nothing' => array(
+      'label' => 'Operations',
+      'alter' => array(
+        'text' => 'offer',
+        'make_link' => 1,
+        'path' => 'node/[nid]/workflow',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'exclude' => 0,
+      'id' => 'nothing',
+      'table' => 'views',
+      'field' => 'nothing',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+    'nothing_1' => array(
+      'label' => 'Duplicate',
+      'alter' => array(
+        'text' => 'duplicate',
+        'make_link' => 1,
+        'path' => 'spaces_og_clone/[nid]',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'exclude' => 0,
+      'id' => 'nothing_1',
+      'table' => 'views',
+      'field' => 'nothing',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+    'delete_node' => array(
+      'label' => 'delete',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'text' => 'delete',
+      'exclude' => 0,
+      'id' => 'delete_node',
+      'table' => 'node',
+      'field' => 'delete_node',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('filters', array(
+    'status' => array(
+      'operator' => '=',
+      'value' => '1',
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'status',
+      'table' => 'node',
+      'field' => 'status',
+      'relationship' => 'none',
+    ),
+    'type' => array(
+      'operator' => 'in',
+      'value' => array(
+        'version' => 'version',
+      ),
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'type',
+      'table' => 'node',
+      'field' => 'type',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+    'sid' => array(
+      'operator' => 'in',
+      'value' => array(
+        '3' => '3',
+      ),
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'sid',
+      'table' => 'workflow_node',
+      'field' => 'sid',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('title', 'Development Sandboxes');
+  $handler->override_option('block_description', '');
+  $handler->override_option('block_caching', -1);
+
+  $views[$view->name] = $view;
+
+  // Exported view: elms_course_info_blocks
+  $view = new view;
+  $view->name = 'elms_course_info_blocks';
+  $view->description = 'Blocks that group together the fields of the course node';
+  $view->tag = 'course';
+  $view->view_php = '';
+  $view->base_table = 'node';
+  $view->is_cacheable = FALSE;
+  $view->api_version = 2;
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+  $handler = $view->new_display('default', 'Defaults', 'default');
+  $handler->override_option('fields', array(
+    'field_supported_browsers_value' => array(
+      'label' => 'Supported Browsers',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 1,
+      'empty_zero' => 1,
+      'link_to_node' => 0,
+      'label_type' => 'widget',
+      'format' => 'default',
+      'multiple' => array(
+        'group' => 1,
+        'multiple_number' => '',
+        'multiple_from' => '',
+        'multiple_reversed' => 0,
+      ),
+      'exclude' => 0,
+      'id' => 'field_supported_browsers_value',
+      'table' => 'node_data_field_supported_browsers',
+      'field' => 'field_supported_browsers_value',
+      'override' => array(
+        'button' => 'Override',
+      ),
+      'relationship' => 'none',
+    ),
+    'field_required_plugins_value' => array(
+      'label' => 'Plugin',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 1,
+      'empty_zero' => 1,
+      'link_to_node' => 0,
+      'label_type' => 'widget',
+      'format' => 'default',
+      'multiple' => array(
+        'group' => 1,
+        'multiple_number' => '',
+        'multiple_from' => '',
+        'multiple_reversed' => 0,
+      ),
+      'exclude' => 0,
+      'id' => 'field_required_plugins_value',
+      'table' => 'node_data_field_required_plugins',
+      'field' => 'field_required_plugins_value',
+      'override' => array(
+        'button' => 'Override',
+      ),
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('arguments', array(
+    'nid' => array(
+      'default_action' => 'default',
+      'style_plugin' => 'default_summary',
+      'style_options' => array(),
+      'wildcard' => 'all',
+      'wildcard_substitution' => 'All',
+      'title' => '',
+      'breadcrumb' => '',
+      'default_argument_type' => 'node',
+      'default_argument' => '',
+      'validate_type' => 'node',
+      'validate_fail' => 'not found',
+      'break_phrase' => 0,
+      'not' => 0,
+      'id' => 'nid',
+      'table' => 'node',
+      'field' => 'nid',
+      'validate_user_argument_type' => 'uid',
+      'validate_user_roles' => array(
+        '2' => 0,
+        '3' => 0,
+        '6' => 0,
+        '4' => 0,
+        '9' => 0,
+        '10' => 0,
+        '8' => 0,
+      ),
+      'override' => array(
+        'button' => 'Override',
+      ),
+      'relationship' => 'none',
+      'default_options_div_prefix' => '',
+      'default_argument_fixed' => '',
+      'default_argument_user' => 0,
+      'default_argument_php' => '',
+      'validate_argument_node_type' => array(
+        'course' => 'course',
+        'blog' => 0,
+        'feed_reader' => 0,
+        'folder' => 0,
+        'link' => 0,
+        'page' => 0,
+        'studio_submission' => 0,
+        'reaction' => 0,
+        'accessibility_guideline' => 0,
+        'accessibility_test' => 0,
+        'course_event' => 0,
+        'version' => 0,
+        'feed_user_import' => 0,
+        'promo' => 0,
+      ),
+      'validate_argument_node_access' => 0,
+      'validate_argument_nid_type' => 'nid',
+      'validate_argument_vocabulary' => array(
+        '1' => 0,
+      ),
+      'validate_argument_type' => 'tid',
+      'validate_argument_transform' => 0,
+      'validate_user_restrict_roles' => 0,
+      'validate_argument_node_flag_name' => '*relationship*',
+      'validate_argument_node_flag_test' => 'flaggable',
+      'validate_argument_node_flag_id_type' => 'id',
+      'validate_argument_user_flag_name' => '*relationship*',
+      'validate_argument_user_flag_test' => 'flaggable',
+      'validate_argument_user_flag_id_type' => 'id',
+      'validate_argument_is_member' => 'OG_VIEWS_DO_NOT_VALIDATE_MEMBERSHIP',
+      'validate_argument_group_node_type' => array(
+        'version' => 0,
+      ),
+      'validate_argument_php' => '',
+    ),
+  ));
+  $handler->override_option('filters', array(
+    'field_description_value' => array(
+      'operator' => 'not empty',
+      'value' => '',
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'case' => 1,
+      'id' => 'field_description_value',
+      'table' => 'node_data_field_description',
+      'field' => 'field_description_value',
+      'override' => array(
+        'button' => 'Override',
+      ),
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('access', array(
+    'type' => 'none',
+  ));
+  $handler->override_option('cache', array(
+    'type' => 'none',
+  ));
+  $handler->override_option('title', 'Technical Requirements');
+  $handler->override_option('empty_format', '1');
+  $handler->override_option('items_per_page', 0);
+  $handler->override_option('style_plugin', 'table');
+  $handler = $view->new_display('block', 'Tech Requirements', 'block_1');
+  $handler->override_option('filters', array());
+  $handler->override_option('block_description', '');
+  $handler->override_option('block_caching', -1);
+  $handler = $view->new_display('block', 'Sample Materials', 'block_2');
+  $handler->override_option('relationships', array(
+    'field_sample_materials_fid' => array(
+      'label' => 'Sample Materials',
+      'required' => 1,
+      'delta' => '-1',
+      'id' => 'field_sample_materials_fid',
+      'table' => 'node_data_field_sample_materials',
+      'field' => 'field_sample_materials_fid',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('fields', array(
+    'field_sample_materials_fid' => array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 1,
+      'empty_zero' => 0,
+      'link_to_node' => 0,
+      'label_type' => 'none',
+      'format' => 'default',
+      'multiple' => array(
+        'group' => 0,
+        'multiple_number' => '',
+        'multiple_from' => '',
+        'multiple_reversed' => 0,
+      ),
+      'exclude' => 0,
+      'id' => 'field_sample_materials_fid',
+      'table' => 'node_data_field_sample_materials',
+      'field' => 'field_sample_materials_fid',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('filters', array());
+  $handler->override_option('title', 'Sample Materials');
+  $handler->override_option('style_plugin', 'default');
+  $handler->override_option('row_options', array(
+    'inline' => array(),
+    'separator' => '',
+    'hide_empty' => 1,
+  ));
+  $handler->override_option('block_description', '');
+  $handler->override_option('block_caching', -1);
+  $handler = $view->new_display('block', 'Description', 'block_3');
+  $handler->override_option('fields', array(
+    'field_description_value' => array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 1,
+      'empty_zero' => 0,
+      'link_to_node' => 0,
+      'label_type' => 'none',
+      'format' => 'default',
+      'multiple' => array(
+        'group' => TRUE,
+        'multiple_number' => '',
+        'multiple_from' => '',
+        'multiple_reversed' => FALSE,
+      ),
+      'exclude' => 0,
+      'id' => 'field_description_value',
+      'table' => 'node_data_field_description',
+      'field' => 'field_description_value',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('title', 'Course Description');
+  $handler->override_option('style_plugin', 'default');
+  $handler->override_option('row_options', array(
+    'inline' => array(),
+    'separator' => '',
+    'hide_empty' => 1,
+  ));
+  $handler->override_option('block_description', '');
+  $handler->override_option('block_caching', -1);
+  $handler = $view->new_display('block', 'Faculty Resources', 'block_4');
+  $handler->override_option('relationships', array(
+    'field_faculty_resources_fid' => array(
+      'label' => 'Faculty Resources',
+      'required' => 1,
+      'delta' => '-1',
+      'id' => 'field_faculty_resources_fid',
+      'table' => 'node_data_field_faculty_resources',
+      'field' => 'field_faculty_resources_fid',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('fields', array(
+    'field_faculty_resources_fid' => array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'link_class' => '',
+        'alt' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 1,
+      'empty_zero' => 0,
+      'link_to_node' => 0,
+      'label_type' => 'none',
+      'format' => 'default',
+      'multiple' => array(
+        'group' => 0,
+        'multiple_number' => '',
+        'multiple_from' => '',
+        'multiple_reversed' => 0,
+      ),
+      'exclude' => 0,
+      'id' => 'field_faculty_resources_fid',
+      'table' => 'node_data_field_faculty_resources',
+      'field' => 'field_faculty_resources_fid',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('filters', array());
+  $handler->override_option('access', array(
+    'type' => 'role',
+    'role' => array(
+      '3' => 3,
+      '6' => 6,
+      '4' => 4,
+      '9' => 9,
+      '8' => 8,
+    ),
+  ));
+  $handler->override_option('title', 'Faculty Resources');
+  $handler->override_option('style_plugin', 'default');
+  $handler->override_option('row_options', array(
+    'inline' => array(),
+    'separator' => '',
+    'hide_empty' => 1,
+  ));
   $handler->override_option('block_description', '');
   $handler->override_option('block_caching', -1);
 

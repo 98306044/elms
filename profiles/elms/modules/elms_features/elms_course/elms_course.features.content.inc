@@ -6,87 +6,25 @@
 function elms_course_content_default_fields() {
   $fields = array();
 
-  // Exported field: field_accessibility_rating
-  $fields['course-field_accessibility_rating'] = array(
-    'field_name' => 'field_accessibility_rating',
-    'type_name' => 'course',
-    'display_settings' => array(
-      'label' => array(
-        'format' => 'above',
-        'exclude' => 0,
-      ),
-      '5' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      'teaser' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      'full' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '4' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '2' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '3' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      'token' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-    ),
-    'widget_active' => '1',
-    'type' => 'text',
-    'required' => '0',
-    'multiple' => '0',
-    'module' => 'text',
-    'active' => '1',
-    'text_processing' => '0',
-    'max_length' => '',
-    'allowed_values' => 'wcag20|WCAG 2.0',
-    'allowed_values_php' => '',
-    'widget' => array(
-      'default_value' => array(
-        '0' => array(
-          'value' => '',
-        ),
-      ),
-      'default_value_php' => NULL,
-      'label' => 'Accessibility Rating',
-      'weight' => '11',
-      'description' => 'This can help those with accessibility needs identify any potential problems they might have with this course based on their needs.',
-      'type' => 'optionwidgets_select',
-      'module' => 'optionwidgets',
-    ),
-  );
-
   // Exported field: field_course_link
   $fields['course-field_course_link'] = array(
     'field_name' => 'field_course_link',
     'type_name' => 'course',
     'display_settings' => array(
+      'weight' => '18',
+      'parent' => 'group_additional_settings',
       'label' => array(
         'format' => 'above',
-        'exclude' => 0,
-      ),
-      '5' => array(
-        'format' => 'default',
-        'exclude' => 0,
       ),
       'teaser' => array(
         'format' => 'default',
-        'exclude' => 0,
+        'exclude' => 1,
       ),
       'full' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      '5' => array(
         'format' => 'default',
         'exclude' => 0,
       ),
@@ -130,13 +68,12 @@ function elms_course_content_default_fields() {
     'widget' => array(
       'default_value' => array(
         '0' => array(
-          'title' => '',
           'url' => '',
         ),
       ),
       'default_value_php' => NULL,
       'label' => 'Course Link',
-      'weight' => '17',
+      'weight' => '18',
       'description' => 'Only use this if you are hosting the course external to ELMS',
       'type' => 'link',
       'module' => 'link',
@@ -148,7 +85,7 @@ function elms_course_content_default_fields() {
     'field_name' => 'field_course_name',
     'type_name' => 'course',
     'display_settings' => array(
-      'weight' => '9',
+      'weight' => '7',
       'parent' => '',
       'label' => array(
         'format' => 'hidden',
@@ -159,7 +96,7 @@ function elms_course_content_default_fields() {
       ),
       'full' => array(
         'format' => 'default',
-        'exclude' => 0,
+        'exclude' => 1,
       ),
       '5' => array(
         'format' => 'default',
@@ -219,8 +156,8 @@ Art 122 Y',
     'field_name' => 'field_course_promotion',
     'type_name' => 'course',
     'display_settings' => array(
-      'weight' => '13',
-      'parent' => '',
+      'weight' => '15',
+      'parent' => 'group_additional_settings',
       'label' => array(
         'format' => 'above',
       ),
@@ -273,7 +210,7 @@ Art 122 Y',
       'alt' => 'Sample Course Screenshot',
       'custom_alt' => 1,
       'title' => 'Sample Course Screenshot',
-      'custom_title' => 1,
+      'custom_title' => 0,
       'title_type' => 'textfield',
       'default_image' => NULL,
       'use_default_image' => 0,
@@ -290,7 +227,7 @@ Art 122 Y',
     'field_name' => 'field_course_title',
     'type_name' => 'course',
     'display_settings' => array(
-      'weight' => '10',
+      'weight' => '8',
       'parent' => '',
       'label' => array(
         'format' => 'hidden',
@@ -301,7 +238,7 @@ Art 122 Y',
       ),
       'full' => array(
         'format' => 'default',
-        'exclude' => 0,
+        'exclude' => 1,
       ),
       '5' => array(
         'format' => 'default',
@@ -345,7 +282,7 @@ Art 122 Y',
       ),
       'default_value_php' => NULL,
       'label' => 'Title',
-      'weight' => '13',
+      'weight' => '8',
       'description' => 'Examples:
 Introduction to World Music
 The Evolution of Jazz
@@ -360,8 +297,8 @@ Advanced Network Design',
     'field_name' => 'field_description',
     'type_name' => 'course',
     'display_settings' => array(
-      'weight' => '11',
-      'parent' => '',
+      'weight' => '14',
+      'parent' => 'group_additional_settings',
       'label' => array(
         'format' => 'hidden',
       ),
@@ -371,7 +308,7 @@ Advanced Network Design',
       ),
       'full' => array(
         'format' => 'default',
-        'exclude' => 0,
+        'exclude' => 1,
       ),
       '5' => array(
         'format' => 'default',
@@ -422,24 +359,151 @@ Advanced Network Design',
     ),
   );
 
-  // Exported field: field_prerequisites
-  $fields['course-field_prerequisites'] = array(
-    'field_name' => 'field_prerequisites',
+  // Exported field: field_faculty_resources
+  $fields['course-field_faculty_resources'] = array(
+    'field_name' => 'field_faculty_resources',
     'type_name' => 'course',
     'display_settings' => array(
+      'weight' => '11',
+      'parent' => 'group_documentation',
       'label' => array(
         'format' => 'above',
-        'exclude' => 0,
+      ),
+      'teaser' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      'full' => array(
+        'format' => 'default',
+        'exclude' => 1,
       ),
       '5' => array(
         'format' => 'default',
         'exclude' => 0,
       ),
-      'teaser' => array(
+      '4' => array(
         'format' => 'default',
         'exclude' => 0,
       ),
+      '2' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '3' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      'token' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+    ),
+    'widget_active' => '1',
+    'type' => 'filefield',
+    'required' => '0',
+    'multiple' => '1',
+    'module' => 'filefield',
+    'active' => '1',
+    'list_field' => '0',
+    'list_default' => 1,
+    'description_field' => '1',
+    'widget' => array(
+      'file_extensions' => 'txt doc docx pdf',
+      'file_path' => '',
+      'progress_indicator' => 'bar',
+      'max_filesize_per_file' => '20M',
+      'max_filesize_per_node' => '',
+      'label' => 'Faculty Resources',
+      'weight' => '11',
+      'description' => 'Upload documents that could help facilitate course communication between faculty members and instructional designers',
+      'type' => 'filefield_widget',
+      'module' => 'filefield',
+    ),
+  );
+
+  // Exported field: field_listing_only
+  $fields['course-field_listing_only'] = array(
+    'field_name' => 'field_listing_only',
+    'type_name' => 'course',
+    'display_settings' => array(
+      'weight' => '17',
+      'parent' => 'group_additional_settings',
+      'label' => array(
+        'format' => 'above',
+      ),
+      'teaser' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
       'full' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      '5' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '2' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '3' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      'token' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+    ),
+    'widget_active' => '1',
+    'type' => 'text',
+    'required' => '0',
+    'multiple' => '1',
+    'module' => 'text',
+    'active' => '1',
+    'text_processing' => '0',
+    'max_length' => '',
+    'allowed_values' => 'list|List Course Name Only',
+    'allowed_values_php' => '',
+    'widget' => array(
+      'default_value' => array(
+        '0' => array(
+          'value' => '',
+        ),
+      ),
+      'default_value_php' => NULL,
+      'label' => 'Listing Only',
+      'weight' => '17',
+      'description' => 'Check this box to indicate that you only want to list the fact that a course exists but not to create pages and versions in the system.  By default ELMS will automatically create a version to work off of, this disables this functionality.  Use this in instances where you want to list a course using ELMS but not build out a space (you can always build one in the future).',
+      'type' => 'optionwidgets_buttons',
+      'module' => 'optionwidgets',
+    ),
+  );
+
+  // Exported field: field_prerequisites
+  $fields['course-field_prerequisites'] = array(
+    'field_name' => 'field_prerequisites',
+    'type_name' => 'course',
+    'display_settings' => array(
+      'weight' => '16',
+      'parent' => 'group_additional_settings',
+      'label' => array(
+        'format' => 'above',
+      ),
+      'teaser' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      'full' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      '5' => array(
         'format' => 'default',
         'exclude' => 0,
       ),
@@ -492,7 +556,7 @@ Advanced Network Design',
       ),
       'default_value_php' => NULL,
       'label' => 'Prerequisites',
-      'weight' => '14',
+      'weight' => '16',
       'description' => 'List courses required in order to take this one.',
       'type' => 'nodereference_autocomplete',
       'module' => 'nodereference',
@@ -504,19 +568,20 @@ Advanced Network Design',
     'field_name' => 'field_required_plugins',
     'type_name' => 'course',
     'display_settings' => array(
+      'weight' => '12',
+      'parent' => 'group_requirements',
       'label' => array(
         'format' => 'above',
-        'exclude' => 0,
-      ),
-      '5' => array(
-        'format' => 'default',
-        'exclude' => 0,
       ),
       'teaser' => array(
         'format' => 'default',
-        'exclude' => 0,
+        'exclude' => 1,
       ),
       'full' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      '5' => array(
         'format' => 'default',
         'exclude' => 0,
       ),
@@ -555,36 +620,37 @@ html5|HTML 5',
     'widget' => array(
       'default_value' => array(
         '0' => array(
-          'value' => NULL,
+          'value' => 'pdf',
         ),
       ),
       'default_value_php' => NULL,
       'label' => 'Plugin',
-      'weight' => '13',
+      'weight' => '12',
       'description' => 'Select the plugins required to take this course.',
       'type' => 'optionwidgets_buttons',
       'module' => 'optionwidgets',
     ),
   );
 
-  // Exported field: field_sample_syllabus
-  $fields['course-field_sample_syllabus'] = array(
-    'field_name' => 'field_sample_syllabus',
+  // Exported field: field_sample_materials
+  $fields['course-field_sample_materials'] = array(
+    'field_name' => 'field_sample_materials',
     'type_name' => 'course',
     'display_settings' => array(
+      'weight' => '10',
+      'parent' => 'group_documentation',
       'label' => array(
         'format' => 'above',
-        'exclude' => 0,
-      ),
-      '5' => array(
-        'format' => 'default',
-        'exclude' => 0,
       ),
       'teaser' => array(
         'format' => 'default',
-        'exclude' => 0,
+        'exclude' => 1,
       ),
       'full' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      '5' => array(
         'format' => 'default',
         'exclude' => 0,
       ),
@@ -608,21 +674,21 @@ html5|HTML 5',
     'widget_active' => '1',
     'type' => 'filefield',
     'required' => '0',
-    'multiple' => '0',
+    'multiple' => '1',
     'module' => 'filefield',
     'active' => '1',
     'list_field' => '0',
     'list_default' => 1,
-    'description_field' => '0',
+    'description_field' => '1',
     'widget' => array(
-      'file_extensions' => 'txt doc pdf docx',
+      'file_extensions' => 'txt doc pdf docx xls xlsx',
       'file_path' => '',
       'progress_indicator' => 'bar',
-      'max_filesize_per_file' => '1MB',
+      'max_filesize_per_file' => '10M',
       'max_filesize_per_node' => '',
-      'label' => 'Sample Syllabus',
-      'weight' => '16',
-      'description' => 'A sample syllabus for this course to give students an idea of what to expect if they were to take the course.',
+      'label' => 'Sample Materials',
+      'weight' => '10',
+      'description' => 'Use this for uploading syllabi and other sample materials to give students a feel for the course.',
       'type' => 'filefield_widget',
       'module' => 'filefield',
     ),
@@ -633,19 +699,20 @@ html5|HTML 5',
     'field_name' => 'field_supported_browsers',
     'type_name' => 'course',
     'display_settings' => array(
+      'weight' => '11',
+      'parent' => 'group_requirements',
       'label' => array(
         'format' => 'above',
-        'exclude' => 0,
-      ),
-      '5' => array(
-        'format' => 'default',
-        'exclude' => 0,
       ),
       'teaser' => array(
         'format' => 'default',
-        'exclude' => 0,
+        'exclude' => 1,
       ),
       'full' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      '5' => array(
         'format' => 'default',
         'exclude' => 0,
       ),
@@ -687,12 +754,24 @@ safari|Safari (latest)',
     'widget' => array(
       'default_value' => array(
         '0' => array(
-          'value' => '',
+          'value' => 'chrome',
+        ),
+        '1' => array(
+          'value' => 'IE9',
+        ),
+        '2' => array(
+          'value' => 'firefox',
+        ),
+        '3' => array(
+          'value' => 'firefox36',
+        ),
+        '4' => array(
+          'value' => 'safari',
         ),
       ),
       'default_value_php' => NULL,
       'label' => 'Supported Browsers',
-      'weight' => '12',
+      'weight' => '11',
       'description' => 'Browsers that are supported for this course.  If none are selected defaults will be used.  This can be good for defining advanced support in courses pushing the envelop on modern technology adoption (such as HTML 5).',
       'type' => 'optionwidgets_buttons',
       'module' => 'optionwidgets',
@@ -701,14 +780,15 @@ safari|Safari (latest)',
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('Accessibility Rating');
   t('Course Link');
   t('Course Promotion');
   t('Description');
+  t('Faculty Resources');
+  t('Listing Only');
   t('Name');
   t('Plugin');
   t('Prerequisites');
-  t('Sample Syllabus');
+  t('Sample Materials');
   t('Supported Browsers');
   t('Title');
 

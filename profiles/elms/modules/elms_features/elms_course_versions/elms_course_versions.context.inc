@@ -9,6 +9,39 @@ function elms_course_versions_context_default_contexts() {
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
+  $context->name = 'elms_course-sandboxes';
+  $context->description = 'Adds a block to the user profile page to display their development sandboxes';
+  $context->tag = 'ELMS Course Versions';
+  $context->conditions = array(
+    'path' => array(
+      'values' => array(
+        'user/*' => 'user/*',
+      ),
+    ),
+  );
+  $context->reactions = array(
+    'block' => array(
+      'blocks' => array(
+        'views-course_sandboxes-block_1' => array(
+          'module' => 'views',
+          'delta' => 'course_sandboxes-block_1',
+          'region' => 'right',
+          'weight' => 0,
+        ),
+      ),
+    ),
+  );
+  $context->condition_mode = 0;
+
+  // Translatables
+  // Included for use with string extractors like potx.
+  t('Adds a block to the user profile page to display their development sandboxes');
+  t('ELMS Course Versions');
+  $export['elms_course-sandboxes'] = $context;
+
+  $context = new stdClass;
+  $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
+  $context->api_version = 3;
   $context->name = 'elms_course_versions-features';
   $context->description = 'Display the block navigation for the enabled Features';
   $context->tag = 'ELMS Course Versions';
@@ -35,6 +68,12 @@ function elms_course_versions_context_default_contexts() {
           'delta' => 'features',
           'region' => 'left',
           'weight' => 0,
+        ),
+        'views-f4b29b192e7665960ddb69aa48cf7be2' => array(
+          'module' => 'views',
+          'delta' => 'f4b29b192e7665960ddb69aa48cf7be2',
+          'region' => 'left',
+          'weight' => 1,
         ),
       ),
     ),

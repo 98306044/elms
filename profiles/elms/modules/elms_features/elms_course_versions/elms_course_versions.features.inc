@@ -42,7 +42,7 @@ function elms_course_versions_imagecache_default_presets() {
 function elms_course_versions_node_info() {
   $items = array(
     'version' => array(
-      'name' => t('Version'),
+      'name' => t('Course Version'),
       'module' => 'features',
       'description' => t('A version of a course either for new development, to be offered to students, or for promotional purposes.'),
       'has_title' => '1',

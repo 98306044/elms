@@ -100,7 +100,7 @@ yk|York Campus',
     'field_name' => 'field_course_ref',
     'type_name' => 'version',
     'display_settings' => array(
-      'weight' => '-4',
+      'weight' => '-5',
       'parent' => '',
       'label' => array(
         'format' => 'above',
@@ -136,7 +136,7 @@ yk|York Campus',
     ),
     'widget_active' => '1',
     'type' => 'nodereference',
-    'required' => '1',
+    'required' => '0',
     'multiple' => '0',
     'module' => 'nodereference',
     'active' => '1',
@@ -144,14 +144,17 @@ yk|York Campus',
       'course' => 'course',
       'accessibility_guideline' => 0,
       'accessibility_test' => 0,
+      'blog' => 0,
       'course_event' => 0,
+      'version' => 0,
       'folder' => 0,
       'link' => 0,
       'page' => 0,
       'promo' => 0,
-      'version' => 0,
-      'reaction' => FALSE,
-      'studio_submission' => FALSE,
+      'reaction' => 0,
+      'feed_reader' => 0,
+      'studio_submission' => 0,
+      'feed_user_import' => 0,
     ),
     'advanced_view' => '--',
     'advanced_view_args' => '',
@@ -187,7 +190,7 @@ yk|York Campus',
     'field_name' => 'field_finals_monday',
     'type_name' => 'version',
     'display_settings' => array(
-      'weight' => '17',
+      'weight' => '7',
       'parent' => 'group_schedule',
       'label' => array(
         'format' => 'above',
@@ -262,7 +265,7 @@ yk|York Campus',
     'field_name' => 'field_forming_week_structure',
     'type_name' => 'version',
     'display_settings' => array(
-      'weight' => '20',
+      'weight' => '10',
       'parent' => 'group_schedule',
       'label' => array(
         'format' => 'above',
@@ -323,13 +326,80 @@ prototype|Build from Prototype Lesson / Course',
     ),
   );
 
+  // Exported field: field_inst_contact_block
+  $fields['version-field_inst_contact_block'] = array(
+    'field_name' => 'field_inst_contact_block',
+    'type_name' => 'version',
+    'display_settings' => array(
+      'weight' => '22',
+      'parent' => 'group_instructor_contact_info',
+      'label' => array(
+        'format' => 'above',
+      ),
+      'teaser' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      'full' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      '5' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '2' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '3' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      'token' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+    ),
+    'widget_active' => '1',
+    'type' => 'text',
+    'required' => '0',
+    'multiple' => '0',
+    'module' => 'text',
+    'active' => '1',
+    'text_processing' => '1',
+    'max_length' => '',
+    'allowed_values' => '',
+    'allowed_values_php' => '',
+    'widget' => array(
+      'rows' => '5',
+      'size' => 60,
+      'default_value' => array(
+        '0' => array(
+          'value' => '',
+          '_error_element' => 'default_value_widget][field_inst_contact_block][0][value',
+        ),
+      ),
+      'default_value_php' => NULL,
+      'label' => 'Contact Block',
+      'weight' => '22',
+      'description' => '',
+      'type' => 'text_textarea',
+      'module' => 'text',
+    ),
+  );
+
   // Exported field: field_instructional_template
   $fields['version-field_instructional_template'] = array(
     'field_name' => 'field_instructional_template',
     'type_name' => 'version',
     'display_settings' => array(
-      'weight' => '8',
-      'parent' => '',
+      'weight' => '-1',
+      'parent' => 'group_content',
       'label' => array(
         'format' => 'above',
       ),
@@ -398,8 +468,8 @@ else {
     'field_name' => 'field_lesson_count',
     'type_name' => 'version',
     'display_settings' => array(
-      'weight' => '9',
-      'parent' => '',
+      'weight' => 0,
+      'parent' => 'group_content',
       'label' => array(
         'format' => 'above',
       ),
@@ -477,7 +547,7 @@ else {
     'field_name' => 'field_num_topics',
     'type_name' => 'version',
     'display_settings' => array(
-      'weight' => '19',
+      'weight' => '9',
       'parent' => 'group_schedule',
       'label' => array(
         'format' => 'above',
@@ -547,7 +617,7 @@ else {
     'field_name' => 'field_schedule_source',
     'type_name' => 'version',
     'display_settings' => array(
-      'weight' => '15',
+      'weight' => '5',
       'parent' => 'group_schedule',
       'label' => array(
         'format' => 'above',
@@ -614,7 +684,7 @@ manual|Manual Entry',
     'field_name' => 'field_schedule_to_build',
     'type_name' => 'version',
     'display_settings' => array(
-      'weight' => '14',
+      'weight' => '4',
       'parent' => 'group_schedule',
       'label' => array(
         'format' => 'above',
@@ -679,8 +749,8 @@ topic|Topic Based Schedule',
     'field_name' => 'field_scoring_method',
     'type_name' => 'version',
     'display_settings' => array(
-      'weight' => '12',
-      'parent' => '',
+      'weight' => '3',
+      'parent' => 'group_schedule',
       'label' => array(
         'format' => 'above',
       ),
@@ -953,7 +1023,7 @@ su2|Summer 2',
     'field_name' => 'field_semester',
     'type_name' => 'version',
     'display_settings' => array(
-      'weight' => '22',
+      'weight' => '12',
       'parent' => 'group_schedule',
       'label' => array(
         'format' => 'above',
@@ -1021,7 +1091,7 @@ summer2|Summer 2',
     'field_name' => 'field_start_date',
     'type_name' => 'version',
     'display_settings' => array(
-      'weight' => '16',
+      'weight' => '6',
       'parent' => 'group_schedule',
       'label' => array(
         'format' => 'above',
@@ -1096,7 +1166,7 @@ summer2|Summer 2',
     'field_name' => 'field_top_level_name',
     'type_name' => 'version',
     'display_settings' => array(
-      'weight' => '18',
+      'weight' => '8',
       'parent' => 'group_schedule',
       'label' => array(
         'format' => 'above',
@@ -1163,7 +1233,7 @@ unit|Unit',
     'field_name' => 'field_week_structure',
     'type_name' => 'version',
     'display_settings' => array(
-      'weight' => '21',
+      'weight' => '11',
       'parent' => 'group_schedule',
       'label' => array(
         'format' => 'above',
@@ -1236,7 +1306,7 @@ reading|Reading',
     'field_name' => 'field_year',
     'type_name' => 'version',
     'display_settings' => array(
-      'weight' => '23',
+      'weight' => '13',
       'parent' => 'group_schedule',
       'label' => array(
         'format' => 'above',
@@ -1304,6 +1374,7 @@ reading|Reading',
   // Translatables
   // Included for use with string extractors like potx.
   t('Campus');
+  t('Contact Block');
   t('Course');
   t('Finals');
   t('Forming Week Structure');
