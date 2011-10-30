@@ -46,7 +46,8 @@ function elms_install() {
   drupal_flush_all_caches();
   //disable all DB blocks
   db_query("UPDATE {blocks} SET status = 0, region = ''");
-  db_query("UPDATE {system} SET status = 0 WHERE type = 'theme' and name ='%s'", 'garland');
+  //activate all themes
+  db_query("UPDATE {system} SET status = 1 WHERE type = 'theme'");
   //set module weights accordingly
   
   // In Aegir install processes, we need to init strongarm manually as a
