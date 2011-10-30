@@ -40,8 +40,6 @@ function elms_navigation_top_init() {
       'factor' => 1,
     )
   );
-  drupal_set_message('Browser is Chrome and should be something else!', 'browser-version', FALSE);
-  drupal_set_message('I hate your flash!', 'browser-flash', FALSE);
   drupal_add_js($settings, 'setting');
 }
 /**
