@@ -1,5 +1,6 @@
 core = "6.x"
 dependencies[] = "context"
+dependencies[] = "formblock"
 dependencies[] = "menu"
 dependencies[] = "nodereference_url"
 dependencies[] = "spaces"
