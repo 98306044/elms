@@ -14,8 +14,16 @@ profiler_v2('elms');
  * Implementation of hook_install().
  */
 function elms_install() {
+  //run the accessible content builder
+  //include_once('modules/contrib/accessible_content/accessible_content.admin.inc');
+  drupal_set_message(l(t('Click to install Accessibility Test'),'admin/settings/accessible_content/create_tests'));
+  //accessible_content_admin_update_tests_form_submit();
+  _elms_role_query();
   // Remove default input filter formats
-  db_query("DELETE FROM {filters} WHERE format = *");
+  db_query("DELETE FROM {filters} WHERE fid <> 0");
+  db_query("DELETE FROM {filter_formats} WHERE format <> 0");
+  //delete book content type
+  db_query("DELETE FROM {node_type} WHERE type='book'");
   //apply elms default filters
   _elms_filters_query();
   _elms_filter_formats_query();
@@ -23,6 +31,8 @@ function elms_install() {
   _elms_better_formats_defaults_query();
   //wysiwyg defaults
   _elms_wysiwyg_query();
+  //add profile fields
+  _elms_profile_fields_query();
   //contact form for the default helpdesk
   _elms_contact_query();
   _elms_contact_fields_query();
@@ -57,10 +67,34 @@ function elms_install() {
 }
 
 /**
+ * Helper function to install roles with RID defaults.
+ */
+function _elms_profile_fields_query() {
+  db_query("INSERT INTO {profile_fields} VALUES ('1', 'First Name', 'profile_first_name', '', 'Personal', '', 'textfield', '-10', '0', '0', '4', '0', ''), ('2', 'Last Name', 'profile_last_name', '', 'Personal', '', 'textfield', '-9', '0', '0', '4', '0', '')");
+}
+
+/**
+ * Helper function to install roles with RID defaults.
+ */
+function _elms_role_query() {
+  db_query("INSERT INTO {role} VALUES ('6', 'instructional designer'), ('4', 'instructor'), ('9', 'staff'), ('10', 'student'), ('8', 'teaching assistant');");	
+}
+/**
  * Helper function to install workflow states.
  */
 function _elms_workflow_query() {
-  db_query("INSERT INTO {workflows} VALUES ('1', 'Status', 'author,3,6', 'a:3:{s:16:\"comment_log_node\";i:1;s:15:\"comment_log_tab\";i:1;s:13:\"name_as_title\";i:1;}')");
+  $ary = array (
+  'wid' => '1',
+  'name' => 'Status',
+  'tab_roles' => 'author,3,6',
+  'options' => 
+  serialize(array (
+    'comment_log_node' => 1,
+    'comment_log_tab' => 1,
+    'name_as_title' => 1,
+  )),
+  );
+  drupal_write_record('workflows', $ary);
   //insert the content type association
   db_query("INSERT INTO {workflow_type_map} VALUES ('accessibility_guideline', '0'), ('accessibility_test', '0'), ('blog', '0'), ('course', '0'), ('course_event', '0'), ('feed_reader', '0'), ('feed_user_import', '0'), ('folder', '0'), ('link', '0'), ('page', '0'), ('promo', '0'), ('reaction', '0'), ('studio_submission', '0'), ('version', '1')");
   //define the workflow states
@@ -73,28 +107,292 @@ function _elms_workflow_query() {
  * Helper function to install default contact form.
  */
 function _elms_contact_query() {
-  db_query("INSERT INTO {contact} VALUES ('Helpdesk', '%s', 'Thank you for contacting the e-Learning Institute Helpdesk.  We will contact you within 24 hours during normal business hours or 48 hours during off-peak times.', '0', '1')", variable_get('site_mail', ''));
+  db_query("INSERT INTO {contact} VALUES ('1','Helpdesk', '%s', 'Thank you for contacting the e-Learning Institute Helpdesk.  We will contact you within 24 hours during normal business hours or 48 hours during off-peak times.', '0', '1')", variable_get('site_mail', ''));
 }
 
 /**
  * Helper function to install default contact fields.
  */
 function _elms_contact_fields_query() {
-  db_query("INSERT INTO {contact_fields} VALUES ('name', 'textfield', 'a:1:{s:5:\"title\";s:9:\"Your name\";}', '1', '1', '2', '1', ''), ('mail', 'textfield', 'a:1:{s:5:\"title\";s:19:\"Your e-mail address\";}', '1', '1', '3', '1', ''), ('subject', 'textfield', 'a:1:{s:5:\"title\";s:7:\"Subject\";}', '1', '1', '4', '1', ''), ('cid', 'value', 'a:1:{s:5:\"title\";N;}', '0', '1', '7', '1', ''), ('message', 'textarea', 'a:1:{s:5:\"title\";s:7:\"Message\";}', '1', '1', '5', '1', ''), ('field_issue_type', 'select', 'a:7:{s:8:\"multiple\";b:0;s:5:\"title\";s:16:\"Type of Question\";s:6:\"prefix\";s:0:\"\";s:6:\"suffix\";s:0:\"\";s:9:\"num_value\";s:1:\"0\";s:11:\"description\";s:84:\"Please classify your question to help us better understand the issue you are having.\";s:7:\"options\";a:4:{s:7:\"general\";s:8:\"General\r\";s:10:\"instructor\";s:15:\"For Instructor\r\";s:9:\"technical\";s:10:\"Technical\r\";s:5:\"angel\";s:5:\"ANGEL\";}}', '1', '1', '0', '0', ''), ('field_roles', 'textfield', 'a:7:{s:5:\"title\";s:5:\"Roles\";s:11:\"description\";s:0:\"\";s:6:\"prefix\";s:0:\"\";s:6:\"suffix\";s:0:\"\";s:9:\"maxlength\";i:255;s:12:\"field_prefix\";s:0:\"\";s:12:\"field_suffix\";s:0:\"\";}', '0', '1', '1', '0', ''), ('field_tech_details', 'textarea', 'a:4:{s:11:\"description\";s:82:\"The following are technical support details that will also be sent to the helpdesk\";s:5:\"title\";s:17:\"Technical Details\";s:4:\"rows\";s:2:\"14\";s:4:\"cols\";s:0:\"\";}', '1', '1', '6', '0', '')");
+  $ary = array (
+  'field_name' => 'name',
+  'field_type' => 'textfield',
+  'settings' => 
+  serialize(array (
+    'title' => 'Your name',
+  )),
+  'required' => '1',
+  'enabled' => '1',
+  'weight' => '2',
+  'core' => '1',
+  'field_group' => '',
+  );
+  drupal_write_record('contact_fields', $ary);
+  $ary = array (
+  'field_name' => 'mail',
+  'field_type' => 'textfield',
+  'settings' => 
+  serialize(array (
+    'title' => 'Your e-mail address',
+  )),
+  'required' => '1',
+  'enabled' => '1',
+  'weight' => '3',
+  'core' => '1',
+  'field_group' => '',
+  );
+  drupal_write_record('contact_fields', $ary);
+  $ary = array (
+  'field_name' => 'subject',
+  'field_type' => 'textfield',
+  'settings' => 
+  serialize(array (
+    'title' => 'Subject',
+  )),
+  'required' => '1',
+  'enabled' => '1',
+  'weight' => '4',
+  'core' => '1',
+  'field_group' => '',
+  );
+  drupal_write_record('contact_fields', $ary);
+  $ary = array (
+  'field_name' => 'cid',
+  'field_type' => 'value',
+  'settings' => 
+  serialize(array (
+    'title' => NULL,
+  )),
+  'required' => '0',
+  'enabled' => '1',
+  'weight' => '7',
+  'core' => '1',
+  'field_group' => '',
+  );
+  drupal_write_record('contact_fields', $ary);
+  $ary = array (
+  'field_name' => 'message',
+  'field_type' => 'textarea',
+  'settings' => 
+  serialize(array (
+    'title' => 'Message',
+  )),
+  'required' => '1',
+  'enabled' => '1',
+  'weight' => '5',
+  'core' => '1',
+  'field_group' => '',
+  );
+  drupal_write_record('contact_fields', $ary);
+  $ary = array (
+  'field_name' => 'field_issue_type',
+  'field_type' => 'select',
+  'settings' => 
+  serialize(array (
+    'multiple' => false,
+    'title' => 'Type of Question',
+    'prefix' => '',
+    'suffix' => '',
+    'num_value' => '0',
+    'description' => 'Please classify your question to help us better understand the issue you are having.',
+    'options' => 
+    array (
+      'general' => 'General
+',
+      'instructor' => 'For Instructor
+',
+      'technical' => 'Technical
+',
+    ),
+  )),
+  'required' => '1',
+  'enabled' => '1',
+  'weight' => '0',
+  'core' => '0',
+  'field_group' => '',
+  );
+  drupal_write_record('contact_fields', $ary);
+  $ary = array (
+  'field_name' => 'field_roles',
+  'field_type' => 'textfield',
+  'settings' => 
+  serialize(array (
+    'title' => 'Roles',
+    'description' => '',
+    'prefix' => '',
+    'suffix' => '',
+    'maxlength' => 255,
+    'field_prefix' => '',
+    'field_suffix' => '',
+  )),
+  'required' => '0',
+  'enabled' => '1',
+  'weight' => '1',
+  'core' => '0',
+  'field_group' => '',
+  );
+  drupal_write_record('contact_fields', $ary);
+  $ary = array (
+  'field_name' => 'field_tech_details',
+  'field_type' => 'textarea',
+  'settings' => 
+  serialize(array (
+    'description' => 'The following are technical support details that will also be sent to the helpdesk',
+    'title' => 'Technical Details',
+    'rows' => '14',
+    'cols' => '',
+  )),
+  'required' => '1',
+  'enabled' => '1',
+  'weight' => '6',
+  'core' => '0',
+  'field_group' => '',
+  );
+  drupal_write_record('contact_fields', $ary);
 }
 
 /**
  * Helper function to install default wysiwyg settings.
  */
 function _elms_wysiwyg_query() {
-  db_query("INSERT INTO {wysiwyg} VALUES ('1', 'ckeditor', 'a:20:{s:7:\"default\";i:1;s:11:\"user_choose\";i:0;s:11:\"show_toggle\";i:0;s:5:\"theme\";s:8:\"advanced\";s:8:\"language\";s:2:\"en\";s:7:\"buttons\";a:1:{s:7:\"default\";a:7:{s:4:\"Bold\";i:1;s:6:\"Italic\";i:1;s:9:\"Underline\";i:1;s:12:\"BulletedList\";i:1;s:12:\"NumberedList\";i:1;s:4:\"Link\";i:1;s:5:\"Scayt\";i:1;}}s:11:\"toolbar_loc\";s:3:\"top\";s:13:\"toolbar_align\";s:4:\"left\";s:8:\"path_loc\";s:4:\"none\";s:8:\"resizing\";i:1;s:11:\"verify_html\";i:1;s:12:\"preformatted\";i:0;s:22:\"convert_fonts_to_spans\";i:1;s:17:\"remove_linebreaks\";i:0;s:23:\"apply_source_formatting\";i:0;s:27:\"paste_auto_cleanup_on_paste\";i:1;s:13:\"block_formats\";s:32:\"p,address,pre,h2,h3,h4,h5,h6,div\";s:11:\"css_setting\";s:4:\"none\";s:8:\"css_path\";s:0:\"\";s:11:\"css_classes\";s:0:\"\";}'), ('2', 'ckeditor', 'a:20:{s:7:\"default\";i:1;s:11:\"user_choose\";i:0;s:11:\"show_toggle\";i:1;s:5:\"theme\";s:8:\"advanced\";s:8:\"language\";s:2:\"en\";s:7:\"buttons\";a:4:{s:7:\"default\";a:19:{s:4:\"Bold\";i:1;s:6:\"Italic\";i:1;s:9:\"Underline\";i:1;s:11:\"JustifyLeft\";i:1;s:13:\"JustifyCenter\";i:1;s:12:\"JustifyRight\";i:1;s:12:\"BulletedList\";i:1;s:12:\"NumberedList\";i:1;s:7:\"Outdent\";i:1;s:6:\"Indent\";i:1;s:4:\"Link\";i:1;s:5:\"Image\";i:1;s:11:\"Superscript\";i:1;s:9:\"Subscript\";i:1;s:12:\"RemoveFormat\";i:1;s:8:\"FontSize\";i:1;s:6:\"Styles\";i:1;s:5:\"Table\";i:1;s:5:\"Scayt\";i:1;}s:8:\"elimedia\";a:1:{s:8:\"elimedia\";i:1;}s:4:\"imce\";a:1:{s:4:\"imce\";i:1;}s:11:\"drupal_path\";a:1:{s:4:\"Link\";i:1;}}s:11:\"toolbar_loc\";s:3:\"top\";s:13:\"toolbar_align\";s:4:\"left\";s:8:\"path_loc\";s:6:\"bottom\";s:8:\"resizing\";i:1;s:11:\"verify_html\";i:0;s:12:\"preformatted\";i:0;s:22:\"convert_fonts_to_spans\";i:1;s:17:\"remove_linebreaks\";i:0;s:23:\"apply_source_formatting\";i:0;s:27:\"paste_auto_cleanup_on_paste\";i:1;s:13:\"block_formats\";s:32:\"p,address,pre,h2,h3,h4,h5,h6,div\";s:11:\"css_setting\";s:4:\"none\";s:8:\"css_path\";s:0:\"\";s:11:\"css_classes\";s:0:\"\";}'), ('4', 'ckeditor', 'a:20:{s:7:\"default\";i:1;s:11:\"user_choose\";i:0;s:11:\"show_toggle\";i:0;s:5:\"theme\";s:8:\"advanced\";s:8:\"language\";s:2:\"en\";s:7:\"buttons\";a:1:{s:7:\"default\";a:4:{s:4:\"Bold\";i:1;s:6:\"Italic\";i:1;s:12:\"BulletedList\";i:1;s:12:\"NumberedList\";i:1;}}s:11:\"toolbar_loc\";s:3:\"top\";s:13:\"toolbar_align\";s:4:\"left\";s:8:\"path_loc\";s:6:\"bottom\";s:8:\"resizing\";i:1;s:11:\"verify_html\";i:1;s:12:\"preformatted\";i:0;s:22:\"convert_fonts_to_spans\";i:1;s:17:\"remove_linebreaks\";i:1;s:23:\"apply_source_formatting\";i:0;s:27:\"paste_auto_cleanup_on_paste\";i:1;s:13:\"block_formats\";s:32:\"p,address,pre,h2,h3,h4,h5,h6,div\";s:11:\"css_setting\";s:4:\"none\";s:8:\"css_path\";s:0:\"\";s:11:\"css_classes\";s:0:\"\";}'), ('5', '', null), ('6', 'codemirror', 'a:20:{s:7:\"default\";i:1;s:11:\"user_choose\";i:0;s:11:\"show_toggle\";i:1;s:5:\"theme\";s:8:\"advanced\";s:8:\"language\";s:2:\"en\";s:7:\"buttons\";a:1:{s:7:\"default\";a:5:{s:11:\"lineNumbers\";i:1;s:13:\"matchBrackets\";i:1;s:13:\"electricChars\";i:1;s:14:\"indentWithTabs\";i:1;s:6:\"gutter\";i:1;}}s:11:\"toolbar_loc\";s:3:\"top\";s:13:\"toolbar_align\";s:4:\"left\";s:8:\"path_loc\";s:6:\"bottom\";s:8:\"resizing\";i:1;s:11:\"verify_html\";i:0;s:12:\"preformatted\";i:0;s:22:\"convert_fonts_to_spans\";i:1;s:17:\"remove_linebreaks\";i:0;s:23:\"apply_source_formatting\";i:0;s:27:\"paste_auto_cleanup_on_paste\";i:1;s:13:\"block_formats\";s:32:\"p,address,pre,h2,h3,h4,h5,h6,div\";s:11:\"css_setting\";s:4:\"none\";s:8:\"css_path\";s:0:\"\";s:11:\"css_classes\";s:0:\"\";}'), ('7', 'ckeditor', 'a:20:{s:7:\"default\";i:1;s:11:\"user_choose\";i:0;s:11:\"show_toggle\";i:1;s:5:\"theme\";s:8:\"advanced\";s:8:\"language\";s:2:\"en\";s:7:\"buttons\";a:2:{s:7:\"default\";a:5:{s:4:\"Bold\";i:1;s:6:\"Italic\";i:1;s:9:\"Underline\";i:1;s:4:\"Link\";i:1;s:11:\"SpecialChar\";i:1;}s:11:\"drupal_path\";a:1:{s:4:\"Link\";i:1;}}s:11:\"toolbar_loc\";s:3:\"top\";s:13:\"toolbar_align\";s:4:\"left\";s:8:\"path_loc\";s:6:\"bottom\";s:8:\"resizing\";i:1;s:11:\"verify_html\";i:1;s:12:\"preformatted\";i:0;s:22:\"convert_fonts_to_spans\";i:1;s:17:\"remove_linebreaks\";i:1;s:23:\"apply_source_formatting\";i:0;s:27:\"paste_auto_cleanup_on_paste\";i:0;s:13:\"block_formats\";s:0:\"\";s:11:\"css_setting\";s:4:\"none\";s:8:\"css_path\";s:0:\"\";s:11:\"css_classes\";s:0:\"\";}')");
+  $tmp_ary = array (
+  'default' => 1,
+  'user_choose' => 0,
+  'show_toggle' => 0,
+  'theme' => 'advanced',
+  'language' => 'en',
+  'buttons' => 
+  array (
+    'default' => 
+    array (
+      'Bold' => 1,
+      'Italic' => 1,
+      'Underline' => 1,
+      'BulletedList' => 1,
+      'NumberedList' => 1,
+      'Link' => 1,
+      'Scayt' => 1,
+    ),
+  ),
+  'toolbar_loc' => 'top',
+  'toolbar_align' => 'left',
+  'path_loc' => 'none',
+  'resizing' => 1,
+  'verify_html' => 1,
+  'preformatted' => 0,
+  'convert_fonts_to_spans' => 1,
+  'remove_linebreaks' => 0,
+  'apply_source_formatting' => 0,
+  'paste_auto_cleanup_on_paste' => 1,
+  'block_formats' => 'p,address,pre,h2,h3,h4,h5,h6,div',
+  'css_setting' => 'none',
+  'css_path' => '',
+  'css_classes' => '',
+);
+$ary = array('format' => '1', 'editor' => 'ckeditor', 'settings' => serialize($tmp_ary));
+drupal_write_record('wysiwyg', $ary);
+
+$tmp_ary = array (
+  'default' => 1,
+  'user_choose' => 0,
+  'show_toggle' => 1,
+  'theme' => 'advanced',
+  'language' => 'en',
+  'buttons' => 
+  array (
+    'default' => 
+    array (
+      'Bold' => 1,
+      'Italic' => 1,
+      'Underline' => 1,
+      'JustifyLeft' => 1,
+      'JustifyCenter' => 1,
+      'JustifyRight' => 1,
+      'BulletedList' => 1,
+      'NumberedList' => 1,
+      'Outdent' => 1,
+      'Indent' => 1,
+      'Link' => 1,
+      'Image' => 1,
+      'Superscript' => 1,
+      'Subscript' => 1,
+      'RemoveFormat' => 1,
+      'FontSize' => 1,
+      'Styles' => 1,
+      'Table' => 1,
+      'Scayt' => 1,
+    ),
+    'elimedia' => 
+    array (
+      'elimedia' => 1,
+    ),
+    'imce' => 
+    array (
+      'imce' => 1,
+    ),
+    'drupal_path' => 
+    array (
+      'Link' => 1,
+    ),
+  ),
+  'toolbar_loc' => 'top',
+  'toolbar_align' => 'left',
+  'path_loc' => 'bottom',
+  'resizing' => 1,
+  'verify_html' => 0,
+  'preformatted' => 0,
+  'convert_fonts_to_spans' => 1,
+  'remove_linebreaks' => 0,
+  'apply_source_formatting' => 0,
+  'paste_auto_cleanup_on_paste' => 1,
+  'block_formats' => 'p,address,pre,h2,h3,h4,h5,h6,div',
+  'css_setting' => 'none',
+  'css_path' => '',
+  'css_classes' => '',
+);
+$ary = array('format' => '2', 'editor' => 'ckeditor', 'settings' => serialize($tmp_ary));
+drupal_write_record('wysiwyg', $ary);
+
+$tmp_ary = array (
+  'default' => 1,
+  'user_choose' => 0,
+  'show_toggle' => 0,
+  'theme' => 'advanced',
+  'language' => 'en',
+  'buttons' => 
+  array (
+    'default' => 
+    array (
+      'Bold' => 1,
+      'Italic' => 1,
+      'BulletedList' => 1,
+      'NumberedList' => 1,
+    ),
+  ),
+  'toolbar_loc' => 'top',
+  'toolbar_align' => 'left',
+  'path_loc' => 'bottom',
+  'resizing' => 1,
+  'verify_html' => 1,
+  'preformatted' => 0,
+  'convert_fonts_to_spans' => 1,
+  'remove_linebreaks' => 1,
+  'apply_source_formatting' => 0,
+  'paste_auto_cleanup_on_paste' => 1,
+  'block_formats' => 'p,address,pre,h2,h3,h4,h5,h6,div',
+  'css_setting' => 'none',
+  'css_path' => '',
+  'css_classes' => '',
+);
+$ary = array('format' => '4', 'editor' => 'ckeditor', 'settings' => serialize($tmp_ary));
+drupal_write_record('wysiwyg', $ary);
 }
 
 /**
  * Helper function to install default filter formats.
  */
 function _elms_filter_formats_query() {
-  db_query("INSERT INTO {filter_formats} VALUES ('1', 'Comment Filter', ',1,2,3,6,4,9,10,8,', '1'), ('2', 'Content Filter', ',3,6,4,', '1'), ('4', 'Course Event', ',6,4,', '1'), ('6', 'promopages', ',3,', '1')");
+  db_query("INSERT INTO {filter_formats} VALUES ('1', 'Comment Filter', ',1,2,3,6,4,9,10,8,', '1'), ('2', 'Content Filter', ',3,6,4,', '1'), ('4', 'Course Event', ',6,4,', '1')");
 }
 
 /**
