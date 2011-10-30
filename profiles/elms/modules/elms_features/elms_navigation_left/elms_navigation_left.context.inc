@@ -9,7 +9,7 @@ function elms_navigation_left_context_default_contexts() {
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
-  $context->name = 'elms_core-nav_left';
+  $context->name = 'elms_core-nav-left';
   $context->description = 'Left side menu items';
   $context->tag = 'ELMS Core';
   $context->conditions = array(
@@ -49,7 +49,7 @@ function elms_navigation_left_context_default_contexts() {
   // Included for use with string extractors like potx.
   t('ELMS Core');
   t('Left side menu items');
-  $export['elms_core-nav_left'] = $context;
+  $export['elms_core-nav-left'] = $context;
 
   return $export;
 }

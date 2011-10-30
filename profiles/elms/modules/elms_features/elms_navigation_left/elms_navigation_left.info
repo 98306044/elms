@@ -1,9 +1,8 @@
-; $Id: elms_navigation_left
 core = "6.x"
 dependencies[] = "context"
 dependencies[] = "regions"
-description = "Instructional Designer Bar in ELMS"
-features[context][] = "elms_core-nav_left"
+description = "Left toolbar in ELMS"
+features[context][] = "elms_core-nav-left"
 features[ctools][] = "context:context:3"
 name = "ELMS Navigation Left"
 package = "ELMS Core"

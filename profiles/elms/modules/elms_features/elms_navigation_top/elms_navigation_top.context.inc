@@ -9,7 +9,7 @@ function elms_navigation_top_context_default_contexts() {
   $context = new stdClass;
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
-  $context->name = 'elms-core_nav_top';
+  $context->name = 'elms_core-nav-top';
   $context->description = 'Define the blocks for the top navigational region';
   $context->tag = 'ELMS Core';
   $context->conditions = array(
@@ -40,6 +40,12 @@ function elms_navigation_top_context_default_contexts() {
           'region' => 'regions_elms_navigation_top',
           'weight' => 2,
         ),
+        'elms_navigation_top-3' => array(
+          'module' => 'elms_navigation_top',
+          'delta' => 3,
+          'region' => 'regions_elms_navigation_top',
+          'weight' => 3,
+        ),
       ),
     ),
   );
@@ -49,7 +55,7 @@ function elms_navigation_top_context_default_contexts() {
   // Included for use with string extractors like potx.
   t('Define the blocks for the top navigational region');
   t('ELMS Core');
-  $export['elms-core_nav_top'] = $context;
+  $export['elms_core-nav-top'] = $context;
 
   return $export;
 }
