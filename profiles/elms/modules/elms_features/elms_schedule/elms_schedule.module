@@ -191,7 +191,7 @@ function _elms_schedule_rebuild_schedule($group, &$context) {
     }
     node_save($node);
   }
-  //need to pass through the map that's been built
+  //need to pass through the map that has been built
   $context['finished'] = 1;
   $context['message'] = t('Rebuilding Dates: Reassigning dates');
 }
