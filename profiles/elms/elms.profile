@@ -49,11 +49,13 @@ function elms_install() {
   // Note that this comes after all other processes have run, as some cache
   // clears/rebuilds actually set variables or other settings that would count
   // as overrides. See `og_node_type()`.
-  /*
+  
   $revert = array(
-    'elms_course' => array('user_role', 'user_permission', 'variable', 'filter'),
+    'elms_course' => array(),
+	'elms_course_content' => array(),
+	'elms_navigation_top' => array(),
   );
-  features_revert($revert);*/  
+  features_revert($revert);  
 }
 
 /**
