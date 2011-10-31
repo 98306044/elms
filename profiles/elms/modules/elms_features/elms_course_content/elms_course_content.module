@@ -38,7 +38,7 @@ function elms_course_content_theme_registry_alter(&$vars) {
 function elms_course_content_init() {
   drupal_add_css(drupal_get_path('module', 'elms_course_content') .'/css/style.css', 'theme');
   //offer to continue where they left off if we can grab it
-  if (arg(0) == 'course_content' && module_exists('statistics')) {
+  /*if (arg(0) == 'course_content' && module_exists('statistics')) {
     $group = og_get_group_context();
   global $user;
   $result = db_query_range("SELECT {accesslog}.title,{accesslog}.path FROM {accesslog} JOIN {menu_links} ON {menu_links}.link_path = {accesslog}.path JOIN {book} ON {menu_links}.mlid = {book}.mlid JOIN {og_ancestry} ON {book}.nid={og_ancestry}.nid WHERE {accesslog}.uid=%d AND {og_ancestry}.group_nid=%d ORDER BY {accesslog}.timestamp DESC", array($user->uid, $group->nid), 1);
@@ -46,7 +46,7 @@ function elms_course_content_init() {
     if ($val['title'] != '') {
       drupal_set_message(t('Continue where you left off? %link', array('%link' => l($val['title'], $val['path']))), 'elms-message');
     }
-  }
+  }*/
 }
 
 /**
