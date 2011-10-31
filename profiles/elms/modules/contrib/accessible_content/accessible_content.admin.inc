@@ -148,7 +148,7 @@ function accessible_cotnent_admin_install_guidelines_form_operation(&$context) {
 */
 function accessible_content_admin_update_tests_form_operation(&$context) {
   if (!$context['sandbox']['tests']) {
-    $file = fopen(variable_get('accessible_content_path', 'sites/all/libraries') .'/quail/quail/guidelines/translations/en.txt', 'r');
+	$file = fopen(variable_get('accessible_content_path', 'sites/all/libraries') .'/quail/quail/guidelines/translations/en.txt', 'r');
     while (($test = fgetcsv($file)) !== FALSE ) {
       $context['sandbox']['tests'][] = $test;
     }
