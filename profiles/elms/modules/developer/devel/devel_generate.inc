@@ -334,26 +334,26 @@ function devel_create_greeking($words, $title = FALSE) {
   $greeking = "";
 
   if (!$title) {
-      while ($words > 0) {
-        $sentence_length = mt_rand(3,10);
+	  while ($words > 0) {
+	    $sentence_length = mt_rand(3,10);
 
-        $greeking .= ucfirst($dictionary[array_rand($dictionary)]);
-        for ($i = 1; $i < $sentence_length; $i++) {
-          $greeking .= " " . $dictionary[array_rand($dictionary)];
-        }
+	    $greeking .= ucfirst($dictionary[array_rand($dictionary)]);
+	    for ($i = 1; $i < $sentence_length; $i++) {
+	      $greeking .= " " . $dictionary[array_rand($dictionary)];
+	    }
 
-        $greeking .= ". ";
-        $words -= $sentence_length;
-      }
+	    $greeking .= ". ";
+	    $words -= $sentence_length;
+	  }
   }
   else {
-      // use different method for titles
-      $title_length = $words;
-      $array = array();
-      for ($i = 0; $i < $words; $i++) {
-          $array[] = $dictionary[array_rand($dictionary)];
-      }
-      $greeking = ucwords(implode(' ', $array));
+  	// use different method for titles
+  	$title_length = $words;
+  	$array = array();
+  	for ($i = 0; $i < $words; $i++) {
+  		$array[] = $dictionary[array_rand($dictionary)];
+  	}
+  	$greeking = ucwords(implode(' ', $array));
   }
   return $greeking;
 }
