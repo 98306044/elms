@@ -38,8 +38,6 @@ Disallow: /update.php
 Disallow: /UPGRADE.txt
 Disallow: /xmlrpc.php
 # Paths (clean URLs)
-Disallow: /print/
-Disallow: /flag/
 Disallow: /admin/
 Disallow: /comment/reply/
 Disallow: /logout/
@@ -49,7 +47,6 @@ Disallow: /user/register/
 Disallow: /user/password/
 Disallow: /user/login/
 # Paths (no clean URLs)
-Disallow: /?q=flag/
 Disallow: /?q=admin/
 Disallow: /?q=comment/reply/
 Disallow: /?q=logout/
