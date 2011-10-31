@@ -40,7 +40,7 @@ function elms_install() {
   //disable all DB blocks
   db_query("UPDATE {blocks} SET status = 0, region = ''");
   //activate all themes
-  db_query("UPDATE {system} SET status = 1 WHERE type = 'theme'");
+  db_query("UPDATE {system} SET status = 1 WHERE type = 'theme' AND name <> 'tao' AND name <> 'rubik'");
   //set module weights accordingly
   
   // In Aegir install processes, we need to init strongarm manually as a
