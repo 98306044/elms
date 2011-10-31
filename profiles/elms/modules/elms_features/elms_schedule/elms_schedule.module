@@ -129,7 +129,6 @@ function elms_schedule_init() {
       }
       drupal_add_css(drupal_get_path('module', 'elms_schedule') .'/css/schedule_edit.css', 'theme');
       drupal_add_js(drupal_get_path('module', 'elms_schedule') .'/js/schedule_edit.js');
-      automodal_add('.schedule_automodal', array('draggable' => FALSE, 'automodalReload' => TRUE));
     }
     //ignore outline and delete for the time being so we don't load needless files
     elseif (arg(1) == 'outline' || arg(1) == 'delete') {
@@ -145,15 +144,6 @@ function elms_schedule_init() {
       drupal_add_css(drupal_get_path('module', 'elms_schedule') .'/css/schedule.css', 'theme');
       drupal_add_js(drupal_get_path('module', 'elms_schedule') .'/js/schedule.js');
     }
-  }
-}
-/**
- * Implementation of hook_form_alter().
- */
-function elms_schedule_form_alter(&$form, $form_state, $form_id) {
-  if (automodal_request_is_child() && filter_input(INPUT_GET, 'automodalClose', FILTER_VALIDATE_BOOLEAN)) {
-  //hide the appbar via css for just things being popuped up via modalframe
-  drupal_add_css(drupal_get_path('module', 'elms_schedule') .'/css/hide_appbar.css', 'theme');
   }
 }
 

@@ -1,15 +1,5 @@
 // JavaScript Document
 $(document).ready(function(){
-  //prevent additional modals from opening in the background
-  /*$('#schedule_edit').click(function(){
-    $('.schedule_add_events_wrapper').slideUp('fast');
-  });
-  $('#schedule_delete').click(function(){
-    $('.schedule_add_events_wrapper').slideUp('fast');
-  });
-  $('.schedule_edit_event').click(function(){
-    $('.schedule_add_events_wrapper').slideUp('fast');
-  });*/
   //trigger for the edit link since its a complex version of clicktoedit
   $('.schedule_edit_link').click(function(){
   //need additional logic for which form field we're editing
