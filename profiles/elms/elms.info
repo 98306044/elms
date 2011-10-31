@@ -85,6 +85,7 @@ dependencies[] = context_og
 dependencies[] = feeds_ridmap
 dependencies[] = feeds_node_helper
 dependencies[] = feeds
+dependencies[] = feeds_ui
 dependencies[] = feeds_tamper
 dependencies[] = feeds_xpathparser
 ; Regions
@@ -165,14 +166,15 @@ dependencies[] = elms_navigation_left
 dependencies[] = elms_navigation_top
 dependencies[] = elms_navigation_right
 dependencies[] = elms_helpdesk
-; ELMS
+dependencies[] = elms_export_html
+; ELMS Features
 dependencies[] = elms_course_content
 dependencies[] = elms_course_studio
 dependencies[] = elms_reaction
 dependencies[] = elms_schedule
-dependencies[] = elms_export_html
 dependencies[] = elms_data_out
 dependencies[] = elms_course_content_export
+dependencies[] = elms_course_content_import
 ; Variables
 variables[admin_menu_display] = "0"
 variables[admin_theme] = "rubik"

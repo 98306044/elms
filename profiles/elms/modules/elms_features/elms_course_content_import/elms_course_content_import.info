@@ -1,5 +1,6 @@
 core = "6.x"
 dependencies[] = "feeds_tamper"
+dependencies[] = "feeds_node_helper"
 description = "Import Content from other ELMS instances"
 features[ctools][] = "feeds:feeds_importer_default:1"
 features[ctools][] = "feeds_tamper:feeds_tamper_default:2"
