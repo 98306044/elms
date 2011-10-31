@@ -148,7 +148,7 @@ function accessible_cotnent_admin_install_guidelines_form_operation(&$context) {
 */
 function accessible_content_admin_update_tests_form_operation(&$context) {
   if (!$context['sandbox']['tests']) {
-    $file = fopen('sites/all/libraries/quail/quail/guidelines/translations/en.txt', 'r');
+    $file = fopen(variable_get('accessible_content_path', 'sites/all/libraries') .'/quail/quail/guidelines/translations/en.txt', 'r');
     while (($test = fgetcsv($file)) !== FALSE ) {
       $context['sandbox']['tests'][] = $test;
     }
@@ -328,7 +328,7 @@ function  _accessible_content_create_guidelines() {
         $node->uid = $user->uid;
         $node->title = $guideline[1];
         node_save($node);
-        require_once('sites/all/libraries/quail/quail/guidelines/'. strtolower($guideline[0]) .'.php');
+        require_once(variable_get('accessible_content_path', 'sites/all/libraries') .'/quail/quail/guidelines/'. strtolower($guideline[0]) .'.php');
         $FALSE = FALSE;
         $guideline_object = new $guideline[2]($FALSE, $FALSE, $FALSE);
         $guideline_tests = $guideline_object->getTests();
