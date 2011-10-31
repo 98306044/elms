@@ -139,9 +139,13 @@ function _elms_navigation_left_course_block($group) {
   //use the custom theme form
   $output .= theme('menu_item', l(t('Change Theme'), 'theme', array('attributes' => array('title' => 'Change Theme'))), 0, '', FALSE, 'change_theme');
   //user import
-  $output .= theme('menu_item', l(t('User Management'), 'node/add/feed-user-import', array('attributes' => array('title' => 'User Management'))), 0, '',	 FALSE, 'manage_users');
+  if (module_exists('elms_user_management')) {
+    $output .= theme('menu_item', l(t('User Management'), 'node/add/feed-user-import', array('attributes' => array('title' => 'User Management'))), 0, '',	 FALSE, 'manage_users');
+  }
   //use the custom theme form
-  $output .= theme('menu_item', l(t('Import Content'), 'import/elms_node_import', array('attributes' => array('title' => 'Import Outline'))), 0, '', FALSE, 'manage_content');
+  if (module_exists('elms_course_content_import')) {
+    $output .= theme('menu_item', l(t('Import Content'), 'import/elms_node_import', array('attributes' => array('title' => 'Import Outline'))), 0, '', FALSE, 'manage_content');
+  }
   //use the custom theme form
   $output .= theme('menu_item', l(t('Admin Settings'), 'node/'. $group->nid .'/edit', array('query' => 'destination='. $_GET['q'], 'attributes' => array('title' => 'Admin Settings'))), 0, '', FALSE, 'admin_settings');
   return $output;
