@@ -130,7 +130,7 @@ class reportAccessibleContent extends quailReporter {
 *
 *
 */
-require_once(variable_get('accessible_content_path', 'sites/all/libraries') .'/quail/quail/reporters/reporter.demo.php');
+require_once('sites/all/libraries/quail/quail/reporters/reporter.demo.php');
 class reportAccessibleContentHighlight extends reportDemo {
 
   /**

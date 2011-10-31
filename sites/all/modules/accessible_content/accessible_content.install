@@ -19,10 +19,9 @@ function accessible_content_requirements($phase) {
     else {
       //Library does not exist and we throw an error with a link to download
       $requirements['accessible_content']['severity'] = REQUIREMENT_ERROR;
-      $requirements['accessible_content']['description'] = t('Accessible content module requires the Quail library. Please download and from !link and place the "quail" directory in the directory "@path"', array(
+      $requirements['accessible_content']['description'] = t('Accessible content module requires the Quail library. Please download and from !link and place the "quail" directory in the directory "sites/all/libraries"', array(
       '!link' => 
-      l('http://code.google.com/p/quail-lib', 'http://code.google.com/p/quail-lib'),
-	  '@path' => variable_set('accessible_content_path', 'sites/all/libraries')));
+      l('http://code.google.com/p/quail-lib', 'http://code.google.com/p/quail-lib')));
 
     }
     if (!class_exists('DOMDocument')) {
