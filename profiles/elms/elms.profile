@@ -7,10 +7,6 @@ profiler_v2('elms');
  * Implementation of hook_install().
  */
 function elms_install() {
-  //run the accessible content builder
-  //include_once('modules/contrib/accessible_content/accessible_content.admin.inc');
-  drupal_set_message(l(t('Click to install Accessibility Test'),'admin/settings/accessible_content/create_tests'));
-  //accessible_content_admin_update_tests_form_submit();
   _elms_role_query();
   // Remove default input filter formats
   db_query("DELETE FROM {filters} WHERE fid <> 0");
