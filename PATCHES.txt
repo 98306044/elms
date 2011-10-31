@@ -26,3 +26,7 @@ jquery colorpicker
 UUID
 -- Fixes a glitch in creation of UUIDs from an admin side
 -- http://drupal.org/node/1236768
+
+Accessible Content
+-- Allow for inclusion in install profiles
+-- http://drupal.org/node/1326220
