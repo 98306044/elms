@@ -51,9 +51,9 @@ function elms_install() {
   // as overrides. See `og_node_type()`.
   
   $revert = array(
-    'elms_course' => array(),
-	'elms_course_content' => array(),
-	'elms_navigation_top' => array(),
+	'elms_course_content' => array('flag'),
+	'elms_navigation_top' => array('menu_custom', 'menu_links'),
+	'elms_course' => array('content', 'context', 'ctools', 'fieldgroup', 'imagecache', 'node', 'variable', 'views', 'views_api'),
   );
   features_revert($revert);  
 }
