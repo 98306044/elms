@@ -15,15 +15,22 @@ function accessible_content_include_library() {
   if (!isset($profile)) {
     $profile = variable_get('install_profile', 'default');
   }
+  else {
+	$install_script = TRUE;  
+  }
   //test the install profile location first
   $result = @include_once("profiles/$profile/libraries/quail/quail/quail.php");
   //if it wasn't found, then test the sites all location
   if (!$result) {
     $result = @include_once('sites/all/libraries/quail/quail/quail.php');
-	variable_set('accessible_content_path', 'sites/all/libraries');
+	if ($install_script) {
+	  variable_set('accessible_content_path', 'sites/all/libraries');
+	}
   }
   else {
-	variable_set('accessible_content_path', "profiles/$profile/libraries");  
+	if ($install_script) {
+	  variable_set('accessible_content_path', "profiles/$profile/libraries");
+	}
   }
  
   if ($result) {
