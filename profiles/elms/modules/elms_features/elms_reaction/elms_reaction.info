@@ -9,6 +9,7 @@ description = "Allows the user to react to the content they are viewing in a mor
 features[content][] = "reaction-field_reaction_feeling"
 features[content][] = "reaction-field_related_content"
 features[content][] = "reaction-field_related_reaction"
+features[context][] = "elms_reaction-nav-right"
 features[context][] = "elms_reaction-navigation"
 features[ctools][] = "context:context:3"
 features[ctools][] = "strongarm:strongarm:1"
