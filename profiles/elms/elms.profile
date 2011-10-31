@@ -52,8 +52,7 @@ function elms_install() {
   
   $revert = array(
 	'elms_course_content' => array('flag'),
-	'elms_navigation_top' => array('menu_custom', 'menu_links'),
-	'elms_course' => array('content', 'context', 'ctools', 'fieldgroup', 'imagecache', 'node', 'variable', 'views', 'views_api'),
+	'elms_navigation_top' => array('menu_links'),
   );
   features_revert($revert);  
 }
