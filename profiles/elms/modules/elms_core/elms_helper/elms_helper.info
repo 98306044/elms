@@ -5,4 +5,5 @@ core = "6.x"
 dependencies[] = og
 package = "ELMS Core"
 version = "6.x-1.0-alpha5"
+project = "elms_helper"
 project status url = "http://drupal.psu.edu/fserver"
