@@ -40,6 +40,27 @@ INSTALLATION
 *You are now running ELMS ICMS Alpha 5, enjoy making courses!
 
 ------------
+TROUBLESHOOTING INSTALLATION / SETUP
+------------
+PHP 5.3
+-- Make sure you have error reporting turned off during installation
+
+PHP 5.2
+-- There may be a lot of errors after install though it has installed correctly so turning error reporting off is recommended for 5.2 as well
+
+PHP lower then 5.2
+-- Unsupported because of date module though you can activate the date 5.2 emulation module and it should work
+
+Solving Drupal White screen of Death
+*Try setting the following settings in included .htaccess file:
+  php_value memory_limit 128M
+* if that doesn't work, remove the php_value part and see if it works otherwise you'll need to change it in the php.ini
+
+Annoying MYSQL max packet error
+*run the following command in mysql console: "set global max_allowed_packet = 10 * 1024 * 1024;"
+* This error is caused mostly in localhost installs or shared environments and is caused by all the caching of views going on
+
+------------
 Known issues
 ------------
 *There are still some admin UIs that need to be built out and more visual user management
