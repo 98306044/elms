@@ -17,7 +17,18 @@
  * Adds functionality that's useful for running a helpdesk
  */
 
-
+/**
+ * Implementation of hook_user().
+ */
+function elms_helpdesk_user($op, &$edit, &$account, $category = NULL) {
+  switch ($op) {
+	case 'login':
+	  //set a login global value, this is needed to test on the first legit page load, it also helps with accounting for remote authentication systems
+	  $account->initial_login = TRUE;
+	  drupal_add_js(drupal_get_path('module', 'elms_helpdesk') .'/login_check.js');
+	break;
+  }
+}
 
 /**
  * Implementation of hook_form_alter().
