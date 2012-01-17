@@ -1,0 +1,9 @@
+; $Id: elms_helper.info
+name = ELMS Helper
+description = This module tweaks Drupal to make it ELMS without modifying any other module
+core = "6.x"
+dependencies[] = og
+package = "ELMS Core"
+version = "6.x-1.0-beta1"
+project = "elms_helper"
+project status url = "http://drupal.psu.edu/fserver"

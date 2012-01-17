@@ -1,0 +1,51 @@
+
+ELMS Instructional Templates API
+--------------------------------
+
+This API is fairly straight forward.  You can use it to get new book outlines automatically populated on the creation of new course versions.  Some samples are provided in the see elms_id_best_practices for more complex examples
+
+Here is the basic structure:
+$outline['YOUR_TEMPLATE_MACHINE_NAME'] = array(
+     'title' => 'YOUR TEMPLATE NAME',
+      array(
+       'type' => '',
+       'title' => '',
+       'link' => '',
+			 'content => '', //optional body content
+			 'format' => '', //optional text input format
+			 'duplicate' => TRUE //or number of times to replicate,
+			 'children' => array(
+			   //SAME STRUCTURE AS ABOVE NOW
+			 )
+     ));
+
+--Acceptable values for type is link, page, folder
+--'link' is only used if type is link
+--@i can be used in the title of something that's going to be duplicated as to where the incemental value should be placed.  This is not required.
+--duplicate: TRUE means to read based on the lessons value passed on group form submission or a number can be used as short hand.  duplication can be nested using the two methods
+--children: An array of additional items that make up the full outline
+
+/**
+ * Implementation of hook_elms_instructional_template().
+ */
+function YOURMODULENAME_elms_instructional_template() {
+  $outline['TEMPLATENAME'] = array(
+    'title' => 'Outline',
+    array(
+      'type' => 'folder',
+      'title' => 'Lesson @i',
+			'duplicate' => TRUE,
+			'children' => array(
+			  array(
+          'type' => 'page',
+          'title' => 'Introduction',
+        ),
+		    array(
+          'type' => 'page',
+          'title' => 'Content',
+        ),
+		  ),
+		),
+  );
+  return $outline;
+}

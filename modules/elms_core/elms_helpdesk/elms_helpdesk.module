@@ -1,0 +1,297 @@
+<?php
+//ELMS: ELMS Helpdesk
+//Development Sponsored by The Pennsylvania State University
+//ELMS is Copyright (C) 2008-2011  The Pennsylvania State University
+//
+//Bryan Ollendyke
+//bto108@psu.edu
+//
+//Keith D. Bailey
+//kdb163@psu.edu
+//
+//12 Borland
+//University Park,  PA 16802
+
+/**
+ * @file
+ * Adds functionality that's useful for running a helpdesk
+ */
+
+
+/**
+* Implementation of hook_user().
+*/
+function elms_helpdesk_user($op, &$edit, &$account, $category = NULL) {
+  switch ($op) {
+    case 'login':
+      //stupid thing so we can trip things for the first page render
+      $update = array('elms_helpdesk_trigger' => TRUE);
+      user_save($account, $update);
+    break;
+  }
+}
+
+
+/**
+ * Implementation of hook_form_alter().
+ */
+function elms_helpdesk_init() {
+  global $user;
+  //check for the trigger being kicked for an initial login. Hate having to perform this every page (more or less) but it's required
+  if ($user->elms_helpdesk_trigger) {
+    _elms_helpdesk_add_js();
+    $update = array('elms_helpdesk_trigger' => FALSE);
+    user_save($user, $update);
+  }
+  //add in the jquery but only for the contact form
+  if (arg(0) == 'contact') {
+    _elms_helpdesk_add_js();
+  }
+}
+/**
+ * Implementation of hook_form_alter().
+ */
+function elms_helpdesk_form_alter(&$form, &$form_state, $form_id) {
+  //trap for the contact page to perform the form alterations
+  if ($form_id == 'contact_mail_page' && count($form_state['post']) == 0) {
+    global $user;
+    //additional step to load the user profile into the user object
+    profile_load_profile($user);
+    //hide the input field for the email address
+    $form['mail']['#type'] = 'hidden';
+    //hide roles but this way it can be emailed and set to user's roles
+    $form['field_roles']['#type'] = 'hidden';
+    //parse the user's roles so we can send it to our staff
+    foreach ($user->roles as $key => $role) {
+      //ignore authenticated user role
+      if ($key != 2) {
+        $role_list .= $role .' ';
+      }
+    }
+    //set the hidden field's value
+    $form['field_roles']['#default_value'] = $role_list;
+    //add a heading describing who it will email currently
+    $form['markup']['#type'] = 'markup';
+    $form['markup']['#value'] = 'This message will be sent to: '. $user->profile_first_name .' '. $user->profile_last_name .' ('. $form['mail']['#default_value'] .')';
+    $form['markup']['#weight'] = -10;
+    //hide the copy message as it should email the person what they sent by default
+    $form['copy']['#default_value'] = TRUE;
+    $form['copy']['#type'] = 'hidden';
+    //format name field to use profile fields in elms
+    $form['name']['#type'] = 'hidden';
+    $form['name']['#value'] = $user->profile_first_name .' '. $user->profile_last_name .' ('. $form['mail']['#default_value'] .')';
+    $form['name']['#weight'] = -9;
+    //format the subject
+    $group = og_get_group_context();
+    if (isset($group->nid)) {
+      //see if this is a sandbox or not
+      if (isset($group->field_course_ref[0]['nid'])) {
+        $course = node_load($group->field_course_ref[0]['nid']);    
+        $form['subject']['#default_value'] = 'Issue in '. $course->title;
+      }
+      $form['subject']['#default_value'] .= ' - '. $group->title;
+      $form['subject']['#type'] = 'hidden';
+    }
+    //add in geoip if its turned on
+    if (module_exists('geoip')) {
+      $form['field_tech_details']['#value'] .= "Country: ". geoip_country_code() ."\n";
+    }
+    //add path to the location they were on when they clicked help
+    //try and get the referer
+    if ($_SERVER['HTTP_REFERER'] != '') {
+        $page_path = $_SERVER['HTTP_REFERER'];
+    }
+    //if that is empty try the destination
+    else if ($_REQUEST['destination'] != '') {
+        $page_path = $_REQUEST['destination'];
+    }
+    //if that is empty just add on the q path
+    else {
+        $page_path = $_GET['q'];
+    }
+    $form['field_tech_details']['#value'] .= "Page: ". $page_path ."\n";
+    //make this hidden so we can append the user tech details to something meaningful
+    $form['field_tech_details']['#type'] = 'hidden';
+  //change the language from Send e-mail
+  $form['submit']['#value'] = t('Contact Helpdesk');
+  }
+}
+
+/**
+ * Implementation of hook_map_notification().
+ */
+function elms_helpdesk_map_notification() {
+  //provide defaults for drupal
+  $map = array(
+    'browser' => array(
+      'title' => 'Browser Unsupported',
+      'icon' => base_path() . drupal_get_path('module', 'elms_helpdesk') .'/images/notifications/earth.png',
+      'bar_icon' => base_path() . drupal_get_path('module', 'elms_helpdesk') .'/images/notifications/earth_bar.png',
+    ),
+		'flash' => array(
+      'title' => 'Flash Plugin Missing',
+      'icon' => base_path() . drupal_get_path('module', 'elms_helpdesk') .'/images/notifications/flash.png',
+      'bar_icon' => base_path() . drupal_get_path('module', 'elms_helpdesk') .'/images/notifications/flash_bar.png',
+    ),
+		'flash-version' => array(
+      'title' => 'Flash out of date',
+      'icon' => base_path() . drupal_get_path('module', 'elms_helpdesk') .'/images/notifications/flash.png',
+      'parent' => 'flash',
+    ),
+    'plugin' => array(
+      'title' => 'Plugin Missing',
+      'icon' => base_path() . drupal_get_path('module', 'elms_helpdesk') .'/images/notifications/plugin.png',
+    'bar_icon' => base_path() . drupal_get_path('module', 'elms_helpdesk') .'/images/notifications/plugin_bar.png',
+    ),
+    'plugin-pdf' => array(
+      'title' => 'PDF Plugin',
+      'icon' => base_path() . drupal_get_path('module', 'elms_helpdesk') .'/images/notifications/plugin.png',
+      'parent' => 'plugin',
+    ),
+    'screen' => array(
+      'title' => 'Screen Resolution',
+      'icon' => base_path() . drupal_get_path('module', 'elms_helpdesk') .'/images/notifications/screenres.png',
+      'bar_icon' => base_path() . drupal_get_path('module', 'elms_helpdesk') .'/images/notifications/screenres_bar.png',
+    ),
+    'connection' => array(
+      'title' => 'Connection',
+      'icon' => base_path() . drupal_get_path('module', 'elms_helpdesk') .'/images/notifications/globe.png',
+      'bar_icon' => base_path() . drupal_get_path('module', 'elms_helpdesk') .'/images/notifications/globe_bar.png',
+    ),
+    'connection-speed' => array(
+      'title' => 'Speed / Performance',
+      'icon' => base_path() . drupal_get_path('module', 'elms_helpdesk') .'/images/notifications/globe.png',
+			'parent' => 'connection',
+    ),
+    'connection-country' => array(
+      'title' => 'Connecting Overseas',
+      'icon' => base_path() . drupal_get_path('module', 'elms_helpdesk') .'/images/notifications/globe.png',
+			'parent' => 'connection',
+    ),
+  );
+  return $map;
+}
+
+/**
+ * Implementation of hook_menu().
+ */
+function elms_helpdesk_menu() {
+  $items = array();
+  $items['admin/elms/helpdesk'] = array(
+    'title' => 'Helpdesk',
+    'description' => 'Set global helpdesk settings.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('elms_helpdesk_settings'),
+    'type' => MENU_NORMAL_ITEM,
+    'access arguments' => array('administer site configuration')
+  );
+  return $items;
+}
+
+/**
+ * Implementation of hook_settings().
+ */
+function elms_helpdesk_settings() {
+  $browsers = array(
+    'chrome' => t('Chrome (latest)'),
+    'IE6' => t('Internet Explorer 6'),
+    'IE7' => t('Internet Explorer 7'),
+    'IE8' => t('Internet Explorer 8'),
+    'IE9' => t('Internet Explorer 9'),
+    'firefox' => t('Firefox (latest)'),
+    'firefox36' => t('Firefox 3.6'),
+    'opera' => t('Opera (latest)'),
+    'safari' => t('Safari (latest)'),
+  );
+  $plugins = array(
+    'flash' => t('Flash'),
+    'silverlight' => t('Silver Light'),
+    'pdf' => t('PDF Reader (Adobe / Other)'),
+    'quicktime' => t('Quick Time'),
+    'java' => ('Java'),
+    'html5' => t('HTML5'),
+		'realplayer' => t('Real Player'),
+		'wmp' => t('Windows Media Player'),
+		'gears' => t('Google Gears'),
+		'director' => t('Adobe Director'),
+  );
+	$form['elms_helpdesk_country_origin'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Country of Origin '),
+    '#default_value' => variable_get('elms_helpdesk_country_origin', 'US'),
+		'#description' => t("Set the country code of origin, this is used to indicate to others in the test that they may have connection issues if connecting outside your country.  If you set this to empty this test won't be used (useful for cloud where this shouldn't be an issue)."),
+  );
+	
+  //collapse default state
+  $form['browsers'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Browsers'),
+    '#collapsed' => FALSE,
+    '#collapsible' => TRUE,
+  '#description' => t('Select the browsers that you require globally in order to take courses.  Treat these as minimum requirements.'),
+  );
+  $form['browsers']['elms_helpdesk_browser_list'] = array(
+    '#type' => 'select',
+    '#title' => t('Browser List'),
+    '#default_value' => variable_get('elms_helpdesk_browser_list', array()),
+    '#options' => $browsers,
+  '#multiple' => TRUE,
+  );
+  $form['plugins'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Plugins'),
+    '#collapsed' => FALSE,
+    '#collapsible' => TRUE,
+  '#description' => t('Select the plugins that you require globally in order to take courses.  Treat these as minimum requirements.'),
+  );
+  $form['plugins']['elms_helpdesk_plugin_list'] = array(
+    '#type' => 'select',
+    '#title' => t('Plugin List'),
+    '#default_value' => variable_get('elms_helpdesk_plugin_list', array()),
+    '#options' => $plugins,
+  '#multiple' => TRUE,
+  );
+   return system_settings_form($form);
+}
+
+//helper function to help standardize what gets passed to the screen for user agent testing
+function _elms_helpdesk_add_js() {
+  //add js checks for information that we can harvest on initial page load
+  drupal_add_js(drupal_get_path('module', 'elms_helpdesk') .'/elms_helpdesk.js');
+  //add path to test image so we can do a download test
+  $settings = array(
+    'elms_helpdesk' => array(
+    'test_image' => '/'. drupal_get_path('module', 'elms_helpdesk') .'/speedtest.png',
+    'icon_map' => _elms_navigation_top_get_map(),
+		'country' => geoip_country_code(),
+		'server_country' => variable_get('elms_helpdesk_country_origin', 'US'),
+    ),
+  );
+	//add flag for appending stuff to the screen for contact form
+	if (arg(0) == 'contact') {
+    $settings['elms_helpdesk']['contact_form'] = TRUE;
+	}
+	else {
+		$settings['elms_helpdesk']['contact_form'] = FALSE;
+	}
+	//set the system defaults
+		$settings['elms_helpdesk']['browser_list'] = variable_get('elms_helpdesk_browser_list', array());
+    $settings['elms_helpdesk']['plugin_list'] = variable_get('elms_helpdesk_plugin_list', array());
+	//pull in requirements
+	$group = og_get_group_context();
+	if (isset($group->nid)) {
+		//merge in course specific ones if they exist, this is a list of what's acceptable
+		if (isset($group->field_course_ref[0]['nid'])) {
+		  $course = node_load($group->field_course_ref[0]['nid']);
+			//rebuild arrays with cck based values
+			foreach ($course->field_supported_browsers as $key => $ary) {
+				$settings['elms_helpdesk']['browser_list'][$ary['value']] = $ary['value'];
+			}
+			foreach ($course->field_required_plugins as $key => $ary) {
+				$settings['elms_helpdesk']['plugin_list'][$ary['value']] = $ary['value'];
+			}
+		}
+	}
+	//dpm($settings);
+  drupal_add_js($settings, 'setting');
+}

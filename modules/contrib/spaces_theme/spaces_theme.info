@@ -1,0 +1,11 @@
+; $Id: spaces_theme.info
+name = Spaces Theme
+description = Change theme and settings per Space
+package = Spaces
+core = "6.x"
+dependencies[] = og
+dependencies[] = spaces
+dependencies[] = spaces_og
+project = "spaces_theme"
+project status url = "http://drupal.psu.edu/fserver"
+version = "6.x-1.0-beta4"
