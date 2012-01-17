@@ -8,4 +8,4 @@ dependencies[] = spaces
 dependencies[] = spaces_og
 project = "spaces_theme"
 project status url = "http://drupal.psu.edu/fserver"
-version = "6.x-1.0-beta3"
+version = "6.x-1.0-beta4"

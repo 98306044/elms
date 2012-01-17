@@ -88,14 +88,13 @@ function elms_navigation_top_menu_default_menu_links() {
       'attributes' => array(
         'title' => 'All reactions across courses',
       ),
-      'purl' => 'disabled',
     ),
     'module' => 'system',
     'hidden' => '0',
     'external' => '0',
     'has_children' => '0',
     'expanded' => '0',
-    'weight' => '-47',
+    'weight' => '0',
   );
   // Exported menu link: menu-usermenu:my_studio
   $menu_links['menu-usermenu:my_studio'] = array(
@@ -107,14 +106,13 @@ function elms_navigation_top_menu_default_menu_links() {
       'attributes' => array(
         'title' => 'All my studio submissions',
       ),
-      'purl' => 'disabled',
     ),
     'module' => 'system',
     'hidden' => '0',
     'external' => '0',
     'has_children' => '0',
     'expanded' => '0',
-    'weight' => '-46',
+    'weight' => '0',
   );
   // Exported menu link: menu-usermenu:user
   $menu_links['menu-usermenu:user'] = array(

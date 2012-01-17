@@ -1,4 +1,3 @@
-// $Id: imce_crop.js,v 1.1.2.3 2010/08/14 20:07:05 ufku Exp $
 
 (function($) {
 //implementation of imce.hookOpValidate

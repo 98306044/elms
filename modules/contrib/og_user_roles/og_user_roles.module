@@ -609,3 +609,12 @@ function og_user_roles_get_group_default_role($nid) {
   }
   return $default_role;
 }
+
+/**
+ * Implementation of hook_views_api().
+ */
+function og_user_roles_views_api() {
+  return array(
+    'api' => 2.0,
+  );
+}

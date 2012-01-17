@@ -100,14 +100,13 @@ function jquery_colorpicker_requirements($phase)
 	}
 	elseif($phase == 'install')
 	{
-      //account for install profiles
-      if ($path == '/') {
-        $path = dirname(__FILE__) . '/';
-      }
+		$path =  module_exists('libraries') && in_array('colorpicker', array_keys(libraries_get_libraries()))
+      ? libraries_get_path('colorpicker')
+      : $path = dirname(__FILE__) . '/colorpicker';
 		// The first file we check is the 3rd party integration. Without this file, the module will not work. Other
 		// files are also required, but the assumption is made that if they got this file, they will have gotten all the other files.
 		// This is done to keep code relatively streamlined.
-		if(!is_file($path . 'colorpicker/js/colorpicker.js'))
+		if(!is_file($path . '/js/colorpicker.js'))
 		{
 			$t = get_t();
 			$errors['jquery_colorpicker_missing_files'] = array
@@ -127,8 +126,8 @@ function jquery_colorpicker_requirements($phase)
 									'external' => TRUE,
 							)
 						),
-						'!colorpicker_path' => '<strong>' . $path . 'colorpicker</strong>',
-							'!colorpicker_js_path' => '<strong>' . $path . 'colorpicker/js/colorpicker.js</strong>',
+						'!colorpicker_path' => '<strong>' . $path . '</strong>',
+              '!colorpicker_js_path' => '<strong>' . $path . '/js/colorpicker.js</strong>',
 					)
 				),
 				'severity' => REQUIREMENT_ERROR,

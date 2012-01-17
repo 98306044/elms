@@ -102,74 +102,9 @@ function elms_course_versions_fieldgroup_default_groups() {
         'label' => 'above',
       ),
     ),
-    'weight' => '4',
-    'fields' => array(
-      '0' => 'field_inst_contact_block',
-    ),
-  );
-
-  // Exported group: group_schedule
-  $groups['version-group_schedule'] = array(
-    'group_type' => 'standard',
-    'type_name' => 'version',
-    'group_name' => 'group_schedule',
-    'label' => 'Schedule',
-    'settings' => array(
-      'form' => array(
-        'style' => 'fieldset_collapsible',
-        'description' => 'Use the Schedule Builder to communicate course pacing',
-      ),
-      'display' => array(
-        'weight' => '1',
-        'label' => 'above',
-        'teaser' => array(
-          'format' => 'fieldset',
-          'exclude' => 1,
-        ),
-        'full' => array(
-          'format' => 'no_style',
-          'exclude' => 1,
-        ),
-        'description' => 'Use the Schedule Builder to communicate course pacing',
-        '5' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-        '4' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-        '2' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-        '3' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-        'token' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-      ),
-      'multistep' => array(
-        'step' => '3',
-        'block' => 0,
-      ),
-    ),
     'weight' => '1',
     'fields' => array(
-      '0' => 'field_scoring_method',
-      '1' => 'field_schedule_to_build',
-      '2' => 'field_schedule_source',
-      '3' => 'field_start_date',
-      '4' => 'field_finals_monday',
-      '5' => 'field_top_level_name',
-      '6' => 'field_num_topics',
-      '7' => 'field_forming_week_structure',
-      '8' => 'field_week_structure',
-      '9' => 'field_semester',
-      '10' => 'field_year',
+      '0' => 'field_inst_contact_block',
     ),
   );
 
@@ -231,7 +166,6 @@ function elms_course_versions_fieldgroup_default_groups() {
   // Included for use with string extractors like potx.
   t('Content');
   t('Instructor Contact Info');
-  t('Schedule');
   t('Section Info');
 
   return $groups;

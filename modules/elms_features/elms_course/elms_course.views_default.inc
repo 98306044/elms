@@ -11,10 +11,9 @@ function elms_course_views_default_views() {
   $view->name = 'course_lists';
   $view->description = 'Course Lists';
   $view->tag = 'course';
-  $view->view_php = '';
   $view->base_table = 'node';
-  $view->is_cacheable = FALSE;
-  $view->api_version = 2;
+  $view->core = 0;
+  $view->api_version = '2';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
   $handler = $view->new_display('default', 'Defaults', 'default');
   $handler->override_option('fields', array(
@@ -46,7 +45,7 @@ function elms_course_views_default_views() {
       'link_to_taxonomy' => 0,
       'limit' => 1,
       'vids' => array(
-        '1' => 1,
+        1 => 1,
       ),
       'exclude' => 1,
       'id' => 'tid',
@@ -178,6 +177,13 @@ function elms_course_views_default_views() {
       'relationship' => 'none',
     ),
   ));
+  $handler->override_option('sorts', array(
+    'title' => array(
+      'id' => 'title',
+      'table' => 'node',
+      'field' => 'title',
+    ),
+  ));
   $handler->override_option('filters', array(
     'status' => array(
       'operator' => '=',
@@ -255,14 +261,14 @@ function elms_course_views_default_views() {
   $handler->override_option('style_plugin', 'fluid_grid');
   $handler = $view->new_display('page', 'View List', 'page_1');
   $handler->override_option('style_options', array(
-    'grouping' => 'tid',
+    'grouping' => '',
     'advanced_layout' => array(
       'align' => TRUE,
       'margins' => TRUE,
       'css3' => TRUE,
     ),
-    'items_width' => '180',
-    'items_height' => '150',
+    'items_width' => '150',
+    'items_height' => '200',
     'list_alignment' => '',
     'items_alignment' => 'center',
     'items_h_margin' => '2px',
@@ -273,7 +279,7 @@ function elms_course_views_default_views() {
   $handler->override_option('path', 'courses');
   $handler->override_option('menu', array(
     'type' => 'normal',
-    'title' => 'All Courses',
+    'title' => 'By Department',
     'description' => 'View a list of all courses',
     'weight' => '0',
     'name' => 'navigation',
@@ -397,7 +403,7 @@ function elms_course_views_default_views() {
       'link_to_taxonomy' => 0,
       'limit' => 1,
       'vids' => array(
-        '1' => 1,
+        1 => 1,
       ),
       'exclude' => 0,
       'id' => 'tid',
@@ -408,13 +414,45 @@ function elms_course_views_default_views() {
         'button' => 'Use default',
       ),
     ),
-  ));
-  $handler->override_option('sorts', array(
-    'weight' => array(
-      'order' => 'ASC',
-      'id' => 'weight',
-      'table' => 'term_data',
-      'field' => 'weight',
+    'field_id_of_record_uid' => array(
+      'label' => 'Instructional Designer',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'absolute' => 0,
+        'link_class' => '',
+        'alt' => '',
+        'rel' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'hide_alter_empty' => 1,
+      'link_to_node' => 0,
+      'label_type' => 'custom',
+      'format' => 'default',
+      'multiple' => array(
+        'group' => TRUE,
+        'multiple_number' => '',
+        'multiple_from' => '',
+        'multiple_reversed' => FALSE,
+      ),
+      'exclude' => 0,
+      'id' => 'field_id_of_record_uid',
+      'table' => 'node_data_field_id_of_record',
+      'field' => 'field_id_of_record_uid',
       'override' => array(
         'button' => 'Use default',
       ),
@@ -452,7 +490,7 @@ function elms_course_views_default_views() {
     'type' => 'tab',
     'title' => 'List',
     'description' => 'Table display of courses',
-    'weight' => '1',
+    'weight' => '0',
     'name' => 'navigation',
   ));
   $handler->override_option('tab_options', array(
@@ -463,12 +501,28 @@ function elms_course_views_default_views() {
     'name' => 'navigation',
   ));
   $handler = $view->new_display('page', 'View List Tab', 'page_3');
-  $handler->override_option('path', 'courses/view');
+  $handler->override_option('style_options', array(
+    'grouping' => 'tid',
+    'advanced_layout' => array(
+      'align' => TRUE,
+      'margins' => TRUE,
+      'css3' => TRUE,
+    ),
+    'items_width' => '200',
+    'items_height' => '150',
+    'list_alignment' => '',
+    'items_alignment' => 'center',
+    'items_h_margin' => '2px',
+    'items_v_margin' => '2px',
+    'box_shadow' => '1',
+    'border_radius' => '1',
+  ));
+  $handler->override_option('path', 'courses/department');
   $handler->override_option('menu', array(
-    'type' => 'default tab',
-    'title' => 'All',
+    'type' => 'tab',
+    'title' => 'Department',
     'description' => 'Visual Course Listing',
-    'weight' => '0',
+    'weight' => '1',
     'name' => 'navigation',
   ));
   $handler->override_option('tab_options', array(
@@ -487,43 +541,6 @@ function elms_course_views_default_views() {
     ),
   ));
   $handler->override_option('fields', array(
-    'nid' => array(
-      'label' => 'Nid',
-      'alter' => array(
-        'alter_text' => 0,
-        'text' => '',
-        'make_link' => 0,
-        'path' => '',
-        'link_class' => '',
-        'alt' => '',
-        'prefix' => '',
-        'suffix' => '',
-        'target' => '',
-        'help' => '',
-        'trim' => 0,
-        'max_length' => '',
-        'word_boundary' => 1,
-        'ellipsis' => 1,
-        'html' => 0,
-        'strip_tags' => 0,
-      ),
-      'empty' => '',
-      'hide_empty' => 0,
-      'empty_zero' => 0,
-      'link_to_node' => 0,
-      'spaces' => array(
-        'frontpage' => 0,
-        'type' => 'spaces_og',
-      ),
-      'exclude' => 1,
-      'id' => 'nid',
-      'table' => 'node',
-      'field' => 'nid',
-      'override' => array(
-        'button' => 'Use default',
-      ),
-      'relationship' => 'none',
-    ),
     'tid' => array(
       'label' => 'Academic Area',
       'alter' => array(
@@ -552,7 +569,7 @@ function elms_course_views_default_views() {
       'link_to_taxonomy' => 0,
       'limit' => 1,
       'vids' => array(
-        '1' => 1,
+        1 => 1,
       ),
       'exclude' => 0,
       'id' => 'tid',
@@ -563,15 +580,17 @@ function elms_course_views_default_views() {
         'button' => 'Use default',
       ),
     ),
-    'field_course_title_value' => array(
+    'field_course_name_value' => array(
       'label' => '',
       'alter' => array(
         'alter_text' => 0,
         'text' => '',
         'make_link' => 0,
         'path' => '',
+        'absolute' => 0,
         'link_class' => '',
         'alt' => '',
+        'rel' => '',
         'prefix' => '',
         'suffix' => '',
         'target' => '',
@@ -586,6 +605,51 @@ function elms_course_views_default_views() {
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 1,
+      'link_to_node' => 0,
+      'label_type' => 'none',
+      'format' => 'default',
+      'multiple' => array(
+        'group' => TRUE,
+        'multiple_number' => '',
+        'multiple_from' => '',
+        'multiple_reversed' => FALSE,
+      ),
+      'exclude' => 1,
+      'id' => 'field_course_name_value',
+      'table' => 'node_data_field_course_name',
+      'field' => 'field_course_name_value',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'field_course_ref_nid',
+    ),
+    'field_course_title_value' => array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'absolute' => 0,
+        'link_class' => '',
+        'alt' => '',
+        'rel' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'hide_alter_empty' => 1,
       'link_to_node' => 0,
       'label_type' => 'none',
       'format' => 'default',
@@ -604,15 +668,17 @@ function elms_course_views_default_views() {
       ),
       'relationship' => 'field_course_ref_nid',
     ),
-    'field_course_name_value' => array(
-      'label' => 'Course',
+    'title' => array(
+      'label' => '',
       'alter' => array(
         'alter_text' => 1,
-        'text' => '[field_course_name_value] : [field_course_title_value]',
-        'make_link' => 1,
-        'path' => 'node/[nid]',
+        'text' => '[field_course_name_value]: [field_course_title_value] ([title])',
+        'make_link' => 0,
+        'path' => '',
+        'absolute' => 0,
         'link_class' => '',
-        'alt' => 'Click to access [field_course_name_value]',
+        'alt' => '',
+        'rel' => '',
         'prefix' => '',
         'suffix' => '',
         'target' => '',
@@ -627,23 +693,20 @@ function elms_course_views_default_views() {
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
-      'link_to_node' => 0,
-      'label_type' => 'custom',
-      'format' => 'default',
-      'multiple' => array(
-        'group' => TRUE,
-        'multiple_number' => '',
-        'multiple_from' => '',
-        'multiple_reversed' => FALSE,
+      'hide_alter_empty' => 1,
+      'link_to_node' => 1,
+      'spaces' => array(
+        'frontpage' => 1,
+        'type' => 'spaces_og',
       ),
       'exclude' => 0,
-      'id' => 'field_course_name_value',
-      'table' => 'node_data_field_course_name',
-      'field' => 'field_course_name_value',
+      'id' => 'title',
+      'table' => 'node',
+      'field' => 'title',
       'override' => array(
         'button' => 'Use default',
       ),
-      'relationship' => 'field_course_ref_nid',
+      'relationship' => 'none',
     ),
     'field_section_semester_value' => array(
       'label' => 'Semester',
@@ -857,11 +920,29 @@ function elms_course_views_default_views() {
         'button' => 'Use default',
       ),
     ),
+    'field_course_ref_nid' => array(
+      'operator' => 'not empty',
+      'value' => array(),
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'field_course_ref_nid',
+      'table' => 'node_data_field_course_ref',
+      'field' => 'field_course_ref_nid',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+      'reduce_duplicates' => 0,
+    ),
   ));
   $handler->override_option('access', array(
     'type' => 'role',
     'role' => array(
-      '2' => 2,
+      2 => 2,
     ),
   ));
   $handler->override_option('title', 'My Courses');
@@ -921,8 +1002,350 @@ function elms_course_views_default_views() {
     'type' => 'tab',
     'title' => 'My',
     'description' => 'My Courses',
-    'weight' => '3',
+    'weight' => '2',
     'name' => 'navigation',
+  ));
+  $handler->override_option('tab_options', array(
+    'type' => 'none',
+    'title' => '',
+    'description' => '',
+    'weight' => 0,
+    'name' => 'navigation',
+  ));
+  $handler = $view->new_display('page', 'All Courses', 'page_5');
+  $handler->override_option('path', 'courses/view');
+  $handler->override_option('menu', array(
+    'type' => 'default tab',
+    'title' => 'All',
+    'description' => 'A listing of all Courses',
+    'weight' => '0',
+    'name' => 'primary-links',
+  ));
+  $handler->override_option('tab_options', array(
+    'type' => 'none',
+    'title' => '',
+    'description' => '',
+    'weight' => '0',
+    'name' => 'navigation',
+  ));
+  $handler = $view->new_display('page', 'View sandboxes', 'page_6');
+  $handler->override_option('fields', array(
+    'title' => array(
+      'label' => 'Title',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'absolute' => 0,
+        'link_class' => '',
+        'alt' => '',
+        'rel' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'hide_alter_empty' => 1,
+      'link_to_node' => 1,
+      'spaces' => array(
+        'frontpage' => 1,
+        'type' => 'spaces_og',
+      ),
+      'exclude' => 0,
+      'id' => 'title',
+      'table' => 'node',
+      'field' => 'title',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('filters', array(
+    'status' => array(
+      'operator' => '=',
+      'value' => '1',
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'status',
+      'table' => 'node',
+      'field' => 'status',
+      'relationship' => 'none',
+    ),
+    'type' => array(
+      'operator' => 'in',
+      'value' => array(
+        'version' => 'version',
+      ),
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'type',
+      'table' => 'node',
+      'field' => 'type',
+      'relationship' => 'none',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+    ),
+    'field_course_ref_nid' => array(
+      'operator' => 'empty',
+      'value' => array(),
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'field_course_ref_nid',
+      'table' => 'node_data_field_course_ref',
+      'field' => 'field_course_ref_nid',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+      'reduce_duplicates' => 0,
+    ),
+  ));
+  $handler->override_option('access', array(
+    'type' => 'role',
+    'role' => array(
+      3 => 3,
+      6 => 6,
+    ),
+  ));
+  $handler->override_option('title', 'Sandboxes');
+  $handler->override_option('style_plugin', 'table');
+  $handler->override_option('style_options', array(
+    'grouping' => '',
+    'override' => 1,
+    'sticky' => 0,
+    'order' => 'asc',
+    'summary' => '',
+    'columns' => array(
+      'tid' => 'tid',
+      'field_course_promotion_fid' => 'field_course_promotion_fid',
+      'field_course_name_value' => 'field_course_name_value',
+      'field_course_title_value' => 'field_course_title_value',
+    ),
+    'info' => array(
+      'tid' => array(
+        'separator' => '',
+      ),
+      'field_course_promotion_fid' => array(
+        'separator' => '',
+      ),
+      'field_course_name_value' => array(
+        'sortable' => 0,
+        'separator' => '',
+      ),
+      'field_course_title_value' => array(
+        'sortable' => 0,
+        'separator' => '',
+      ),
+    ),
+    'default' => '-1',
+  ));
+  $handler->override_option('path', 'courses/sandboxes');
+  $handler->override_option('menu', array(
+    'type' => 'tab',
+    'title' => 'Sandboxes',
+    'description' => 'Sandbox courses',
+    'weight' => '3',
+    'name' => 'primary-links',
+  ));
+  $handler->override_option('tab_options', array(
+    'type' => 'none',
+    'title' => '',
+    'description' => '',
+    'weight' => 0,
+    'name' => 'navigation',
+  ));
+  $handler = $view->new_display('page', 'OER', 'page_7');
+  $handler->override_option('fields', array(
+    'description' => array(
+      'label' => 'Title',
+      'alter' => array(
+        'alter_text' => 1,
+        'text' => ': [description]',
+        'make_link' => 0,
+        'path' => '',
+        'absolute' => 0,
+        'link_class' => '',
+        'alt' => '',
+        'rel' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 1,
+      'empty_zero' => 1,
+      'hide_alter_empty' => 1,
+      'exclude' => 1,
+      'id' => 'description',
+      'table' => 'og',
+      'field' => 'description',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+    'title' => array(
+      'label' => 'Name',
+      'alter' => array(
+        'alter_text' => 1,
+        'text' => '[title][description]',
+        'make_link' => 0,
+        'path' => '',
+        'absolute' => 0,
+        'link_class' => '',
+        'alt' => '',
+        'rel' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'hide_alter_empty' => 1,
+      'link_to_node' => 1,
+      'spaces' => array(
+        'frontpage' => 1,
+        'type' => 'spaces_og',
+      ),
+      'exclude' => 0,
+      'id' => 'title',
+      'table' => 'node',
+      'field' => 'title',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('filters', array(
+    'status' => array(
+      'operator' => '=',
+      'value' => '1',
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'status',
+      'table' => 'node',
+      'field' => 'status',
+      'relationship' => 'none',
+    ),
+    'type' => array(
+      'operator' => 'in',
+      'value' => array(
+        'version' => 'version',
+      ),
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'type',
+      'table' => 'node',
+      'field' => 'type',
+      'relationship' => 'none',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+    ),
+    'private' => array(
+      'operator' => '=',
+      'value' => '0',
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'private',
+      'table' => 'og',
+      'field' => 'private',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('style_plugin', 'table');
+  $handler->override_option('style_options', array(
+    'grouping' => '',
+    'override' => 1,
+    'sticky' => 0,
+    'order' => 'asc',
+    'summary' => '',
+    'columns' => array(
+      'tid' => 'tid',
+      'field_course_promotion_fid' => 'field_course_promotion_fid',
+      'field_course_name_value' => 'field_course_name_value',
+      'field_course_title_value' => 'field_course_title_value',
+    ),
+    'info' => array(
+      'tid' => array(
+        'separator' => '',
+      ),
+      'field_course_promotion_fid' => array(
+        'separator' => '',
+      ),
+      'field_course_name_value' => array(
+        'sortable' => 0,
+        'separator' => '',
+      ),
+      'field_course_title_value' => array(
+        'sortable' => 0,
+        'separator' => '',
+      ),
+    ),
+    'default' => '-1',
+  ));
+  $handler->override_option('path', 'courses/oer');
+  $handler->override_option('menu', array(
+    'type' => 'tab',
+    'title' => 'OER',
+    'description' => 'Open Educational Resources',
+    'weight' => '10',
+    'name' => 'primary-links',
   ));
   $handler->override_option('tab_options', array(
     'type' => 'none',
@@ -939,10 +1362,9 @@ function elms_course_views_default_views() {
   $view->name = 'course_promo';
   $view->description = 'Course Promotional image views for slideshow';
   $view->tag = 'slideshow, course';
-  $view->view_php = '';
   $view->base_table = 'node';
-  $view->is_cacheable = FALSE;
-  $view->api_version = 2;
+  $view->core = 0;
+  $view->api_version = '2';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
   $handler = $view->new_display('default', 'Defaults', 'default');
   $handler->override_option('fields', array(
@@ -1008,13 +1430,13 @@ function elms_course_views_default_views() {
       'field' => 'nid',
       'validate_user_argument_type' => 'uid',
       'validate_user_roles' => array(
-        '2' => 0,
-        '3' => 0,
-        '6' => 0,
-        '4' => 0,
-        '9' => 0,
-        '10' => 0,
-        '8' => 0,
+        2 => 0,
+        3 => 0,
+        6 => 0,
+        4 => 0,
+        9 => 0,
+        10 => 0,
+        8 => 0,
       ),
       'override' => array(
         'button' => 'Override',
@@ -1037,7 +1459,7 @@ function elms_course_views_default_views() {
       'validate_argument_node_access' => 0,
       'validate_argument_nid_type' => 'nid',
       'validate_argument_vocabulary' => array(
-        '1' => 0,
+        1 => 0,
       ),
       'validate_argument_type' => 'tid',
       'validate_argument_transform' => 0,
@@ -1164,10 +1586,9 @@ function elms_course_views_default_views() {
   $view->name = 'courses';
   $view->description = 'Course pages, and tabs for displaying either a listing of versions by course, versions of a course, or a list of all';
   $view->tag = 'course, version';
-  $view->view_php = '';
   $view->base_table = 'node';
-  $view->is_cacheable = FALSE;
-  $view->api_version = 2;
+  $view->core = 0;
+  $view->api_version = '2';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
   $handler = $view->new_display('default', 'Defaults', 'default');
   $handler->override_option('fields', array(
@@ -1199,7 +1620,7 @@ function elms_course_views_default_views() {
       'link_to_taxonomy' => 0,
       'limit' => 1,
       'vids' => array(
-        '1' => 1,
+        1 => 1,
       ),
       'exclude' => 1,
       'id' => 'tid',
@@ -1351,13 +1772,13 @@ function elms_course_views_default_views() {
       'field' => 'field_course_ref_nid',
       'validate_user_argument_type' => 'uid',
       'validate_user_roles' => array(
-        '2' => 0,
-        '3' => 0,
-        '6' => 0,
-        '4' => 0,
-        '9' => 0,
-        '10' => 0,
-        '8' => 0,
+        2 => 0,
+        3 => 0,
+        6 => 0,
+        4 => 0,
+        9 => 0,
+        10 => 0,
+        8 => 0,
       ),
       'override' => array(
         'button' => 'Override',
@@ -1380,7 +1801,7 @@ function elms_course_views_default_views() {
       'validate_argument_node_access' => 0,
       'validate_argument_nid_type' => 'nid',
       'validate_argument_vocabulary' => array(
-        '1' => 0,
+        1 => 0,
       ),
       'validate_argument_type' => 'tid',
       'validate_argument_transform' => 0,
@@ -1732,13 +2153,13 @@ function elms_course_views_default_views() {
       'field' => 'field_course_ref_nid',
       'validate_user_argument_type' => 'uid',
       'validate_user_roles' => array(
-        '2' => 0,
-        '3' => 0,
-        '6' => 0,
-        '4' => 0,
-        '9' => 0,
-        '10' => 0,
-        '8' => 0,
+        2 => 0,
+        3 => 0,
+        6 => 0,
+        4 => 0,
+        9 => 0,
+        10 => 0,
+        8 => 0,
       ),
       'override' => array(
         'button' => 'Use default',
@@ -1761,7 +2182,7 @@ function elms_course_views_default_views() {
       'validate_argument_node_access' => 1,
       'validate_argument_nid_type' => 'nid',
       'validate_argument_vocabulary' => array(
-        '1' => 0,
+        1 => 0,
       ),
       'validate_argument_type' => 'tid',
       'validate_argument_transform' => 0,
@@ -1816,7 +2237,7 @@ function elms_course_views_default_views() {
     'sid' => array(
       'operator' => 'in',
       'value' => array(
-        '10' => '10',
+        10 => '10',
       ),
       'group' => '0',
       'exposed' => FALSE,
@@ -1836,8 +2257,8 @@ function elms_course_views_default_views() {
   $handler->override_option('access', array(
     'type' => 'role',
     'role' => array(
-      '3' => 3,
-      '6' => 6,
+      3 => 3,
+      6 => 6,
     ),
   ));
   $handler->override_option('title', 'Master Versions');
@@ -2112,7 +2533,7 @@ function elms_course_views_default_views() {
     'sid' => array(
       'operator' => 'in',
       'value' => array(
-        '7' => '7',
+        7 => '7',
       ),
       'group' => '0',
       'exposed' => FALSE,
@@ -2372,7 +2793,7 @@ function elms_course_views_default_views() {
     'sid' => array(
       'operator' => 'in',
       'value' => array(
-        '5' => '5',
+        5 => '5',
       ),
       'group' => '0',
       'exposed' => FALSE,
@@ -2666,7 +3087,7 @@ function elms_course_views_default_views() {
     'sid' => array(
       'operator' => 'in',
       'value' => array(
-        '6' => '6',
+        6 => '6',
       ),
       'group' => '0',
       'exposed' => FALSE,
@@ -2895,7 +3316,7 @@ function elms_course_views_default_views() {
     'sid' => array(
       'operator' => 'in',
       'value' => array(
-        '3' => '3',
+        3 => '3',
       ),
       'group' => '0',
       'exposed' => FALSE,
@@ -2918,15 +3339,362 @@ function elms_course_views_default_views() {
 
   $views[$view->name] = $view;
 
+  // Exported view: elms_course_get_ids
+  $view = new view;
+  $view->name = 'elms_course_get_ids';
+  $view->description = 'Get a list of instructional designers';
+  $view->tag = 'course';
+  $view->base_table = 'users';
+  $view->core = 6;
+  $view->api_version = '2';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+  $handler = $view->new_display('default', 'Defaults', 'default');
+  $handler->override_option('fields', array(
+    'value' => array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'absolute' => 0,
+        'link_class' => '',
+        'alt' => '',
+        'rel' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'hide_alter_empty' => 1,
+      'link_to_user' => 0,
+      'exclude' => 0,
+      'id' => 'value',
+      'table' => 'profile_values_profile_first_name',
+      'field' => 'value',
+      'relationship' => 'none',
+    ),
+    'value_1' => array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'absolute' => 0,
+        'link_class' => '',
+        'alt' => '',
+        'rel' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'hide_alter_empty' => 1,
+      'link_to_user' => 0,
+      'exclude' => 0,
+      'id' => 'value_1',
+      'table' => 'profile_values_profile_last_name',
+      'field' => 'value',
+      'relationship' => 'none',
+    ),
+    'name' => array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => 1,
+        'text' => '([name])',
+        'make_link' => 0,
+        'path' => '',
+        'absolute' => 0,
+        'link_class' => '',
+        'alt' => '',
+        'rel' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'hide_alter_empty' => 1,
+      'link_to_user' => 0,
+      'overwrite_anonymous' => 0,
+      'anonymous_text' => '',
+      'exclude' => 0,
+      'id' => 'name',
+      'table' => 'users',
+      'field' => 'name',
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('sorts', array(
+    'name' => array(
+      'order' => 'ASC',
+      'id' => 'name',
+      'table' => 'users',
+      'field' => 'name',
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('filters', array(
+    'status' => array(
+      'operator' => '=',
+      'value' => '1',
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'status',
+      'table' => 'users',
+      'field' => 'status',
+      'relationship' => 'none',
+    ),
+    'rid' => array(
+      'operator' => 'or',
+      'value' => array(
+        6 => '6',
+      ),
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'rid',
+      'table' => 'users_roles',
+      'field' => 'rid',
+      'relationship' => 'none',
+      'reduce_duplicates' => 0,
+    ),
+  ));
+  $handler->override_option('access', array(
+    'type' => 'none',
+  ));
+  $handler->override_option('cache', array(
+    'type' => 'none',
+  ));
+  $handler->override_option('items_per_page', 0);
+  $handler->override_option('row_options', array(
+    'inline' => array(
+      'value' => 'value',
+      'value_1' => 'value_1',
+      'name' => 'name',
+    ),
+    'separator' => '',
+    'hide_empty' => 0,
+  ));
+
+  $views[$view->name] = $view;
+
+  // Exported view: elms_course_get_insts
+  $view = new view;
+  $view->name = 'elms_course_get_insts';
+  $view->description = 'List of all instructors';
+  $view->tag = 'course';
+  $view->base_table = 'users';
+  $view->core = 6;
+  $view->api_version = '2';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+  $handler = $view->new_display('default', 'Defaults', 'default');
+  $handler->override_option('fields', array(
+    'value' => array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'absolute' => 0,
+        'link_class' => '',
+        'alt' => '',
+        'rel' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'hide_alter_empty' => 1,
+      'link_to_user' => 0,
+      'exclude' => 0,
+      'id' => 'value',
+      'table' => 'profile_values_profile_first_name',
+      'field' => 'value',
+      'relationship' => 'none',
+    ),
+    'value_1' => array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'absolute' => 0,
+        'link_class' => '',
+        'alt' => '',
+        'rel' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'hide_alter_empty' => 1,
+      'link_to_user' => 0,
+      'exclude' => 0,
+      'id' => 'value_1',
+      'table' => 'profile_values_profile_last_name',
+      'field' => 'value',
+      'relationship' => 'none',
+    ),
+    'name' => array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => 1,
+        'text' => '([name])',
+        'make_link' => 0,
+        'path' => '',
+        'absolute' => 0,
+        'link_class' => '',
+        'alt' => '',
+        'rel' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'hide_alter_empty' => 1,
+      'link_to_user' => 0,
+      'overwrite_anonymous' => 0,
+      'anonymous_text' => '',
+      'exclude' => 0,
+      'id' => 'name',
+      'table' => 'users',
+      'field' => 'name',
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('sorts', array(
+    'name' => array(
+      'order' => 'ASC',
+      'id' => 'name',
+      'table' => 'users',
+      'field' => 'name',
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('filters', array(
+    'status' => array(
+      'operator' => '=',
+      'value' => '1',
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'status',
+      'table' => 'users',
+      'field' => 'status',
+      'relationship' => 'none',
+    ),
+    'rid' => array(
+      'operator' => 'or',
+      'value' => array(
+        4 => '4',
+      ),
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'rid',
+      'table' => 'users_roles',
+      'field' => 'rid',
+      'relationship' => 'none',
+      'reduce_duplicates' => 0,
+    ),
+  ));
+  $handler->override_option('access', array(
+    'type' => 'none',
+  ));
+  $handler->override_option('cache', array(
+    'type' => 'none',
+  ));
+  $handler->override_option('items_per_page', 0);
+  $handler->override_option('row_options', array(
+    'inline' => array(
+      'value' => 'value',
+      'value_1' => 'value_1',
+      'name' => 'name',
+    ),
+    'separator' => '',
+    'hide_empty' => 0,
+  ));
+
+  $views[$view->name] = $view;
+
   // Exported view: elms_course_info_blocks
   $view = new view;
   $view->name = 'elms_course_info_blocks';
   $view->description = 'Blocks that group together the fields of the course node';
   $view->tag = 'course';
-  $view->view_php = '';
   $view->base_table = 'node';
-  $view->is_cacheable = FALSE;
-  $view->api_version = 2;
+  $view->core = 0;
+  $view->api_version = '2';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
   $handler = $view->new_display('default', 'Defaults', 'default');
   $handler->override_option('fields', array(
@@ -3033,13 +3801,13 @@ function elms_course_views_default_views() {
       'field' => 'nid',
       'validate_user_argument_type' => 'uid',
       'validate_user_roles' => array(
-        '2' => 0,
-        '3' => 0,
-        '6' => 0,
-        '4' => 0,
-        '9' => 0,
-        '10' => 0,
-        '8' => 0,
+        2 => 0,
+        3 => 0,
+        6 => 0,
+        4 => 0,
+        9 => 0,
+        10 => 0,
+        8 => 0,
       ),
       'override' => array(
         'button' => 'Override',
@@ -3068,7 +3836,7 @@ function elms_course_views_default_views() {
       'validate_argument_node_access' => 0,
       'validate_argument_nid_type' => 'nid',
       'validate_argument_vocabulary' => array(
-        '1' => 0,
+        1 => 0,
       ),
       'validate_argument_type' => 'tid',
       'validate_argument_transform' => 0,
@@ -3104,6 +3872,11 @@ function elms_course_views_default_views() {
         'button' => 'Override',
       ),
       'relationship' => 'none',
+    ),
+    'field_course_title_value' => array(
+      'id' => 'field_course_title_value',
+      'table' => 'node_data_field_course_title',
+      'field' => 'field_course_title_value',
     ),
   ));
   $handler->override_option('access', array(
@@ -3190,6 +3963,50 @@ function elms_course_views_default_views() {
   $handler->override_option('block_caching', -1);
   $handler = $view->new_display('block', 'Description', 'block_3');
   $handler->override_option('fields', array(
+    'field_course_title_value' => array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'absolute' => 0,
+        'link_class' => '',
+        'alt' => '',
+        'rel' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'hide_alter_empty' => 1,
+      'link_to_node' => 0,
+      'label_type' => 'none',
+      'format' => 'default',
+      'multiple' => array(
+        'group' => TRUE,
+        'multiple_number' => '',
+        'multiple_from' => '',
+        'multiple_reversed' => FALSE,
+      ),
+      'exclude' => 0,
+      'id' => 'field_course_title_value',
+      'table' => 'node_data_field_course_title',
+      'field' => 'field_course_title_value',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
     'field_description_value' => array(
       'label' => '',
       'alter' => array(
@@ -3226,6 +4043,71 @@ function elms_course_views_default_views() {
       'id' => 'field_description_value',
       'table' => 'node_data_field_description',
       'field' => 'field_description_value',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+    'field_link_more_info_url' => array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'absolute' => 0,
+        'link_class' => '',
+        'alt' => '',
+        'rel' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'hide_alter_empty' => 1,
+      'link_to_node' => 0,
+      'label_type' => 'none',
+      'format' => 'default',
+      'multiple' => array(
+        'group' => 1,
+        'multiple_number' => '',
+        'multiple_from' => '',
+        'multiple_reversed' => 0,
+      ),
+      'exclude' => 0,
+      'id' => 'field_link_more_info_url',
+      'table' => 'node_data_field_link_more_info',
+      'field' => 'field_link_more_info_url',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('filters', array(
+    'field_course_title_value' => array(
+      'operator' => 'not empty',
+      'value' => '',
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+        'optional' => FALSE,
+      ),
+      'case' => 1,
+      'id' => 'field_course_title_value',
+      'table' => 'node_data_field_course_title',
+      'field' => 'field_course_title_value',
       'override' => array(
         'button' => 'Use default',
       ),
@@ -3303,11 +4185,11 @@ function elms_course_views_default_views() {
   $handler->override_option('access', array(
     'type' => 'role',
     'role' => array(
-      '3' => 3,
-      '6' => 6,
-      '4' => 4,
-      '9' => 9,
-      '8' => 8,
+      3 => 3,
+      6 => 6,
+      4 => 4,
+      9 => 9,
+      8 => 8,
     ),
   ));
   $handler->override_option('title', 'Faculty Resources');

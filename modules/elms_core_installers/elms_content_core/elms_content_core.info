@@ -1,0 +1,6 @@
+; $Id: $
+name = ELMS Content Core Install Helper
+description = Export objects from CTools
+dependencies[] = strongarm
+package = Chaos tool suite
+core = 6.x

@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * @file
@@ -103,14 +102,16 @@ function jquery_colorpicker_cck_process($element, $edit, $form_state, $form) {
     '#value' => implode('][', array_merge($element['#parents'], array($field_key))),
   );
 
-  if(isset($edit)) {
     // Next we decide what background to use to render the element. In order to ensure the background exists, we create an array of
     // the two possibilities, that we will use to compare the value submitted in the Form API definition
     $backgrounds = array('select.png', 'select2.png');
     // Now we check to see if the value in the Form API definition is valid. If it is, we use it, if it's not, we use a default value
     $background = (in_array($element['#jquery_colorpicker_background'], $backgrounds)) ? $element['#jquery_colorpicker_background'] : 'select.png';
     // Since we know the background, we can then get the URL of it to pass to the javascript function
-    $background_url = base_path() . $path .'colorpicker/images/' . $background;
+    $path = module_exists('libraries') && in_array('colorpicker', array_keys(libraries_get_libraries()))
+    ? libraries_get_path('colorpicker')
+    : drupal_get_path('module', 'jquery_colorpicker') . '/colorpicker';
+    $background_url = base_path() . $path .'/images/' . $background;
     // next we determine what the default value for the form element is. This will also be passed to the javascript function.
     if(isset($element['#value']['value'])) {
       $default_color = '#' . $element['#value']['value'];
@@ -122,7 +123,6 @@ function jquery_colorpicker_cck_process($element, $edit, $form_state, $form) {
 
     // And we pass the settings in a namespace to the Javascript
     drupal_add_js(array('jqueryColorpicker' => $settings), 'setting');
-  }
 
   return $element;
 }

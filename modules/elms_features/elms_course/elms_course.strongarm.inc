@@ -83,6 +83,7 @@ function elms_course_strongarm() {
     'book' => '0',
     'path' => '4',
     'print' => '5',
+    'workflow' => '12',
     'spaces_preset' => '6',
     'purl' => '-3',
     'themes' => '-1',

@@ -57,7 +57,7 @@ function og_node_access_help($path, $arg) {
 
   if ($path != 'admin/og/node-settings/rebuild' && $path != 'manage/og/node-settings/rebuild'
       && $path != 'batch' && strpos($path, '#') === FALSE && !empty($needs_rebuild)
-      && (user_access('access administration pages') || (isset($space) && spaces_admin_access()))) {
+      && (user_access('access administration pages') || (isset($space) && spaces_access_admin()))) {
     if ($path == 'admin/og/node-settings' || $path == 'manage/og/node-settings') {
       $message = t('The content access permissions need to be rebuilt for one or more groups.');
     }

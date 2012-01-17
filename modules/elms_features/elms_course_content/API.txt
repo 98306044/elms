@@ -2,56 +2,50 @@
 ELMS Instructional Templates API
 --------------------------------
 
-This API is fairly straight forward.  You can use it to get new book outlines automatically populated on the creation of new course versions.  Some samples are provided in the elms_instructional_templates_elms_instructional_template function.
+This API is fairly straight forward.  You can use it to get new book outlines automatically populated on the creation of new course versions.  Some samples are provided in the see elms_id_best_practices for more complex examples
 
 Here is the basic structure:
 $outline['YOUR_TEMPLATE_MACHINE_NAME'] = array(
      'title' => 'YOUR TEMPLATE NAME',
-     0 => array(
-       'type' => ,
-       'title' => ,
-       'link' => ,
-       'parent' => 
+      array(
+       'type' => '',
+       'title' => '',
+       'link' => '',
+			 'content => '', //optional body content
+			 'format' => '', //optional text input format
+			 'duplicate' => TRUE //or number of times to replicate,
+			 'children' => array(
+			   //SAME STRUCTURE AS ABOVE NOW
+			 )
      ));
 
---Acceptable values for type is link, page, folder, or duplicate
+--Acceptable values for type is link, page, folder
 --'link' is only used if type is link
 --@i can be used in the title of something that's going to be duplicated as to where the incemental value should be placed.  This is not required.
---parent is a reference to the array member preceeding it, here's a visual example:
-
-0 -- Thing1 (no parent listed at base level)
-1 ---- Stuff2 (parent is 0)
-2 ------ Herethere3 (parent is 1)
-3 ---- MoreStuff (parent is 0)
-4 -- Whothere (no parent listed at base level)
-
---in the case of duplicate, the parent value is what you want to duplicate.
---nested duplication is untested and not recommended
+--duplicate: TRUE means to read based on the lessons value passed on group form submission or a number can be used as short hand.  duplication can be nested using the two methods
+--children: An array of additional items that make up the full outline
 
 /**
  * Implementation of hook_elms_instructional_template().
  */
 function YOURMODULENAME_elms_instructional_template() {
-  $outline['YOUR_TEMPLATE_MACHINE_NAME'] = array(
-    'title' => 'YOUR TEMPLATE NAME',
-    0 => array(
-      'type' => 'link',
-      'title' => 'Homepage',
-      'link' => '<front>',
-    ),
-    1 => array(
+  $outline['TEMPLATENAME'] = array(
+    'title' => 'Outline',
+    array(
       'type' => 'folder',
-      'title' => t('Course Content'),
-    ),
-    2 => array(
-      'type' => 'page',
-      'title' => t('Lesson @i'),
-      'parent' => 1,
-    ),
-    3 => array(
-      'type' => 'duplicate',
-      'parent' => 2,
-    ),
+      'title' => 'Lesson @i',
+			'duplicate' => TRUE,
+			'children' => array(
+			  array(
+          'type' => 'page',
+          'title' => 'Introduction',
+        ),
+		    array(
+          'type' => 'page',
+          'title' => 'Content',
+        ),
+		  ),
+		),
   );
   return $outline;
 }

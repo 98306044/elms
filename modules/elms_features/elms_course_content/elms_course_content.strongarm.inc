@@ -216,6 +216,27 @@ function elms_course_content_strongarm() {
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'content_extra_weights_referenced_page';
+  $strongarm->value = array(
+    'title' => '-5',
+    'revision_information' => '3',
+    'author' => '4',
+    'options' => '5',
+    'menu' => '-4',
+    'book' => '1',
+    'path' => '6',
+    'og_nodeapi' => '-1',
+    'print' => '7',
+    'workflow' => '2',
+    'spaces_preset' => '8',
+    'purl' => '-3',
+    'themes' => '0',
+  );
+  $export['content_extra_weights_referenced_page'] = $strongarm;
+
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'node_options_folder';
   $strongarm->value = array(
     0 => 'status',
@@ -242,6 +263,16 @@ function elms_course_content_strongarm() {
     1 => 'revision',
   );
   $export['node_options_page'] = $strongarm;
+
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'node_options_referenced_page';
+  $strongarm->value = array(
+    0 => 'status',
+    1 => 'revision',
+  );
+  $export['node_options_referenced_page'] = $strongarm;
 
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */

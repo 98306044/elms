@@ -23,11 +23,12 @@ include_once('elms_navigation_top.features.inc');
  */
 function elms_navigation_top_define_regions() {
   //implementation of the regions API
-  $region['elms_navigation_top'] = array(
-    'project' => 'elms_navigation_top',
-    'js' => 'elms_navigation_top.js',
-    'css' => 'elms_navigation_top.css',
-  );
+  $region['regions_elms_navigation_top'] = array(
+    'title' => 'ELMS Nav Top',
+    'js' => drupal_get_path('module', 'elms_navigation_top') .'/elms_navigation_top.js',
+    'css' => drupal_get_path('module', 'elms_navigation_top') .'/elms_navigation_top.css',
+    'render_callback' => '_elms_navigation_top_render_region',
+	);
   return $region;
 }
 
@@ -37,7 +38,7 @@ function elms_navigation_top_define_regions() {
 function elms_navigation_top_init() {
   $settings = array(
     'elms_navigation_top' => array(
-      'factor' => 1,
+			'msg_count' => array(),
     )
   );
   drupal_add_js($settings, 'setting');
@@ -63,11 +64,6 @@ function elms_navigation_top_block($op = 'list', $delta = 0, $edit = array()) {
       'weight' => 0,
       'status' => 0,
     );
-    $blocks[3] = array(
-      'info' => t('Page Controls'),
-      'weight' => 0,
-      'status' => 0,
-    );
     return $blocks;
   }
   elseif ($op == 'view') {
@@ -79,15 +75,11 @@ function elms_navigation_top_block($op = 'list', $delta = 0, $edit = array()) {
       case 1:
         $block = _elms_navigation_top_notifications();
         //if we got a title then bother adding the regions integration
-        if (isset($block['title'])) {
-          $block['regions_allow_html_title'] = TRUE;
-        }
       break;
       case 2:
       //only show menu options for logged in users
       global $user;
       if (!isset($user->uid) || $user->uid == 0 || $user->uid == '') {
-        $block['regions_allow_html_title'] = TRUE;
         //account for PSU's custom login system or to use the drupal default
         $block['title'] = l(t('Login'), 'user/login');
         $block['content'] = ' ';
@@ -104,15 +96,9 @@ function elms_navigation_top_block($op = 'list', $delta = 0, $edit = array()) {
           $rendername .= theme('imagecache', 'elms_navigation_top', variable_get('user_picture_default', ''), $user->name ."'s profile picture", "'s profile picture");    
         }
         //wrap name to offset it from the piture
-        $rendername .= '<span>'. $user->name .'</span>';
-        $block['title'] = $rendername;
-        //invoke the region's HTML title passthrough so that the image renders w/ html as a title
-        $block['regions_allow_html_title'] = TRUE;
+        $rendername .= $user->name;
+        $block['title'] = '<a href="#" title="'. $user->name ."'s menu".'">'. $rendername .'</a>';
       }
-      break;
-      case 3:
-        $block['title'] = '<none>';
-        $block['content'] = _elms_navigation_page_controls();
       break;
     }
     return $block;
@@ -127,20 +113,11 @@ function _elms_navigation_top_system_path() {
     //need to manually build the website's name and homepage because of strongarm being too good!
     $site_frontpage = unserialize(db_result(db_query("SELECT value FROM {variable} WHERE name='site_frontpage'")));
     $site_name = unserialize(db_result(db_query("SELECT value FROM {variable} WHERE name='site_name'")));
-    $output = theme('menu_item', l(t($site_name), $site_frontpage, array('attributes' => array('title' => t('System Home')), 'purl' => array('disabled' => TRUE))), 0);
-    //add the taxonomy of the course version if it has a course association
+    $output = theme('menu_item', l(t($site_name), $site_frontpage, array('attributes' => array('title' => t('Home')), 'purl' => array('disabled' => TRUE))), 0);
+    //add the course home if this version is part of a course
     if ($group->field_course_ref[0]['nid'] != '') {
-      $val = db_fetch_array(db_query("SELECT n.title, td.name FROM {node} AS n JOIN {term_node} AS tn ON n.nid = tn.nid JOIN {term_data} AS td ON td.tid = tn.tid WHERE n.nid=%d", $group->field_course_ref[0]['nid']));
-  //add the courses listing with the name of the taxonomy term
-      $output .= theme('menu_item', l(t($val['name']), 'courses', array('attributes' => array('title' => t('@unit course list', array('@unit' => $val['name']))), 'purl' => array('disabled' => TRUE))), 0);
-    }
-    else {
-      //this isn't part of a course so add sandbox to the path
-      $output .= theme('menu_item', l(t('Sandboxes'), 'courses/sandboxes', array('attributes' => array('title' => t('List of all sandboxes')), 'purl' => array('disabled' => TRUE))), 0);
-    }
-  //add the course home if this version is part of a course
-    if ($group->field_course_ref[0]['nid'] != '') {
-      $output .= theme('menu_item', l(t($val['title']), 'node/'. $group->field_course_ref[0]['nid'], array('attributes' => array('title' => t('Public Course Listing')), 'purl' => array('disabled' => TRUE))), 0);
+	  $course_name = db_result(db_query("SELECT title FROM {node} WHERE nid=%d", $group->field_course_ref[0]['nid']));
+      $output .= theme('menu_item', l(t($course_name), 'node/'. $group->field_course_ref[0]['nid'], array('attributes' => array('title' => t('Public Course Listing')), 'purl' => array('disabled' => TRUE))), 0);
     }
   //add the current group homepage to the trail
     $output .= theme('menu_item', l(t($group->title), variable_get('site_frontpage', 'node/'. $group->nid), array('attributes' => array('title' => t($group->title)))), 0);
@@ -153,15 +130,6 @@ function _elms_navigation_top_system_path() {
     //verify this is an id
     if ($nid != '') {
       $type = db_result(db_query("SELECT type FROM {node} WHERE nid=%d", $nid));
-    }
-    //if this is a course, add the taxonomy and course name
-    if ($type == 'course') {
-      $val = db_fetch_array(db_query("SELECT n.title, td.name FROM {node} AS n JOIN {term_node} AS tn ON n.nid = tn.nid JOIN {term_data} AS td ON td.tid = tn.tid WHERE n.nid=%d", $nid));
-    //taxonomy  term used
-      $output .= theme('menu_item', l(t($val['name']), 'courses', array('attributes' => array('title' => t('@unit course list', array('@unit' => $val['name']))), 'purl' => array('disabled' => TRUE))), 0);
-    }
-    else {
-      $output .= theme('menu_item', l(t('All Courses'), 'courses', array('attributes' => array('title' => t('Course list')), 'purl' => array('disabled' => TRUE))), 0);
     }
   }
   //unify everything that's not in the courses view
@@ -185,68 +153,11 @@ function _elms_navigation_top_system_path() {
   return $output;
 }
 
-//helper function to display page controls like book, print, and zoom
-function _elms_navigation_page_controls() {
-  $output = '';
-  $group = og_get_group_context();
-  //if we're not in a group we can skip most of theses
-  if (isset($group->nid)) {
-    if (ctype_digit(arg(1))) {
-      $node = node_load(arg(1));  
-      //if there is a previous page in this book link to it
-      if ($prev = book_prev($node->book)) {
-        $output .= theme('menu_item', l('', $prev['href'], array('attributes' => array('title' => t('Previous Page')))), 0, '', FALSE, 'elms_prev_page');
-      }
-      //if there is a next page in this book link to it
-      if ($next = book_next($node->book)) {
-        $output .= theme('menu_item', l('', $next['href'], array('attributes' => array('title' => t('Next Page')))), 0, '', FALSE, 'elms_next_page');
-      }
-    //add table of contents link
-      if (isset($group->book_nid)) {
-        $output .= theme('menu_item', l('', 'node/'. $group->book_nid, array('attributes' => array('title' => t('Table of Contents')))), 0, '', FALSE, 'elms_book_toc');
-      }
-    //check for node reference url links
-      $tmp_ref_links = nodereference_url_build_all_links($node, 0);
-      $features = variable_get('spaces_features', array());
-      //account for reactions not being active
-      if (isset($features['elms_reaction']) && $features['elms_reaction']) {
-    $output .= theme('menu_item', l('', $tmp_ref_links['reaction_field_related_content']['href'], array('query' => $_GET['q'], 'attributes' => $tmp_ref_links['reaction_field_related_content']['attributes'])), 0, '', FALSE, 'elms_reactions');
-      }
-      //account for possible flags
-    if (module_exists('flag')) {
-      $flag_links = flag_link('node', $node);
-    //if this has flags then render them here
-    if (count($flag_links)) {
-      foreach ($flag_links as $key => $flag) {
-            $output .= theme('menu_item', $flag['title'], 0, '', FALSE, $key);
-          }
-    }
-      }
-      //see if we should display the page print
-      if (module_exists('print')) {
-        //weak check but if this is in a book then it can be printed in elms
-        if (isset($node->book['bid'])) {
-          $output .= theme('menu_item', l('', 'print/book/export/html/'. $node->nid, array('attributes' => array('title' => t('Print Page')))), 0, '', FALSE, 'elms_print_page');
-        }
-      }
-    }
-  }
-  //scaling options, weird looking but needed for anchor trigger
-  $output .= theme('menu_item', l('', '', array('fragment' => ' ', 'external' => TRUE, 'attributes' => array('title' => t('Scale Out')))), 0, '', FALSE, 'elms_zoom_out');
-  $output .= theme('menu_item', l('', '', array('fragment' => ' ', 'external' => TRUE,'attributes' => array('title' => t('Scale Page')))), 0, '', FALSE, 'elms_zoom_in');
-  $output .= theme('menu_item', l('', '', array('fragment' => ' ', 'external' => TRUE,'attributes' => array('title' => t('Reset Scale')))), 0, '', FALSE, 'elms_zoom_reset');
-  //contact the helpdesk if active
-  if (module_exists('elms_helpdesk')) {
-    $output .= theme('menu_item', l('', 'contact', array('attributes' => array('title' => t('Contact Helpdesk')), 'query' => 'destination='. $_GET['q'])), 0, '', FALSE, 'elms_helpdesk');
-  }
-  return $output;
-}
-
 /**
  * Helper function to retrieves system messages.
  */
 function _elms_navigation_top_notifications() {
-  $block = array();
+  $block = array('content' => ' ', 'title' => ' ');
   global $user;
   //get all messages and unset them for the session
   if ($user->uid == 1) {
@@ -292,7 +203,7 @@ function _elms_navigation_top_notifications() {
         $msg_count = '<div class="elms_nav_top_msg_bar_icon_count">'. count($message_group) .'</div>';
       }
       //block title as icons
-      $title .= '<div class="elms_nav_top_msg_bar_icon" style="background-image:url('. $map[$type]['bar_icon'] .')" title="'. $map[$type]['title'] .' Notification click for more details" alt="'. $map[$type]['title'] .' Notification click for more details">'. $msg_count .'</div>';
+      $title .= '<div class="elms_nav_top_msg_bar_icon"><a href="#" title="'. $map[$type]['title'] .', click for more details"><img src="'. $map[$type]['bar_icon'] .'" title="'. $map[$type]['title'] .', click for more details" alt="'. $map[$type]['title'] .', click for more details" /></a>'. $msg_count .'</div>';
     }
     //build out the message array
     foreach ($messages as $key => $message_group) {
@@ -306,13 +217,13 @@ function _elms_navigation_top_notifications() {
       //loop through as messages are grouped by type
       foreach ($message_group as $message) {
         //block content area
-        $content .= '<div class="elms_nav_top_row"><img src="'. $map[$type]['icon'] .'" title="'. $map[$type]['title'] .' Notification click for more details" alt="'. $map[$type]['title'] .' Notification click for more details" class="elms_nav_top_icon"/><div class="elms_nav_top_msg"><div class="elms_nav_top_msg_title">'. $map[$type]['title'] .'</div><div class="elms_nav_top_msg_text">'. $message .'</div></div></div>';
+        $content .= '<div class="elms_nav_top_row"><img src="'. $map[$type]['icon'] .'" title="'. $map[$type]['title'] .', click for more details" alt="'. $map[$type]['title'] .', click for more details" class="elms_nav_top_icon"/><div class="elms_nav_top_msg"><div class="elms_nav_top_msg_title">'. $map[$type]['title'] .'</div><div class="elms_nav_top_msg_text">'. $message .'</div></div></div>';
       }
     }
     //add arrow to right side to indicate this can be opened
-    $title .= '<img src="'. base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/arrow_down.png" alt="Click to see notifications" class="elms_nav_top_arrow">';
+    $title .= '<a href="#" title="Click to see notifications"><img src="'. base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/arrow_down.png" alt="Click to see notifications" class="elms_nav_top_arrow"/></a>';
 	//construct the block for display
-    $block = array('title' => $title, 'content' => $content);
+    $block = array('subject' => $title, 'content' => $content);
   }
   return $block;
 }
@@ -325,7 +236,7 @@ function elms_navigation_top_map_notification() {
   $map = array(
     'default' => array(
       'title' => 'Message',
-      'icon' => base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/status.png',
+      'icon' => base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/default.png',
       'bar_icon' => base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/default_bar.png',
     ),
     'status' => array(
@@ -343,21 +254,6 @@ function elms_navigation_top_map_notification() {
       'icon' => base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/error.png',
       'bar_icon' => base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/error_bar.png',
     ),
-    'browser' => array(
-      'title' => 'Error',
-      'icon' => base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/warning.png',
-      'bar_icon' => base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/warning_bar.png',
-    ),
-    'browser-version' => array(
-      'title' => 'Browser version unsupported',
-      'icon' => base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/warning.png',
-      'parent' => 'browser',
-    ),
-    'browser-flash' => array(
-      'title' => 'Flash out of date',
-      'icon' => base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/error.png',
-      'parent' => 'browser',
-    ),
   );
   return $map;
 }
@@ -366,4 +262,53 @@ function elms_navigation_top_map_notification() {
 function _elms_navigation_top_get_map() {
   $map = module_invoke_all('map_notification');
   return $map;
+}
+
+
+/**
+ * Implementation of hook_regions_region_alter().
+ */
+function elms_navigation_top_regions_region_alter(&$region, $region_name) {
+  // Example to add an inner DIV to the region markup.
+	if ($region_name == 'regions_elms_navigation_top' && !empty($region['blocks'])) {
+    $new_markup = array(
+      'start' => $region['start'],
+      'inner' => '<div class="regions_pre_block_container"></div><div class="regions_block_container">',
+      'blocks' => $region['blocks'],
+      'inner_end' => '</div><div class="regions_post_block_container"></div>',
+      'end' => $region['end'],
+    );
+    $region = $new_markup;
+	}
+}
+
+/**
+ * Implementation of hook_regions_blocks_alter().
+ */
+function elms_navigation_top_regions_blocks_alter(&$blocks = array(), $region_name = NULL) {
+	if ($region_name == 'regions_elms_navigation_top') {
+    // Example to support HTML titles, with a safe but unorthodox workaround.
+    foreach ($blocks as $key => $block) {
+      $block->subject = filter_xss_admin(html_entity_decode($block->subject));
+      $blocks[$key] = $block;
+    }
+	}
+}
+
+
+/**
+ * Helper function for rendering the blocks in this region
+ */
+function _elms_navigation_top_render_region($block_html, $block) {
+  //build a unique key for this block for theming
+	static $count = 0;
+	$count++;
+  $key = $block->module .'_'. $block->delta;
+  $output .= '<div class="regions_block regions_'. $count .'" id="regions_block_'. $key .'"><div class="regions_block_title">';
+	$output .= $block->subject;
+  $output .= '</div><div class="regions_block_content">'. $block->content .'</div></div>';
+  //if we returned blocks then render the region
+  if ($output != '') {
+    return $output;
+  }
 }

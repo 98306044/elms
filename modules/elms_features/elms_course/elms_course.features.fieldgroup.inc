@@ -11,15 +11,18 @@ function elms_course_fieldgroup_default_groups() {
     'group_type' => 'standard',
     'type_name' => 'course',
     'group_name' => 'group_additional_settings',
-    'label' => 'Additional Settings',
+    'label' => 'Additional Information',
     'settings' => array(
       'form' => array(
-        'style' => 'fieldset_collapsed',
-        'description' => '',
+        'style' => 'fieldset_collapsible',
+        'description' => 'These fields are not required but they help fill out the Public course space.',
       ),
       'display' => array(
-        'weight' => '11',
-        'label' => 'above',
+        'description' => '',
+        '5' => array(
+          'format' => 'fieldset',
+          'exclude' => 0,
+        ),
         'teaser' => array(
           'format' => 'fieldset',
           'exclude' => 1,
@@ -27,11 +30,6 @@ function elms_course_fieldgroup_default_groups() {
         'full' => array(
           'format' => 'fieldset',
           'exclude' => 1,
-        ),
-        'description' => '',
-        '5' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
         ),
         '4' => array(
           'format' => 'fieldset',
@@ -49,42 +47,41 @@ function elms_course_fieldgroup_default_groups() {
           'format' => 'fieldset',
           'exclude' => 0,
         ),
+        'label' => 'above',
       ),
     ),
-    'weight' => '11',
+    'weight' => '8',
     'fields' => array(
-      '0' => 'field_description',
-      '1' => 'field_course_promotion',
-      '2' => 'field_prerequisites',
-      '3' => 'field_listing_only',
-      '4' => 'field_course_link',
+      '0' => 'field_course_title',
+      '1' => 'field_description',
+      '2' => 'field_link_more_info',
+      '3' => 'field_course_promotion',
+      '4' => 'field_sample_materials',
     ),
   );
 
-  // Exported group: group_documentation
-  $groups['course-group_documentation'] = array(
+  // Exported group: group_administrative
+  $groups['course-group_administrative'] = array(
     'group_type' => 'standard',
     'type_name' => 'course',
-    'group_name' => 'group_documentation',
-    'label' => 'Documentation',
+    'group_name' => 'group_administrative',
+    'label' => 'Administrative',
     'settings' => array(
       'form' => array(
         'style' => 'fieldset_collapsed',
-        'description' => 'Add files either to facilitate communication with faculty or students.',
+        'description' => 'These values are for internal record keeping as well as helping streamline project management items.',
       ),
       'display' => array(
-        'weight' => '9',
-        'label' => 'above',
-        'teaser' => array(
-          'format' => 'fieldset',
-          'exclude' => 1,
-        ),
-        'full' => array(
-          'format' => 'fieldset',
-          'exclude' => 1,
-        ),
         'description' => '',
         '5' => array(
+          'format' => 'fieldset',
+          'exclude' => 0,
+        ),
+        'teaser' => array(
+          'format' => 'fieldset',
+          'exclude' => 0,
+        ),
+        'full' => array(
           'format' => 'fieldset',
           'exclude' => 0,
         ),
@@ -104,12 +101,17 @@ function elms_course_fieldgroup_default_groups() {
           'format' => 'fieldset',
           'exclude' => 0,
         ),
+        'label' => 'above',
       ),
     ),
     'weight' => '9',
     'fields' => array(
-      '0' => 'field_sample_materials',
-      '1' => 'field_faculty_resources',
+      '0' => 'field_listing_only',
+      '1' => 'field_id_of_record',
+      '2' => 'field_initial_course_launch',
+      '3' => 'field_lead_faculty',
+      '4' => 'field_faculty_resources',
+      '5' => 'field_prerequisites',
     ),
   );
 
@@ -158,7 +160,7 @@ function elms_course_fieldgroup_default_groups() {
         ),
       ),
     ),
-    'weight' => '10',
+    'weight' => '11',
     'fields' => array(
       '0' => 'field_supported_browsers',
       '1' => 'field_required_plugins',
@@ -167,8 +169,8 @@ function elms_course_fieldgroup_default_groups() {
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('Additional Settings');
-  t('Documentation');
+  t('Additional Information');
+  t('Administrative');
   t('Technical Requirements');
 
   return $groups;

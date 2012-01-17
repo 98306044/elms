@@ -81,8 +81,8 @@ function workflow_purl_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
         'id' => $node->nid,
       );
       purl_save($modifier);
-      //set destination manually since purl changed and the old path no longer exists. this is the joy and pain of PURL
-      purl_goto('<front>', array('purl' => array('provider' => 'spaces_og', 'id' => $node->nid)));
+      //trigger the exit hook to fire correctly
+      $GLOBALS['workflow_purl_redirect_required'] = TRUE;
     }
     break;
   case 'insert':
@@ -133,4 +133,22 @@ function _workflow_purl_get_purl($node) {
   $purl_change = preg_replace('/\W/', '', $purl_change);
   //return
   return $purl_change;
+}
+
+/*
+ * Implementation of hook_exit().
+ */
+function workflow_exit($destination = NULL) {
+  //test for the workflow purl redirect flag
+  if ($GLOBALS['workflow_purl_redirect_required']) {
+    //flag is only triggered on node form so this should be in the clear to load
+    $node = node_load(arg(1));
+    //test to ensure this is a node though it should be
+    if (isset($node->nid)) {
+      //ensure that we don't keep redirecting endlessly
+      $GLOBALS['workflow_purl_redirect_required'] = FALSE;
+      //redirect to what the path SHOULD be
+      purl_goto('<front>', array('purl' => array('provider' => 'spaces_og', 'id' => $node->nid)));
+    }
+  }
 }
