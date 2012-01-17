@@ -17,15 +17,6 @@ function elms_course_content_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
       $node->book_outline_mlid = $val['mlid'];
       $node->book_nid = $val['nid'];
     }
-    break;
-    case 'view':
-    //for referenced nodes we want to populate the content with the other node's body
-    if ($node->type == 'referenced_page') {
-    if (is_numeric($node->field_reference_page[0]['nid'])) {
-      $ref_node = node_load($node->field_reference_page[0]['nid']);
-      $node->content['body']['#value'] = $ref_node->body;
-    }
-    }
   break;
   }
 }
@@ -35,7 +26,7 @@ function elms_course_content_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
  * Implementation of (undocumented) hook_theme_registry_alter().
  */
 function elms_course_content_theme_registry_alter(&$vars) {
-  //alter the way book nav functions
+  //make book navigation function with a jump menu
   $vars['book_navigation']['theme path'] = drupal_get_path('module', 'elms_course_content');
   $vars['book_navigation']['path'] = drupal_get_path('module', 'elms_course_content');
   $vars['book_navigation']['theme paths'] = array(0 => drupal_get_path('module', 'elms_course_content'));
@@ -64,63 +55,34 @@ function elms_course_content_init() {
 function elms_course_content_menu() {
   $items = array();
   $items['course_content'] = array(
+    'title' => 'Content',
     'page callback' => '_elms_course_content_root',
     'access callback' => 'spaces_access_feature',
     'access arguments' => array('view', 'elms_course_content'),
-    'type' => MENU_CALLBACK,
+    'type' => MENU_NORMAL_ITEM,
+    'menu_name' => 'features',
     'file' => 'elms_course_content.pages.inc',
   );
   $items['features/elms_course_content'] = array(
     'title' => 'Settings',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('elms_course_content_settings'),
-    'access callback' => '_elms_course_content_access_check_admin',
+    'access callback' => '_elms_course_content_access_check',
     'access arguments' => module_exists('spaces') ? array() : array('administer site configuration'),
     'type' => MENU_CALLBACK,
     'file' => 'elms_course_content.pages.inc',
   );
-	$items['features/course_content'] = array(
-    'title' => 'Course Content',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('elms_course_content_settings'),
-    'access callback' => '_elms_course_content_access_check',
-		'access arguments' => array(),
-    'type' => MENU_LOCAL_TASK,
-    'file' => 'elms_course_content.pages.inc',
-  );
-	
-	
   return $items;
 }
 
-/**
- * Implementation of hook_menu_alter().
- */
-function elms_course_content_menu_alter(&$items) {
-  //make the default front-page out of the box course content
-	$items['spaces-frontpage']['page callback'] = '_elms_course_content_root';
-  $items['spaces-frontpage']['access callback'] = 'spaces_access_feature';
-  $items['spaces-frontpage']['access arguments'] = array('view', 'elms_course_content');
-  $items['spaces-frontpage']['file'] = 'elms_course_content.pages.inc';
-	$items['spaces-frontpage']['file path'] = drupal_get_path('module', 'elms_course_content');
-}
-
-//helper function for access verification of settings page
+//helper function for access verification
 function _elms_course_content_access_check() {
-	//make sure the feature is activated
-  if (spaces_access_feature('view', 'elms_course_content')) {
-    return user_access('manage features');
-  }
-	return 0;
-}
-
-//helper function for access verification of settings page, as admin
-function _elms_course_content_access_check_admin() {
-	//make sure the feature is activated
-  if (spaces_access_feature('view', 'elms_course_content')) {
+  if (module_exists('spaces')) {
     return user_access('spaces_access_admin');
   }
-  return 0;
+  else {
+    return user_access('user_access');
+  }
 }
 
 /**
@@ -138,35 +100,15 @@ function elms_course_content_block($op = 'list', $delta = 0, $edit = array()) {
   elseif ($op == 'view') {
     switch ($delta) {
       case 0:
-      //account for non-node pages, make sure feature is turned on
-			if (spaces_access_feature('view', 'elms_course_content')) {
-      $group = og_get_group_context();
-      if (isset($group->nid)) {
-				//if this is a node, load it
-        if (arg(0) == 'node' && is_numeric(arg(1)) && arg(1) != $group->nid) {					
-					$node = node_load(arg(1));
-					if (isset($node->book)) {
-            $block = module_invoke('book', 'block', 'view', 0);
-					}
-				}
-				//if it wasn't a node page, load the highest level manually
-				if (!isset($block['content'])) {
-          $node = node_load($group->book_nid);
-          $tree = menu_tree_all_data($node->book['menu_name'], $node->book);
-          // There should only be one element at the top level.
-          $data = array_shift($tree);
-          $block['content'] = ($data['below']) ? menu_tree_output($data['below']) : '';
-        }
-        $block['subject'] = t('Course Outline');
-        $block['title'] = t('Course Outline');
-      }
-			}
+      //invoke the book module and then alter the title
+      $block = module_invoke('book', 'block', 'view', 0);
+    $block['subject'] = t('Content');
+    $block['title'] = t('Content');
       break;
     }
     return $block;
   }
 }
-
 
 /**
  * Implementation of hook_link().
@@ -251,21 +193,44 @@ function _elms_course_content_toc_recurse($tree, &$toc, $exclude, $depth_limit) 
 function elms_course_content_elms_instructional_template() {
   $outline['default'] = array(
     'title' => 'Default Outline',
-    array(
-      'type' => 'folder',
+    0 => array(
+      'type' => 'page',
       'title' => 'Lesson @i',
-			'duplicate' => TRUE,
-			'children' => array(
-			  array(
-          'type' => 'page',
-          'title' => 'Introduction',
-        ),
-		    array(
-          'type' => 'page',
-          'title' => 'Content',
-        ),
-		  ),
-		),
+    ),
+    1 => array(
+      'type' => 'duplicate',
+      'parent' => 0,
+    ),
+  );
+  $outline['topical_outline'] = array(
+    'title' => 'Topical Lesson Outline',
+      0 => array(
+        'type' => 'folder',
+        'title' => 'Lesson @i',
+      ),
+      1 => array(
+        'type' => 'page',
+        'title' => 'Introduction',
+        'parent' => 0,
+      ),
+      2 => array(
+        'type' => 'page',
+        'title' => 'Content',
+        'parent' => 0,
+      ),
+      3 => array(
+        'type' => 'page',
+        'title' => 'Wrap up',
+        'parent' => 0,
+      ),
+      4 => array(
+       'type' => 'duplicate',
+       'parent' => 0,
+      ),
+      5 => array(
+       'type' => 'page',
+       'title' => 'Resources',
+      ),
   );
   return $outline;
 }
@@ -277,7 +242,7 @@ function elms_course_content_elms_instructional_template() {
 function _elms_course_content_get_instructional_template($template = 'list') {
   $ary = module_invoke_all('elms_instructional_template');
   if ($template == 'list') {
-    $list = array();
+    $list = array('none' => '');
     foreach ($ary as $key => $params) {
     $list[$key] = $params['title'];
     }
@@ -314,67 +279,69 @@ function _elms_course_content_create_root($group, $template = NULL) {
   //see if we were passed an instructional template to use, should be
   if ($template != NULL) {
     $id_template = _elms_course_content_get_instructional_template($template);
-	  //start the recursive loop
-	  _elms_course_content_build_instructional_nodes($id_template, $node->book['bid'], $node->book['mlid'], $group);
-	}
-  watchdog('elms', 'New book outline created for the course version');
-}
-
-//recursive function for deep copying of children in an instructional outline
-function _elms_course_content_build_instructional_nodes($outline, $bid, $parent, $group) {
-	global $user;
-	foreach ($outline as $key => $book_item) {
-	  //if this is a duplicate, run this loop many times
-		if (isset($book_item['duplicate'])) {
-			//anything set to true in the API responds to the lesson count set
-			if ($book_item['duplicate'] === TRUE) {
-				$loop = $group->field_lesson_count[0]['value'];
-			}
-			else {
-				$loop = $book_item['duplicate'];
-			}
-		}
-		//if this isnt a duplication only run once
-		else {
-			$loop = 1;
-		}
-		for ($i=0; $i< $loop; $i++) {
+    $id_template_tmp = $id_template;
+    //loop through each item in the defined template and build it as a new book item
+    foreach ($id_template_tmp as $key => $book_item) {
+    if ($book_item['type'] == 'duplicate') {
+    //now replicate
+    $backhalf = array_splice($id_template, $key);
+    //now grab just the chunk to clone
+    $clone_this = array_splice($id_template, $book_item['parent']);
+    $clone_this[0]['origin'] = $book_item['parent'];
+    foreach ($clone_this as $clone_key => $clone) {
+      $clone_this[$clone_key]['clone'] = 1;
+    }
+    //remove the duplicate request and merge back together
+    array_shift($backhalf);
+    for ($i=0; $i<$group->field_lesson_count[0]['value']; $i++) {
+      $id_template = array_merge($id_template, $clone_this);
+    }
+    $id_template = array_merge($id_template, $backhalf);
+    }
+  }
+  $count = 1;
+  foreach ($id_template as $key => $book_item) {
+    if (isset($book_item['origin'])) {
+      $current_origin = $key;
+      $id_template[$key]['title'] = str_replace('@i', $count, $id_template[$key]['title']);
+      $count++;
+    }
+    if (isset($id_template[$key]['parent']) && isset($id_template[$key]['clone'])) {
+      $id_template[$key]['parent'] = $current_origin;
+    }
+  }
+  //now we can run the loop that makes it all
+  foreach ($id_template as $key => $book_item) {
     $bookpage = new stdClass();
     $bookpage->uid = $user->uid;
-    //if we receive a duplication request, utilize the outline designer style duplicate function
+    //if we receive a duplication request, utilize the outline designer duplicate function
     //alter the array to have the correct values
     $bookpage->type = $book_item['type'];
-    $bookpage->title = str_replace('@i', ($i+1), $book_item['title']);
-		//if the optional content field is populated, add it
-		if (isset($book_item['content'])) {
-		  $bookpage->body = $book_item['content'];
-		}
-		//if the optional format field is populated, add it
-		if (isset($book_item['format'])) {
-		  $bookpage->format = $book_item['format'];
-		}
+    $bookpage->title = $book_item['title'];
     $bookpage->og_groups = array($group->nid => $group->nid);
     $bookpage->og_groups_both = array($group->nid => $group->title);
     $bookpage->status = 1;
     $bookpage->revision = 1;
     $bookpage->log = 'Template '. $template .' used to create outline page automatically';
     //place it in the book correctly
-    $bookpage->book['bid'] = $bid;
+    $bookpage->book['bid'] = $node->nid;
     $bookpage->book['weight'] = $key-15;
     $bookpage->book['module'] = 'book';
-		$bookpage->book['plid'] = $parent;
     if ($book_item['type'] == 'link') {
       $bookpage->field_link[0]['value'] = $book_item['link'];
     }
+    //we've defined a hierarchy in the template for nested nodes
+    if (isset($book_item['parent'])) {
+      $bookpage->book['plid'] = $book_map[$book_item['parent']];
+    }
     node_save($bookpage);
-		//we've defined a hierarchy in the template for nested nodes
-    if (isset($book_item['children'])) {
-			_elms_course_content_build_instructional_nodes($book_item['children'], $bid, $bookpage->book['mlid'], $group);
-		}
-	}
+    $book_map[$key] = $bookpage->book['mlid'];
+    $nid_map[$key] = $bookpage->nid;
+    }
   }
-	return 1;
+  watchdog('elms', 'New book outline created for the course version');
 }
+
 /**
  * adds target of the book associated to this feature
  */
@@ -395,97 +362,3 @@ function elms_course_content_feeds_set_elms_book_target($node, $target, $value) 
   $node->book['bid'] = $group->book_nid;
   return $node;
 }
-
-/**
- * Implementation of hook_dashboard_requirements().
- */
-function elms_course_content_dashboard_requirements($provider) {
-  switch ($provider) {
-    case 'og':
-    //list of active features
-    $group = og_get_group_context();
-      $active_features = variable_get('spaces_features', array());
-    //see if this feature is active
-      //loop through and list all features and their status
-      if (isset($active_features['elms_course_content']) && $active_features['elms_course_content'] == 1) {
-    $requirements['elms_course_content'] = array(
-          'title' => t('ELMS Course Content Feature'),
-          'value' => t('Active'),
-          'severity' => REQUIREMENT_OK,
-        );
-        $content_count = db_result(db_query("SELECT COUNT(n.nid) FROM {node} AS n JOIN {og_ancestry} AS oga ON n.nid=oga.nid WHERE group_nid=%d AND type IN('page', 'folder', 'link', 'reference_page')", $group->nid));
-        $requirements['content_count'] = array(
-          'title' => t('Total Content'),
-          'value' => $content_count,
-          'severity' => REQUIREMENT_INFO,
-        );
-      $page_count = db_result(db_query("SELECT COUNT(n.nid) FROM {node} AS n JOIN {og_ancestry} AS oga ON n.nid=oga.nid WHERE group_nid=%d AND type='page'", $group->nid));
-        $requirements['page_count'] = array(
-          'title' => t('Total Pages'),
-          'value' => $page_count,
-          'severity' => REQUIREMENT_INFO,
-        );
-      $folder_count = db_result(db_query("SELECT COUNT(n.nid) FROM {node} AS n JOIN {og_ancestry} AS oga ON n.nid=oga.nid WHERE group_nid=%d AND type='folder'", $group->nid));
-        $requirements['folder_count'] = array(
-          'title' => t('Total Folders'),
-          'value' => $folder_count,
-          'severity' => REQUIREMENT_INFO,
-        );
-      $link_count = db_result(db_query("SELECT COUNT(n.nid) FROM {node} AS n JOIN {og_ancestry} AS oga ON n.nid=oga.nid WHERE group_nid=%d AND type='link'", $group->nid));
-        $requirements['link_count'] = array(
-          'title' => t('Total Links'),
-          'value' => $link_count,
-          'severity' => REQUIREMENT_INFO,
-        );
-      $reference_count = db_result(db_query("SELECT COUNT(n.nid) FROM {node} AS n JOIN {og_ancestry} AS oga ON n.nid=oga.nid WHERE group_nid=%d AND type='reference_page'", $group->nid));
-        $requirements['reference_count'] = array(
-          'title' => t('Total Reference Pages'),
-          'value' => $reference_count,
-          'severity' => REQUIREMENT_INFO,
-        );
-      }
-    else {
-    $requirements['elms_course_content'] = array(
-          'title' => t('ELMS Course Content Feature'),
-          'value' => t('Inactive'),
-          'severity' => REQUIREMENT_WARNING,
-        );  
-    }
-    break;
-  case 'system':
-      //add system level information
-      $content_count = db_result(db_query("SELECT COUNT(nid) FROM {node} WHERE type IN('page', 'folder', 'link', 'reference_page')"));
-      $requirements['content_count'] = array(
-        'title' => t('Total Content'),
-        'value' => $content_count,
-        'severity' => REQUIREMENT_INFO,
-      );
-      $page_count = db_result(db_query("SELECT COUNT(nid) FROM {node} WHERE type='page'"));
-      $requirements['page_count'] = array(
-        'title' => t('Total Pages'),
-        'value' => $page_count,
-        'severity' => REQUIREMENT_INFO,
-      );
-      $folder_count = db_result(db_query("SELECT COUNT(nid) FROM {node} WHERE type='folder'"));
-      $requirements['folder_count'] = array(
-        'title' => t('Total Folders'),
-        'value' => $folder_count,
-        'severity' => REQUIREMENT_INFO,
-      );
-      $link_count = db_result(db_query("SELECT COUNT(nid) FROM {node} WHERE type='link'"));
-      $requirements['link_count'] = array(
-        'title' => t('Total Links'),
-        'value' => $link_count,
-        'severity' => REQUIREMENT_INFO,
-      );
-      $reference_count = db_result(db_query("SELECT COUNT(nid) FROM {node} WHERE type='reference_page'"));
-      $requirements['reference_count'] = array(
-        'title' => t('Total Reference Pages'),
-        'value' => $reference_count,
-        'severity' => REQUIREMENT_INFO,
-      );
-    break;
-  }
-  return $requirements;
-}
-

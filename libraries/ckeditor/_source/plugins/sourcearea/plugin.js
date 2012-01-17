@@ -106,7 +106,7 @@ CKEDITOR.plugins.add( 'sourcearea',
 							setTimeout( function()
 							{
 								editor.mode = 'source';
-								editor.fire( 'mode', { previousMode : editor._.previousMode } );
+								editor.fire( 'mode' );
 							},
 							( CKEDITOR.env.gecko || CKEDITOR.env.webkit ) ? 100 : 0 );
 						},

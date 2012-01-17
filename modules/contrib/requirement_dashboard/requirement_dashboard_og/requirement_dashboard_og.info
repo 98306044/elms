@@ -1,7 +1,0 @@
-; $Id: requirement_dashboard_og.info
-name = "Requirement Dashboard OG"
-description = "Implementation of the Requirement Dashboard API for Organic Groups"
-core = 6.x
-package = "Requirement Dashboard"
-dependencies[] = "requirement_dashboard"
-dependencies[] = "og"

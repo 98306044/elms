@@ -475,7 +475,7 @@ CKEDITOR.plugins.add( 'dialogui' );
 							   item[0] );
 						inputHtmlList.push( inputHtml.join( '' ) );
 					}
-					new CKEDITOR.ui.dialog.hbox( dialog, children, inputHtmlList, html );
+					new CKEDITOR.ui.dialog.hbox( dialog, [], inputHtmlList, html );
 					return html.join( '' );
 				};
 

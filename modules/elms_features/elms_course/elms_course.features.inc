@@ -38,10 +38,11 @@ function elms_course_imagecache_default_presets() {
         '0' => array(
           'weight' => '0',
           'module' => 'imagecache',
-          'action' => 'imagecache_scale_and_crop',
+          'action' => 'imagecache_scale',
           'data' => array(
             'width' => '150',
-            'height' => '100',
+            'height' => '150',
+            'upscale' => 0,
           ),
         ),
       ),

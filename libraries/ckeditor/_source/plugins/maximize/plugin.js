@@ -154,8 +154,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 
 			editor.addCommand( 'maximize',
 				{
-					// Disabled on iOS (#8307).
-					modes : { wysiwyg : !CKEDITOR.env.iOS, source : !CKEDITOR.env.iOS },
+					modes : { wysiwyg : 1, source : 1 },
 					readOnly : 1,
 					editorFocus : false,
 					exec : function()

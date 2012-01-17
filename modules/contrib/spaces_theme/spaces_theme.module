@@ -21,7 +21,7 @@
  */
 function spaces_theme_init() {
   //only add these settings to the node/%theme page
-  if (arg(0) == 'theme' || (arg(0) == 'node' && arg(2) == 'theme')) {
+  if (arg(0) == 'theme') {
     drupal_add_js(drupal_get_path('module', 'spaces_theme') .'/spaces_theme.js');
   }
 }
@@ -40,16 +40,6 @@ function spaces_theme_menu() {
     'file' => 'spaces_theme.theme.inc',
     'file path' => drupal_get_path('module', 'spaces_theme') .'/inc',
   );
-	$items['node/%node/theme'] = array(
-    'title' => 'Theme',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('_spaces_theme_theme_form'),
-    'type' => MENU_LOCAL_TASK,
-    'access callback' => '_spaces_theme_og_theme_access',
-    'access arguments' => array(),
-    'file' => 'spaces_theme.theme.inc',
-    'file path' => drupal_get_path('module', 'spaces_theme') .'/inc',
-  );
   return $items;
 }
 
@@ -57,14 +47,4 @@ function spaces_theme_menu() {
 function _spaces_theme_theme_access() {
   $group = og_get_group_context();
   return og_is_group_admin($group);
-}
-
-//only display tab on group form
-function _spaces_theme_og_theme_access() {
-  $group = og_get_group_context();
-	//if this is the group node, then assess if they are an admin of the group
-	if (arg(1) == $group->nid) {
-    return og_is_group_admin($group);
-	}
-	return 0;
 }

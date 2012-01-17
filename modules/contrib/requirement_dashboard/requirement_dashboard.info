@@ -1,5 +1,0 @@
-; $Id: requirement_dashboard.info
-name = "Requirement Dashboard"
-description = "API and scafolding to build requirement dashboards like Drupal's core status page"
-core = 6.x
-package = "Requirement Dashboard"

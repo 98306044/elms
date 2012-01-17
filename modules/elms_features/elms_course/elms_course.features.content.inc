@@ -6,6 +6,80 @@
 function elms_course_content_default_fields() {
   $fields = array();
 
+  // Exported field: field_course_link
+  $fields['course-field_course_link'] = array(
+    'field_name' => 'field_course_link',
+    'type_name' => 'course',
+    'display_settings' => array(
+      'weight' => '18',
+      'parent' => 'group_additional_settings',
+      'label' => array(
+        'format' => 'above',
+      ),
+      'teaser' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      'full' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      '5' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '2' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '3' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      'token' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+    ),
+    'widget_active' => '1',
+    'type' => 'link',
+    'required' => '0',
+    'multiple' => '0',
+    'module' => 'link',
+    'active' => '1',
+    'attributes' => array(
+      'target' => 'default',
+      'rel' => 'nofollow',
+      'class' => '',
+      'title' => 'Click to access [title]',
+    ),
+    'display' => array(
+      'url_cutoff' => '80',
+    ),
+    'url' => 0,
+    'title' => 'none',
+    'title_value' => '',
+    'enable_tokens' => 0,
+    'validate_url' => 1,
+    'widget' => array(
+      'default_value' => array(
+        '0' => array(
+          'url' => '',
+        ),
+      ),
+      'default_value_php' => NULL,
+      'label' => 'Course Link',
+      'weight' => '18',
+      'description' => 'Only use this if you are hosting the course external to ELMS',
+      'type' => 'link',
+      'module' => 'link',
+    ),
+  );
+
   // Exported field: field_course_name
   $fields['course-field_course_name'] = array(
     'field_name' => 'field_course_name',
@@ -82,8 +156,8 @@ Art 122 Y',
     'field_name' => 'field_course_promotion',
     'type_name' => 'course',
     'display_settings' => array(
-      'weight' => '24',
-      'parent' => 'group_documentation',
+      'weight' => '15',
+      'parent' => 'group_additional_settings',
       'label' => array(
         'format' => 'above',
       ),
@@ -136,24 +210,12 @@ Art 122 Y',
       'alt' => 'Sample Course Screenshot',
       'custom_alt' => 1,
       'title' => 'Sample Course Screenshot',
-      'custom_title' => 1,
+      'custom_title' => 0,
       'title_type' => 'textfield',
-      'default_image' => array(
-        'filename' => 'defaultcourseimage.jpg',
-        'filepath' => 'sites/default/files/imagefield_default_images/defaultcourseimage.jpg',
-        'filemime' => 'image/jpeg',
-        'source' => 'default_image_upload',
-        'destination' => 'sites/default/files/imagefield_default_images/defaultcourseimage.jpg',
-        'filesize' => 804195,
-        'uid' => '1',
-        'status' => 1,
-        'timestamp' => 1322680167,
-        'origname' => '',
-        'fid' => '54',
-      ),
-      'use_default_image' => 1,
+      'default_image' => NULL,
+      'use_default_image' => 0,
       'label' => 'Course Promotion',
-      'weight' => '11',
+      'weight' => '15',
       'description' => 'Upload images that are representative of the course',
       'type' => 'imagefield_widget',
       'module' => 'imagefield',
@@ -235,8 +297,8 @@ Advanced Network Design',
     'field_name' => 'field_description',
     'type_name' => 'course',
     'display_settings' => array(
-      'weight' => '20',
-      'parent' => 'group_documentation',
+      'weight' => '14',
+      'parent' => 'group_additional_settings',
       'label' => array(
         'format' => 'hidden',
       ),
@@ -290,7 +352,7 @@ Advanced Network Design',
       ),
       'default_value_php' => NULL,
       'label' => 'Description',
-      'weight' => '9',
+      'weight' => '14',
       'description' => 'What would be listed in the bluebook that describes the course in a meaningful way to students.',
       'type' => 'text_textarea',
       'module' => 'text',
@@ -302,7 +364,7 @@ Advanced Network Design',
     'field_name' => 'field_faculty_resources',
     'type_name' => 'course',
     'display_settings' => array(
-      'weight' => '23',
+      'weight' => '11',
       'parent' => 'group_documentation',
       'label' => array(
         'format' => 'above',
@@ -352,322 +414,10 @@ Advanced Network Design',
       'max_filesize_per_file' => '20M',
       'max_filesize_per_node' => '',
       'label' => 'Faculty Resources',
-      'weight' => '20',
+      'weight' => '11',
       'description' => 'Upload documents that could help facilitate course communication between faculty members and instructional designers',
       'type' => 'filefield_widget',
       'module' => 'filefield',
-    ),
-  );
-
-  // Exported field: field_id_of_record
-  $fields['course-field_id_of_record'] = array(
-    'field_name' => 'field_id_of_record',
-    'type_name' => 'course',
-    'display_settings' => array(
-      'weight' => '25',
-      'parent' => 'group_additional_settings',
-      'label' => array(
-        'format' => 'above',
-      ),
-      'teaser' => array(
-        'format' => 'default',
-        'exclude' => 1,
-      ),
-      'full' => array(
-        'format' => 'default',
-        'exclude' => 1,
-      ),
-      '5' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '4' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '2' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '3' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      'token' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-    ),
-    'widget_active' => '1',
-    'type' => 'userreference',
-    'required' => '0',
-    'multiple' => '0',
-    'module' => 'userreference',
-    'active' => '1',
-    'referenceable_roles' => array(
-      '6' => 6,
-      '2' => 0,
-      '3' => 0,
-      '4' => 0,
-      '9' => 0,
-      '10' => 0,
-      '8' => 0,
-    ),
-    'referenceable_status' => '1',
-    'advanced_view' => 'elms_course_get_ids',
-    'advanced_view_args' => '',
-    'widget' => array(
-      'autocomplete_match' => 'contains',
-      'size' => 60,
-      'reverse_link' => 0,
-      'default_value' => array(
-        '0' => array(
-          'uid' => '',
-        ),
-      ),
-      'default_value_php' => NULL,
-      'label' => 'ID of Record',
-      'weight' => '17',
-      'description' => 'Use this to establish who is principally responsible for this course running.  This information is used in administrative views for planning purposes.',
-      'type' => 'userreference_select',
-      'module' => 'userreference',
-    ),
-  );
-
-  // Exported field: field_initial_course_launch
-  $fields['course-field_initial_course_launch'] = array(
-    'field_name' => 'field_initial_course_launch',
-    'type_name' => 'course',
-    'display_settings' => array(
-      'label' => array(
-        'format' => 'above',
-        'exclude' => 0,
-      ),
-      '5' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      'teaser' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      'full' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '4' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '2' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '3' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      'token' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-    ),
-    'widget_active' => '1',
-    'type' => 'text',
-    'required' => '0',
-    'multiple' => '0',
-    'module' => 'text',
-    'active' => '1',
-    'text_processing' => '0',
-    'max_length' => '',
-    'allowed_values' => 'sp05|Spring 05
-su05|Summer 05
-fa05|Fall 05
-sp06|Spring 06
-su06|Summer 06
-fa06|Fall 06
-sp07|Spring 07
-su07|Summer 07
-fa07|Fall 07
-sp08|Spring 08
-su08|Summer 08
-fa08|Fall 08
-sp09|Spring 09
-su09|Summer 09
-fa09|Fall 09
-sp10|Spring 10
-su10|Summer 10
-fa10|Fall 10
-sp11|Spring 11
-su11|Summer 11
-fa11|Fall 11
-sp12|Spring 12
-su12|Summer 12
-fa12|Fall 12',
-    'allowed_values_php' => '',
-    'widget' => array(
-      'default_value' => array(
-        '0' => array(
-          'value' => '',
-        ),
-      ),
-      'default_value_php' => NULL,
-      'label' => 'Initial Course Launch',
-      'weight' => '18',
-      'description' => 'The semester and year that the course was initially ran.  This is useful for showing our growth across time.',
-      'type' => 'optionwidgets_select',
-      'module' => 'optionwidgets',
-    ),
-  );
-
-  // Exported field: field_lead_faculty
-  $fields['course-field_lead_faculty'] = array(
-    'field_name' => 'field_lead_faculty',
-    'type_name' => 'course',
-    'display_settings' => array(
-      'weight' => '26',
-      'parent' => 'group_additional_settings',
-      'label' => array(
-        'format' => 'above',
-      ),
-      'teaser' => array(
-        'format' => 'default',
-        'exclude' => 1,
-      ),
-      'full' => array(
-        'format' => 'default',
-        'exclude' => 1,
-      ),
-      '5' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '4' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '2' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '3' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      'token' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-    ),
-    'widget_active' => '1',
-    'type' => 'userreference',
-    'required' => '0',
-    'multiple' => '0',
-    'module' => 'userreference',
-    'active' => '1',
-    'referenceable_roles' => array(
-      '4' => 4,
-      '2' => 0,
-      '3' => 0,
-      '6' => 0,
-      '9' => 0,
-      '10' => 0,
-      '11' => 0,
-      '8' => 0,
-    ),
-    'referenceable_status' => '1',
-    'advanced_view' => 'elms_course_get_insts',
-    'advanced_view_args' => '',
-    'widget' => array(
-      'autocomplete_match' => 'contains',
-      'size' => '20',
-      'reverse_link' => 0,
-      'default_value' => array(
-        '0' => array(
-          'uid' => '',
-        ),
-      ),
-      'default_value_php' => NULL,
-      'label' => 'Lead Faculty',
-      'weight' => '19',
-      'description' => '',
-      'type' => 'userreference_select',
-      'module' => 'userreference',
-    ),
-  );
-
-  // Exported field: field_link_more_info
-  $fields['course-field_link_more_info'] = array(
-    'field_name' => 'field_link_more_info',
-    'type_name' => 'course',
-    'display_settings' => array(
-      'weight' => '21',
-      'parent' => 'group_documentation',
-      'label' => array(
-        'format' => 'hidden',
-      ),
-      'teaser' => array(
-        'format' => 'default',
-        'exclude' => 1,
-      ),
-      'full' => array(
-        'format' => 'default',
-        'exclude' => 1,
-      ),
-      '5' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '4' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '2' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '3' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      'token' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-    ),
-    'widget_active' => '1',
-    'type' => 'link',
-    'required' => '0',
-    'multiple' => '1',
-    'module' => 'link',
-    'active' => '1',
-    'attributes' => array(
-      'target' => 'default',
-      'rel' => 'nofollow',
-      'class' => '',
-      'title' => 'Click to access [title]',
-    ),
-    'display' => array(
-      'url_cutoff' => '80',
-    ),
-    'url' => 0,
-    'title' => 'required',
-    'title_value' => '',
-    'enable_tokens' => 0,
-    'validate_url' => 1,
-    'widget' => array(
-      'default_value' => array(
-        '0' => array(
-          'title' => '',
-          'url' => '',
-        ),
-      ),
-      'default_value_php' => NULL,
-      'label' => 'Link to more Info',
-      'weight' => '10',
-      'description' => 'Use this to link to an external resources that has additional information about the course.  The most common use for this is a university bulletin',
-      'type' => 'link',
-      'module' => 'link',
     ),
   );
 
@@ -676,7 +426,7 @@ fa12|Fall 12',
     'field_name' => 'field_listing_only',
     'type_name' => 'course',
     'display_settings' => array(
-      'weight' => '28',
+      'weight' => '17',
       'parent' => 'group_additional_settings',
       'label' => array(
         'format' => 'above',
@@ -728,7 +478,7 @@ fa12|Fall 12',
       ),
       'default_value_php' => NULL,
       'label' => 'Listing Only',
-      'weight' => '16',
+      'weight' => '17',
       'description' => 'Check this box to indicate that you only want to list the fact that a course exists but not to create pages and versions in the system.  By default ELMS will automatically create a version to work off of, this disables this functionality.  Use this in instances where you want to list a course using ELMS but not build out a space (you can always build one in the future).',
       'type' => 'optionwidgets_buttons',
       'module' => 'optionwidgets',
@@ -740,7 +490,7 @@ fa12|Fall 12',
     'field_name' => 'field_prerequisites',
     'type_name' => 'course',
     'display_settings' => array(
-      'weight' => '27',
+      'weight' => '16',
       'parent' => 'group_additional_settings',
       'label' => array(
         'format' => 'above',
@@ -806,7 +556,7 @@ fa12|Fall 12',
       ),
       'default_value_php' => NULL,
       'label' => 'Prerequisites',
-      'weight' => '21',
+      'weight' => '16',
       'description' => 'List courses required in order to take this one.',
       'type' => 'nodereference_autocomplete',
       'module' => 'nodereference',
@@ -870,9 +620,6 @@ html5|HTML 5',
     'widget' => array(
       'default_value' => array(
         '0' => array(
-          'value' => 'flash',
-        ),
-        '1' => array(
           'value' => 'pdf',
         ),
       ),
@@ -890,7 +637,7 @@ html5|HTML 5',
     'field_name' => 'field_sample_materials',
     'type_name' => 'course',
     'display_settings' => array(
-      'weight' => '22',
+      'weight' => '10',
       'parent' => 'group_documentation',
       'label' => array(
         'format' => 'above',
@@ -940,7 +687,7 @@ html5|HTML 5',
       'max_filesize_per_file' => '10M',
       'max_filesize_per_node' => '',
       'label' => 'Sample Materials',
-      'weight' => '12',
+      'weight' => '10',
       'description' => 'Use this for uploading syllabi and other sample materials to give students a feel for the course.',
       'type' => 'filefield_widget',
       'module' => 'filefield',
@@ -1033,13 +780,10 @@ safari|Safari (latest)',
 
   // Translatables
   // Included for use with string extractors like potx.
+  t('Course Link');
   t('Course Promotion');
   t('Description');
   t('Faculty Resources');
-  t('ID of Record');
-  t('Initial Course Launch');
-  t('Lead Faculty');
-  t('Link to more Info');
   t('Listing Only');
   t('Name');
   t('Plugin');

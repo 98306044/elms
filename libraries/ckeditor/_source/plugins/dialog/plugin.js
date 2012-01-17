@@ -2356,24 +2356,14 @@ CKEDITOR.DIALOG_RESIZE_BOTH = 3;
 				var me = this;
 				dialog.on( 'load', function()
 					{
-						var input = me.getInputElement();
-						if ( input )
+						if ( me.getInputElement() )
 						{
-							var focusClass = me.type in { 'checkbox' : 1, 'ratio' : 1 } && CKEDITOR.env.ie && CKEDITOR.env.version < 8 ? 'cke_dialog_ui_focused' : '';
-							input.on( 'focus', function()
+							me.getInputElement().on( 'focus', function()
 								{
 									dialog._.tabBarMode = false;
 									dialog._.hasFocus = true;
 									me.fire( 'focus' );
-									focusClass && this.addClass( focusClass );
-
-								});
-
-							input.on( 'blur', function()
-								{
-									me.fire( 'blur' );
-									focusClass && this.removeClass( focusClass );
-								});
+								}, me );
 						}
 					} );
 
@@ -2933,10 +2923,7 @@ CKEDITOR.DIALOG_RESIZE_BOTH = 3;
 		/** @ignore */
 		exec : function( editor )
 		{
-			// Special treatment for Opera. (#8031)
-			CKEDITOR.env.opera ?
-				CKEDITOR.tools.setTimeout( function() { editor.openDialog( this.dialogName ) }, 0, this )
-				: editor.openDialog( this.dialogName );
+			editor.openDialog( this.dialogName );
 		},
 
 		// Dialog commands just open a dialog ui, thus require no undo logic,
@@ -2952,8 +2939,7 @@ CKEDITOR.DIALOG_RESIZE_BOTH = 3;
 			integerRegex = /^\d*$/,
 			numberRegex = /^\d*(?:\.\d+)?$/,
 			htmlLengthRegex = /^(((\d*(\.\d+))|(\d*))(px|\%)?)?$/,
-			cssLengthRegex = /^(((\d*(\.\d+))|(\d*))(px|em|ex|in|cm|mm|pt|pc|\%)?)?$/i,
-			inlineStyleRegex = /^(\s*[\w-]+\s*:\s*[^:;]+(?:;|$))*$/;
+			cssLengthRegex = /^(((\d*(\.\d+))|(\d*))(px|em|ex|in|cm|mm|pt|pc|\%)?)?$/i;
 
 		CKEDITOR.VALIDATE_OR = 1;
 		CKEDITOR.VALIDATE_AND = 2;
@@ -3043,11 +3029,6 @@ CKEDITOR.DIALOG_RESIZE_BOTH = 3;
 			'htmlLength' : function( msg )
 			{
 				return this.functions( function( val ){ return htmlLengthRegex.test( CKEDITOR.tools.trim( val ) ); }, msg );
-			},
-
-			'inlineStyle' : function( msg )
-			{
-				return this.functions( function( val ){ return inlineStyleRegex.test( CKEDITOR.tools.trim( val ) ); }, msg );
 			},
 
 			equals : function( value, msg )

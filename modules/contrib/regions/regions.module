@@ -1,4 +1,16 @@
 <?php
+//ELMS: Regions
+//Development Sponsored by The Pennsylvania State University
+//ELMS is Copyright (C) 2008-2011  The Pennsylvania State University
+//
+//Bryan Ollendyke
+//bto108@psu.edu
+//
+//Keith D. Bailey
+//kdb163@psu.edu
+//
+//12 Borland
+//University Park,  PA 16802
 
 /**
  * @file
@@ -18,10 +30,10 @@ function regions_help($path, $arg) {
  * Implementation of hook_perm().
  */
 function regions_perm() {
-  $regions = _regions_list();
-  // Generate a list of regions and permissions.
-  foreach (array_keys($regions) as $region_name) {
-    $perms[] = 'view '. $region_name .' region';
+  $list = _regions_list();
+  //generate a list of regions and the permissions for them
+  foreach ($list as $key => $region) {
+    $perms[] = 'view '. $key .' region';
   }
   return $perms;
 }
@@ -30,52 +42,31 @@ function regions_perm() {
  * Implementation of hook_init().
  */
 function regions_init() {
-  // Check for current theme.
-  init_theme();
-  global $theme_key;
-  $regions = _regions_list($theme_key);
-  foreach ($regions as $region_info) {
-    // Add optional js files if defined.
-    if (isset($region_info['js'])) {
-      drupal_add_js($region_info['js']);
+  //pull all regions
+  $list = _regions_list();
+  foreach ($list as $machine_name => $region) {
+    //add any js that might be included in the definition
+    if (isset($region['js'])) {
+      drupal_add_js(drupal_get_path('module', $region['project']) .'/'. $region['js']);
     }
-    // Add optional stylesheets if defined.
-    if (isset($region_info['css'])) {
-      drupal_add_css($region_info['css']);
+    //add any css that might be included in the definition
+    if (isset($region['css'])) {
+      drupal_add_css(drupal_get_path('module', $region['project']) .'/'. $region['css']);
     }
   }
 }
 
 /**
  * Implementation of hook_footer().
- *
- * @todo consider implementing drupal_set_content() so we can use theme_blocks()
- *
- * @todo for D7 use hook_page_alter().
  */
 function regions_footer($main = 0) {
-  // Check for current theme.
-  init_theme();
-  global $theme_key;
-  $regions = _regions_list($theme_key);
-
-  // Regions the user has access to are added the end of the site.
+  //check for access to regions
+  $list = _regions_list();
   $output = '';
-  foreach ($regions as $region_name => $region_info) {
-    // Check for access to regions.
-    if (user_access('view '. $region_name .' region')) {
-      $region = array();
-      // Get themed blocks string.
-      $blocks = _regions_blocks($region_name, $region_info);
-      if (isset($blocks)) {
-        $region['start'] = '<div id="'. $region_name .'" class="regions">';
-        $region['blocks'] .= $blocks;
-        $region['end'] .= '</div>';
-      }
-      // Allow other modules to alter the region array before the each element
-      // is concatenated into a single HTML string.
-      drupal_alter('regions_region', $region, $region_name);
-      $output .= !empty($region) ? implode('', $region) : NULL;
+  //add the regions to the end of the site that the user has access to
+  foreach ($list as $machine_name => $region) {
+    if (user_access('view '. $machine_name .' region')) {
+      $output .= theme('regions', $machine_name);
     }
   }
   return $output;
@@ -86,96 +77,78 @@ function regions_footer($main = 0) {
  */
 function regions_system_info_alter(&$info, $file) {
   if (isset($info['regions'])) {
-    $list = module_invoke_all('define_regions');
-    // Add the regions into the definition typically only provided by the theme
-    // layer.
-    if (count($list) > 0) {
-      $info['original_regions'] = $info['regions'];
-    }
+    $list = _regions_list();
+  //add the regions into the definition typically only provided by the theme layer
     foreach ($list as $machine_name => $region) {
-      $info['regions'] += array($machine_name => $region['title']);
+      $info['regions'] += array('regions_'. $machine_name => t('Regions: @name', array('@name' => $machine_name)));
     }
   }
 }
 
 /**
- * Helper function lists newly defined regions against regions already declared
- * by a theme.
- *
- * @param $theme_key
- *   A theme key to check against. Defaults to current theme.
- *
- * @return
- *   An array keyed by region identifier, containing:
- *   - title: the region title
- *   - css: optional path to stylesheet for theming the new region, relative to
- *     implementing module directory.
- *   - js: optional path to javascript file, relative to implementing module
- *     directory.
- *   - render_callback: optional function to use in rendering blocks of this
- *     region (will be passed 'block' and $block parameters).
- *   Or an empty array.
+ * Implementation of hook_theme().
  */
-function _regions_list($theme_key = NULL) {
-  if (!isset($theme_key)) {
-    init_theme();
-    global $theme_key;
-  }
-  // Tap the stored info file for the original_regions variable.
-  $info = unserialize(db_result(db_query("SELECT info FROM {system} WHERE type = 'theme' AND name = '%s'", $theme_key)));
-  $theme_regions = array_map('t', $info['original_regions']);
-  // Allow modules to define new regions.
-  $defined_regions = module_invoke_all('define_regions');
-
-  // Build an array of new regions, if defined ones don't already exist.
-  $new_regions = array();
-  if (!empty($defined_regions)) {
-    foreach ($defined_regions as $key => $value) {
-      if (!in_array($key, array_keys($theme_regions))) {
-        $new_regions[$key] = $value;
-      }
-    }
-  }
-
-  return $new_regions;
+function regions_theme($existing, $type, $theme, $path) {
+  //defines theme_regions for use by themes should they want to override this
+  return array(
+    'regions' => array(
+    'arguments' => array(
+        'region_name' => '',
+      ),
+    ),
+  );
 }
 
 /**
- * Helper function to get a list of blocks per region, as provided by core block
- * and context modules.
- *
- * @param string $region_name
- *   The region identifier.
- * @param array $region_info
- *   An individual element child of the array returned by _regions_list().
- *
- * @return
- *   A string containing the rendered blocks for this region.
- *
- * @see _regions_list()
- * @see regions_footer()
+ * Themes Regions. This draws much inspiration from appbar module.
  */
-function _regions_blocks($region_name, $region_info) {
-  // Update the {blocks} table with the blocks currently exported by modules.
+function theme_regions($region_name) {
+  //Update the 'blocks' DB table with the blocks currently exported by modules.
   _block_rehash();
-  $blocks = array();
+  //Get a list of blocks in the current region (from the Context module if necessary).
+  $block_list = array();
   if (module_exists('context') && function_exists('context_get_plugin')) {
-    $blocks = context_get_plugin('reaction', 'block')->block_list($region_name);
+    $block_list = context_get_plugin('reaction', 'block')->block_list('regions_'. $region_name);
   }
   else {
-    $blocks = block_list($region_name);
+    $block_list = block_list('regions_'. $region_name);
   }
-  // Allow other modules to alter the blocks array before the each block object
-  // is rendered by theme_block().
-  drupal_alter('regions_blocks', $blocks, $region_name);
-
-  // Render the array of blocks using either an optional module-provided
-  // callback, or the default theme('block', $block).
-  $render_callback = isset($region_info['render_callback']) && function_exists($region_info['render_callback']) ? $region_info['render_callback'] : 'theme';
-  $output = '';
-  foreach ($blocks as $block) {
-    $output .= call_user_func_array($render_callback, array('block', $block));
+  $blocks = '';
+  $count = 0;
+  foreach ($block_list as $block) {
+    //hide the block if it doesnt have content, otherwise count how many were made
+    if (!isset($block->content) || !$block->content) {
+      continue;
+    }
+    else {
+      $count++;
+    }
+  //build a unique key for this block for theming
+    $key = $block->module .'_'. $block->delta;
+    $blocks .= '<div class="regions_block regions_'. $count .'" id="regions_block_'. $key .'"><div class="regions_block_title">';
+      if (!empty($block->subject)) {
+    //allow for HTML titles based on intentional API inclusion
+    if ($block->regions_allow_html_title) {
+          $blocks .= $block->title;
+    }
+    else {
+          $blocks .= $block->subject;
+    }
+      }
+      else {
+        $blocks .= t('<no title>');
+      }
+      $blocks .= '</div><div class="regions_block_content">'. $block->content .'</div></div>';
+    }
+  //if we returned blocks then render the region
+  if ($blocks != '') {
+    return '<div id="regions_'. $region_name .'"><div class="regions_pre_block_container"></div><div class="regions_block_container">'. $blocks .'</div><div class="regions_post_block_container"></div></div>';
   }
+}
 
-  return $output;
+//helper function to return an array of the available regions
+//this makes it easier to add additional ones if needed
+function _regions_list() {
+  $regions = module_invoke_all('define_regions');
+  return $regions;
 }

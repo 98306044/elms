@@ -1,4 +1,5 @@
 <?php
+// $Id: jquery_colorpicker.module,v 1.6 2011/01/20 09:25:05 hakulicious Exp $
 
 /**
  * Implementation of hook_perm()
@@ -83,14 +84,12 @@ function theme_colorpicker($element)
 {
 	$class = array('form-colorpicker');
 	$output = '';
-	$path = module_exists('libraries') && in_array('colorpicker', array_keys(libraries_get_libraries()))
-    ? libraries_get_path('colorpicker')
-    : drupal_get_path('module', 'jquery_colorpicker') . '/colorpicker';
+	$path = drupal_get_path('module', 'jquery_colorpicker') . '/';
 	// First we add the 3rd party CSS files and JS files that are required for the form elmeent
-	drupal_add_css($path . '/css/colorpicker.css');
-	drupal_add_js($path . '/js/colorpicker.js');
+	drupal_add_css($path . 'colorpicker/css/colorpicker.css');
+	drupal_add_js($path . 'colorpicker/js/colorpicker.js');
 	// Then we add the JS file required by this module
-	drupal_add_js(drupal_get_path('module', 'jquery_colorpicker') . '/js/jquery_colorpicker.js');
+	drupal_add_js($path . 'js/jquery_colorpicker.js');
 	// If IE6 support has been enabled, we set a variable that will be used later during page rendering to indicate that 
 	// IE6 specific code should be added to the <head> of the page.
 	if(variable_get('jquery_colorpicker_ie6_support', 0))
@@ -103,7 +102,7 @@ function theme_colorpicker($element)
 	// Now we check to see if the value in the Form API definition is valid. If it is, we use it, if it's not, we use a default value
 	$background = (in_array($element['#jquery_colorpicker_background'], $backgrounds)) ? $element['#jquery_colorpicker_background'] : 'select.png';
 	// Since we know the background, we can then get the URL of it to pass to the javascript function
-	$background_url = base_path() . $path . '/images/' . $background;
+	$background_url = base_path() . $path .'colorpicker/images/' . $background;
 	// next we determine what the default value for the form element is. This will also be passed to the javascript function.
 	if(isset($element['#value']))
 	{
@@ -220,7 +219,7 @@ function jquery_colorpicker_settings()
 	// Next we add a description of the necessary steps to enable IE6 support
 	$form['ie6']['description'] = array
 	(
-		'#value' => '<p>' . t('Internet Explorer 6 does not support transparencies in .png files. They are rendered with a non-transparent blue glow anywhere where there should be transparency. Since jquery colorpicker relies on transparent .png files to work, this means that out of the box, the jquery colorpicker will not work with IE6. You can solve this using the following steps:') . '</p><ol><li>' . t('Inside the jquery colorpicker module folder (generally located at sites/all/modules), create a new folder named "twin_helix". If the jquery colorpicker module is in the standard location, this means you will have the folder sites/all/modules/jquery_colorpicker/twin_helix') . '</li><li>' . t('Download the iepngfix.zip from !twin_helix', array('!twin_helix' => l('Twin Helix', 'http://www.twinhelix.com/css/iepngfix/', array('absolute' => TRUE)))) . '</li><li>' . t('Unpack the zip file, and place the following three files into the twin_helix folder you created in step 1:') . '<ul><li>iepngfix.htc</li><li>blank.gif</li><li>iepngfix_tilebg.js</li></ul></li><li>' . t('Check the box below, and save this page') . '</li></ol>',
+		'#value' => '<p>' . t('Internet Explorer 6 does not support transparencies in .png files. They are rendered with a non-transparent blue glow anywhere where there should be transparency. Since jquery colorpicker relies on transparent .png files to work, this means that out of the box, the jquery colorpicker will not work with IE6. You can solve this using the following steps:') . '</p><ol><li>' . t('Inside the jquery colorpicker module folder (generally located at sites/all/modules), create a new folder named "twin_helix". If the jquery colorpicker module is in the standard location, this means you will have the folder sites/all/modules/twin_helix') . '</li><li>' . t('Download the iepngfix.zip from !twin_helix', array('!twin_helix' => l('Twin Helix', 'http://www.twinhelix.com/css/iepngfix/', array('absolute' => TRUE)))) . '</li><li>' . t('Unpack the zip file, and place the following three files into the twin_helix folder you created in step 1:') . '<ul><li>iepngfix.htc</li><li>blank.gif</li><li>iepngfix_tilebg.js</li></ul></li><li>' . t('Check the box below, and save this page') . '</li></ol>',
 	);
 	// And finally we add a checkbox so the user can indicate that IE6 should be supported
 	$form['ie6']['jquery_colorpicker_ie6_support'] = array

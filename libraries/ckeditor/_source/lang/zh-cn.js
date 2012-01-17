@@ -14,7 +14,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 */
 
 /**
- * Contains the dictionary of language entries.
+ * Constains the dictionary of language entries.
  * @namespace
  */
 CKEDITOR.lang['zh-cn'] =
@@ -34,7 +34,7 @@ CKEDITOR.lang['zh-cn'] =
 	editorTitle : '所见即所得编辑器, %1, 按 ALT+0 查看帮助。',
 
 	// ARIA descriptions.
-	toolbars	: '工具栏',
+	toolbars	: 'Editor toolbars', // MISSING
 	editor		: '所见即所得编辑器',
 
 	// Toolbar buttons without dialogs.
@@ -56,7 +56,7 @@ CKEDITOR.lang['zh-cn'] =
 	superscript		: '上标',
 	horizontalrule	: '插入水平线',
 	pagebreak		: '插入分页符',
-	pagebreakAlt		: '分页符',
+	pagebreakAlt		: 'Page Break', // MISSING
 	unlink			: '取消超链接',
 	undo			: '撤消',
 	redo			: '重做',
@@ -121,10 +121,8 @@ CKEDITOR.lang['zh-cn'] =
 		alignBottom		: '底部',
 		invalidHeight	: '高度必须为数字格式',
 		invalidWidth	: '宽度必须为数字格式',
-		invalidCssLength	: '该字段必须为合式的CSS长度值，包括单位(px, %, in, cm, mm, em, ex, pt 或 pc)',
-		invalidHtmlLength	: '该字段必须为合式的HTML长度值，包括单位(px 或 %)',
-		invalidInlineStyle	: '内联样式必须为格式是以分号分隔的一个或多个“属性名 : 属性值”',
-		cssLengthTooltip	: '该字段必须为合式的CSS长度值，包括单位(px, %, in, cm, mm, em, ex, pt 或 pc)',
+		invalidCssLength	: 'Value specified for the "%1" field must be a positive number with or without a valid CSS measurement unit (px, %, in, cm, mm, em, ex, pt, or pc).', // MISSING
+		invalidHtmlLength	: 'Value specified for the "%1" field must be a positive number with or without a valid HTML measurement unit (px or %).', // MISSING
 
 		// Put the voice-only part of the label in the span.
 		unavailable		: '%1<span class="cke_accessibility">, 不可用</span>'
@@ -186,7 +184,7 @@ CKEDITOR.lang['zh-cn'] =
 		cssClasses		: '样式类名称',
 		charset			: '字符编码',
 		styles			: '行内样式',
-		rel			: '关联',
+		rel			: 'Relationship', // MISSING
 		selectAnchor		: '选择一个锚点',
 		anchorName		: '按锚点名称',
 		anchorId			: '按锚点 ID',
@@ -206,7 +204,7 @@ CKEDITOR.lang['zh-cn'] =
 		title		: '锚点链接属性',
 		name		: '锚点名称',
 		errorName	: '请输入锚点名称',
-		remove		: '删除锚点'
+		remove		: 'Remove Anchor' // MISSING
 	},
 
 	// List style dialog
@@ -242,7 +240,6 @@ CKEDITOR.lang['zh-cn'] =
 		findWhat			: '查找:',
 		replaceWith			: '替换:',
 		notFoundMsg			: '指定文本没有找到',
-		findOptions			: '查找选项',
 		matchCase			: '区分大小写',
 		matchWord			: '全字匹配',
 		matchCyclic			: '循环匹配',
@@ -720,10 +717,10 @@ CKEDITOR.lang['zh-cn'] =
 	{
 		title		: '关于CKEditor',
 		dlgTitle	: '关于CKEditor',
-		help	: '请访问 $1 以获取帮助.',
-		userGuide : 'CKEditor 用户向导',
+		help	: 'Check $1 for help.', // MISSING
+		userGuide : 'CKEditor User\'s Guide', // MISSING
 		moreInfo	: '访问我们的网站以获取更多关于协议的信息',
-		copy		: 'Copyright &copy; $1. 版权所有。'
+		copy		: 'Copyright &copy; $1. All rights reserved.'
 	},
 
 	maximize : '全屏',
@@ -733,8 +730,8 @@ CKEDITOR.lang['zh-cn'] =
 	{
 		anchor		: '锚点',
 		flash		: 'Flash 动画',
-		iframe		: 'IFrame',
-		hiddenfield	: '隐藏域',
+		iframe		: 'IFrame', // MISSING
+		hiddenfield	: 'Hidden Field', // MISSING
 		unknown		: '未知对象'
 	},
 
@@ -754,17 +751,17 @@ CKEDITOR.lang['zh-cn'] =
 
 	toolbarGroups :
 	{
-		document : '文档',
-		clipboard : '剪贴板/撤销',
-		editing : '编辑',
-		forms : '表单',
-		basicstyles : '基本格式',
-		paragraph : '段落',
-		links : '链接',
-		insert : '插入',
-		styles : '样式',
-		colors : '颜色',
-		tools : '工具'
+		document : 'Document', // MISSING
+		clipboard : 'Clipboard/Undo', // MISSING
+		editing : 'Editing', // MISSING
+		forms : 'Forms', // MISSING
+		basicstyles : 'Basic Styles', // MISSING
+		paragraph : 'Paragraph', // MISSING
+		links : 'Links', // MISSING
+		insert : 'Insert', // MISSING
+		styles : 'Styles', // MISSING
+		colors : 'Colors', // MISSING
+		tools : 'Tools' // MISSING
 	},
 
 	bidi :
@@ -777,14 +774,14 @@ CKEDITOR.lang['zh-cn'] =
 	{
 		label : '页面属性',
 		title : '页面属性',
-		design : '设计',
+		design : 'Design', // MISSING
 		meta : 'Meta 数据',
 		chooseColor : '选择',
 		other : '<其他>',
 		docTitle :	'页面标题',
 		charset : 	'字符编码',
 		charsetOther : '其它字符编码',
-		charsetASCII : 'ASCII',
+		charsetASCII : 'ASCII', // MISSING
 		charsetCE : '中欧',
 		charsetCT : '繁体中文 (Big5)',
 		charsetCR : '西里尔文',
@@ -792,7 +789,7 @@ CKEDITOR.lang['zh-cn'] =
 		charsetJP : '日文',
 		charsetKR : '韩文',
 		charsetTR : '土耳其文',
-		charsetUN : 'Unicode (UTF-8)',
+		charsetUN : 'Unicode (UTF-8)', // MISSING
 		charsetWE : '西欧',
 		docType : '文档类型',
 		docTypeOther : '其它文档类型',
@@ -810,6 +807,6 @@ CKEDITOR.lang['zh-cn'] =
 		metaDescription : '页面说明',
 		metaAuthor : '作者',
 		metaCopyright : '版权',
-		previewHtml : '<p>This is some <strong>sample text</strong>. You are using <a href="javascript:void(0)">CKEditor</a>.</p>'
+		previewHtml : '<p>This is some <strong>sample text</strong>. You are using <a href="javascript:void(0)">CKEditor</a>.</p>' // MISSING
 	}
 };

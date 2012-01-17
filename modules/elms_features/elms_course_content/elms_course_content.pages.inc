@@ -6,18 +6,14 @@
 function _elms_course_content_root() {
   //get the group
   $group = og_get_group_context();
-  //if we find a group node, take them to the book's first page
+  //if we find a group node, take them to the book node's root
   if (isset($group->book_nid)) {
-		$root = node_load($group->book_nid);
-		//account for an empty book though that would cause issues
-		if ($next = book_next($root->book)) {
-		  drupal_goto($next['href']);
-		}
-		else {
-      drupal_goto('node/'. $group->book_nid);
-		}
+    drupal_goto('node/'. $group->book_nid);
   }
-  //if it didn't find anything do nothing cause something went wrong
+  //if it didn't find anything, default back to front page
+  else {
+    drupal_goto('<front>');  
+  }
   return 1;
 }
 
@@ -42,5 +38,36 @@ function elms_course_content_settings() {
     ),
     '#default_value' => variable_get('elms_print_options', 'print'),
   );
+  $form['content'] = array(
+    '#title' => t('Content Outline'),
+    '#type' => 'fieldset',
+    '#collapsed' => TRUE,
+    '#collapsible' => TRUE,
+  );
+  $form['content']['elms_content_outline'] = array(
+    '#description' => t('Select a content outline to work from.  This is not required to create a course but can help with rapid prototyping.'),
+    '#key_type_toggled' => '1',
+    '#type' => 'select',
+    '#options' => _elms_course_content_get_instructional_template(),
+    '#multiple_toggle' => '1',
+    '#title' => t('Content Outline'),
+  );
+  $form['content']['elms_content_lessons'] = array(
+    '#description' => t('How many lessons would you like to start with?'),
+    '#type' => 'select',
+    '#options' => array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15),
+    '#title' => t('Lessons'),
+  );
+  
+  $form['site_footer'] = array(
+    '#default_value' => variable_get('site_footer', '2011 Copyright PSU'),
+    '#description' => t('This will be the footer for your course in ELMS'),
+    '#rows' => '3',
+    '#cols' => '60',
+    '#input_format' => '2',
+    '#type' => 'textarea',
+    '#title' => t('Footer'),
+  );
+  $form['format'] = filter_form('2');
   return system_settings_form($form);
 }

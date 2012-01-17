@@ -1,8 +1,0 @@
-; $Id: elms_styles.info
-name = "ELMS Styles"
-description = "Style Guide and text editor clean up for a standard approach to handling accessibility and content presentation"
-package = "ELMS Core"
-core = "6.x"
-version = "6.x-1.0-beta1"
-project = "elms_styles"
-project status url = "https://drupal.psu.edu/fserver"

@@ -27,7 +27,7 @@ $(document).ready(function(){
     else {
       $(this).addClass('regions_toggle_closed');
       $(this).removeClass('regions_toggle_open');
-      $('#regions_elms_navigation_right').animate({right:'-300'}, 'fast');
+      $('#regions_elms_navigation_right').animate({right:'-200'}, 'fast');
     }
   });
 });

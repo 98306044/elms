@@ -1,4 +1,5 @@
 <?php
+// $Id: imce_crop.install,v 1.1 2008/05/11 13:00:06 ufku Exp $
 
 /**
  * Implementation of hook_install()

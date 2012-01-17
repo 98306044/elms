@@ -141,7 +141,7 @@
   };
 
   function childrenOf(node) {
-    return $(node).siblings("tr." + options.childPrefix + node[0].id);
+    return $("table.treeTable tbody tr." + options.childPrefix + node[0].id);
   };
 
   function getPaddingLeft(node) {
@@ -213,7 +213,7 @@
 
     for(key in classNames) {
       if(classNames[key].match(options.childPrefix)) {
-        return $(node).siblings("#" + classNames[key].substring(options.childPrefix.length));
+        return $("#" + classNames[key].substring(9));
       }
     }
   };

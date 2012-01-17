@@ -1,6 +1,0 @@
-; $Id: requirement_dashboard_system.info
-name = "Requirement Dashboard System"
-description = "Implementation of the Requirement Dashboard API for a system wide dashboard"
-core = 6.x
-package = "Requirement Dashboard"
-dependencies[] = "requirement_dashboard"

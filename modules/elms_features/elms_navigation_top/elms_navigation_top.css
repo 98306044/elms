@@ -32,16 +32,21 @@ body {
 #regions_block_elms_navigation_top_2 {
   float:right;
   line-height:20px;
+  width:100px;
 }
 
 #regions_block_elms_navigation_top_2 .regions_block_title {
  cursor:pointer;
- float:right;
+ text-align:right;
+}
+#regions_block_elms_navigation_top_2 .regions_block_title span {
+ padding:0px 10px;
+}
+#regions_block_elms_navigation_top_2 .regions_block_title a {
+ padding:0px 10px;
 }
 #regions_block_elms_navigation_top_2 .regions_block_content {
   display:none;
-	top:20px;
-	clear:both;
 }
 #regions_block_elms_navigation_top_2 ul.menu {
   background-color:#555;
@@ -75,6 +80,7 @@ body {
 #regions_elms_navigation_top * {
   margin:0px;
   padding:0px;
+  outline:0px;
   font-size:100%;
   vertical-align:top;
   line-height:20px;
@@ -94,12 +100,10 @@ body {
 #regions_elms_navigation_top a {
   text-decoration:none;
   color:#ccc !important;
-  clear:none;
+  clear: both;
   float: left;
   height: 20px;
   padding: 0px;
-	font-weight: normal;
-	font-size:11px;
 }
 
 #regions_elms_navigation_top ul.links {
@@ -209,15 +213,7 @@ background-color:#666;
   float:left;
 }
 
-#regions_block_elms_navigation_top_2 .regions_block_title a {
- padding:0px 10px;
-}
-#regions_block_elms_navigation_top_2 .regions_block_title img {
- float:right;
- margin:0px 2px;
-}
-
-#regions_block_elms_navigation_top_2 li a {
+#regions_block_elms_navigation_top_2 a {
  padding:5px;
  width:100%;
 }
@@ -240,8 +236,8 @@ background-color:#666;
   background-color:#666;
 }
 #regions_block_elms_navigation_top_1 .regions_block_content {
+  display:none;
   width:300px;
-	display:none;
   top:20px;
   border-left:solid 2px #444;
   border-right:solid 1px #444;
@@ -267,18 +263,11 @@ background-color:#666;
 #regions_elms_navigation_top .elms_nav_top_msg_bar_icon_count {
  width:20px;
  height:20px;
- color:#FFF;
- position:fixed;
- top:1px;
+ color:#CCC;
  text-align:right;
- padding:0px;
+ padding:2px;
  font-weight:bold;
- font-size:15px;
- text-shadow:
-	 -1px -1px 0 #000,
-		1px -1px 0 #000,
-		-1px 1px 0 #000,
-		 1px 1px 0 #000;
+ font-size:14px;
 }
 #regions_elms_navigation_top .elms_nav_top_icon {
   float:left;

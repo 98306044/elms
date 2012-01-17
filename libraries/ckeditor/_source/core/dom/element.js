@@ -719,31 +719,20 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype,
 			return false;
 		},
 
-		/**
-		 * Decide whether one element is able to receive cursor.
-		 * @param {Boolean} [textCursor=true] Only consider element that could receive text child.
-		 */
-		isEditable : function( textCursor )
+		isEditable : function()
 		{
+			if ( this.isReadOnly() )
+				return false;
+
+			// Get the element name.
 			var name = this.getName();
 
-			if ( this.isReadOnly()
-					|| this.getComputedStyle( 'display' ) == 'none'
-					|| this.getComputedStyle( 'visibility' ) == 'hidden'
-					|| CKEDITOR.dtd.$nonEditable[ name ] )
-			{
-				return false;
-			}
+			// Get the element DTD (defaults to span for unknown elements).
+			var dtd = !CKEDITOR.dtd.$nonEditable[ name ]
+						&& ( CKEDITOR.dtd[ name ] || CKEDITOR.dtd.span );
 
-			if ( textCursor !== false )
-			{
-				// Get the element DTD (defaults to span for unknown elements).
-				var dtd = CKEDITOR.dtd[ name ] || CKEDITOR.dtd.span;
-				// In the DTD # == text node.
-				return ( dtd && dtd[ '#'] );
-			}
-
-			return true;
+			// In the DTD # == text node.
+			return ( dtd && dtd['#'] );
 		},
 
 		isIdentical : function( otherElement )
@@ -792,7 +781,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype,
 		 */
 		isVisible : function()
 		{
-			var isVisible = ( this.$.offsetHeight || this.$.offsetWidth ) && this.getComputedStyle( 'visibility' ) != 'hidden',
+			var isVisible = !!this.$.offsetHeight && this.getComputedStyle( 'visibility' ) != 'hidden',
 				elementWindow,
 				elementWindowFrame;
 
@@ -809,7 +798,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype,
 				}
 			}
 
-			return !!isVisible;
+			return isVisible;
 		},
 
 		/**
@@ -1299,9 +1288,10 @@ CKEDITOR.tools.extend( CKEDITOR.dom.element.prototype,
 		getDocumentPosition : function( refDocument )
 		{
 			var x = 0, y = 0,
-				doc = this.getDocument(),
-				body = doc.getBody(),
-				quirks = doc.$.compatMode == 'BackCompat';
+				body = this.getDocument().getBody(),
+				quirks = this.getDocument().$.compatMode == 'BackCompat';
+
+			var doc = this.getDocument();
 
 			if ( document.documentElement[ "getBoundingClientRect" ] )
 			{

@@ -11,13 +11,6 @@
 //University Park, PA 16802
 
 /**
- * Implementation of hook_perm().
- */
-function elms_export_html_perm() {
-  return array('export course as html');
-}
-
-/**
  * Implementation of hook_help().
  */
 function elms_export_html_help($section) {
@@ -32,17 +25,16 @@ function elms_export_html_help($section) {
  */
 function elms_export_html_menu() {
   $items = array();
-  $items['node/%node/html_export'] = array(
+  $items['node/%/html_export'] = array(
     'title' => 'HTML Export',
     'description' => 'Export your drupal site to static html page',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('elms_export_html_settings'),
-    'access arguments' => array('export course as html'),
+    'access arguments' => array('edit own course content'),
     'type' => MENU_NORMAL_ITEM,
   );
   return $items;
 }
-
 /**
  * Implementation of hook_settings().
  */
@@ -56,52 +48,150 @@ function elms_export_html_settings() {
   );
   return $form;
 }
-
 /**
  * Implementation of hook_settings_submit().
  */
 function elms_export_html_settings_submit($form_id, $form_values) {
-    $group = og_get_group_context();
-		$nids = array();
-		//create a folder html_export to put the directory in if it doesnt exist
+    $clean = variable_get('clean_url', 0);
+    //turn clean URLs off temporarily if they are on
+    if ($clean) {
+      variable_set('clean_url', 0);
+    }
+    $root = drupal_substr($_SERVER['HTTP_REFERER'], 0, strpos($_SERVER['HTTP_REFERER'], $_GET['q']));
+    //remove the ?q= if clean URLs are off
+    if (strpos($root, '?q=') != 0) {
+      $root = drupal_substr($root, 0, strpos($root, '?q='));
+    }
+    //create a folder html_export to put the directory in
     $dir = file_create_path(file_directory_path() . '/html_export');
     file_check_directory($dir, 1);
-		//make the directory path for this export (just timestamp)
     $export_path = $dir .'/export'. time();
     file_check_directory(file_create_path($export_path), 1);
-    //build a list of nodes for path translation
+    file_check_directory(file_create_path($export_path .'/'. file_directory_path()), 1);
+    file_check_directory(file_create_path($export_path . '/sites'), 1);
+    file_check_directory(file_create_path($export_path . '/modules'), 1);
+    file_check_directory(file_create_path($export_path . '/themes'), 1);
+    file_check_directory(file_create_path($export_path . '/misc'), 1);
+    $export_path = str_replace('index.php', '', $_SERVER['PATH_TRANSLATED']) . $export_path;
+    //run the copyr function, modified to work with zip archive; copy the files,themes,sites,and misc directories
+    //_elms_export_html_copyr(str_replace('index.php','',$_SERVER['PATH_TRANSLATED']) . file_directory_path(),$export_path . '/' . file_directory_path());
+    _elms_export_html_copyr(str_replace('index.php', '', $_SERVER['PATH_TRANSLATED']) . 'sites', $export_path . '/sites');
+    //_elms_export_html_copyr(str_replace('index.php','',$_SERVER['PATH_TRANSLATED']) . 'modules',$export_path . '/modules');
+    _elms_export_html_copyr(str_replace('index.php', '', $_SERVER['PATH_TRANSLATED']) . 'themes', $export_path . '/themes');
+    //_elms_export_html_copyr(str_replace('index.php','',$_SERVER['PATH_TRANSLATED']) . 'misc',$export_path . '/misc');
+
+    //grab all the nodes in the system that are published and then build out a list of url's to rename in the rendered code.
+    //similar to url rewrite and will need to take that into account eventually
+    $group = og_get_group_context();
     $result = db_query(db_rewrite_sql("SELECT {node}.nid FROM {node} JOIN {og_ancestry} ON {og_ancestry}.nid={node}.nid WHERE status=1 AND group_nid=%d ORDER BY nid DESC"), $group->nid);
-    while ($val = db_fetch_array($result)) {
-      $nids['node/'. $val['nid']] = 'node-'. $val['nid'] .'.html';
-		}
-		//make all the files
-		$result = db_query(db_rewrite_sql("SELECT {node}.nid FROM {node} JOIN {og_ancestry} ON {og_ancestry}.nid={node}.nid WHERE status=1 AND group_nid=%d ORDER BY nid DESC"), $group->nid);
-    while ($val = db_fetch_array($result)) {
-			menu_set_active_item('node/'. $val['nid']);
-      $return = menu_execute_active_handler();
-      $data = theme('page', $return);
-			//convert all paths to the new ones based on what we know will be exported
-			foreach ($nids as $path => $new_path) {
-			  $data = str_replace($path, $new_path, $data);
-			}
-			//open a file for writing with the new path
-			$file = fopen($export_path .'/'. $nids['node/'. $val['nid']] , 'w');
+    $nids = array();
+    while ($node = db_fetch_array($result)) {
+      $url = url('node/' . $node['nid']);
+      if (strpos(' ' . $url, '/?q=') != 0) {
+        $url = drupal_substr($url, (4 + strpos($url, '/?q=')));
+      }
+      if ($url == 'node/' . $node['nid']) {
+        $nids['node/' . $node['nid']] = 'page' . $node['nid'] . '.html';
+      }
+      else {
+        $tmp_url = $url;
+        //this removes the fake extension if one exists
+        $tmp_url = str_replace(".html", "", $tmp_url);
+        $tmp_url = str_replace(".htm", "", $tmp_url);
+        $tmp_url = str_replace(".shtml", "", $tmp_url);
+        $tmp_url = str_replace(".php", "", $tmp_url);
+        $tmp_url = str_replace(".asp", "", $tmp_url);
+        //this will remove everything that isn't a letter or number and replace it with a dash
+        //this will allow custom url paths to still remain yet be translated correctly
+        $tmp_url=preg_replace('/[^0-9a-z ]+/i', '-', $tmp_url);
+        $tmp_url=preg_replace('/[^\w\d\s]+/i', '-', $tmp_url);
+        $nids[$url] = $tmp_url . '.html';
+        $nids['node/' . $node['nid']] = $tmp_url . '.html';
+      }
+    }
+    //run through all the nodes and render pages to add to the zip file
+    $group = og_get_group_context();
+    $result = db_query(db_rewrite_sql("SELECT {node}.nid FROM {node} JOIN {og_ancestry} ON {og_ancestry}.nid={node}.nid WHERE status=1 AND group_nid=%d ORDER BY nid DESC"), $group->nid);
+    while ($node = db_fetch_array($result)) {
+      $return = menu_execute_active_handler('node/'. $node['nid']);
+        $data = theme('page', $return);
+      //strip out file paths that have the full server in them
+      $data = str_replace($root . base_path(), "", $data);
+      $data = str_replace($root, "", $data);
+      //strip out just the node/ if it's left over and replace it with the correct form of the link so that they actually find each other
+      foreach ($nids as $key => $nidpath) {
+        //get rid of a base path if there is one
+        if (base_path() != '/') {
+          $data = str_replace(base_path(), '', $data);
+        }
+        //account for links back to home where they are just a backslash cause it's at the root
+        $data = str_replace('index.php/?q=' . $key, $nidpath, $data);
+        $data = str_replace('index.php?q=' . $key, $nidpath, $data);
+        $data = str_replace('/?q=' . $key, $nidpath, $data);
+        $data = str_replace('?q=' . $key, $nidpath, $data);
+      }
+      $data = str_replace('?q=', '', $data);
+      $data = str_replace('<a href="/"', '<a href="index.html"', $data);
+      $data = str_replace('<a href=""', '<a href="index.html"', $data);
+      $file = fopen($export_path . "/" . $nids['node/' . $node['nid']], "w");
       fwrite($file, $data);
       fclose($file);
-		}
-		//create index page which is the book root node id
-		menu_set_active_item('node/'. $group->book_nid);
-    $return = menu_execute_active_handler();
+    }
+    $return = menu_execute_active_handler('node/'. $group->nid);
     $data = theme('page', $return);
-		//convert all paths to the new ones based on what we know will be exported
-		foreach ($nids as $path => $new_path) {
-		  $data = str_replace($path, $new_path, $data);
-		}
-    $file = fopen($export_path . '/index.html', 'w');
+    //strip out file paths that have the full server in them
+    //$data = str_replace($root . base_path(),"",$data);
+    //$data = str_replace($root,"",$data);
+    //strip out just the node/ if it's left over and replace it with the correct form of the link so that they actually find each other
+    foreach ($nids as $key => $nidpath) {
+      if (base_path() != '/') {
+        $data = str_replace(base_path(), '', $data);
+      }
+      //account for links back to home where they are just a backslash cause it's at the root
+      $data = str_replace('index.php/?q=' . $key, $nidpath, $data);
+      $data = str_replace('index.php?q=' . $key, $nidpath, $data);
+      $data = str_replace('/?q=' . $key, $nidpath, $data);
+      $data = str_replace('?q=' . $key, $nidpath, $data);
+    }
+    $data = str_replace('?q=', '', $data);
+    //try to account for links to nowhere because they should point Home
+    $data = str_replace('<a href="/"', '<a href="index.html"', $data);
+    $data = str_replace('<a href=""', '<a href="index.html"', $data);
+    $file = fopen($export_path . "/index.html", "w");
     fwrite($file, $data);
     fclose($file);
+    //turn clean URLs back on if it was off temporarily
+    if ($clean) {
+      variable_set('clean_url', 1);
+    }
     //need to generate a list of modules and themes to copy as well as files directory except for html_export folder
-  drupal_set_message("If you don't see any errors the site was exported successfully! @link here to access the export.", array('@link' => l('Click', drupal_substr($export_path, strpos($export_path, $dir)) . "/index.html")));
-	//seems silly but needed because we are manipulating the location upstream
-	drupal_goto('node/'. $group->nid .'/html_export');
+    drupal_set_message(t("If you don't see any errors the site was exported successfully! @link here to access the export.", array('@link' => l('Click', drupal_substr($export_path, strpos($export_path, $dir)) . "/index.html"))));
+}
+
+//helper function for deep directory copying
+function _elms_export_html_copyr($source, $dest) {
+  // Simple copy for a file
+  if (is_file($source)) {
+    return copy($source, $dest);
+  }
+  // Make destination directory
+  if (!is_dir($dest)) {
+    mkdir($dest);
+  }
+  // Loop through the folder
+  $dir = dir($source);
+  while (FALSE !== $entry = $dir->read()) {
+    //if this is the files folder then skip the pointers, the html_export directory (server == dead), and .htaccess files
+    //if not then Skip pointers to folders, .DS_Store, *.php, and .htaccess
+    if ($entry == '.' || $entry == '..' || $entry == 'README.txt' || $entry == 'LICENSE.txt' || $entry == '.DS_Store' || $entry == '.htaccess' || $entry == 'Thumbs.db' || strpos($entry, '.engine') != 0 || strpos($entry, '.php') != 0 || strpos($entry, '.inc') != 0 || strpos($entry, '.include') != 0 || strpos($entry, '.info') != 0 || strpos($entry, '.install') != 0 || strpos($entry, '.module') != 0) {
+      continue;
+    }
+    // Media hosted externally so only copy
+    if ($dest !== "$source/$entry" && (strpos($source, 'css') === 1 || strpos($source, 'js') === 1)) {
+      _elms_export_html_copyr("$source/$entry", "$dest/$entry");
+    }
+  }
+  // Clean up
+  $dir->close();
+  return TRUE;
 }

@@ -1,4 +1,7 @@
 This file is to keep track of the patches applied to make this stack work:
+--Core--
+-- avoid conflict with install profiles and filter_xss function
+-- http://drupal.org/node/1174496#comment-5460812
 
 --Contributed--
 Editable Fields

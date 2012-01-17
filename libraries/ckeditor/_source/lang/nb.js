@@ -14,7 +14,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 */
 
 /**
- * Contains the dictionary of language entries.
+ * Constains the dictionary of language entries.
  * @namespace
  */
 CKEDITOR.lang['nb'] =
@@ -34,7 +34,7 @@ CKEDITOR.lang['nb'] =
 	editorTitle : 'Rikteksteditor, %1, trykk ALT 0 for hjelp.',
 
 	// ARIA descriptions.
-	toolbars	: 'Verktøylinjer for editor',
+	toolbars	: 'Editor toolbars', // MISSING
 	editor		: 'Rikteksteditor',
 
 	// Toolbar buttons without dialogs.
@@ -121,10 +121,8 @@ CKEDITOR.lang['nb'] =
 		alignBottom		: 'Bunn',
 		invalidHeight	: 'Høyde må være et tall.',
 		invalidWidth	: 'Bredde må være et tall.',
-		invalidCssLength	: 'Den angitte verdien for feltet "%1" må være et positivt tall med eller uten en gyldig CSS-målingsenhet (px, %, in, cm, mm, em, ex, pt, eller pc).',
-		invalidHtmlLength	: 'Den angitte verdien for feltet "%1" må være et positivt tall med eller uten en gyldig HTML-målingsenhet (px eller %).',
-		invalidInlineStyle	: 'Verdi angitt for inline stil må bestå av en eller flere sett med formatet "navn : verdi", separert med semikolon',
-		cssLengthTooltip	: 'Enter a number for a value in pixels or a number with a valid CSS unit (px, %, in, cm, mm, em, ex, pt, or pc).', // MISSING
+		invalidCssLength	: 'Value specified for the "%1" field must be a positive number with or without a valid CSS measurement unit (px, %, in, cm, mm, em, ex, pt, or pc).', // MISSING
+		invalidHtmlLength	: 'Value specified for the "%1" field must be a positive number with or without a valid HTML measurement unit (px or %).', // MISSING
 
 		// Put the voice-only part of the label in the span.
 		unavailable		: '%1<span class="cke_accessibility">, utilgjenglig</span>'
@@ -186,7 +184,7 @@ CKEDITOR.lang['nb'] =
 		cssClasses		: 'Stilarkklasser',
 		charset			: 'Lenket tegnsett',
 		styles			: 'Stil',
-		rel			: 'Relasjon (rel)',
+		rel			: 'Relationship', // MISSING
 		selectAnchor		: 'Velg et anker',
 		anchorName		: 'Anker etter navn',
 		anchorId			: 'Element etter ID',
@@ -206,7 +204,7 @@ CKEDITOR.lang['nb'] =
 		title		: 'Egenskaper for anker',
 		name		: 'Ankernavn',
 		errorName	: 'Vennligst skriv inn ankernavnet',
-		remove		: 'Fjern anker'
+		remove		: 'Remove Anchor' // MISSING
 	},
 
 	// List style dialog
@@ -242,7 +240,6 @@ CKEDITOR.lang['nb'] =
 		findWhat			: 'Søk etter:',
 		replaceWith			: 'Erstatt med:',
 		notFoundMsg			: 'Fant ikke søketeksten.',
-		findOptions			: 'Søkealternativer',
 		matchCase			: 'Skill mellom store og små bokstaver',
 		matchWord			: 'Bare hele ord',
 		matchCyclic			: 'Søk i hele dokumentet',
@@ -277,8 +274,8 @@ CKEDITOR.lang['nb'] =
 		invalidBorder	: 'Rammestørrelse må være et tall.',
 		invalidWidth	: 'Tabellbredde må være et tall.',
 		invalidHeight	: 'Tabellhøyde må være et tall.',
-		invalidCellSpacing	: 'Cellemarg må være et positivt tall.',
-		invalidCellPadding	: 'Cellepolstring må være et positivt tall.',
+		invalidCellSpacing	: 'Cellemarg må være et tall.',
+		invalidCellPadding	: 'Cellepolstring må være et tall.',
 
 		cell :
 		{
@@ -720,8 +717,8 @@ CKEDITOR.lang['nb'] =
 	{
 		title		: 'Om CKEditor',
 		dlgTitle	: 'Om CKEditor',
-		help	: 'Se $1 for hjelp.',
-		userGuide : 'CKEditors brukerveiledning',
+		help	: 'Check $1 for help.', // MISSING
+		userGuide : 'CKEditor User\'s Guide', // MISSING
 		moreInfo	: 'For lisensieringsinformasjon, vennligst besøk vårt nettsted:',
 		copy		: 'Copyright &copy; $1. Alle rettigheter reservert.'
 	},
@@ -754,17 +751,17 @@ CKEDITOR.lang['nb'] =
 
 	toolbarGroups :
 	{
-		document : 'Dokument',
-		clipboard : 'Utklippstavle/Angre',
-		editing : 'Redigering',
-		forms : 'Skjema',
-		basicstyles : 'Basisstiler',
-		paragraph : 'Avsnitt',
-		links : 'Lenker',
-		insert : 'Innsetting',
-		styles : 'Stiler',
-		colors : 'Farger',
-		tools : 'Verktøy'
+		document : 'Document', // MISSING
+		clipboard : 'Clipboard/Undo', // MISSING
+		editing : 'Editing', // MISSING
+		forms : 'Forms', // MISSING
+		basicstyles : 'Basic Styles', // MISSING
+		paragraph : 'Paragraph', // MISSING
+		links : 'Links', // MISSING
+		insert : 'Insert', // MISSING
+		styles : 'Styles', // MISSING
+		colors : 'Colors', // MISSING
+		tools : 'Tools' // MISSING
 	},
 
 	bidi :
@@ -777,22 +774,22 @@ CKEDITOR.lang['nb'] =
 	{
 		label : 'Dokumentegenskaper',
 		title : 'Dokumentegenskaper',
-		design : 'Design',
+		design : 'Design', // MISSING
 		meta : 'Meta-data',
 		chooseColor : 'Velg',
 		other : '<annen>',
 		docTitle :	'Sidetittel',
 		charset : 	'Tegnsett',
 		charsetOther : 'Annet tegnsett',
-		charsetASCII : 'ASCII',
+		charsetASCII : 'ASCII', // MISSING
 		charsetCE : 'Sentraleuropeisk',
 		charsetCT : 'Tradisonell kinesisk(Big5)',
-		charsetCR : 'Kyrillisk',
+		charsetCR : 'Cyrillic', // MISSING
 		charsetGR : 'Gresk',
 		charsetJP : 'Japansk',
 		charsetKR : 'Koreansk',
 		charsetTR : 'Tyrkisk',
-		charsetUN : 'Unicode (UTF-8)',
+		charsetUN : 'Unicode (UTF-8)', // MISSING
 		charsetWE : 'Vesteuropeisk',
 		docType : 'Dokumenttype header',
 		docTypeOther : 'Annet dokumenttype header',
@@ -810,6 +807,6 @@ CKEDITOR.lang['nb'] =
 		metaDescription : 'Dokumentbeskrivelse',
 		metaAuthor : 'Forfatter',
 		metaCopyright : 'Kopirett',
-		previewHtml : '<p>Dette er en <strong>eksempeltekst</strong>. Du bruker <a href="javascript:void(0)">CKEditor</a>.</p>'
+		previewHtml : '<p>This is some <strong>sample text</strong>. You are using <a href="javascript:void(0)">CKEditor</a>.</p>' // MISSING
 	}
 };

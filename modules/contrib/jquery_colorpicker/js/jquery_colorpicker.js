@@ -1,3 +1,4 @@
+// $Id: jquery_colorpicker.js,v 1.2 2010/01/04 08:35:06 hakulicious Exp $
 // JavaScript Document
 
 // First we create a namespace for our module so that any functions or variables don't conflict with other modules
@@ -66,7 +67,7 @@ Drupal.behaviors.jqueryColorpicker = function()
 			},
 			onChange: function (hsb, hex, rgb)
 			{
-				$("#" + target + " .color_picker").css("backgroundColor", "#" + hex).children("input").val(hex).change();;
+				$("#" + target + " .color_picker").css("backgroundColor", "#" + hex).children("input").val(hex);
 			}
 		});
 	});

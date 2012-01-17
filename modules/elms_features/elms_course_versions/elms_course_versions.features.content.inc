@@ -159,15 +159,6 @@ yk|York Campus',
     'advanced_view' => '--',
     'advanced_view_args' => '',
     'widget' => array(
-      'node_link' => array(
-        'teaser' => 0,
-        'full' => 0,
-        'title' => 'Course Version',
-        'hover_title' => '',
-        'destination' => 'default',
-      ),
-      'fallback' => 'select',
-      'edit_fallback' => 0,
       'autocomplete_match' => 'contains',
       'size' => '20',
       'multistep' => '1',
@@ -177,11 +168,161 @@ yk|York Campus',
         ),
       ),
       'default_value_php' => NULL,
+      'node_link' => array(
+        'teaser' => 0,
+        'full' => 0,
+        'title' => 'Course Version',
+        'hover_title' => '',
+        'destination' => 'default',
+      ),
+      'fallback' => 'select',
+      'edit_fallback' => 0,
       'label' => 'Course',
       'weight' => '-5',
       'description' => '',
       'type' => 'nodereference_url',
       'module' => 'nodereference_url',
+    ),
+  );
+
+  // Exported field: field_finals_monday
+  $fields['version-field_finals_monday'] = array(
+    'field_name' => 'field_finals_monday',
+    'type_name' => 'version',
+    'display_settings' => array(
+      'weight' => '7',
+      'parent' => 'group_schedule',
+      'label' => array(
+        'format' => 'above',
+      ),
+      'teaser' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      'full' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      '5' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '2' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '3' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      'token' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+    ),
+    'widget_active' => '1',
+    'type' => 'date',
+    'required' => '1',
+    'multiple' => '0',
+    'module' => 'date',
+    'active' => '1',
+    'granularity' => array(
+      'year' => 'year',
+      'month' => 'month',
+      'day' => 'day',
+    ),
+    'timezone_db' => 'America/New_York',
+    'tz_handling' => 'none',
+    'todate' => '',
+    'repeat' => 0,
+    'repeat_collapsed' => '',
+    'default_format' => 'schedule_date',
+    'widget' => array(
+      'default_value' => 'blank',
+      'default_value_code' => '',
+      'default_value2' => 'same',
+      'default_value_code2' => '',
+      'input_format' => 'D, d/m/Y - g:ia',
+      'input_format_custom' => '',
+      'increment' => '1',
+      'text_parts' => array(),
+      'year_range' => '-1:+3',
+      'label_position' => 'above',
+      'label' => 'Finals',
+      'weight' => '7',
+      'description' => 'The Monday of the week that finals start',
+      'type' => 'date_popup',
+      'module' => 'date',
+    ),
+  );
+
+  // Exported field: field_forming_week_structure
+  $fields['version-field_forming_week_structure'] = array(
+    'field_name' => 'field_forming_week_structure',
+    'type_name' => 'version',
+    'display_settings' => array(
+      'weight' => '10',
+      'parent' => 'group_schedule',
+      'label' => array(
+        'format' => 'above',
+      ),
+      'teaser' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      'full' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      '5' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '2' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '3' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      'token' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+    ),
+    'widget_active' => '1',
+    'type' => 'text',
+    'required' => '1',
+    'multiple' => '0',
+    'module' => 'text',
+    'active' => '1',
+    'text_processing' => '0',
+    'max_length' => '',
+    'allowed_values' => 'define_structure|Define Structure below
+none|Don\'t create events, only create containers
+prototype|Build from Prototype Lesson / Course',
+    'allowed_values_php' => '',
+    'widget' => array(
+      'default_value' => array(
+        '0' => array(
+          'value' => 'define_structure',
+        ),
+      ),
+      'default_value_php' => NULL,
+      'label' => 'Forming Week Structure',
+      'weight' => '10',
+      'description' => 'How do you want weeks to be populated in schedule creation? You can either define a structure below, not build one, or build based on a prototype lesson (requires that a course structure exist)',
+      'type' => 'optionwidgets_select',
+      'module' => 'optionwidgets',
     ),
   );
 
@@ -401,6 +542,274 @@ else {
     ),
   );
 
+  // Exported field: field_num_topics
+  $fields['version-field_num_topics'] = array(
+    'field_name' => 'field_num_topics',
+    'type_name' => 'version',
+    'display_settings' => array(
+      'weight' => '9',
+      'parent' => 'group_schedule',
+      'label' => array(
+        'format' => 'above',
+      ),
+      'teaser' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      'full' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      '5' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '2' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '3' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      'token' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+    ),
+    'widget_active' => '1',
+    'type' => 'text',
+    'required' => '1',
+    'multiple' => '0',
+    'module' => 'text',
+    'active' => '1',
+    'text_processing' => '0',
+    'max_length' => '',
+    'allowed_values' => '2
+3
+4
+5
+6
+7
+8',
+    'allowed_values_php' => '',
+    'widget' => array(
+      'default_value' => array(
+        '0' => array(
+          'value' => '3',
+        ),
+      ),
+      'default_value_php' => NULL,
+      'label' => 'Number of Topics',
+      'weight' => '9',
+      'description' => 'How many topics would you like to build out? This will be used to spread the weeks of instruction evenly. You can always add or remove topics after creation.',
+      'type' => 'optionwidgets_select',
+      'module' => 'optionwidgets',
+    ),
+  );
+
+  // Exported field: field_schedule_source
+  $fields['version-field_schedule_source'] = array(
+    'field_name' => 'field_schedule_source',
+    'type_name' => 'version',
+    'display_settings' => array(
+      'weight' => '5',
+      'parent' => 'group_schedule',
+      'label' => array(
+        'format' => 'above',
+      ),
+      'teaser' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      'full' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      '5' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '2' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '3' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      'token' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+    ),
+    'widget_active' => '1',
+    'type' => 'text',
+    'required' => '1',
+    'multiple' => '0',
+    'module' => 'text',
+    'active' => '1',
+    'text_processing' => '0',
+    'max_length' => '',
+    'allowed_values' => 'registrar|Registrar
+manual|Manual Entry',
+    'allowed_values_php' => '',
+    'widget' => array(
+      'rows' => 5,
+      'size' => '60',
+      'default_value' => array(
+        '0' => array(
+          'value' => 'registrar',
+        ),
+      ),
+      'default_value_php' => NULL,
+      'label' => 'Schedule Source',
+      'weight' => '5',
+      'description' => 'Connect to the registrar or use manual date entry to build schedule.',
+      'type' => 'optionwidgets_select',
+      'module' => 'optionwidgets',
+    ),
+  );
+
+  // Exported field: field_schedule_to_build
+  $fields['version-field_schedule_to_build'] = array(
+    'field_name' => 'field_schedule_to_build',
+    'type_name' => 'version',
+    'display_settings' => array(
+      'weight' => '4',
+      'parent' => 'group_schedule',
+      'label' => array(
+        'format' => 'above',
+      ),
+      'teaser' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      'full' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      '5' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '2' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '3' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      'token' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+    ),
+    'widget_active' => '1',
+    'type' => 'text',
+    'required' => '0',
+    'multiple' => '0',
+    'module' => 'text',
+    'active' => '1',
+    'text_processing' => '0',
+    'max_length' => '',
+    'allowed_values' => 'week|Week Based Schedule
+topic|Topic Based Schedule',
+    'allowed_values_php' => '',
+    'widget' => array(
+      'default_value' => array(
+        '0' => array(
+          'value' => 'week',
+        ),
+      ),
+      'default_value_php' => NULL,
+      'label' => 'Schedule to Build',
+      'weight' => '4',
+      'description' => 'Select if you would like to build a new schedule from scratch or use a template.  In the case of rebuilding a schedule you can either rebuild the dates or the entire schedule. <strong>WARNING: Rebuilding the entire schedule will delete your current schedule!</strong>',
+      'type' => 'optionwidgets_select',
+      'module' => 'optionwidgets',
+    ),
+  );
+
+  // Exported field: field_scoring_method
+  $fields['version-field_scoring_method'] = array(
+    'field_name' => 'field_scoring_method',
+    'type_name' => 'version',
+    'display_settings' => array(
+      'weight' => '3',
+      'parent' => 'group_schedule',
+      'label' => array(
+        'format' => 'above',
+      ),
+      'teaser' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      'full' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      '5' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '2' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '3' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      'token' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+    ),
+    'widget_active' => '1',
+    'type' => 'text',
+    'required' => '1',
+    'multiple' => '0',
+    'module' => 'text',
+    'active' => '1',
+    'text_processing' => '0',
+    'max_length' => '',
+    'allowed_values' => 'points|Points
+percentage|Percentages',
+    'allowed_values_php' => '',
+    'widget' => array(
+      'default_value' => array(
+        '0' => array(
+          'value' => 'points',
+        ),
+      ),
+      'default_value_php' => NULL,
+      'multistep' => '3',
+      'label' => 'Scoring Method',
+      'weight' => '3',
+      'description' => 'This will base all Event Score values on either points or percentages.  Points is the default and this value won\'t be used unless you decide to add points to events.',
+      'type' => 'optionwidgets_select',
+      'module' => 'optionwidgets',
+    ),
+  );
+
   // Exported field: field_section_number
   $fields['version-field_section_number'] = array(
     'field_name' => 'field_section_number',
@@ -609,15 +1018,378 @@ su2|Summer 2',
     ),
   );
 
+  // Exported field: field_semester
+  $fields['version-field_semester'] = array(
+    'field_name' => 'field_semester',
+    'type_name' => 'version',
+    'display_settings' => array(
+      'weight' => '12',
+      'parent' => 'group_schedule',
+      'label' => array(
+        'format' => 'above',
+      ),
+      'teaser' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      'full' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      '5' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '2' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '3' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      'token' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+    ),
+    'widget_active' => '1',
+    'type' => 'text',
+    'required' => '1',
+    'multiple' => '0',
+    'module' => 'text',
+    'active' => '1',
+    'text_processing' => '0',
+    'max_length' => '',
+    'allowed_values' => 'fall|Fall
+spring|Spring
+summer|Summer
+summer1|Summer 1
+summer2|Summer 2',
+    'allowed_values_php' => '',
+    'widget' => array(
+      'default_value' => array(
+        '0' => array(
+          'value' => '',
+        ),
+      ),
+      'default_value_php' => NULL,
+      'label' => 'Semester',
+      'weight' => '12',
+      'description' => 'What semester is this course space being developed for?',
+      'type' => 'optionwidgets_select',
+      'module' => 'optionwidgets',
+    ),
+  );
+
+  // Exported field: field_start_date
+  $fields['version-field_start_date'] = array(
+    'field_name' => 'field_start_date',
+    'type_name' => 'version',
+    'display_settings' => array(
+      'weight' => '6',
+      'parent' => 'group_schedule',
+      'label' => array(
+        'format' => 'above',
+      ),
+      'teaser' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      'full' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      '5' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '2' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '3' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      'token' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+    ),
+    'widget_active' => '1',
+    'type' => 'date',
+    'required' => '1',
+    'multiple' => '0',
+    'module' => 'date',
+    'active' => '1',
+    'granularity' => array(
+      'year' => 'year',
+      'month' => 'month',
+      'day' => 'day',
+    ),
+    'timezone_db' => 'America/New_York',
+    'tz_handling' => 'none',
+    'todate' => '',
+    'repeat' => 0,
+    'repeat_collapsed' => '',
+    'default_format' => 'schedule_date',
+    'widget' => array(
+      'default_value' => 'blank',
+      'default_value_code' => '',
+      'default_value2' => 'same',
+      'default_value_code2' => '',
+      'input_format' => 'D, m/d/Y - g:ia',
+      'input_format_custom' => '',
+      'increment' => '1',
+      'text_parts' => array(),
+      'year_range' => '-1:+3',
+      'label_position' => 'above',
+      'label' => 'Start',
+      'weight' => '6',
+      'description' => 'The first Monday of the semester.',
+      'type' => 'date_popup',
+      'module' => 'date',
+    ),
+  );
+
+  // Exported field: field_top_level_name
+  $fields['version-field_top_level_name'] = array(
+    'field_name' => 'field_top_level_name',
+    'type_name' => 'version',
+    'display_settings' => array(
+      'weight' => '8',
+      'parent' => 'group_schedule',
+      'label' => array(
+        'format' => 'above',
+      ),
+      'teaser' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      'full' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      '5' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '2' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '3' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      'token' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+    ),
+    'widget_active' => '1',
+    'type' => 'text',
+    'required' => '1',
+    'multiple' => '0',
+    'module' => 'text',
+    'active' => '1',
+    'text_processing' => '0',
+    'max_length' => '',
+    'allowed_values' => 'module|Module
+unit|Unit',
+    'allowed_values_php' => '',
+    'widget' => array(
+      'rows' => 5,
+      'size' => '60',
+      'default_value' => array(
+        '0' => array(
+          'value' => 'unit',
+        ),
+      ),
+      'default_value_php' => NULL,
+      'label' => 'Top Level Name',
+      'weight' => '8',
+      'description' => 'The name of the largest structural item in the schedule for Topic Based outlines / schedules.',
+      'type' => 'optionwidgets_select',
+      'module' => 'optionwidgets',
+    ),
+  );
+
+  // Exported field: field_week_structure
+  $fields['version-field_week_structure'] = array(
+    'field_name' => 'field_week_structure',
+    'type_name' => 'version',
+    'display_settings' => array(
+      'weight' => '11',
+      'parent' => 'group_schedule',
+      'label' => array(
+        'format' => 'above',
+      ),
+      'teaser' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      'full' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      '5' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '2' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '3' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      'token' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+    ),
+    'widget_active' => '1',
+    'type' => 'text',
+    'required' => '0',
+    'multiple' => '1',
+    'module' => 'text',
+    'active' => '1',
+    'text_processing' => 0,
+    'max_length' => '',
+    'allowed_values' => 'activity|Activity
+assessment|Assessment
+assignment|Assignment
+discussion|Discussion
+lecture|Lecture
+reading|Reading',
+    'allowed_values_php' => '',
+    'widget' => array(
+      'size' => '20',
+      'autocomplete_match' => 'starts_with',
+      'autocomplete_case' => '1',
+      'i18n_flddata' => 0,
+      'default_value' => NULL,
+      'default_value_php' => 'return array(
+  0 => array(\'value\' => \'reading\'),
+  1 => array(\'value\' => \'reading\'),
+  2 => array(\'value\' => \'activity\'),
+  3 => array(\'value\' => \'assessment\'));',
+      'label' => 'Week Structure',
+      'weight' => '11',
+      'description' => 'Select the default structure for your weeks. Allowed values are Activity, Assessment, Assignment, Discussion, Lecture, Reading',
+      'type' => 'autocomplete_widgets_allowvals',
+      'module' => 'autocomplete_widgets',
+    ),
+  );
+
+  // Exported field: field_year
+  $fields['version-field_year'] = array(
+    'field_name' => 'field_year',
+    'type_name' => 'version',
+    'display_settings' => array(
+      'weight' => '13',
+      'parent' => 'group_schedule',
+      'label' => array(
+        'format' => 'above',
+      ),
+      'teaser' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      'full' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      '5' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '2' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '3' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      'token' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+    ),
+    'widget_active' => '1',
+    'type' => 'text',
+    'required' => '1',
+    'multiple' => '0',
+    'module' => 'text',
+    'active' => '1',
+    'text_processing' => '0',
+    'max_length' => '',
+    'allowed_values' => '11|2011
+12|2012
+13|2013
+14|2014
+15|2015
+16|2016
+17|2017',
+    'allowed_values_php' => '',
+    'widget' => array(
+      'default_value' => array(
+        '0' => array(
+          'value' => '',
+        ),
+      ),
+      'default_value_php' => NULL,
+      'label' => 'Year',
+      'weight' => '13',
+      'description' => 'The year this course will be offered.',
+      'type' => 'optionwidgets_select',
+      'module' => 'optionwidgets',
+    ),
+  );
+
   // Translatables
   // Included for use with string extractors like potx.
   t('Campus');
   t('Contact Block');
   t('Course');
+  t('Finals');
+  t('Forming Week Structure');
   t('Instructional Template');
   t('Lessons');
+  t('Number of Topics');
+  t('Schedule Source');
+  t('Schedule to Build');
+  t('Scoring Method');
   t('Section Number');
   t('Section Semester');
+  t('Semester');
+  t('Start');
+  t('Top Level Name');
+  t('Week Structure');
   t('Year');
 
   return $fields;

@@ -14,7 +14,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 */
 
 /**
- * Contains the dictionary of language entries.
+ * Constains the dictionary of language entries.
  * @namespace
  */
 CKEDITOR.lang['es'] =
@@ -121,10 +121,8 @@ CKEDITOR.lang['es'] =
 		alignBottom		: 'Pie',
 		invalidHeight	: 'Altura debe ser un número.',
 		invalidWidth	: 'Anchura debe ser un número.',
-		invalidCssLength	: 'El valor especificado para el campo "%1" debe ser un número positivo, incluyendo optionalmente una unidad de medida CSS válida (px, %, in, cm, mm, em, ex, pt, o pc).',
-		invalidHtmlLength	: 'El valor especificado para el campo "%1" debe ser un número positivo, incluyendo optionalmente una unidad de medida HTML válida (px o %).',
-		invalidInlineStyle	: 'El valor especificado para el estilo debe consistir en uno o más pares con el formato "nombre: valor", separados por punto y coma.',
-		cssLengthTooltip	: 'Introduca un número para el valor en pixels o un número con una unidad de medida CSS válida (px, %, in, cm, mm, em, ex, pt, o pc).',
+		invalidCssLength	: 'Value specified for the "%1" field must be a positive number with or without a valid CSS measurement unit (px, %, in, cm, mm, em, ex, pt, or pc).', // MISSING
+		invalidHtmlLength	: 'Value specified for the "%1" field must be a positive number with or without a valid HTML measurement unit (px or %).', // MISSING
 
 		// Put the voice-only part of the label in the span.
 		unavailable		: '%1<span class="cke_accessibility">, no disponible</span>'
@@ -206,7 +204,7 @@ CKEDITOR.lang['es'] =
 		title		: 'Propiedades de Referencia',
 		name		: 'Nombre de la Referencia',
 		errorName	: 'Por favor, complete el nombre de la Referencia',
-		remove		: 'Quitar Referencia'
+		remove		: 'Remove Anchor' // MISSING
 	},
 
 	// List style dialog
@@ -242,7 +240,6 @@ CKEDITOR.lang['es'] =
 		findWhat			: 'Texto a buscar:',
 		replaceWith			: 'Reemplazar con:',
 		notFoundMsg			: 'El texto especificado no ha sido encontrado.',
-		findOptions			: 'Opciones de búsqueda',
 		matchCase			: 'Coincidir may/min',
 		matchWord			: 'Coincidir toda la palabra',
 		matchCyclic			: 'Buscar en todo el contenido',

@@ -112,7 +112,11 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 				}
 			}
 
-			$sel.createRange().pasteHTML( data );
+			try
+			{
+				$sel.createRange().pasteHTML( data );
+			}
+			catch (e) {}
 
 			if ( selIsLocked )
 				this.getSelection().lock();
@@ -394,6 +398,8 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 					&& !pathBlock.is( 'pre' )
 					&& !pathBlock.getBogus() )
 			{
+				editor.fire( 'updateSnapshot' );
+				restoreDirty( editor );
 				pathBlock.appendBogus();
 			}
 		}
@@ -406,6 +412,10 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 				&& blockLimit.getName() == 'body'
 				&& !path.block )
 		{
+			editor.fire( 'updateSnapshot' );
+			restoreDirty( editor );
+			CKEDITOR.env.ie && restoreSelection( selection );
+
 			var fixedBlock = range.fixBlock( true,
 					editor.config.enterMode == CKEDITOR.ENTER_DIV ? 'div' : 'p'  );
 
@@ -454,6 +464,10 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 		var testPath = new CKEDITOR.dom.elementPath( testRange.startContainer );
 		if ( !testPath.blockLimit.is( 'body') )
 		{
+			editor.fire( 'updateSnapshot' );
+			restoreDirty( editor );
+			CKEDITOR.env.ie && restoreSelection( selection );
+
 			var paddingBlock;
 			if ( enterMode != CKEDITOR.ENTER_BR )
 				paddingBlock = body.append( editor.document.createElement( enterMode == CKEDITOR.ENTER_P ? 'p' : 'div' ) );
@@ -745,82 +759,80 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 						keystrokeHandler.blockedKeystrokes[ 8 ] = !editable;
 						keystrokeHandler.attach( domDocument );
 
-						domDocument.getDocumentElement().addClass( domDocument.$.compatMode );
-						// Override keystroke behaviors.
-						editable && domDocument.on( 'keydown', function( evt )
+						if ( CKEDITOR.env.ie )
 						{
-							var keyCode = evt.data.getKeystroke();
-
-							// Backspace OR Delete.
-							if ( keyCode in { 8 : 1, 46 : 1 } )
+							domDocument.getDocumentElement().addClass( domDocument.$.compatMode );
+							// Override keystrokes which should have deletion behavior
+							//  on control types in IE . (#4047)
+							editable && domDocument.on( 'keydown', function( evt )
 							{
-								var sel = editor.getSelection(),
-									selected = sel.getSelectedElement(),
-									range  = sel.getRanges()[ 0 ];
+								var keyCode = evt.data.getKeystroke();
 
-								// Override keystrokes which should have deletion behavior
-								//  on fully selected element . (#4047) (#7645)
-								if ( selected )
+								// Backspace OR Delete.
+								if ( keyCode in { 8 : 1, 46 : 1 } )
 								{
-									// Make undo snapshot.
-									editor.fire( 'saveSnapshot' );
+									var sel = editor.getSelection(),
+										control = sel.getSelectedElement();
 
-									// Delete any element that 'hasLayout' (e.g. hr,table) in IE8 will
-									// break up the selection, safely manage it here. (#4795)
-									range.moveToPosition( selected, CKEDITOR.POSITION_BEFORE_START );
-									// Remove the control manually.
-									selected.remove();
-									range.select();
-
-									editor.fire( 'saveSnapshot' );
-
-									evt.data.preventDefault();
-									return;
-								}
-							}
-						} );
-
-						// PageUp/PageDown scrolling is broken in document
-						// with standard doctype, manually fix it. (#4736)
-						if ( CKEDITOR.env.ie && domDocument.$.compatMode == 'CSS1Compat' )
-						{
-							var pageUpDownKeys = { 33 : 1, 34 : 1 };
-							domDocument.on( 'keydown', function( evt )
-							{
-								if ( evt.data.getKeystroke() in pageUpDownKeys )
-								{
-									setTimeout( function ()
+									if ( control )
 									{
-										editor.getSelection().scrollIntoView();
-									}, 0 );
+										// Make undo snapshot.
+										editor.fire( 'saveSnapshot' );
+
+										// Delete any element that 'hasLayout' (e.g. hr,table) in IE8 will
+										// break up the selection, safely manage it here. (#4795)
+										var bookmark = sel.getRanges()[ 0 ].createBookmark();
+										// Remove the control manually.
+										control.remove();
+										sel.selectBookmarks( [ bookmark ] );
+
+										editor.fire( 'saveSnapshot' );
+
+										evt.data.preventDefault();
+									}
 								}
 							} );
-						}
 
-						// Prevent IE from leaving new paragraph after deleting all contents in body. (#6966)
-						if ( CKEDITOR.env.ie && editor.config.enterMode != CKEDITOR.ENTER_P )
-						{
-							domDocument.on( 'selectionchange', function()
+							// PageUp/PageDown scrolling is broken in document
+							// with standard doctype, manually fix it. (#4736)
+							if ( domDocument.$.compatMode == 'CSS1Compat' )
 							{
-								var body = domDocument.getBody(),
-									range = editor.getSelection().getRanges()[ 0 ];
-
-								if ( body.getHtml().match( /^<p>&nbsp;<\/p>$/i )
-									&& range.startContainer.equals( body ) )
+								var pageUpDownKeys = { 33 : 1, 34 : 1 };
+								domDocument.on( 'keydown', function( evt )
 								{
-									// Avoid the ambiguity from a real user cursor position.
-									setTimeout( function ()
+									if ( evt.data.getKeystroke() in pageUpDownKeys )
 									{
-										range = editor.getSelection().getRanges()[ 0 ];
-										if ( !range.startContainer.equals ( 'body' ) )
+										setTimeout( function ()
 										{
-											body.getFirst().remove( 1 );
-											range.moveToElementEditEnd( body );
-											range.select( 1 );
-										}
-									}, 0 );
-								}
-							});
+											editor.getSelection().scrollIntoView();
+										}, 0 );
+									}
+								} );
+							}
+
+							// Prevent IE from leaving new paragraph after deleting all contents in body. (#6966)
+							editor.config.enterMode != CKEDITOR.ENTER_P
+								&& domDocument.on( 'selectionchange', function()
+								{
+									var body = domDocument.getBody(),
+										range = editor.getSelection().getRanges()[ 0 ];
+
+									if ( body.getHtml().match( /^<p>&nbsp;<\/p>$/i )
+										&& range.startContainer.equals( body ) )
+									{
+										// Avoid the ambiguity from a real user cursor position.
+										setTimeout( function ()
+										{
+											range = editor.getSelection().getRanges()[ 0 ];
+											if ( !range.startContainer.equals ( 'body' ) )
+											{
+												body.getFirst().remove( 1 );
+												range.moveToElementEditEnd( body );
+												range.select( 1 );
+											}
+										}, 0 );
+									}
+								});
 						}
 
 						// Adds the document body as a context menu target.
@@ -834,7 +846,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 								if ( fireMode )
 								{
 									editor.mode = 'wysiwyg';
-									editor.fire( 'mode', { previousMode : editor._.previousMode } );
+									editor.fire( 'mode' );
 									fireMode = false;
 								}
 
@@ -1089,7 +1101,18 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 
 								if ( isLoadingData )
 									isPendingFocus = true;
-								else if ( win )
+								// Temporary solution caused by #6025, supposed be unified by #6154.
+								else if ( CKEDITOR.env.opera && editor.document )
+								{
+									// Required for Opera when switching focus
+									// from another iframe, e.g. panels. (#6444)
+									var iframe = editor.window.$.frameElement;
+									iframe.blur(), iframe.focus();
+									editor.document.getBody().focus();
+
+									editor.selectionChange();
+								}
+								else if ( !CKEDITOR.env.opera && win )
 								{
 									// AIR needs a while to focus when moving from a link.
 									CKEDITOR.env.air ? setTimeout( function () { win.focus(); }, 0 ) : win.focus();
@@ -1102,23 +1125,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 					editor.on( 'insertElement', onInsert( doInsertElement ), null, null, 20 );
 					editor.on( 'insertText', onInsert( doInsertText ), null, null, 20 );
 					// Auto fixing on some document structure weakness to enhance usabilities. (#3190 and #3189)
-					editor.on( 'selectionChange', function( evt )
-					{
-						if ( editor.readOnly )
-							return;
-
-						var sel = editor.getSelection();
-						// Do it only when selection is not locked. (#8222)
-						if ( sel && !sel.isLocked )
-						{
-							var isDirty = editor.checkDirty();
-							editor.fire( 'saveSnapshot', { contentOnly : 1 } );
-							onSelectionChangeFixBody.call( this, evt );
-							editor.fire( 'updateSnapshot' );
-							!isDirty && editor.resetDirty();
-						}
-
-					}, null, null, 1 );
+					editor.on( 'selectionChange', onSelectionChangeFixBody, null, null, 1 );
 				});
 
 			var titleBackup;
@@ -1232,12 +1239,9 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 				{
 					// We should flag that the element was locked by our code so
 					// it'll be editable by the editor functions (#6046).
-					var readonly = element.getAttribute( 'contenteditable' ) == 'false';
-					if ( !readonly )
-					{
+					if ( !element.isReadOnly() )
 						element.data( 'cke-editable', element.hasAttribute( 'contenteditable' ) ? 'true' : '1' );
-						element.setAttribute( 'contenteditable', false );
-					}
+					element.setAttribute( 'contentEditable', false );
 				}
 			});
 

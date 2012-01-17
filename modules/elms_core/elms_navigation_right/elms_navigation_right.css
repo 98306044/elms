@@ -1,11 +1,11 @@
 /* right side blocks */
 #regions_elms_navigation_right {
   background-color:#C63;
-  width:300px;
+  width:200px;
   top:0px;
   bottom:0px;
   z-index:100;
-  right:-300px;
+  right:-200px;
   float:right;
   position:fixed;
   padding:0px;
@@ -14,7 +14,7 @@
 }
 #regions_elms_navigation_right .regions_block_title {
   padding:5px;
-  margin:300px 0px 0px -60px;
+  margin:200px 0px 0px -60px;
   -o-transform:  rotate(-90deg); /* opera specific */
   filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3); /* ie */
   -webkit-transform: rotate(-90deg);
@@ -53,19 +53,19 @@
   margin-top:510px;
 }
 /* colors for the blocks on the right */
-#regions_elms_navigation_right .regions_1 .regions_block_title, #regions_elms_navigation_right .regions_1 .regions_block_content {
+#regions_elms_navigation_right .regions_1 div {
   background-color:#FFAE00;
 }
-#regions_elms_navigation_right .regions_2 .regions_block_title, #regions_elms_navigation_right .regions_2 .regions_block_content {
+#regions_elms_navigation_right .regions_2 div {
   background-color:#0098FF;
 }
-#regions_elms_navigation_right .regions_3 .regions_block_title, #regions_elms_navigation_right .regions_3 .regions_block_content {
+#regions_elms_navigation_right .regions_3 div {
   background-color:#FF3B00;
 }
-#regions_elms_navigation_right .regions_4 .regions_block_title, #regions_elms_navigation_right .regions_4 .regions_block_content {
+#regions_elms_navigation_right .regions_4 div {
   background-color:#7FA100;
 }
-#regions_elms_navigation_right .regions_5 .regions_block_title, #regions_elms_navigation_right .regions_5 .regions_block_content {
+#regions_elms_navigation_right .regions_5 div {
   background-color:#6E00A3;
 }
 /* open / close block display */

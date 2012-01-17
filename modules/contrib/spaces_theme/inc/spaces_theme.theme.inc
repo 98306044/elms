@@ -8,9 +8,9 @@
 // helper function for group theme settings
 function _spaces_theme_theme_form($form_state, $feature = NULL) {
   //create directories just in-case of first load
-  $dir = file_create_path(file_directory_path() .'/spaces_theme_logos');
+  $dir = file_create_path(file_directory_path() .'/theme_logos');
   file_check_directory($dir,  1);
-  $dir = file_create_path(file_directory_path() .'/spaces_theme_favicons');
+  $dir = file_create_path(file_directory_path() .'/theme_favicons');
   file_check_directory($dir,  1);
   $group = og_get_group_context();
   //get local overrides from the new theme if possible
@@ -138,7 +138,7 @@ function _spaces_theme_theme_form_validate($form, &$form_state) {
     $form_state['storage']['logo'] = '';
     $form_state['storage']['favicon'] = '';
     //create the theme logo area and validate its size
-    $dir = file_create_path(file_directory_path() .'/spaces_theme_logos');
+    $dir = file_create_path(file_directory_path() .'/theme_logos');
     $is_writable = file_check_directory($dir, 1);
     if ($is_writable) {
       $validators = array(
@@ -150,7 +150,7 @@ function _spaces_theme_theme_form_validate($form, &$form_state) {
       }
     }
     //same operation but for the icon
-    $dir = file_create_path(file_directory_path() .'/spaces_theme_favicons');
+    $dir = file_create_path(file_directory_path() .'/theme_favicons');
     $is_writable = file_check_directory($dir, 1);
     if ($is_writable) {
       //this uses a validator developed for outline designer to force the image to 16x16
@@ -164,8 +164,7 @@ function _spaces_theme_theme_form_validate($form, &$form_state) {
       }
     }
     //custom css
-		if (isset($form_state['storage']['css'])) {
-    $dir = file_create_path(file_directory_path() .'/spaces_theme_custom_css');
+    $dir = file_create_path(file_directory_path() .'/theme_custom_css');
     $is_writable = file_check_directory($dir, 1);
     if ($is_writable) {
       $validators = array(
@@ -176,7 +175,6 @@ function _spaces_theme_theme_form_validate($form, &$form_state) {
         $form_state['storage']['css'] = str_replace(' ', '%20', $file->filepath);
       }
     }
-	  }
 }
 
 //theme settings submit

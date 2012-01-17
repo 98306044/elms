@@ -163,8 +163,6 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 			if ( mode == this.mode )
 				return;
 
-			this._.previousMode = this.mode;
-
 			this.fire( 'beforeModeUnload' );
 
 			var currentMode = this.getMode();
@@ -189,7 +187,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 				});
 		}
 
-		modeEditor.load( holderElement, ( typeof data ) != 'string'  ? this.getData() : data );
+		modeEditor.load( holderElement, ( typeof data ) != 'string'  ? this.getData() : data);
 	};
 
 	/**
@@ -274,5 +272,4 @@ CKEDITOR.config.editingBlock = true;
  * Fired after setting the editing mode. See also CKEDITOR.editor#beforeSetMode and CKEDITOR.editor#beforeModeUnload
  * @name CKEDITOR.editor#mode
  * @event
- * @param {String} previousMode The previous mode of the editor.
  */

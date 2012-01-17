@@ -1,3 +1,4 @@
+// $Id: README.txt,v 1.1.2.1 2010/02/09 17:10:17 ufku Exp $
 
 IMCE Crop
 http://drupal.org/project/imce_crop
