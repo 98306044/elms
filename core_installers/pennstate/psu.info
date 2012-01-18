@@ -1,0 +1,16 @@
+name = "PSU ELMS"
+description = "Enable additional modules written for Penn State integration"
+type = "add-on"
+; Penn State Specific install
+; Penn State
+dependencies[] = "activation_codes"
+dependencies[] = "ldap_value_map"
+dependencies[] = "psu_angel_integration"
+dependencies[] = "psu_elms"
+; ELMS PSU
+dependencies[] = "elms_media_helper"
+; Media needs
+dependencies[] = "jwplayermodule"
+; WebAccess
+dependencies[] = "webaccess"
+dependencies[] = "webaccess_forms"

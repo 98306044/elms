@@ -123,7 +123,12 @@ function _regions_list($theme_key = NULL) {
   }
   // Tap the stored info file for the original_regions variable.
   $info = unserialize(db_result(db_query("SELECT info FROM {system} WHERE type = 'theme' AND name = '%s'", $theme_key)));
-  $theme_regions = array_map('t', $info['original_regions']);
+	if (isset($info['original_regions'])) {
+    $theme_regions = array_map('t', $info['original_regions']);
+	}
+	else {
+		$theme_regions = array_map('t', $info['regions']);
+	}
   // Allow modules to define new regions.
   $defined_regions = module_invoke_all('define_regions');
 

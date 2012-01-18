@@ -1,0 +1,14 @@
+name = "Developer Mode"
+description = "Enable modules to help with development of the ELMS platform."
+type = "add-on"
+; ELMS Developer install
+dependencies[] = "dbtuner"
+dependencies[] = "profiler_builder"
+dependencies[] = "devel"
+dependencies[] = "bulk_export"
+; UI modules
+dependencies[] = "context_ui"
+dependencies[] = "beautytips_ui"
+dependencies[] = "views_ui"
+dependencies[] = "feeds_ui"
+dependencies[] = "imagecache_ui"

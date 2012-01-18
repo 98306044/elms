@@ -13,30 +13,45 @@ function elms_profile_details() {
 /**
  * Helper to parse info file for module set management().
  */
-function _elms_get_module_group($core_part = 'all') {
-	$filepath = "./profiles/elms/elms.info";
-  $infofile = file_get_contents($filepath);
-  $info_setup = elms_parse_info_file($infofile);
-	//if nothing was supplied, return all modules in list
-	if ($core_part == 'all') {
-		$tmp = array();
-		//flatten the array into a single list
-		foreach ($info_setup['dependencies'] as $key => $array) {
-			$tmp = array_merge($tmp, $info_setup['dependencies'][$key]);
-		}
-		return $tmp;
-	}
-	else {
-    return $info_setup['dependencies'][$core_part];
-	}
+function _elms_get_core_install_data($core_part = 'all') {
+	//build list of all info files
+  $files = _elms_get_core_install_files();
+	//if loading all we need to build all the info files
+  if ($core_part == 'all') {
+    $tmp = array();
+    //flatten all info files into one
+    foreach ($files as $key => $file) {
+			$infofile = file_get_contents($files[$key]->filename);
+      $info_setup = elms_parse_info_file($infofile);
+			$info_setup['file'] = $files[$key]->name;
+      $tmp[] = $info_setup;
+    }
+    return $tmp;
+  }
+  else {
+    //return just the info from the core piece in question
+    $infofile = file_get_contents($files[$core_part]->filename);
+    $info_setup = elms_parse_info_file($infofile);
+    return $info_setup;
+  }
 }
+/**
+ * Helper to allow for modularity in the direction the install profile shifts based on creation of new .info files
+ */
+function _elms_get_core_install_files() {
+  $dir = "./profiles/elms/core_installers";
+  $mask = '\.info$';
+  $files = file_scan_directory($dir, $mask, array('.', '..', 'CVS'), 0, TRUE, 'name', 0);
+  return $files;
+}
+
 /**
  * Implementation of hook_profile_modules().
  */
 function elms_profile_modules() {
-  $modules = _elms_get_module_group('core');
-	//print_r($modules);
-	//exit;
+	//get the core installation module set
+	$install_core = _elms_get_core_install_data('default');
+	$modules = $install_core['dependencies'];
   // If language is not English we add the 'elms_translate' module the first
   // To get some modules installed properly we need to have translations loaded
   // We also use it to check connectivity with the translation server on hook_requirements()
@@ -54,7 +69,22 @@ function elms_profile_modules() {
  * Returns an array list of elms features (and supporting) modules.
  */
 function _elms_core_modules() {
-	return _elms_get_module_group('elms_core');
+	$req_core = _elms_get_core_install_data('extended');
+	//TODO: Swap this out with user selections
+  $install_core = _elms_get_core_install_data(variable_get('install-core-installer','icms'));
+	$add_ons = variable_get('install-add-ons', array());
+	$add_on_modules = array();
+	//loop through to account for possible multiple options
+	foreach ($add_ons as $val) {
+		//if the box was checked, append it to the module lis
+		if ($val != 0) {
+		  $tmp = _elms_get_core_install_data($val);
+		  $add_on_modules = array_merge($add_on_modules, $tmp['dependencies']);
+		}
+	}
+	//merge the list of the install core with the extended core and optional add-on lists
+	$modules = array_merge($install_core['dependencies'], $req_core['dependencies'], $add_on_modules);
+	return $modules;
 }
 
 /**
@@ -117,7 +147,7 @@ function elms_profile_tasks(&$task, $url) {
       $batch['operations'][] = array('_install_module_batch', array($module, $files[$module]->info['name']));
     }    
     $batch['finished'] = '_elms_profile_batch_finished';
-    $batch['title'] = st('Installing @drupal', array('@drupal' => drupal_install_profile_name()));
+    $batch['title'] = st('Installing @drupal Base', array('@drupal' => drupal_install_profile_name()));
     $batch['error_message'] = st('The installation has encountered an error.');
 
     // Start a batch, switch to 'elms-install-modules-batch' task. We need to
@@ -188,7 +218,7 @@ function _elms_installer_configure() {
  * Configuration. Second stage.
  */
 function _elms_installer_configure_check() {
-	//final clean up stuff
+  //final clean up stuff
   _elms_role_query();
   //delete book content type
   db_query("DELETE FROM {node_type} WHERE type='book'");
@@ -206,8 +236,8 @@ function _elms_installer_configure_check() {
   _elms_contact_fields_query();
   //set default workflow states, in the future workflow states will be exportable via Features
   _elms_workflow_query();
-	//create default vocab and terms
-	_elms_vocab_query();
+  //create default vocab and terms
+  _elms_vocab_query();
   // This isn't actually necessary as there are no node_access() entries,
   // but we run it to prevent the "rebuild node access" message from being
   // shown on install.
@@ -220,22 +250,20 @@ function _elms_installer_configure_check() {
   // will run system_theme_data() without detecting themes in the install
   // profile directory.
   _elms_system_theme_data();
-	// disable all DB blocks
+  // disable all DB blocks
   db_query("UPDATE {blocks} SET status = 0, region = ''");
-	// activate all themes first
+  // activate all themes first
   db_query("UPDATE {system} SET status = 1 WHERE type = 'theme'");
-	// disable some core themes
+  // disable some core themes
   db_query("UPDATE {system} SET status = 0 WHERE type = 'theme' and name ='%s'", 'garland');
-	db_query("UPDATE {system} SET status = 0 WHERE type = 'theme' and name ='%s'", 'minnelli');
-	db_query("UPDATE {system} SET status = 0 WHERE type = 'theme' and name ='%s'", 'marvin');
-	db_query("UPDATE {system} SET status = 0 WHERE type = 'theme' and name ='%s'", 'chameleon');
-	// disable system themes by default
-	db_query("UPDATE {system} SET status = 0 WHERE type = 'theme' and name ='%s'", 'tao');
-	db_query("UPDATE {system} SET status = 0 WHERE type = 'theme' and name ='%s'", 'rubik');
+  db_query("UPDATE {system} SET status = 0 WHERE type = 'theme' and name ='%s'", 'minnelli');
+  db_query("UPDATE {system} SET status = 0 WHERE type = 'theme' and name ='%s'", 'marvin');
+  db_query("UPDATE {system} SET status = 0 WHERE type = 'theme' and name ='%s'", 'chameleon');
+  // disable system themes by default
+  db_query("UPDATE {system} SET status = 0 WHERE type = 'theme' and name ='%s'", 'tao');
+  db_query("UPDATE {system} SET status = 0 WHERE type = 'theme' and name ='%s'", 'rubik');
   variable_set('theme_default', 'cube');
-  //try rebuilding caches prior to system load
-	drupal_rebuild_theme_registry();
-	menu_rebuild();
+ 
   // In Aegir install processes, we need to init strongarm manually as a
   // separate page load isn't available to do this for us.
   if (function_exists('strongarm_init')) {
@@ -245,23 +273,25 @@ function _elms_installer_configure_check() {
   // Revert key components that are overridden by others on install.
   // Note that this comes after all other processes have run, as some cache
   // clears/rebuilds actually set variables or other settings that would count
-  // as overrides. See `og_node_type()`.
+  // as overrides. See `og_node_type()`
   $revert = array(
-	  //revert core architecture
-	  'elms_course' => array('content', 'fieldgroup'),
-		'elms_course_versions' => array('content', 'fieldgroup'),
-		//revert default features
-	  'elms_course_content' => array('content'),
-		'elms_course_resources' => array('content'),
-		'elms_id_best_practices' => array('views'),
-		//revert data passers
-		'elms_course_content_export' => array('content', 'fieldgroup'),
-		'elms_course_content_import' => array('content', 'fieldgroup'),
-		//revert nav
-	  'elms_navigation_top' => array('menu_links', 'menu_custom'),
-		'elms_navigation_left' => array('menu_links', 'menu_custom'),
+    //revert core architecture
+    'elms_course' => array('content', 'fieldgroup'),
+    'elms_course_versions' => array('content', 'fieldgroup'),
+    //revert default features
+    'elms_course_content' => array('content'),
+    'elms_course_resources' => array('content'),
+    'elms_id_best_practices' => array('views'),
+    //revert data passers
+    'elms_course_content_export' => array('content', 'fieldgroup'),
+    'elms_course_content_import' => array('content', 'fieldgroup'),
+    //revert nav
+    'elms_navigation_top' => array('menu_links', 'menu_custom'),
+    'elms_navigation_left' => array('menu_links', 'menu_custom'),
   );
-	features_revert($revert);
+  features_revert($revert);
+	//try rebuilding caches prior to system load
+	module_rebuild_cache();
 }
 
 /**
@@ -337,6 +367,40 @@ function system_form_install_select_locale_form_alter(&$form, $form_state) {
  * Alter the install profile configuration form and provide timezone location options.
  */
 function system_form_install_configure_form_alter(&$form, $form_state) {
+	//add options for core installer
+	$form['core_installer'] = array(
+	  '#type' => 'fieldset',
+		'#title' => st('Installation Options'),
+		'#collapsed' => FALSE,
+		'#collapsible' => TRUE,
+		'#description' => st('ELMS allows for the creation of many different kinds of systems.  These options are just to get you started off as far along as possible in meeting the goals of your organization.'),
+		'#weight' => -10,
+	);
+	//build list of possible installer options
+	$core_install_data = _elms_get_core_install_data();
+	foreach ($core_install_data as $key => $install_file) {
+		if ($install_file['type'] == 'installer') {
+			$installers[$install_file['file']] = $install_file['name'];
+		}
+		if ($install_file['type'] == 'add-on') {
+			$add_ons[$install_file['file']] = $install_file['name'];
+		}
+	}
+	
+	$form['core_installer']['installer'] = array(
+	  '#type' => 'select',
+		'#options' => $installers,
+		'#title' => st('Core Focus'),
+		'#description' => st('What is the core mission of this ELMS instance?'),
+		'#default_value' => 'icms',
+		'#required' => TRUE,
+	);
+	$form['core_installer']['add_ons'] = array(
+	  '#type' => 'checkboxes',
+		'#options' => $add_ons,
+		'#title' => st('Optional Add-ons'),
+		'#description' => st('Functionality to extend your instance'),
+	);
   $form['site_information']['site_name']['#default_value'] = 'ELMS';
   $form['site_information']['site_mail']['#default_value'] = 'admin@'. $_SERVER['HTTP_HOST'];
   $form['admin_account']['account']['name']['#default_value'] = 'admin';
@@ -354,6 +418,16 @@ function system_form_install_configure_form_alter(&$form, $form_state) {
       '#required' => TRUE,
     );
   }
+	$form['#submit'][] = 'elms_install_configure_form_submit';
+}
+
+/**
+ * Submit handler for the installation configure form
+ */
+function elms_install_configure_form_submit(&$form, &$form_state) {
+	//store the values selected for installer and add ons
+	variable_set('install-core-installer', $form_state['values']['installer']);
+	variable_set('install-add-ons', $form_state['values']['add_ons']);
 }
 
 /**
@@ -515,7 +589,7 @@ function _elms_profile_fields_query() {
  * Helper function to install roles with RID defaults.
  */
 function _elms_role_query() {
-  db_query("INSERT INTO {role} VALUES ('6', 'instructional designer'), ('4', 'instructor'), ('9', 'staff'), ('10', 'student'), ('8', 'teaching assistant');");	
+  db_query("INSERT INTO {role} VALUES ('6', 'instructional designer'), ('4', 'instructor'), ('9', 'staff'), ('10', 'student'), ('8', 'teaching assistant');");  
 }
 /**
  * Helper function to install workflow states.
@@ -837,7 +911,7 @@ function _elms_filter_formats_query() {
  * Helper function to set the defaults defined by better formats module.
  */
 function _elms_better_formats_defaults_query() {
-  db_query("INSERT INTO {better_formats_defaults} VALUES ('1', 'block', '0', '1', '25'), ('1', 'comment', '1', '1', '0'), ('1', 'comment/accessibility_guideline', '1', '2', '0'), ('1', 'comment/accessibility_test', '1', '2', '0'), ('1', 'comment/blog', '1', '2', '0'), ('1', 'comment/course', '0', '2', '0'), ('1', 'comment/course_event', '0', '2', '0'), ('1', 'comment/feed_reader', '1', '2', '0'), ('1', 'comment/feed_user_import', '1', '2', '0'), ('1', 'comment/folder', '1', '2', '0'), ('1', 'comment/link', '1', '2', '0'), ('1', 'comment/offering', '0', '2', '0'), ('1', 'comment/page', '0', '2', '0'), ('1', 'comment/promo', '0', '2', '0'), ('1', 'comment/reaction', '1', '2', '0'), ('1', 'comment/studio_submission', '1', '2', '0'), ('1', 'comment/version', '0', '2', '0'), ('1', 'node', '0', '1', '0'), ('1', 'node/accessibility_guideline', '0', '2', '0'), ('1', 'node/accessibility_test', '0', '2', '0'), ('1', 'node/blog', '0', '2', '0'), ('1', 'node/course', '0', '2', '0'), ('1', 'node/course_event', '0', '2', '0'), ('1', 'node/feed_reader', '0', '2', '0'), ('1', 'node/feed_user_import', '0', '2', '0'), ('1', 'node/folder', '0', '2', '0'), ('1', 'node/link', '0', '2', '0'), ('1', 'node/offering', '0', '2', '0'), ('1', 'node/page', '0', '2', '0'), ('1', 'node/promo', '0', '2', '0'), ('1', 'node/reaction', '0', '2', '0'), ('1', 'node/studio_submission', '0', '2', '0'), ('1', 'node/version', '0', '2', '0'), ('2', 'block', '0', '1', '25'), ('2', 'comment', '1', '1', '0'), ('2', 'comment/accessibility_guideline', '1', '2', '0'), ('2', 'comment/accessibility_test', '1', '2', '0'), ('2', 'comment/blog', '1', '2', '0'), ('2', 'comment/course', '0', '2', '0'), ('2', 'comment/course_event', '0', '2', '0'), ('2', 'comment/feed_reader', '1', '2', '0'), ('2', 'comment/feed_user_import', '1', '2', '0'), ('2', 'comment/folder', '1', '2', '0'), ('2', 'comment/link', '1', '2', '0'), ('2', 'comment/offering', '0', '2', '0'), ('2', 'comment/page', '0', '2', '0'), ('2', 'comment/promo', '0', '2', '0'), ('2', 'comment/reaction', '1', '2', '0'), ('2', 'comment/studio_submission', '1', '2', '0'), ('2', 'comment/version', '0', '2', '0'), ('2', 'node', '0', '1', '0'), ('2', 'node/accessibility_guideline', '0', '2', '0'), ('2', 'node/accessibility_test', '0', '2', '0'), ('2', 'node/blog', '0', '2', '0'), ('2', 'node/course', '0', '2', '0'), ('2', 'node/course_event', '0', '2', '0'), ('2', 'node/feed_reader', '0', '2', '0'), ('2', 'node/feed_user_import', '0', '2', '0'), ('2', 'node/folder', '0', '2', '0'), ('2', 'node/link', '0', '2', '0'), ('2', 'node/offering', '0', '2', '0'), ('2', 'node/page', '0', '2', '0'), ('2', 'node/promo', '0', '2', '0'), ('2', 'node/reaction', '0', '2', '0'), ('2', 'node/studio_submission', '0', '2', '0'), ('2', 'node/version', '0', '2', '0'), ('3', 'block', '2', '1', '25'), ('3', 'comment', '1', '1', '0'), ('3', 'comment/accessibility_guideline', '1', '2', '0'), ('3', 'comment/accessibility_test', '1', '2', '0'), ('3', 'comment/blog', '1', '2', '0'), ('3', 'comment/course', '0', '2', '0'), ('3', 'comment/course_event', '0', '2', '0'), ('3', 'comment/feed_reader', '1', '2', '0'), ('3', 'comment/feed_user_import', '1', '2', '0'), ('3', 'comment/folder', '1', '2', '0'), ('3', 'comment/link', '1', '2', '0'), ('3', 'comment/offering', '0', '2', '0'), ('3', 'comment/page', '0', '2', '0'), ('3', 'comment/promo', '0', '2', '0'), ('3', 'comment/reaction', '1', '2', '0'), ('3', 'comment/studio_submission', '1', '2', '0'), ('3', 'comment/version', '0', '2', '0'), ('3', 'node', '2', '1', '0'), ('3', 'node/accessibility_guideline', '2', '2', '0'), ('3', 'node/accessibility_test', '2', '2', '0'), ('3', 'node/blog', '2', '2', '0'), ('3', 'node/course', '2', '2', '0'), ('3', 'node/course_event', '0', '2', '0'), ('3', 'node/feed_reader', '2', '2', '0'), ('3', 'node/feed_user_import', '2', '2', '0'), ('3', 'node/folder', '2', '2', '0'), ('3', 'node/link', '0', '2', '0'), ('3', 'node/offering', '2', '2', '0'), ('3', 'node/page', '2', '2', '0'), ('3', 'node/promo', '2', '2', '0'), ('3', 'node/reaction', '0', '2', '0'), ('3', 'node/studio_submission', '2', '2', '0'), ('3', 'node/version', '2', '2', '0'), ('4', 'block', '2', '1', '25'), ('4', 'comment', '1', '1', '25'), ('4', 'comment/accessibility_guideline', '1', '2', '25'), ('4', 'comment/accessibility_test', '1', '2', '25'), ('4', 'comment/blog', '1', '2', '25'), ('4', 'comment/course', '0', '2', '25'), ('4', 'comment/course_event', '0', '2', '25'), ('4', 'comment/feed_reader', '1', '2', '25'), ('4', 'comment/feed_user_import', '1', '2', '25'), ('4', 'comment/folder', '1', '2', '25'), ('4', 'comment/link', '1', '2', '25'), ('4', 'comment/offering', '0', '2', '25'), ('4', 'comment/page', '0', '2', '25'), ('4', 'comment/promo', '0', '2', '25'), ('4', 'comment/reaction', '1', '2', '25'), ('4', 'comment/studio_submission', '1', '2', '25'), ('4', 'comment/version', '0', '2', '25'), ('4', 'node', '2', '1', '25'), ('4', 'node/accessibility_guideline', '2', '2', '25'), ('4', 'node/accessibility_test', '2', '2', '25'), ('4', 'node/blog', '2', '2', '25'), ('4', 'node/course', '2', '2', '25'), ('4', 'node/course_event', '0', '2', '25'), ('4', 'node/feed_reader', '2', '2', '25'), ('4', 'node/feed_user_import', '2', '2', '25'), ('4', 'node/folder', '2', '2', '25'), ('4', 'node/link', '0', '2', '25'), ('4', 'node/offering', '2', '2', '25'), ('4', 'node/page', '2', '2', '25'), ('4', 'node/promo', '2', '2', '25'), ('4', 'node/reaction', '0', '2', '25'), ('4', 'node/studio_submission', '2', '2', '25'), ('4', 'node/version', '2', '2', '25'), ('6', 'block', '2', '1', '25'), ('6', 'comment', '1', '1', '25'), ('6', 'comment/accessibility_guideline', '1', '2', '25'), ('6', 'comment/accessibility_test', '1', '2', '25'), ('6', 'comment/blog', '1', '2', '25'), ('6', 'comment/course', '0', '2', '25'), ('6', 'comment/course_event', '0', '2', '25'), ('6', 'comment/feed_reader', '1', '2', '25'), ('6', 'comment/feed_user_import', '1', '2', '25'), ('6', 'comment/folder', '1', '2', '25'), ('6', 'comment/link', '1', '2', '25'), ('6', 'comment/offering', '0', '2', '25'), ('6', 'comment/page', '0', '2', '25'), ('6', 'comment/promo', '0', '2', '25'), ('6', 'comment/reaction', '1', '2', '25'), ('6', 'comment/studio_submission', '1', '2', '25'), ('6', 'comment/version', '0', '2', '25'), ('6', 'node', '2', '1', '25'), ('6', 'node/accessibility_guideline', '2', '2', '25'), ('6', 'node/accessibility_test', '2', '2', '25'), ('6', 'node/blog', '2', '2', '25'), ('6', 'node/course', '2', '2', '25'), ('6', 'node/course_event', '0', '2', '25'), ('6', 'node/feed_reader', '2', '2', '25'), ('6', 'node/feed_user_import', '2', '2', '25'), ('6', 'node/folder', '2', '2', '25'), ('6', 'node/link', '0', '2', '25'), ('6', 'node/offering', '2', '2', '25'), ('6', 'node/page', '2', '2', '25'), ('6', 'node/promo', '2', '2', '25'), ('6', 'node/reaction', '0', '2', '25'), ('6', 'node/studio_submission', '2', '2', '25'), ('6', 'node/version', '2', '2', '25'), ('7', 'block', '0', '1', '25'), ('7', 'comment', '1', '1', '25'), ('7', 'node', '0', '1', '25'), ('8', 'block', '0', '1', '25'), ('8', 'comment', '0', '1', '25'), ('8', 'comment/accessibility_guideline', '0', '2', '25'), ('8', 'comment/accessibility_test', '0', '2', '25'), ('8', 'comment/blog', '0', '2', '25'), ('8', 'comment/course', '0', '2', '25'), ('8', 'comment/course_event', '0', '2', '25'), ('8', 'comment/feed_reader', '0', '2', '25'), ('8', 'comment/feed_user_import', '0', '2', '25'), ('8', 'comment/folder', '0', '2', '25'), ('8', 'comment/link', '0', '2', '25'), ('8', 'comment/offering', '0', '2', '25'), ('8', 'comment/page', '0', '2', '25'), ('8', 'comment/promo', '0', '2', '25'), ('8', 'comment/reaction', '0', '2', '25'), ('8', 'comment/studio_submission', '0', '2', '25'), ('8', 'comment/version', '0', '2', '25'), ('8', 'node', '0', '1', '25'), ('8', 'node/accessibility_guideline', '0', '2', '25'), ('8', 'node/accessibility_test', '0', '2', '25'), ('8', 'node/blog', '0', '2', '25'), ('8', 'node/course', '0', '2', '25'), ('8', 'node/course_event', '0', '2', '25'), ('8', 'node/feed_reader', '0', '2', '25'), ('8', 'node/feed_user_import', '0', '2', '25'), ('8', 'node/folder', '0', '2', '25'), ('8', 'node/link', '0', '2', '25'), ('8', 'node/offering', '0', '2', '25'), ('8', 'node/page', '0', '2', '25'), ('8', 'node/promo', '0', '2', '25'), ('8', 'node/reaction', '0', '2', '25'), ('8', 'node/studio_submission', '0', '2', '25'), ('8', 'node/version', '0', '2', '25'), ('10', 'block', '0', '1', '25'), ('10', 'comment', '0', '1', '25'), ('10', 'comment/accessibility_guideline', '0', '2', '25'), ('10', 'comment/accessibility_test', '0', '2', '25'), ('10', 'comment/blog', '0', '2', '25'), ('10', 'comment/course', '0', '2', '25'), ('10', 'comment/course_event', '0', '2', '25'), ('10', 'comment/feed_reader', '0', '2', '25'), ('10', 'comment/feed_user_import', '0', '2', '25'), ('10', 'comment/folder', '0', '2', '25'), ('10', 'comment/link', '0', '2', '25'), ('10', 'comment/offering', '0', '2', '25'), ('10', 'comment/page', '0', '2', '25'), ('10', 'comment/promo', '0', '2', '25'), ('10', 'comment/reaction', '0', '2', '25'), ('10', 'comment/studio_submission', '0', '2', '25'), ('10', 'comment/version', '0', '2', '25'), ('10', 'node', '0', '1', '25'), ('10', 'node/accessibility_guideline', '0', '2', '25'), ('10', 'node/accessibility_test', '0', '2', '25'), ('10', 'node/blog', '0', '2', '25'), ('10', 'node/course', '0', '2', '25'), ('10', 'node/course_event', '0', '2', '25'), ('10', 'node/feed_reader', '0', '2', '25'), ('10', 'node/feed_user_import', '0', '2', '25'), ('10', 'node/folder', '0', '2', '25'), ('10', 'node/link', '0', '2', '25'), ('10', 'node/offering', '0', '2', '25'), ('10', 'node/page', '0', '2', '25'), ('10', 'node/promo', '0', '2', '25'), ('10', 'node/reaction', '0', '2', '25'), ('10', 'node/studio_submission', '0', '2', '25'), ('10', 'node/version', '0', '2', '25')");	
+  db_query("INSERT INTO {better_formats_defaults} VALUES ('1', 'block', '0', '1', '25'), ('1', 'comment', '1', '1', '0'), ('1', 'comment/accessibility_guideline', '1', '2', '0'), ('1', 'comment/accessibility_test', '1', '2', '0'), ('1', 'comment/blog', '1', '2', '0'), ('1', 'comment/course', '0', '2', '0'), ('1', 'comment/course_event', '0', '2', '0'), ('1', 'comment/feed_reader', '1', '2', '0'), ('1', 'comment/feed_user_import', '1', '2', '0'), ('1', 'comment/folder', '1', '2', '0'), ('1', 'comment/link', '1', '2', '0'), ('1', 'comment/offering', '0', '2', '0'), ('1', 'comment/page', '0', '2', '0'), ('1', 'comment/promo', '0', '2', '0'), ('1', 'comment/reaction', '1', '2', '0'), ('1', 'comment/studio_submission', '1', '2', '0'), ('1', 'comment/version', '0', '2', '0'), ('1', 'node', '0', '1', '0'), ('1', 'node/accessibility_guideline', '0', '2', '0'), ('1', 'node/accessibility_test', '0', '2', '0'), ('1', 'node/blog', '0', '2', '0'), ('1', 'node/course', '0', '2', '0'), ('1', 'node/course_event', '0', '2', '0'), ('1', 'node/feed_reader', '0', '2', '0'), ('1', 'node/feed_user_import', '0', '2', '0'), ('1', 'node/folder', '0', '2', '0'), ('1', 'node/link', '0', '2', '0'), ('1', 'node/offering', '0', '2', '0'), ('1', 'node/page', '0', '2', '0'), ('1', 'node/promo', '0', '2', '0'), ('1', 'node/reaction', '0', '2', '0'), ('1', 'node/studio_submission', '0', '2', '0'), ('1', 'node/version', '0', '2', '0'), ('2', 'block', '0', '1', '25'), ('2', 'comment', '1', '1', '0'), ('2', 'comment/accessibility_guideline', '1', '2', '0'), ('2', 'comment/accessibility_test', '1', '2', '0'), ('2', 'comment/blog', '1', '2', '0'), ('2', 'comment/course', '0', '2', '0'), ('2', 'comment/course_event', '0', '2', '0'), ('2', 'comment/feed_reader', '1', '2', '0'), ('2', 'comment/feed_user_import', '1', '2', '0'), ('2', 'comment/folder', '1', '2', '0'), ('2', 'comment/link', '1', '2', '0'), ('2', 'comment/offering', '0', '2', '0'), ('2', 'comment/page', '0', '2', '0'), ('2', 'comment/promo', '0', '2', '0'), ('2', 'comment/reaction', '1', '2', '0'), ('2', 'comment/studio_submission', '1', '2', '0'), ('2', 'comment/version', '0', '2', '0'), ('2', 'node', '0', '1', '0'), ('2', 'node/accessibility_guideline', '0', '2', '0'), ('2', 'node/accessibility_test', '0', '2', '0'), ('2', 'node/blog', '0', '2', '0'), ('2', 'node/course', '0', '2', '0'), ('2', 'node/course_event', '0', '2', '0'), ('2', 'node/feed_reader', '0', '2', '0'), ('2', 'node/feed_user_import', '0', '2', '0'), ('2', 'node/folder', '0', '2', '0'), ('2', 'node/link', '0', '2', '0'), ('2', 'node/offering', '0', '2', '0'), ('2', 'node/page', '0', '2', '0'), ('2', 'node/promo', '0', '2', '0'), ('2', 'node/reaction', '0', '2', '0'), ('2', 'node/studio_submission', '0', '2', '0'), ('2', 'node/version', '0', '2', '0'), ('3', 'block', '2', '1', '25'), ('3', 'comment', '1', '1', '0'), ('3', 'comment/accessibility_guideline', '1', '2', '0'), ('3', 'comment/accessibility_test', '1', '2', '0'), ('3', 'comment/blog', '1', '2', '0'), ('3', 'comment/course', '0', '2', '0'), ('3', 'comment/course_event', '0', '2', '0'), ('3', 'comment/feed_reader', '1', '2', '0'), ('3', 'comment/feed_user_import', '1', '2', '0'), ('3', 'comment/folder', '1', '2', '0'), ('3', 'comment/link', '1', '2', '0'), ('3', 'comment/offering', '0', '2', '0'), ('3', 'comment/page', '0', '2', '0'), ('3', 'comment/promo', '0', '2', '0'), ('3', 'comment/reaction', '1', '2', '0'), ('3', 'comment/studio_submission', '1', '2', '0'), ('3', 'comment/version', '0', '2', '0'), ('3', 'node', '2', '1', '0'), ('3', 'node/accessibility_guideline', '2', '2', '0'), ('3', 'node/accessibility_test', '2', '2', '0'), ('3', 'node/blog', '2', '2', '0'), ('3', 'node/course', '2', '2', '0'), ('3', 'node/course_event', '0', '2', '0'), ('3', 'node/feed_reader', '2', '2', '0'), ('3', 'node/feed_user_import', '2', '2', '0'), ('3', 'node/folder', '2', '2', '0'), ('3', 'node/link', '0', '2', '0'), ('3', 'node/offering', '2', '2', '0'), ('3', 'node/page', '2', '2', '0'), ('3', 'node/promo', '2', '2', '0'), ('3', 'node/reaction', '0', '2', '0'), ('3', 'node/studio_submission', '2', '2', '0'), ('3', 'node/version', '2', '2', '0'), ('4', 'block', '2', '1', '25'), ('4', 'comment', '1', '1', '25'), ('4', 'comment/accessibility_guideline', '1', '2', '25'), ('4', 'comment/accessibility_test', '1', '2', '25'), ('4', 'comment/blog', '1', '2', '25'), ('4', 'comment/course', '0', '2', '25'), ('4', 'comment/course_event', '0', '2', '25'), ('4', 'comment/feed_reader', '1', '2', '25'), ('4', 'comment/feed_user_import', '1', '2', '25'), ('4', 'comment/folder', '1', '2', '25'), ('4', 'comment/link', '1', '2', '25'), ('4', 'comment/offering', '0', '2', '25'), ('4', 'comment/page', '0', '2', '25'), ('4', 'comment/promo', '0', '2', '25'), ('4', 'comment/reaction', '1', '2', '25'), ('4', 'comment/studio_submission', '1', '2', '25'), ('4', 'comment/version', '0', '2', '25'), ('4', 'node', '2', '1', '25'), ('4', 'node/accessibility_guideline', '2', '2', '25'), ('4', 'node/accessibility_test', '2', '2', '25'), ('4', 'node/blog', '2', '2', '25'), ('4', 'node/course', '2', '2', '25'), ('4', 'node/course_event', '0', '2', '25'), ('4', 'node/feed_reader', '2', '2', '25'), ('4', 'node/feed_user_import', '2', '2', '25'), ('4', 'node/folder', '2', '2', '25'), ('4', 'node/link', '0', '2', '25'), ('4', 'node/offering', '2', '2', '25'), ('4', 'node/page', '2', '2', '25'), ('4', 'node/promo', '2', '2', '25'), ('4', 'node/reaction', '0', '2', '25'), ('4', 'node/studio_submission', '2', '2', '25'), ('4', 'node/version', '2', '2', '25'), ('6', 'block', '2', '1', '25'), ('6', 'comment', '1', '1', '25'), ('6', 'comment/accessibility_guideline', '1', '2', '25'), ('6', 'comment/accessibility_test', '1', '2', '25'), ('6', 'comment/blog', '1', '2', '25'), ('6', 'comment/course', '0', '2', '25'), ('6', 'comment/course_event', '0', '2', '25'), ('6', 'comment/feed_reader', '1', '2', '25'), ('6', 'comment/feed_user_import', '1', '2', '25'), ('6', 'comment/folder', '1', '2', '25'), ('6', 'comment/link', '1', '2', '25'), ('6', 'comment/offering', '0', '2', '25'), ('6', 'comment/page', '0', '2', '25'), ('6', 'comment/promo', '0', '2', '25'), ('6', 'comment/reaction', '1', '2', '25'), ('6', 'comment/studio_submission', '1', '2', '25'), ('6', 'comment/version', '0', '2', '25'), ('6', 'node', '2', '1', '25'), ('6', 'node/accessibility_guideline', '2', '2', '25'), ('6', 'node/accessibility_test', '2', '2', '25'), ('6', 'node/blog', '2', '2', '25'), ('6', 'node/course', '2', '2', '25'), ('6', 'node/course_event', '0', '2', '25'), ('6', 'node/feed_reader', '2', '2', '25'), ('6', 'node/feed_user_import', '2', '2', '25'), ('6', 'node/folder', '2', '2', '25'), ('6', 'node/link', '0', '2', '25'), ('6', 'node/offering', '2', '2', '25'), ('6', 'node/page', '2', '2', '25'), ('6', 'node/promo', '2', '2', '25'), ('6', 'node/reaction', '0', '2', '25'), ('6', 'node/studio_submission', '2', '2', '25'), ('6', 'node/version', '2', '2', '25'), ('7', 'block', '0', '1', '25'), ('7', 'comment', '1', '1', '25'), ('7', 'node', '0', '1', '25'), ('8', 'block', '0', '1', '25'), ('8', 'comment', '0', '1', '25'), ('8', 'comment/accessibility_guideline', '0', '2', '25'), ('8', 'comment/accessibility_test', '0', '2', '25'), ('8', 'comment/blog', '0', '2', '25'), ('8', 'comment/course', '0', '2', '25'), ('8', 'comment/course_event', '0', '2', '25'), ('8', 'comment/feed_reader', '0', '2', '25'), ('8', 'comment/feed_user_import', '0', '2', '25'), ('8', 'comment/folder', '0', '2', '25'), ('8', 'comment/link', '0', '2', '25'), ('8', 'comment/offering', '0', '2', '25'), ('8', 'comment/page', '0', '2', '25'), ('8', 'comment/promo', '0', '2', '25'), ('8', 'comment/reaction', '0', '2', '25'), ('8', 'comment/studio_submission', '0', '2', '25'), ('8', 'comment/version', '0', '2', '25'), ('8', 'node', '0', '1', '25'), ('8', 'node/accessibility_guideline', '0', '2', '25'), ('8', 'node/accessibility_test', '0', '2', '25'), ('8', 'node/blog', '0', '2', '25'), ('8', 'node/course', '0', '2', '25'), ('8', 'node/course_event', '0', '2', '25'), ('8', 'node/feed_reader', '0', '2', '25'), ('8', 'node/feed_user_import', '0', '2', '25'), ('8', 'node/folder', '0', '2', '25'), ('8', 'node/link', '0', '2', '25'), ('8', 'node/offering', '0', '2', '25'), ('8', 'node/page', '0', '2', '25'), ('8', 'node/promo', '0', '2', '25'), ('8', 'node/reaction', '0', '2', '25'), ('8', 'node/studio_submission', '0', '2', '25'), ('8', 'node/version', '0', '2', '25'), ('10', 'block', '0', '1', '25'), ('10', 'comment', '0', '1', '25'), ('10', 'comment/accessibility_guideline', '0', '2', '25'), ('10', 'comment/accessibility_test', '0', '2', '25'), ('10', 'comment/blog', '0', '2', '25'), ('10', 'comment/course', '0', '2', '25'), ('10', 'comment/course_event', '0', '2', '25'), ('10', 'comment/feed_reader', '0', '2', '25'), ('10', 'comment/feed_user_import', '0', '2', '25'), ('10', 'comment/folder', '0', '2', '25'), ('10', 'comment/link', '0', '2', '25'), ('10', 'comment/offering', '0', '2', '25'), ('10', 'comment/page', '0', '2', '25'), ('10', 'comment/promo', '0', '2', '25'), ('10', 'comment/reaction', '0', '2', '25'), ('10', 'comment/studio_submission', '0', '2', '25'), ('10', 'comment/version', '0', '2', '25'), ('10', 'node', '0', '1', '25'), ('10', 'node/accessibility_guideline', '0', '2', '25'), ('10', 'node/accessibility_test', '0', '2', '25'), ('10', 'node/blog', '0', '2', '25'), ('10', 'node/course', '0', '2', '25'), ('10', 'node/course_event', '0', '2', '25'), ('10', 'node/feed_reader', '0', '2', '25'), ('10', 'node/feed_user_import', '0', '2', '25'), ('10', 'node/folder', '0', '2', '25'), ('10', 'node/link', '0', '2', '25'), ('10', 'node/offering', '0', '2', '25'), ('10', 'node/page', '0', '2', '25'), ('10', 'node/promo', '0', '2', '25'), ('10', 'node/reaction', '0', '2', '25'), ('10', 'node/studio_submission', '0', '2', '25'), ('10', 'node/version', '0', '2', '25')");  
 }
 
 /**
@@ -851,12 +925,12 @@ function _elms_filters_query() {
  * Helper function to install default vocabulary.
  */
 function _elms_vocab_query() {
-	//create vocab as first item
+  //create vocab as first item
   db_query("INSERT INTO {vocabulary} VALUES ('1', 'Academic Unit', 'Academic Unit that is offering this course', 'Choose the Academic Unit offering this course', '1', '0', '0', '1', '0', 'features_academicunit', '0')");
-	//populate hierarchy
-	db_query("INSERT INTO {vocabulary_node_types} VALUES ('1', 'course')");
-	//populate terms
-	db_query("INSERT INTO {term_data} VALUES ('1', '1', 'Department 1', '', '0'), ('2', '1', 'Department 4', '', '1'), ('3', '1', 'Department 3', '', '2'), ('4', '1', 'Department 4', '', '3')");
-	//populate hierarchy
-	db_query("INSERT INTO {term_hierarchy} VALUES ('1', '0'), ('2', '0'), ('3', '0'), ('4', '0')");
+  //populate hierarchy
+  db_query("INSERT INTO {vocabulary_node_types} VALUES ('1', 'course')");
+  //populate terms
+  db_query("INSERT INTO {term_data} VALUES ('1', '1', 'Department 1', '', '0'), ('2', '1', 'Department 4', '', '1'), ('3', '1', 'Department 3', '', '2'), ('4', '1', 'Department 4', '', '3')");
+  //populate hierarchy
+  db_query("INSERT INTO {term_hierarchy} VALUES ('1', '0'), ('2', '0'), ('3', '0'), ('4', '0')");
 }
