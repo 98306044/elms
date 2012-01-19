@@ -3,7 +3,51 @@
 /**
  * Implementation of hook_install().
  */
-function elms_icms_install() {     
-  //change the weight so that alters fire after others
-  db_query("INSERT INTO {spaces_presets} VALUES ('og_private', 'Private group', 'Only members will be able to access this group. Membership is strictly managed by admins.', 'og', 'a:2:{s:8:\"variable\";a:8:{s:15:\"spaces_features\";a:2:{s:19:\"elms_course_content\";s:1:\"1\";s:22:\"elms_id_best_practices\";s:1:\"1\";}s:16:\"spaces_preset_og\";s:10:\"og_private\";s:19:\"spaces_og_selective\";s:1:\"3\";s:18:\"spaces_og_register\";i:0;s:19:\"spaces_og_directory\";i:0;s:17:\"spaces_og_private\";i:1;s:14:\"site_frontpage\";s:16:\"spaces-frontpage\";s:19:\"site_frontpage_path\";s:16:\"spaces-frontpage\";}s:7:\"context\";a:0:{}}'), ('og_public', 'Public group', 'All users may view public content from this group. User may join this group at will.', 'og', 'a:1:{s:8:\"variable\";a:7:{s:15:\"spaces_features\";a:2:{s:19:\"elms_course_content\";s:1:\"1\";s:22:\"elms_id_best_practices\";s:1:\"1\";}s:19:\"spaces_og_selective\";s:1:\"0\";s:18:\"spaces_og_register\";i:1;s:19:\"spaces_og_directory\";i:1;s:17:\"spaces_og_private\";i:0;s:14:\"site_frontpage\";s:16:\"spaces-frontpage\";s:19:\"site_frontpage_path\";s:7:\"courses\";}}'");
+function elms_icms_install() { 
+  //install the default settings for public and private
+  $ary = array(
+    'name' => 'og_private', 
+	  'title' => 'Private group',
+	  'description' => 'Only members will be able to access this group. Membership is strictly managed by admins.',
+	  'space_type' => 'og',
+	  'value' => array(
+      'variable' => array(
+      'spaces_features' => array(
+        'elms_course_content' => 1,
+        'elms_id_best_practices' => 1,
+      ),
+      'spaces_preset_og' => 'og_private',
+      'spaces_og_selective' => 3,
+      'spaces_og_register' => 0,
+      'spaces_og_directory' => 0,
+      'spaces_og_private' => 1,
+      'site_frontpage' => 'spaces-frontpage',
+      'site_frontpage_path' => 'spaces-frontpage',
+    ),
+    'context' => array(),
+    )
+	);
+  drupal_write_record('spaces_presets', $ary);
+  $ary = array(
+    'name' => 'og_public', 
+	  'title' => 'Public group',
+	  'description' => 'All users may view public content from this group. User may join this group at will.',
+	  'space_type' => 'og',
+	  'value' => array(
+      'variable' => array(
+        'spaces_features' => array(
+          'elms_course_content' => 1,
+          'elms_id_best_practices' => 1,
+        ),
+        'spaces_og_selective' => 0,
+        'spaces_og_register' => 1,
+        'spaces_og_directory' => 1,
+        'spaces_og_private' => 0,
+        'site_frontpage' => 'spaces-frontpage',
+        'site_frontpage_path' => 'spaces-frontpage',
+      ),
+      'context' => array(),
+    )
+	);
+  drupal_write_record('spaces_presets', $ary);              
 }

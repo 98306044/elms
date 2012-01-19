@@ -15,83 +15,6 @@ function elms_icms_strongarm() {
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'accessibility_guideline_course_resource';
-  $strongarm->value = '1392';
-  $strongarms['accessibility_guideline_course_resource'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'accessibility_guideline_folder';
-  $strongarm->value = '1392';
-  $strongarms['accessibility_guideline_folder'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'accessibility_guideline_page';
-  $strongarm->value = '1392';
-  $strongarms['accessibility_guideline_page'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'accessible_content_guidelines_created';
-  $strongarm->value = TRUE;
-  $strongarms['accessible_content_guidelines_created'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'accessible_content_path';
-  $strongarm->value = 'sites/all/libraries';
-  $strongarms['accessible_content_path'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'acquia_agent_verify_peer';
-  $strongarm->value = '1';
-  $strongarms['acquia_agent_verify_peer'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'acquia_spi_admin_priv';
-  $strongarm->value = '1';
-  $strongarms['acquia_spi_admin_priv'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'acquia_spi_module_diff_data';
-  $strongarm->value = '1';
-  $strongarms['acquia_spi_module_diff_data'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'acquia_spi_module_rebuild';
-  $strongarm->value = 1322599055;
-  $strongarms['acquia_spi_module_rebuild'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'acquia_spi_send_node_user';
-  $strongarm->value = '1';
-  $strongarms['acquia_spi_send_node_user'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'acquia_spi_send_watchdog';
-  $strongarm->value = '1';
-  $strongarms['acquia_spi_send_watchdog'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'ac_after_filter_course_resource';
   $strongarm->value = 1;
   $strongarms['ac_after_filter_course_resource'] = $strongarm;
@@ -2051,52 +1974,6 @@ Technical Information
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'course_resource_accessibility_guideline_nid';
-  $strongarm->value = '1392';
-  $strongarms['course_resource_accessibility_guideline_nid'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'course_resource_ac_after_filter';
-  $strongarm->value = 1;
-  $strongarms['course_resource_ac_after_filter'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'course_resource_ac_display_level';
-  $strongarm->value = array(
-    1 => 1,
-    2 => 2,
-    3 => 3,
-  );
-  $strongarms['course_resource_ac_display_level'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'course_resource_ac_enable';
-  $strongarm->value = 1;
-  $strongarms['course_resource_ac_enable'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'course_resource_ac_fail';
-  $strongarm->value = 1;
-  $strongarms['course_resource_ac_fail'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'course_resource_ac_ignore_cms_off';
-  $strongarm->value = 1;
-  $strongarms['course_resource_ac_ignore_cms_off'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'cron_last';
   $strongarm->value = 1326826869;
   $strongarms['cron_last'] = $strongarm;
@@ -3197,52 +3074,6 @@ if (isset($node->nid)) {
     'bookmarks' => '1',
   );
   $strongarms['flag_default_flag_status'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'folder_accessibility_guideline_nid';
-  $strongarm->value = '1392';
-  $strongarms['folder_accessibility_guideline_nid'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'folder_ac_after_filter';
-  $strongarm->value = 1;
-  $strongarms['folder_ac_after_filter'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'folder_ac_display_level';
-  $strongarm->value = array(
-    1 => 1,
-    2 => 2,
-    3 => 3,
-  );
-  $strongarms['folder_ac_display_level'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'folder_ac_enable';
-  $strongarm->value = 1;
-  $strongarms['folder_ac_enable'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'folder_ac_fail';
-  $strongarm->value = 1;
-  $strongarms['folder_ac_fail'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'folder_ac_ignore_cms_off';
-  $strongarm->value = 1;
-  $strongarms['folder_ac_ignore_cms_off'] = $strongarm;
 
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -5784,52 +5615,6 @@ Personal message from @username:
   $strongarm->name = 'outline_designer_version_icon';
   $strongarm->value = '';
   $strongarms['outline_designer_version_icon'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'page_accessibility_guideline_nid';
-  $strongarm->value = '1392';
-  $strongarms['page_accessibility_guideline_nid'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'page_ac_after_filter';
-  $strongarm->value = 1;
-  $strongarms['page_ac_after_filter'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'page_ac_display_level';
-  $strongarm->value = array(
-    1 => 1,
-    2 => 2,
-    3 => 3,
-  );
-  $strongarms['page_ac_display_level'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'page_ac_enable';
-  $strongarm->value = 1;
-  $strongarms['page_ac_enable'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'page_ac_fail';
-  $strongarm->value = 1;
-  $strongarms['page_ac_fail'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'page_ac_ignore_cms_off';
-  $strongarm->value = 1;
-  $strongarms['page_ac_ignore_cms_off'] = $strongarm;
 
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */

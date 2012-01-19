@@ -293,6 +293,22 @@ function _elms_installer_configure() {
  * Configuration. Second stage.
  */
 function _elms_installer_configure_check() {
+	//accessibility cleanup
+	$guidelines = _elms_get_guidelines();
+	//find the node created based on the spec requested
+	$guide_nid = db_result(db_query("SELECT nid FROM {node} WHERE type='%s' AND title='%s'", 'accessibility_guideline', $guidelines[variable_get('install-accessibility-guideline', 'wcag2aa')]));
+	//associate known content types to this guideline and set defaults
+	$types = node_get_types();
+	foreach ($types as $key => $type) {
+	  variable_set($key .'_course_resource', $guide_nid);
+	  variable_set($key .'_accessibility_guideline_nid', $guide_nid);
+	  variable_set($key .'_ac_after_filter', 1);
+    variable_set($key .'_ac_display_level', array(1 => 1, 2 => 2, 3 => 3));
+    variable_set($key .'_ac_enable', 1);
+    variable_set($key .'_ac_fail', 1);
+		variable_set($key .'_ac_ignore_cms_off', 1);
+	}
+
   //final clean up stuff
   _elms_role_query();
   //delete book content type
@@ -367,6 +383,7 @@ function _elms_installer_configure_check() {
   features_revert($revert);
 	//try rebuilding caches prior to system load
 	module_rebuild_cache();
+	drupal_set_message(st('Welcome to your new ELMS system!'));
 }
 
 /**
@@ -507,6 +524,24 @@ function system_form_install_configure_form_alter(&$form, $form_state) {
 		'#title' => st('Optional Add-ons'),
 		'#description' => st('Functionality to extend your instance'),
 	);
+	//accessibility
+	$guidelines = _elms_get_guidelines();
+	$form['accessibility'] = array(
+	  '#type' => 'fieldset',
+		'#title' => st('Accessibility'),
+		'#collapsed' => FALSE,
+		'#collapsible' => TRUE,
+		'#description' => st('ELMS helps your organization adhere to accessibility guidelines.'),
+		'#weight' => -9,
+	);
+	$form['accessibility']['guideline'] = array(
+	  '#type' => 'select',
+		'#options' => $guidelines,
+		'#title' => st('Accessibility Guideline'),
+		'#description' => st('Which guideline would you like to ensure content respects?'),
+		'#default_value' => 'wcag2aa',
+		'#required' => TRUE,
+	);
 	$form['site_information']['#collapsible'] = TRUE;
   $form['site_information']['site_name']['#default_value'] = 'ELMS';
   $form['site_information']['site_mail']['#default_value'] = 'admin@'. $_SERVER['HTTP_HOST'];
@@ -537,6 +572,7 @@ function elms_install_configure_form_submit(&$form, &$form_state) {
 	//store the values selected for installer and add ons
 	variable_set('install-core-installer', $form_state['values']['installer']);
 	variable_set('install-add-ons', $form_state['values']['add_ons']);
+	variable_set('install-accessibility-guideline', $form_state['values']['guideline']);
 }
 
 /**
@@ -1042,4 +1078,17 @@ function _elms_vocab_query() {
   db_query("INSERT INTO {term_data} VALUES ('1', '1', 'Department 1', '', '0'), ('2', '1', 'Department 4', '', '1'), ('3', '1', 'Department 3', '', '2'), ('4', '1', 'Department 4', '', '3')");
   //populate hierarchy
   db_query("INSERT INTO {term_hierarchy} VALUES ('1', '0'), ('2', '0'), ('3', '0'), ('4', '0')");
+}
+
+//helper for guidelines
+function _elms_get_guidelines() {
+	return array(
+	  '508' => 'Section 508',
+		'wcag1a' => 'WCAG 1.0 (A)',
+		'wcag1aa' => 'WCAG 1.0 (AA)',
+		'wcag1aaa' => 'WCAG 1.0 (AAA)',
+		'wcag2a' => 'WCAG 2.0 (A)',
+		'wcag2aa' => 'WCAG 2.0 (AA)',
+		'wcag2aaa' => 'WCAG 2.0 (AAA)',
+	);
 }

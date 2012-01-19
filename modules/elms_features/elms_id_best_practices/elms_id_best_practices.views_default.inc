@@ -309,7 +309,7 @@ function elms_id_best_practices_views_default_views() {
     'type' => 'normal',
     'title' => 'Applications',
     'description' => 'List of all Course Applications',
-    'weight' => '0',
+    'weight' => '-46',
     'name' => 'menu-usermenu',
   ));
   $handler->override_option('tab_options', array(
