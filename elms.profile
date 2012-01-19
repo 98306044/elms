@@ -68,23 +68,34 @@ function elms_profile_modules() {
 /**
  * Returns an array list of elms features (and supporting) modules.
  */
-function _elms_core_modules() {
+function _elms_extended_modules() {
 	$req_core = _elms_get_core_install_data('extended');
-	//TODO: Swap this out with user selections
+  return $req_core['dependencies'];
+}
+
+/**
+ * Returns an array list of modules based on the core focus selected
+ */
+function _elms_core_focus_modules() {
   $install_core = _elms_get_core_install_data(variable_get('install-core-installer','icms'));
+	return $install_core['dependencies'];
+}
+
+/**
+ * Returns an array list of add on modules to install
+ */
+function _elms_add_ons_modules() {
 	$add_ons = variable_get('install-add-ons', array());
 	$add_on_modules = array();
 	//loop through to account for possible multiple options
 	foreach ($add_ons as $val) {
 		//if the box was checked, append it to the module lis
-		if ($val != 0) {
+		if ($val != '0') {
 		  $tmp = _elms_get_core_install_data($val);
 		  $add_on_modules = array_merge($add_on_modules, $tmp['dependencies']);
 		}
 	}
-	//merge the list of the install core with the extended core and optional add-on lists
-	$modules = array_merge($install_core['dependencies'], $req_core['dependencies'], $add_on_modules);
-	return $modules;
+	return $add_on_modules;
 }
 
 /**
@@ -94,8 +105,11 @@ function elms_profile_task_list() {
   if (_elms_language_selected()) {
     $tasks['elms-install-translation-batch'] = st('Download and import translation');
   }
-  $tasks['elms-install-modules-batch'] = st('Install Profile modules');
-  $tasks['elms-install-configure-batch'] = st('Configure Defaults');
+  $tasks['elms-install-modules-batch'] = st('Install ELMS');
+  $tasks['elms-install-modules-2-batch'] = st('Install Core Focus');
+	$tasks['elms-install-modules-3-batch'] = st('Install Add Ons');
+	$tasks['elms-install-ac-batch'] = st('Configure Accessibility');
+	$tasks['elms-install-configure-batch'] = st('Finalize Configuration');
   return $tasks;
 }
 
@@ -133,20 +147,20 @@ function elms_profile_tasks(&$task, $url) {
   }
 
   // We are running a batch task for this profile so basically do nothing and return page
-  if (in_array($task, array('elms-install-modules-batch', 'elms-install-translation-batch', 'elms-install-configure-batch'))) {
+  if (in_array($task, array('elms-install-modules-batch', 'elms-install-modules-2-batch', 'elms-install-modules-3-batch', 'elms-install-translation-batch', 'elms-install-ac-batch', 'elms-install-configure-batch'))) {
     include_once 'includes/batch.inc';
     $output = _batch_page();
   }
   
   // Install some more modules and maybe localization helpers too
   if ($task == 'elms-install-modules') {
-    $modules = _elms_core_modules();
+    $modules = _elms_extended_modules();
     $files = module_rebuild_cache();
     // Create batch
     foreach ($modules as $module) {
       $batch['operations'][] = array('_install_module_batch', array($module, $files[$module]->info['name']));
     }    
-    $batch['finished'] = '_elms_profile_batch_finished';
+    $batch['finished'] = '_elms_module_batch_1_finished';
     $batch['title'] = st('Installing @drupal Base', array('@drupal' => drupal_install_profile_name()));
     $batch['error_message'] = st('The installation has encountered an error.');
 
@@ -158,12 +172,73 @@ function elms_profile_tasks(&$task, $url) {
     // Jut for cli installs. We'll never reach here on interactive installs.
     return;
   }
-
+	// Install some more modules
+  if ($task == 'elms-install-modules-2') {
+    $modules = _elms_core_focus_modules();
+    $files = module_rebuild_cache();
+    // Create batch
+    foreach ($modules as $module) {
+      $batch['operations'][] = array('_install_module_batch', array($module, $files[$module]->info['name']));
+    }    
+    $batch['finished'] = '_elms_module_batch_2_finished';
+    $batch['title'] = st('Install Core Focus');
+    $batch['error_message'] = st('The installation has encountered an error.');
+		
+    // Start a batch, switch to 'elms-install-modules-batch' task. We need to
+    // set the variable here, because batch_process() redirects.
+    variable_set('install_task', 'elms-install-modules-2-batch');
+    batch_set($batch);
+    batch_process($url, $url);
+    // Jut for cli installs. We'll never reach here on interactive installs.
+    return;
+  }
+	
+	// Install some more modules
+  if ($task == 'elms-install-modules-3') {
+    $modules = _elms_add_ons_modules();
+    $files = module_rebuild_cache();
+    // Create batch
+    foreach ($modules as $module) {
+      $batch['operations'][] = array('_install_module_batch', array($module, $files[$module]->info['name']));
+    }    
+    $batch['finished'] = '_elms_module_batch_3_finished';
+    $batch['title'] = st('Install Add Ons');
+    $batch['error_message'] = st('The installation has encountered an error.');
+		
+    // Start a batch, switch to 'elms-install-modules-batch' task. We need to
+    // set the variable here, because batch_process() redirects.
+    variable_set('install_task', 'elms-install-modules-3-batch');
+    batch_set($batch);
+    batch_process($url, $url);
+    // Jut for cli installs. We'll never reach here on interactive installs.
+    return;
+  }
+  // install accessible content node structure
+  if ($task == 'elms-install-ac') {
+    $batch = array(
+    'title' => st('Configure Accessibility'),
+    'operations' => array(
+      array('accessible_content_admin_update_tests_form_operation', array()),
+      array('accessible_cotnent_admin_install_guidelines_form_operation', array()),
+    ),
+    'finished' => '_elms_install_ac_finished',
+    'file' => drupal_get_path('module', 'accessible_content') .'/accessible_content.admin.inc',
+		'error_message' => st('The installation has encountered an error.'),
+  );   
+    // Start a batch, switch to 'elms-install-modules-batch' task. We need to
+    // set the variable here, because batch_process() redirects.
+    variable_set('install_task', 'elms-install-ac-batch');
+    batch_set($batch);
+    batch_process($url, $url);
+    // Jut for cli installs. We'll never reach here on interactive installs.
+    return;
+  }
+	
   // Run additional configuration tasks
   // @todo Review all the cache/rebuild options at the end, some of them may not be needed
   // @todo Review for localization, the time zone cannot be set that way either
   if ($task == 'elms-install-configure') {
-    $batch['title'] = st('Configuring @drupal', array('@drupal' => drupal_install_profile_name()));
+    $batch['title'] = st('Finalize Configuration');
     $batch['operations'][] = array('_elms_installer_configure', array());
     $batch['operations'][] = array('_elms_installer_configure_check', array());
     $batch['finished'] = '_elms_installer_configure_finished';
@@ -172,7 +247,7 @@ function elms_profile_tasks(&$task, $url) {
     batch_process($url, $url);
     // Jut for cli installs. We'll never reach here on interactive installs.
     return;
-  }  
+  }
 
   return $output;
 }
@@ -292,6 +367,22 @@ function _elms_installer_configure_check() {
   features_revert($revert);
 	//try rebuilding caches prior to system load
 	module_rebuild_cache();
+	//fake a render of the modules page to trigger caches
+	$return = menu_execute_active_handler('admin/build/modules');
+  // Print any value (including an empty string) except NULL or undefined:
+  theme('page', $return);
+  drupal_page_footer();
+  //kill all error messages that may have created
+	$msgtrap = drupal_get_messages();
+}
+
+/**
+ * Finished callback for the modules install batch.
+ *
+ * Advance installer task to language import.
+ */
+function _elms_install_ac_finished($success, $results) {
+  variable_set('install_task', 'elms-install-configure');
 }
 
 /**
@@ -318,8 +409,26 @@ function _elms_installer_configure_finished($success, $results) {
  *
  * Advance installer task to language import.
  */
-function _elms_profile_batch_finished($success, $results) {
-  variable_set('install_task', 'elms-install-configure');
+function _elms_module_batch_1_finished($success, $results) {
+  variable_set('install_task', 'elms-install-modules-2');
+}
+
+/**
+ * Finished callback for the modules install batch.
+ *
+ * Advance installer task to language import.
+ */
+function _elms_module_batch_2_finished($success, $results) {
+  variable_set('install_task', 'elms-install-modules-3');
+}
+
+/**
+ * Finished callback for the modules install batch.
+ *
+ * Advance installer task to language import.
+ */
+function _elms_module_batch_3_finished($success, $results) {
+  variable_set('install_task', 'elms-install-ac');
 }
 
 /**
@@ -401,20 +510,23 @@ function system_form_install_configure_form_alter(&$form, $form_state) {
 		'#title' => st('Optional Add-ons'),
 		'#description' => st('Functionality to extend your instance'),
 	);
+	$form['site_information']['#collapsible'] = TRUE;
   $form['site_information']['site_name']['#default_value'] = 'ELMS';
   $form['site_information']['site_mail']['#default_value'] = 'admin@'. $_SERVER['HTTP_HOST'];
+	$form['admin_account']['#collapsible'] = TRUE;
   $form['admin_account']['account']['name']['#default_value'] = 'admin';
   $form['admin_account']['account']['mail']['#default_value'] = 'admin@'. $_SERVER['HTTP_HOST'];
 
+  $form['server_settings']['#collapsible'] = TRUE;
   if (function_exists('date_timezone_names') && function_exists('date_timezone_update_site')) {
     $form['server_settings']['date_default_timezone']['#access'] = FALSE;
     $form['server_settings']['#element_validate'] = array('date_timezone_update_site');
     $form['server_settings']['date_default_timezone_name'] = array(
       '#type' => 'select',
-      '#title' => t('Default time zone'),
+      '#title' => st('Default time zone'),
       '#default_value' => NULL,
       '#options' => date_timezone_names(FALSE, TRUE),
-      '#description' => t('Select the default site time zone. If in doubt, choose the timezone that is closest to your location which has the same rules for daylight saving time.'),
+      '#description' => st('Select the default site time zone. If in doubt, choose the timezone that is closest to your location which has the same rules for daylight saving time.'),
       '#required' => TRUE,
     );
   }

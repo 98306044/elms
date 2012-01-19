@@ -76,43 +76,7 @@ function elms_navigation_top_menu_default_menu_links() {
     'external' => '0',
     'has_children' => '0',
     'expanded' => '0',
-    'weight' => '-45',
-  );
-  // Exported menu link: menu-usermenu:my_reactions
-  $menu_links['menu-usermenu:my_reactions'] = array(
-    'menu_name' => 'menu-usermenu',
-    'link_path' => 'my_reactions',
-    'router_path' => 'my_reactions',
-    'link_title' => 'My Reactions',
-    'options' => array(
-      'attributes' => array(
-        'title' => 'All reactions across courses',
-      ),
-    ),
-    'module' => 'system',
-    'hidden' => '0',
-    'external' => '0',
-    'has_children' => '0',
-    'expanded' => '0',
-    'weight' => '0',
-  );
-  // Exported menu link: menu-usermenu:my_studio
-  $menu_links['menu-usermenu:my_studio'] = array(
-    'menu_name' => 'menu-usermenu',
-    'link_path' => 'my_studio',
-    'router_path' => 'my_studio',
-    'link_title' => 'My Studio',
-    'options' => array(
-      'attributes' => array(
-        'title' => 'All my studio submissions',
-      ),
-    ),
-    'module' => 'system',
-    'hidden' => '0',
-    'external' => '0',
-    'has_children' => '0',
-    'expanded' => '0',
-    'weight' => '0',
+    'weight' => '-46',
   );
   // Exported menu link: menu-usermenu:user
   $menu_links['menu-usermenu:user'] = array(
@@ -139,8 +103,6 @@ function elms_navigation_top_menu_default_menu_links() {
   t('My Bookmarks');
   t('My Courses');
   t('My Profile');
-  t('My Reactions');
-  t('My Studio');
 
 
   return $menu_links;

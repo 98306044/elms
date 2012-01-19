@@ -37,17 +37,12 @@ INSTALLATION
 *Download the ELMS ICMS distribution from http://drupal.psu.edu/fserver
 *Unzip and go to the install.php page from a web-browser as you normally would when installing Drupal
 *Select the ELMS radio bubble and run through the typical Drupal installation
+*Select the core focus and optional packages that you'd like to install with ELMS
 *You are now running ELMS, enjoy making courses!
 
 ------------
 TROUBLESHOOTING INSTALLATION / SETUP
 ------------
-PHP 5.3
--- Make sure you have error reporting turned off during installation
-
-PHP 5.2
--- There may be a lot of errors after install though it has installed correctly so turning error reporting off is recommended for 5.2 as well
-
 PHP lower then 5.2
 -- Unsupported because of date module though you can activate the date 5.2 emulation module and it should work
 
@@ -58,7 +53,8 @@ Solving Drupal White screen of Death
 
 Annoying MYSQL max packet error
 *run the following command in mysql console: "set global max_allowed_packet = 10 * 1024 * 1024;"
-* This error is caused mostly in localhost installs or shared environments and is caused by all the caching of views going on
+* This error is caused mostly in localhost installs or shared environments and is caused by all the caching going on
+* Review this page to help resolve it http://drupal.org/node/321210
 
 ------------
 Known issues
