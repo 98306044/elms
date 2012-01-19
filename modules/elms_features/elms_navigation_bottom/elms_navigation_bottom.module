@@ -1,5 +1,7 @@
 <?php
 
+include_once('elms_navigation_bottom.features.inc');
+
 //ELMS
 //Copyright (C) 2011  The Pennsylvania State University
 //
