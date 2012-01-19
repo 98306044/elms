@@ -912,137 +912,146 @@ function _elms_contact_fields_query() {
  * Helper function to install default wysiwyg settings.
  */
 function _elms_wysiwyg_query() {
-  $tmp_ary = array (
-  'default' => 1,
-  'user_choose' => 0,
-  'show_toggle' => 0,
-  'theme' => 'advanced',
-  'language' => 'en',
-  'buttons' => 
-  array (
-    'default' => 
+  drupal_write_record('wysiwyg', $insert);
+  $insert = array (
+  'format' => '1',
+  'editor' => 'ckeditor',
+  'settings' => 
+  serialize(array (
+    'default' => 1,
+    'user_choose' => 0,
+    'show_toggle' => 0,
+    'theme' => 'advanced',
+    'language' => 'en',
+    'buttons' => 
     array (
-      'Bold' => 1,
-      'Italic' => 1,
-      'Underline' => 1,
-      'BulletedList' => 1,
-      'NumberedList' => 1,
-      'Link' => 1,
-      'Scayt' => 1,
+      'default' => 
+      array (
+        'Bold' => 1,
+        'Italic' => 1,
+        'BulletedList' => 1,
+        'NumberedList' => 1,
+        'Link' => 1,
+        'Scayt' => 1,
+      ),
     ),
-  ),
-  'toolbar_loc' => 'top',
-  'toolbar_align' => 'left',
-  'path_loc' => 'none',
-  'resizing' => 1,
-  'verify_html' => 1,
-  'preformatted' => 0,
-  'convert_fonts_to_spans' => 1,
-  'remove_linebreaks' => 0,
-  'apply_source_formatting' => 0,
-  'paste_auto_cleanup_on_paste' => 1,
-  'block_formats' => 'p,address,pre,h2,h3,h4,h5,h6,div',
-  'css_setting' => 'none',
-  'css_path' => '',
-  'css_classes' => '',
-);
-$ary = array('format' => '1', 'editor' => 'ckeditor', 'settings' => serialize($tmp_ary));
-drupal_write_record('wysiwyg', $ary);
-
-$tmp_ary = array (
-  'default' => 1,
-  'user_choose' => 0,
-  'show_toggle' => 1,
-  'theme' => 'advanced',
-  'language' => 'en',
-  'buttons' => 
-  array (
-    'default' => 
+    'toolbar_loc' => 'top',
+    'toolbar_align' => 'left',
+    'path_loc' => 'none',
+    'resizing' => 1,
+    'verify_html' => 1,
+    'preformatted' => 0,
+    'convert_fonts_to_spans' => 1,
+    'remove_linebreaks' => 0,
+    'apply_source_formatting' => 0,
+    'paste_auto_cleanup_on_paste' => 1,
+    'block_formats' => 'p,address,pre,h2,h3,h4,h5,h6,div',
+    'css_setting' => 'none',
+    'css_path' => '',
+    'css_classes' => '',
+  )),
+  );
+  drupal_write_record('wysiwyg', $insert);
+  $insert = array (
+  'format' => '2',
+  'editor' => 'ckeditor',
+  'settings' => 
+  serialize(array (
+    'default' => 1,
+    'user_choose' => 0,
+    'show_toggle' => 0,
+    'theme' => 'advanced',
+    'language' => 'en',
+    'buttons' => 
     array (
-      'Bold' => 1,
-      'Italic' => 1,
-      'Underline' => 1,
-      'JustifyLeft' => 1,
-      'JustifyCenter' => 1,
-      'JustifyRight' => 1,
-      'BulletedList' => 1,
-      'NumberedList' => 1,
-      'Outdent' => 1,
-      'Indent' => 1,
-      'Link' => 1,
-      'Image' => 1,
-      'Superscript' => 1,
-      'Subscript' => 1,
-      'RemoveFormat' => 1,
-      'FontSize' => 1,
-      'Styles' => 1,
-      'Table' => 1,
-      'Scayt' => 1,
+      'default' => 
+      array (
+        'BulletedList' => 1,
+        'NumberedList' => 1,
+        'Outdent' => 1,
+        'Indent' => 1,
+        'Link' => 1,
+        'Image' => 1,
+        'Blockquote' => 1,
+        'Source' => 1,
+        'RemoveFormat' => 1,
+        'Format' => 1,
+        'Styles' => 1,
+        'Table' => 1,
+        'Iframe' => 1,
+        'Scayt' => 1,
+      ),
+      'imce' => 
+      array (
+        'imce' => 1,
+      ),
+      'templates' => 
+      array (
+        'Templates' => 1,
+      ),
+      'elimedia' => 
+      array (
+        'elimedia' => 1,
+      ),
+      'drupal_path' => 
+      array (
+        'Link' => 1,
+      ),
     ),
-    'elimedia' => 
+    'toolbar_loc' => 'top',
+    'toolbar_align' => 'left',
+    'path_loc' => 'bottom',
+    'resizing' => 1,
+    'verify_html' => 0,
+    'preformatted' => 0,
+    'convert_fonts_to_spans' => 0,
+    'remove_linebreaks' => 0,
+    'apply_source_formatting' => 1,
+    'paste_auto_cleanup_on_paste' => 1,
+    'block_formats' => 'p,h2',
+    'css_setting' => 'self',
+    'css_path' => '%bprofiles/elms/modules/elms_core/elms_styles/elms_styles.css',
+    'css_classes' => '',
+  )),
+  );
+  drupal_write_record('wysiwyg', $insert);
+  $insert = array (
+  'format' => '4',
+  'editor' => 'ckeditor',
+  'settings' => 
+  serialize(array (
+    'default' => 1,
+    'user_choose' => 0,
+    'show_toggle' => 0,
+    'theme' => 'advanced',
+    'language' => 'en',
+    'buttons' => 
     array (
-      'elimedia' => 1,
+      'default' => 
+      array (
+        'Bold' => 1,
+        'Italic' => 1,
+        'BulletedList' => 1,
+        'NumberedList' => 1,
+      ),
     ),
-    'imce' => 
-    array (
-      'imce' => 1,
-    ),
-    'drupal_path' => 
-    array (
-      'Link' => 1,
-    ),
-  ),
-  'toolbar_loc' => 'top',
-  'toolbar_align' => 'left',
-  'path_loc' => 'bottom',
-  'resizing' => 1,
-  'verify_html' => 0,
-  'preformatted' => 0,
-  'convert_fonts_to_spans' => 1,
-  'remove_linebreaks' => 0,
-  'apply_source_formatting' => 0,
-  'paste_auto_cleanup_on_paste' => 1,
-  'block_formats' => 'p,address,pre,h2,h3,h4,h5,h6,div',
-  'css_setting' => 'none',
-  'css_path' => '',
-  'css_classes' => '',
-);
-$ary = array('format' => '2', 'editor' => 'ckeditor', 'settings' => serialize($tmp_ary));
-drupal_write_record('wysiwyg', $ary);
-
-$tmp_ary = array (
-  'default' => 1,
-  'user_choose' => 0,
-  'show_toggle' => 0,
-  'theme' => 'advanced',
-  'language' => 'en',
-  'buttons' => 
-  array (
-    'default' => 
-    array (
-      'Bold' => 1,
-      'Italic' => 1,
-      'BulletedList' => 1,
-      'NumberedList' => 1,
-    ),
-  ),
-  'toolbar_loc' => 'top',
-  'toolbar_align' => 'left',
-  'path_loc' => 'bottom',
-  'resizing' => 1,
-  'verify_html' => 1,
-  'preformatted' => 0,
-  'convert_fonts_to_spans' => 1,
-  'remove_linebreaks' => 1,
-  'apply_source_formatting' => 0,
-  'paste_auto_cleanup_on_paste' => 1,
-  'block_formats' => 'p,address,pre,h2,h3,h4,h5,h6,div',
-  'css_setting' => 'none',
-  'css_path' => '',
-  'css_classes' => '',
-);
-$ary = array('format' => '4', 'editor' => 'ckeditor', 'settings' => serialize($tmp_ary));
-drupal_write_record('wysiwyg', $ary);
+    'toolbar_loc' => 'top',
+    'toolbar_align' => 'left',
+    'path_loc' => 'bottom',
+    'resizing' => 1,
+    'verify_html' => 1,
+    'preformatted' => 0,
+    'convert_fonts_to_spans' => 1,
+    'remove_linebreaks' => 1,
+    'apply_source_formatting' => 0,
+    'paste_auto_cleanup_on_paste' => 1,
+    'block_formats' => 'p,address,pre,h2,h3,h4,h5,h6,div',
+    'css_setting' => 'none',
+    'css_path' => '',
+    'css_classes' => '',
+  )),
+  );
+  drupal_write_record('wysiwyg', $insert);
 }
 
 /**
