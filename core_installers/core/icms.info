@@ -21,5 +21,5 @@ dependencies[] = "elms_course_content_import"
 dependencies[] = "elms_course_content_export"
 dependencies[] = "elms_id_best_practices"
 dependencies[] = "elms_user_management"
-; ELMS Core Installers
-dependencies[] = "elms_content_core"
+; ELMS ICMS Core Installer
+dependencies[] = "elms_icms"

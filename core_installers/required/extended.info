@@ -16,7 +16,6 @@ dependencies[] = "elms_navigation_right"
 ; ELMS Core Optional
 dependencies[] = "elms_export_html"
 dependencies[] = "elms_course_resources"
-dependencies[] = "elms_data_out"
 dependencies[] = "elms_helpdesk"
 
 ; Contrib

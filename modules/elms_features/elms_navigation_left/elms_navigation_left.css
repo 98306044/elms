@@ -31,6 +31,10 @@ div#admin-toolbar {
  cursor:pointer;
 }
 
+#regions_block_elms_navigation_left_3 div.regions_block_title {
+	display:none;
+}
+
 #regions_elms_navigation_left li {
   list-style-type: none;
   list-style-image: none;

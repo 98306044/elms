@@ -36,7 +36,11 @@ function elms_navigation_left_define_regions() {
  */
 function elms_navigation_left_form_alter(&$form, &$form_state, $form_id) {
   //make the masquerade block display differently in the left hand menu to fit one line
+	
   if ($form_id == 'masquerade_block_1' && isset($form['masquerade_user_field'])) {
+		//remove message
+		unset($form['masquerade_desc']);
+		//help it fit in the left collapse
     $form['masquerade_user_field']['#size'] = 8;
 	$form['#prefix'] .='<li class="leaf click_handler"><a name="masquerade" title="Open to Masquerade"></a></li>';
   }
@@ -54,6 +58,11 @@ function elms_navigation_left_block($op = 'list', $delta = 0, $edit = array()) {
     );
     $blocks[2] = array(
       'info' => t('Actions Level Navigation'),
+      'weight' => 0,
+      'status' => 0,
+    );
+		$blocks[3] = array(
+      'info' => t('Help Popup'),
       'weight' => 0,
       'status' => 0,
     );
@@ -75,10 +84,21 @@ function elms_navigation_left_block($op = 'list', $delta = 0, $edit = array()) {
           $block['content'] = _elms_navigation_left_page_block();
 					drupal_add_css(drupal_get_path('module', 'elms_navigation_left') .'/hide_tabs.css');
         }
+			break;
+			case 3:
+			  $block['title'] = '<none>';
+        $block['content'] = _elms_navigation_left_help_block();
       break;
     }
     return $block;
   }
+}
+
+//helper function for Help icon addition
+function _elms_navigation_left_help_block() {
+  if (user_access('view advanced help popup')) {
+	  return theme('menu_item', l(t('ELMS Help'), 'admin/advanced_help/elms_helper', array('query'  => array('popup' => TRUE), 'attributes' => array('onclick' => "var w=window.open(this.href, 'advanced_help_window', 'width=640,height=480,scrollbars,resizable'); w.focus(); return false;", 'title' => 'ELMS Help'))), 0, '', FALSE, 'help');
+	}
 }
 
 //helper function Page level tasks
@@ -119,9 +139,6 @@ function _elms_navigation_left_course_block($group) {
       $output .= theme('menu_item', l(t('Import Content'), 'import/elms_node_import', array('attributes' => array('title' => 'Import Outline'))), 0, '', FALSE, 'manage_content');
     }
   }
-	if (user_access('view advanced help popup')) {
-	  $output .= theme('menu_item', l(t('ELMS Help'), 'admin/advanced_help/elms_helper', array('query'  => array('popup' => TRUE), 'attributes' => array('onclick' => "var w=window.open(this.href, 'advanced_help_window', 'width=640,height=480,scrollbars,resizable'); w.focus(); return false;", 'title' => 'ELMS Help'))), 0, '', FALSE, 'help');
-	}
   return $output;
 }
 

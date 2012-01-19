@@ -9,7 +9,7 @@
 /**
  * Implementation of hook_strongarm()
  */
-function elms_content_core_strongarm() {
+function elms_icms_strongarm() {
   $strongarms = array();
 
   $strongarm = new stdClass;
@@ -991,107 +991,6 @@ function elms_content_core_strongarm() {
   $strongarm->name = 'cache_lifetime';
   $strongarm->value = '0';
   $strongarms['cache_lifetime'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'cdn_advanced_synced_files_db';
-  $strongarm->value = '';
-  $strongarms['cdn_advanced_synced_files_db'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'cdn_basic_mapping';
-  $strongarm->value = 'http://static.online.aanda.psu.edu';
-  $strongarms['cdn_basic_mapping'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'cdn_exception_auth_users_blacklist';
-  $strongarm->value = '';
-  $strongarms['cdn_exception_auth_users_blacklist'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'cdn_exception_drupal_path_blacklist';
-  $strongarm->value = 'admin*';
-  $strongarms['cdn_exception_drupal_path_blacklist'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'cdn_exception_file_path_blacklist';
-  $strongarm->value = '*.js
-*/image_captcha/*';
-  $strongarms['cdn_exception_file_path_blacklist'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'cdn_exception_file_path_whitelist';
-  $strongarm->value = 'misc/*.js
-modules/block/block.js
-modules/color/color.js
-modules/comment/comment.js
-modules/openid/openid.js
-modules/profile/profile.js
-modules/system/system.js
-modules/taxonomy/taxonomy.js
-modules/user/user.js
-*/admin_menu/admin_menu.js';
-  $strongarms['cdn_exception_file_path_whitelist'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'cdn_https_support';
-  $strongarm->value = 1;
-  $strongarms['cdn_https_support'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'cdn_mode';
-  $strongarm->value = 'basic';
-  $strongarms['cdn_mode'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'CDN_PICK_SERVER_PHP_CODE_VARIABLE';
-  $strongarm->value = '';
-  $strongarms['CDN_PICK_SERVER_PHP_CODE_VARIABLE'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'cdn_stats';
-  $strongarm->value = 0;
-  $strongarms['cdn_stats'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'cdn_status';
-  $strongarm->value = '2';
-  $strongarms['cdn_status'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'cdn_theme_layer_fallback';
-  $strongarm->value = FALSE;
-  $strongarms['cdn_theme_layer_fallback'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'CDN_THEME_LAYER_FALLBACK_VARIABLE';
-  $strongarm->value = TRUE;
-  $strongarms['CDN_THEME_LAYER_FALLBACK_VARIABLE'] = $strongarm;
 
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -3055,138 +2954,6 @@ if (isset($node->nid)) {
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'features_codecache';
-  $strongarm->value = array(
-    'elms_course' => array(
-      'dependencies' => 'e27aeb3eec11ca538a34b9b011c5e160',
-      'taxonomy' => 'e8ecf8a93f0b491998edcd2aaffb38da',
-      'content' => '4423febbf662c19db92e9787cd798d9e',
-      'fieldgroup' => 'd483edabd6ca14e56ad137384afad4a0',
-      'context' => 'addea0def19178cd82ae0eb68353bf2e',
-      'imagecache' => '3ee5d984053d4f465cc668b3e4ba6dc6',
-      'variable' => 'be6242d875a3e6fa43791be61f211f2c',
-      'node' => 'dd6c90fe07fb821e4986224ef2ae2822',
-      'views' => '4b230f5ce3c6946bbb615d3b43bb7296',
-    ),
-    'elms_course_content' => array(
-      'dependencies' => '475746c4886f0e7a5af86df312f5f6e1',
-      'content' => '92144ff1edb35d3aaccaac6febd9badf',
-      'flag' => '3bba3bd5699304085387862cc64ca634',
-      'variable' => '69ca70707e9d0a115035ada81f6e5b91',
-      'node' => '4319a9ee11f09784654d69e0eab882a7',
-      'context' => 'b9b5ff20d84b2f0091fd26a8a4e2a57d',
-      'views' => 'd4e1f42537bfd4cfee749c9f9d1abf9f',
-    ),
-    'elms_course_content_export' => array(
-      'dependencies' => '44f1e5525b0b5a5f387998c0aad2341e',
-      'views' => '13c37166ab37df54c587f33f5f5eda16',
-    ),
-    'elms_course_content_import' => array(
-      'dependencies' => '68dbfa86b516036ca20443f31f72a731',
-      'feeds_importer' => '1edce2c93e9caedcd16509cc493033a0',
-      'feeds_tamper' => 'f5602d4819ae48013c9a0d5b528d72c6',
-    ),
-    'elms_course_studio' => array(
-      'dependencies' => '28b05ec7ab7d70ea1c980ee710f363c2',
-      'menu_custom' => 'a17fca2ae6d12d3f12f0d2096e991748',
-      'menu_links' => '53534a3457185997f29da7ca243454fc',
-      'content' => 'dc4efa9c815ff1370dd5c32ac7b0fa2b',
-      'variable' => 'e3454ff5cb61b1a688668d241fb753c2',
-      'node' => '0df81fed1568597739386b96a2472b94',
-      'context' => '2d917c1f914a50b6357eb102ae8473b7',
-      'imagecache' => '9f6a3af239c74628b89b75e993ffbd05',
-      'views' => '8e1e37ecfd32f5fee044e84dbcd89798',
-    ),
-    'elms_course_versions' => array(
-      'dependencies' => '00e56c2ccd0e8194cb8b3bba3dd7decd',
-      'content' => 'e2445b89ca177ce0c8a9f6f412517dad',
-      'fieldgroup' => '00b2dd335404ac36b4f3ce13958ecb55',
-      'conditional_fields' => FALSE,
-      'variable' => '903af13057de8b2bb34673e94a4d0b22',
-      'node' => '3e841ea895a59f9f5be6fb601b512491',
-      'context' => '1f1d1645df996174ac5f942ecf30eb6d',
-      'imagecache' => '7812b09abf4b74e5f2ed7a54c1f32999',
-      'views' => 'b506bf2e99d8672c3c8a8910c7d9f439',
-    ),
-    'elms_data_out' => array(
-      'dependencies' => 'b1881ff7b48281b46eb85d3490e76c9f',
-      'views' => '11bac302e337d5952494c4ea22d6c0dc',
-    ),
-    'elms_navigation_left' => array(
-      'dependencies' => '116ff4cf2a92f8b0989abee63a761605',
-      'context' => 'bfb3f9b010879578ef6632e7e87fcf73',
-    ),
-    'elms_navigation_top' => array(
-      'dependencies' => '07b7d958146109e9333d08f41020b8ea',
-      'menu_custom' => '0b5749843966a4c1d34159230a0107e0',
-      'menu_links' => '2e4ef83a8dd1d64c2b17103bfa9cb90b',
-      'context' => 'a31457419779d98b05a0e63e1cff47a7',
-      'imagecache' => 'b799b33d91edb711f28e998e75c42e2a',
-    ),
-    'elms_reaction' => array(
-      'dependencies' => '9351b0fa7b77c9dd06dc2afcfa4d1532',
-      'menu_custom' => '23db07c84d31cf87b5cf361f2643a793',
-      'menu_links' => 'edf0a743cb097327cbdbb494dc2429b8',
-      'content' => 'c94346697577e15b142564e0869ecefa',
-      'variable' => '6e209e4859712b0d73611f523211a6d8',
-      'node' => 'acd573abdc81a8e444dedf7941fb279a',
-      'context' => '635eda13b16dc792ca29548005700a88',
-      'views' => '2e1c708de1f43e720d58dc02c17f5396',
-    ),
-    'elms_schedule' => array(
-      'dependencies' => 'd5bba3ed4436303ab1d24248d4e4bdbd',
-      'content' => '96e09cad07365416681867c4992f629d',
-      'fieldgroup' => '6dff299335e4a1bb97c4caa9660271cb',
-      'variable' => '22a3c2964371038de1c6c4895103ee79',
-      'node' => '104c7b4d05d55ff684d3db557fd155e9',
-      'views' => '722d08e6e391785961d1b01be6baf798',
-    ),
-    'psu_angel_integration' => array(
-      'dependencies' => '19857eda920612c8dc42140e9aa95748',
-      'feeds_importer' => '8b1ac528e09c9f4fcc52a3bd5f4dbe24',
-      'feeds_tamper' => '76cc0f1f310c366188ffc5c937068739',
-    ),
-    'atrium_blog' => array(
-      'dependencies' => '214005deca409a1e9b1db390aa406f6b',
-      'user_permission' => '5e89e45dd200de0792cc8aa7b0df483b',
-      'content' => '8166503b90493cc6686b87a4366c0304',
-      'node' => '0aeffc5d9c130263e060a905702d6959',
-      'context' => '8d756ce0a22a0d4bbe88a94db9258bcc',
-      'views' => 'cb93ef04d05a8c2b77fca6ff75d3c55c',
-    ),
-    'atrium_reader' => array(
-      'menu_links' => '18077c146abd6c912d0ad70782c068b1',
-      'dependencies' => '1a92bb0bac08b8bad410c411ac953f46',
-      'user_permission' => '1e81c2addbf6c295e3c4bfa0d6ffa458',
-      'content' => 'e1543f3f768c7641103ead0cdf3f01a3',
-      'variable' => '048b69d39c831afb213a10fbbbabd4f7',
-      'node' => 'f6260d34a2088745870d88ebb9d939b6',
-      'context' => 'ddce24b971ee7c89a134745146b94ac2',
-      'data_tables' => 'dab00c4891b6b98965ea7dc2f85fc4cc',
-      'feeds_importer' => '9fbbc4665debe98c50370f3035cb3db7',
-      'views' => 'e406c118bd9f678b1d33610dabeacf74',
-    ),
-    'elms_user_management' => array(
-      'dependencies' => '45fdada4cbe4ef010e30abcb944f8553',
-      'views' => '3ecd9f8486aa9370bc39fe9f2b360cd2',
-    ),
-    'elms_course_resources' => array(
-      'dependencies' => '15e134682a6365f8c197ab6878064b53',
-      'content' => '2dfe34ac59fa25c3cd5703d03fd2330b',
-      'variable' => '9c31efe0ef5d9252e4b52394253b4a7d',
-      'node' => '9b2fd5b40faecea5f8d49daa782bd42f',
-    ),
-    'elms_id_best_practices' => array(
-      'menu_links' => '4f6cc9655a7f6ba2ecf6cc3be1cff0bb',
-      'dependencies' => 'cf5074b20f52568151fe55256e818d65',
-      'views' => '71f75a7771f818ea54cb997fe0720703',
-    ),
-  );
-  $strongarms['features_codecache'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'features_ignored_orphans';
   $strongarm->value = array(
     'context_ui' => 'context_ui',
@@ -3706,7 +3473,7 @@ news',
     'URI.DisableExternal' => '0',
     'URI.DisableExternalResources' => '0',
     'URI.DisableResources' => '0',
-    'URI.Host' => 'online.aanda.psu.edu',
+    'URI.Host' => '',
     'URI.HostBlacklist' => '',
     'URI.MakeAbsolute' => '0',
     'Null_URI.Munge' => '1',
@@ -3933,13 +3700,6 @@ news',
   $strongarm->name = 'install_task';
   $strongarm->value = 'done';
   $strongarms['install_task'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'install_time';
-  $strongarm->value = 1321281084;
-  $strongarms['install_time'] = $strongarm;
 
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -6631,153 +6391,6 @@ Personal message from @username:
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'piwik_cache';
-  $strongarm->value = 1;
-  $strongarms['piwik_cache'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'piwik_codesnippet_after';
-  $strongarm->value = '';
-  $strongarms['piwik_codesnippet_after'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'piwik_codesnippet_before';
-  $strongarm->value = '';
-  $strongarms['piwik_codesnippet_before'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'piwik_custom';
-  $strongarm->value = '0';
-  $strongarms['piwik_custom'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'piwik_domain_mode';
-  $strongarm->value = '0';
-  $strongarms['piwik_domain_mode'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'piwik_last_cache';
-  $strongarm->value = 1326798064;
-  $strongarms['piwik_last_cache'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'piwik_pages';
-  $strongarm->value = 'admin
-admin/*
-batch
-node/add*
-node/*/*
-user/*/*';
-  $strongarms['piwik_pages'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'piwik_page_title_hierarchy';
-  $strongarm->value = 1;
-  $strongarms['piwik_page_title_hierarchy'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'piwik_page_title_hierarchy_exclude_home';
-  $strongarm->value = 1;
-  $strongarms['piwik_page_title_hierarchy_exclude_home'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'piwik_privacy_donottrack';
-  $strongarm->value = 1;
-  $strongarms['piwik_privacy_donottrack'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'piwik_roles';
-  $strongarm->value = array(
-    1 => 1,
-    3 => 3,
-    2 => 0,
-    6 => 0,
-    4 => 0,
-    9 => 0,
-    10 => 0,
-    8 => 0,
-  );
-  $strongarms['piwik_roles'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'piwik_site_id';
-  $strongarm->value = '5';
-  $strongarms['piwik_site_id'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'piwik_site_search';
-  $strongarm->value = 0;
-  $strongarms['piwik_site_search'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'piwik_track';
-  $strongarm->value = 1;
-  $strongarms['piwik_track'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'piwik_trackfiles_extensions';
-  $strongarm->value = '7z|aac|arc|arj|asf|asx|avi|bin|csv|doc|exe|flv|gif|gz|gzip|hqx|jar|jpe?g|js|mp(2|3|4|e?g)|mov(ie)?|msi|msp|pdf|phps|png|ppt|qtm?|ra(m|r)?|sea|sit|tar|tgz|torrent|txt|wav|wma|wmv|wpd|xls|xml|z|zip';
-  $strongarms['piwik_trackfiles_extensions'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'piwik_url_http';
-  $strongarm->value = 'http://elearning.psu.edu/stats/';
-  $strongarms['piwik_url_http'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'piwik_url_https';
-  $strongarm->value = 'https://elearning.psu.edu/stats/';
-  $strongarms['piwik_url_https'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'piwik_visibility_pages';
-  $strongarm->value = '0';
-  $strongarms['piwik_visibility_pages'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'piwik_visibility_roles';
-  $strongarm->value = '1';
-  $strongarms['piwik_visibility_roles'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'preprocess_css';
   $strongarm->value = '0';
   $strongarms['preprocess_css'] = $strongarm;
@@ -7200,13 +6813,6 @@ Cache-Control: max-age=60, must-revalidate';
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'site_footer';
-  $strongarm->value = 'Online Arts and Architecture is managed by the College of Arts and Architecture\'s e-Learning Institute at Pennsylvania State University &copy; 2011';
-  $strongarms['site_footer'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'site_frontpage';
   $strongarm->value = 'courses';
   $strongarms['site_frontpage'] = $strongarm;
@@ -7217,13 +6823,6 @@ Cache-Control: max-age=60, must-revalidate';
   $strongarm->name = 'site_frontpage_path';
   $strongarm->value = 'courses';
   $strongarms['site_frontpage_path'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'site_mail';
-  $strongarm->value = 'bto108@psu.edu';
-  $strongarms['site_mail'] = $strongarm;
 
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -7994,15 +7593,6 @@ Cache-Control: max-age=60, must-revalidate';
   $strongarm->name = 'update_notification_threshold';
   $strongarm->value = 'security';
   $strongarms['update_notification_threshold'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'update_notify_emails';
-  $strongarm->value = array(
-    0 => 'bto108@psu.edu',
-  );
-  $strongarms['update_notify_emails'] = $strongarm;
 
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */

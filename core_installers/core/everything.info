@@ -1,3 +1,0 @@
-name = "Everything"
-description = "Installs all developed ELMS functionality, this is essentially a mashing together of all cores and add-ons"
-type = "installer"
