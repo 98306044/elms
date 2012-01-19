@@ -260,6 +260,11 @@ function elms_course_views_default_views() {
   $handler->override_option('use_pager', '1');
   $handler->override_option('style_plugin', 'fluid_grid');
   $handler = $view->new_display('page', 'View List', 'page_1');
+  $handler->override_option('cache', array(
+    'type' => 'time',
+    'results_lifespan' => '21600',
+    'output_lifespan' => '21600',
+  ));
   $handler->override_option('style_options', array(
     'grouping' => '',
     'advanced_layout' => array(
@@ -2003,40 +2008,6 @@ function elms_course_views_default_views() {
         'button' => 'Use default',
       ),
     ),
-    'private' => array(
-      'label' => 'OER',
-      'alter' => array(
-        'alter_text' => 0,
-        'text' => '',
-        'make_link' => 0,
-        'path' => '',
-        'link_class' => '',
-        'alt' => '',
-        'prefix' => '',
-        'suffix' => '',
-        'target' => '',
-        'help' => '',
-        'trim' => 0,
-        'max_length' => '',
-        'word_boundary' => 1,
-        'ellipsis' => 1,
-        'html' => 0,
-        'strip_tags' => 0,
-      ),
-      'empty' => '',
-      'hide_empty' => 0,
-      'empty_zero' => 0,
-      'type' => 'yes-no',
-      'not' => 1,
-      'exclude' => 0,
-      'id' => 'private',
-      'table' => 'og',
-      'field' => 'private',
-      'override' => array(
-        'button' => 'Use default',
-      ),
-      'relationship' => 'none',
-    ),
     'nothing_3' => array(
       'label' => 'Operations',
       'alter' => array(
@@ -2462,15 +2433,17 @@ function elms_course_views_default_views() {
   $handler->override_option('block_caching', -1);
   $handler = $view->new_display('block', 'Promo block', 'block_4');
   $handler->override_option('fields', array(
-    'view_node' => array(
+    'title' => array(
       'label' => '',
       'alter' => array(
         'alter_text' => 0,
         'text' => '',
         'make_link' => 0,
         'path' => '',
+        'absolute' => 0,
         'link_class' => '',
         'alt' => '',
+        'rel' => '',
         'prefix' => '',
         'suffix' => '',
         'target' => '',
@@ -2485,11 +2458,16 @@ function elms_course_views_default_views() {
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
-      'text' => 'Take a tour of this course',
+      'hide_alter_empty' => 1,
+      'link_to_node' => 1,
+      'spaces' => array(
+        'frontpage' => 1,
+        'type' => 'spaces_og',
+      ),
       'exclude' => 0,
-      'id' => 'view_node',
+      'id' => 'title',
       'table' => 'node',
-      'field' => 'view_node',
+      'field' => 'title',
       'override' => array(
         'button' => 'Use default',
       ),
@@ -3010,40 +2988,6 @@ function elms_course_views_default_views() {
       'id' => 'field_section_number_value',
       'table' => 'node_data_field_section_number',
       'field' => 'field_section_number_value',
-      'override' => array(
-        'button' => 'Use default',
-      ),
-      'relationship' => 'none',
-    ),
-    'private' => array(
-      'label' => 'OER',
-      'alter' => array(
-        'alter_text' => 0,
-        'text' => '',
-        'make_link' => 0,
-        'path' => '',
-        'link_class' => '',
-        'alt' => '',
-        'prefix' => '',
-        'suffix' => '',
-        'target' => '',
-        'help' => '',
-        'trim' => 0,
-        'max_length' => '',
-        'word_boundary' => 1,
-        'ellipsis' => 1,
-        'html' => 0,
-        'strip_tags' => 0,
-      ),
-      'empty' => '',
-      'hide_empty' => 0,
-      'empty_zero' => 0,
-      'type' => 'yes-no',
-      'not' => 1,
-      'exclude' => 0,
-      'id' => 'private',
-      'table' => 'og',
-      'field' => 'private',
       'override' => array(
         'button' => 'Use default',
       ),

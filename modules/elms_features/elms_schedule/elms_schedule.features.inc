@@ -20,9 +20,7 @@ function elms_schedule_flag_default_flags() {
     'content_type' => 'node',
     'title' => 'Student self reporting of completed course events',
     'global' => '0',
-    'types' => array(
-      '0' => 'course_event',
-    ),
+    'types' => array(),
     'flag_short' => 'incomplete',
     'flag_long' => '',
     'flag_message' => '',

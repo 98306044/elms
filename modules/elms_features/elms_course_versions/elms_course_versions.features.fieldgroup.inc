@@ -58,56 +58,6 @@ function elms_course_versions_fieldgroup_default_groups() {
     ),
   );
 
-  // Exported group: group_instructor_contact_info
-  $groups['version-group_instructor_contact_info'] = array(
-    'group_type' => 'standard',
-    'type_name' => 'version',
-    'group_name' => 'group_instructor_contact_info',
-    'label' => 'Instructor Contact Info',
-    'settings' => array(
-      'form' => array(
-        'style' => 'fieldset_collapsed',
-        'description' => 'This provides a block for the instructor to display their contact information (such as office hours)',
-      ),
-      'display' => array(
-        'description' => '',
-        '5' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-        'teaser' => array(
-          'format' => 'fieldset',
-          'exclude' => 1,
-        ),
-        'full' => array(
-          'format' => 'fieldset',
-          'exclude' => 1,
-        ),
-        '4' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-        '2' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-        '3' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-        'token' => array(
-          'format' => 'fieldset',
-          'exclude' => 0,
-        ),
-        'label' => 'above',
-      ),
-    ),
-    'weight' => '1',
-    'fields' => array(
-      '0' => 'field_inst_contact_block',
-    ),
-  );
-
   // Exported group: group_section_info
   $groups['version-group_section_info'] = array(
     'group_type' => 'standard',
@@ -128,7 +78,7 @@ function elms_course_versions_fieldgroup_default_groups() {
         ),
         'full' => array(
           'format' => 'fieldset',
-          'exclude' => 1,
+          'exclude' => 0,
         ),
         'description' => '',
         '5' => array(
@@ -159,13 +109,66 @@ function elms_course_versions_fieldgroup_default_groups() {
       '1' => 'field_section_year',
       '2' => 'field_campus',
       '3' => 'field_section_number',
+      '4' => 'field_activation_codes',
+    ),
+  );
+
+  // Exported group: group_site_settings
+  $groups['version-group_site_settings'] = array(
+    'group_type' => 'standard',
+    'type_name' => 'version',
+    'group_name' => 'group_site_settings',
+    'label' => 'Additional Settings',
+    'settings' => array(
+      'form' => array(
+        'style' => 'fieldset_vertical_tab',
+        'description' => '',
+      ),
+      'display' => array(
+        'weight' => '4',
+        'label' => 'above',
+        'teaser' => array(
+          'format' => 'fieldset',
+          'exclude' => 1,
+        ),
+        'full' => array(
+          'format' => 'fieldset',
+          'exclude' => 1,
+        ),
+        'description' => 'Additional settings for making this site unique',
+        '5' => array(
+          'format' => 'fieldset',
+          'exclude' => 0,
+        ),
+        '4' => array(
+          'format' => 'fieldset',
+          'exclude' => 0,
+        ),
+        '2' => array(
+          'format' => 'fieldset',
+          'exclude' => 0,
+        ),
+        '3' => array(
+          'format' => 'fieldset',
+          'exclude' => 0,
+        ),
+        'token' => array(
+          'format' => 'fieldset',
+          'exclude' => 0,
+        ),
+      ),
+    ),
+    'weight' => '4',
+    'fields' => array(
+      '0' => 'field_inst_contact_block',
+      '1' => 'field_footer',
     ),
   );
 
   // Translatables
   // Included for use with string extractors like potx.
+  t('Additional Settings');
   t('Content');
-  t('Instructor Contact Info');
   t('Section Info');
 
   return $groups;

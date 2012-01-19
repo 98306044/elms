@@ -352,7 +352,7 @@ Advanced Network Design',
       'max_filesize_per_file' => '20M',
       'max_filesize_per_node' => '',
       'label' => 'Faculty Resources',
-      'weight' => '20',
+      'weight' => '21',
       'description' => 'Upload documents that could help facilitate course communication between faculty members and instructional designers',
       'type' => 'filefield_widget',
       'module' => 'filefield',
@@ -728,10 +728,85 @@ fa12|Fall 12',
       ),
       'default_value_php' => NULL,
       'label' => 'Listing Only',
-      'weight' => '16',
+      'weight' => '8',
       'description' => 'Check this box to indicate that you only want to list the fact that a course exists but not to create pages and versions in the system.  By default ELMS will automatically create a version to work off of, this disables this functionality.  Use this in instances where you want to list a course using ELMS but not build out a space (you can always build one in the future).',
       'type' => 'optionwidgets_buttons',
       'module' => 'optionwidgets',
+    ),
+  );
+
+  // Exported field: field_past_faculty
+  $fields['course-field_past_faculty'] = array(
+    'field_name' => 'field_past_faculty',
+    'type_name' => 'course',
+    'display_settings' => array(
+      'label' => array(
+        'format' => 'above',
+        'exclude' => 0,
+      ),
+      '5' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      'teaser' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      'full' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '2' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '3' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      'token' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+    ),
+    'widget_active' => '1',
+    'type' => 'userreference',
+    'required' => '0',
+    'multiple' => '1',
+    'module' => 'userreference',
+    'active' => '1',
+    'referenceable_roles' => array(
+      '2' => 0,
+      '3' => 0,
+      '6' => 0,
+      '4' => 0,
+      '9' => 0,
+      '10' => 0,
+      '11' => 0,
+      '8' => 0,
+    ),
+    'referenceable_status' => '',
+    'advanced_view' => 'elms_course_get_insts',
+    'advanced_view_args' => '',
+    'widget' => array(
+      'autocomplete_match' => 'contains',
+      'size' => 60,
+      'reverse_link' => 0,
+      'default_value' => array(
+        '0' => array(
+          'uid' => '',
+        ),
+      ),
+      'default_value_php' => NULL,
+      'label' => 'Past Faculty',
+      'weight' => '20',
+      'description' => '',
+      'type' => 'userreference_select',
+      'module' => 'userreference',
     ),
   );
 
@@ -806,7 +881,7 @@ fa12|Fall 12',
       ),
       'default_value_php' => NULL,
       'label' => 'Prerequisites',
-      'weight' => '21',
+      'weight' => '22',
       'description' => 'List courses required in order to take this one.',
       'type' => 'nodereference_autocomplete',
       'module' => 'nodereference',
@@ -862,10 +937,14 @@ fa12|Fall 12',
     'max_length' => '',
     'allowed_values' => 'flash|Flash
 silverlight|Silver Light
-pdf|Adobe Acrobat
+pdf|PDF Reader (Adobe / Other)
 quicktime|Quick Time
 java|Java
-html5|HTML 5',
+html5|HTML 5
+realplayer|Real Player
+wmp|Windows Media Player
+gears|Google Gears
+director|Adobe Director',
     'allowed_values_php' => '',
     'widget' => array(
       'default_value' => array(
@@ -1042,6 +1121,7 @@ safari|Safari (latest)',
   t('Link to more Info');
   t('Listing Only');
   t('Name');
+  t('Past Faculty');
   t('Plugin');
   t('Prerequisites');
   t('Sample Materials');

@@ -13,18 +13,9 @@ function elms_course_content_context_default_contexts() {
   $context->description = 'Course Content blocks that enable navigation';
   $context->tag = 'ELMS Content';
   $context->conditions = array(
-    'bookroot' => array(
+    'sitewide' => array(
       'values' => array(
-        'folder' => 'folder',
-      ),
-      'options' => array(
-        'node_form' => '1',
-      ),
-    ),
-    'views' => array(
-      'values' => array(
-        'course_content_bookmarks' => 'course_content_bookmarks',
-        'course_content_bookmarks:page' => 'course_content_bookmarks:page',
+        1 => 1,
       ),
     ),
   );
@@ -35,11 +26,10 @@ function elms_course_content_context_default_contexts() {
           'module' => 'elms_course_content',
           'delta' => 0,
           'region' => 'left',
-          'weight' => 0,
+          'weight' => '-10',
         ),
       ),
     ),
-    'menu' => 'course_content',
   );
   $context->condition_mode = 0;
 

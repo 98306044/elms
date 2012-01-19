@@ -211,7 +211,7 @@ function elms_user_management_views_default_views() {
       'breadcrumb' => '',
       'default_argument_type' => 'og_group_node',
       'default_argument' => '',
-      'validate_type' => 'none',
+      'validate_type' => 'node',
       'validate_fail' => 'not found',
       'break_phrase' => 0,
       'not' => 0,
@@ -244,15 +244,17 @@ function elms_user_management_views_default_views() {
       'default_argument_fixed' => '',
       'default_argument_php' => '',
       'validate_argument_node_type' => array(
-        'feed_reader' => 0,
+        'version' => 'version',
         'course' => 0,
         'folder' => 0,
         'link' => 0,
         'page' => 0,
-        'version' => 0,
         'referenced_page' => 0,
+        'course_resource' => 0,
+        'accessibility_guideline' => 0,
+        'accessibility_test' => 0,
       ),
-      'validate_argument_node_access' => 0,
+      'validate_argument_node_access' => 1,
       'validate_argument_nid_type' => 'nid',
       'validate_argument_vocabulary' => array(
         1 => 0,
@@ -575,11 +577,11 @@ function elms_user_management_views_default_views() {
   ));
   $handler->override_option('items_per_page', 50);
   $handler->override_option('use_pager', '1');
-  $handler->override_option('path', 'roster');
+  $handler->override_option('path', 'node/%/roster');
   $handler->override_option('menu', array(
     'type' => 'tab',
-    'title' => 'Course Roster',
-    'description' => 'Users in this course version',
+    'title' => 'Roster',
+    'description' => 'Roster for this version',
     'weight' => '0',
     'name' => 'primary-links',
   ));

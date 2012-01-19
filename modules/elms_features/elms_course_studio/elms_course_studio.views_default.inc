@@ -11,10 +11,9 @@ function elms_course_studio_views_default_views() {
   $view->name = 'course_studio';
   $view->description = 'Display course studio and helper blocks / pages';
   $view->tag = 'course studio';
-  $view->view_php = '';
   $view->base_table = 'node';
-  $view->is_cacheable = FALSE;
-  $view->api_version = 2;
+  $view->core = 0;
+  $view->api_version = '2';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
   $handler = $view->new_display('default', 'Defaults', 'default');
   $handler->override_option('fields', array(
@@ -409,7 +408,7 @@ function elms_course_studio_views_default_views() {
   $handler->override_option('access', array(
     'type' => 'role',
     'role' => array(
-      '2' => 2,
+      2 => 2,
     ),
   ));
   $handler->override_option('path', 'my_studio');

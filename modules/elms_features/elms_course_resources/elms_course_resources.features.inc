@@ -11,6 +11,30 @@ function elms_course_resources_ctools_plugin_api() {
 }
 
 /**
+ * Implementation of hook_imagecache_default_presets().
+ */
+function elms_course_resources_imagecache_default_presets() {
+  $items = array(
+    'course_resource-list' => array(
+      'presetname' => 'course_resource-list',
+      'actions' => array(
+        '0' => array(
+          'weight' => '0',
+          'module' => 'imagecache',
+          'action' => 'imagecache_scale',
+          'data' => array(
+            'width' => '180',
+            'height' => '',
+            'upscale' => 1,
+          ),
+        ),
+      ),
+    ),
+  );
+  return $items;
+}
+
+/**
  * Implementation of hook_node_info().
  */
 function elms_course_resources_node_info() {

@@ -12,18 +12,18 @@ function elms_course_resources_strongarm() {
   $strongarm->name = 'content_extra_weights_course_resource';
   $strongarm->value = array(
     'title' => '-5',
-    'body_field' => '-4',
-    'revision_information' => '4',
-    'author' => '3',
-    'options' => '5',
-    'menu' => '0',
-    'book' => '2',
-    'path' => '7',
-    'print' => '6',
-    'workflow' => '1',
-    'spaces_preset' => '8',
-    'purl' => '-1',
-    'themes' => '-2',
+    'body_field' => '-1',
+    'revision_information' => '6',
+    'author' => '5',
+    'options' => '7',
+    'menu' => '2',
+    'book' => '4',
+    'path' => '9',
+    'print' => '8',
+    'workflow' => '3',
+    'spaces_preset' => '10',
+    'purl' => '1',
+    'themes' => '0',
   );
   $export['content_extra_weights_course_resource'] = $strongarm;
 
@@ -33,7 +33,6 @@ function elms_course_resources_strongarm() {
   $strongarm->name = 'node_options_course_resource';
   $strongarm->value = array(
     0 => 'status',
-    1 => 'revision',
   );
   $export['node_options_course_resource'] = $strongarm;
 

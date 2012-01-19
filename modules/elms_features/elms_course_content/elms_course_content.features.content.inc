@@ -11,19 +11,20 @@ function elms_course_content_content_default_fields() {
     'field_name' => 'field_link',
     'type_name' => 'link',
     'display_settings' => array(
+      'weight' => '31',
+      'parent' => '',
       'label' => array(
-        'format' => 'above',
-        'exclude' => 0,
-      ),
-      '5' => array(
-        'format' => 'default',
-        'exclude' => 0,
+        'format' => 'hidden',
       ),
       'teaser' => array(
         'format' => 'default',
         'exclude' => 0,
       ),
       'full' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '5' => array(
         'format' => 'default',
         'exclude' => 0,
       ),
@@ -60,7 +61,7 @@ function elms_course_content_content_default_fields() {
       'default_value_php' => NULL,
       'label' => 'Link',
       'weight' => '31',
-      'description' => 'Give the full URL for external links and paths like node/5 for internal ones.',
+      'description' => 'Give the full URL for an external link.',
       'type' => 'cck_redirection',
       'module' => 'cck_redirection',
     ),

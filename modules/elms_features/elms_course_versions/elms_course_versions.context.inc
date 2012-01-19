@@ -51,7 +51,7 @@ function elms_course_versions_context_default_contexts() {
         'version' => 'version',
       ),
       'options' => array(
-        'node_form' => 0,
+        'node_form' => 1,
       ),
     ),
     'context_var' => array(
@@ -67,13 +67,7 @@ function elms_course_versions_context_default_contexts() {
           'module' => 'menu',
           'delta' => 'features',
           'region' => 'left',
-          'weight' => 0,
-        ),
-        'views-f4b29b192e7665960ddb69aa48cf7be2' => array(
-          'module' => 'views',
-          'delta' => 'f4b29b192e7665960ddb69aa48cf7be2',
-          'region' => 'left',
-          'weight' => 1,
+          'weight' => '0',
         ),
       ),
     ),

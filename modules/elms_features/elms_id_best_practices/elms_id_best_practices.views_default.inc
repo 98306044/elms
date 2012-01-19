@@ -17,7 +17,7 @@ function elms_id_best_practices_views_default_views() {
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
   $handler = $view->new_display('default', 'Defaults', 'default');
   $handler->override_option('fields', array(
-    'title' => array(
+    'field_cr_logo_fid' => array(
       'label' => '',
       'alter' => array(
         'alter_text' => 0,
@@ -42,6 +42,51 @@ function elms_id_best_practices_views_default_views() {
       'empty' => '',
       'hide_empty' => 0,
       'empty_zero' => 0,
+      'hide_alter_empty' => 1,
+      'link_to_node' => 0,
+      'label_type' => 'none',
+      'format' => 'course_resource-list_default',
+      'multiple' => array(
+        'group' => TRUE,
+        'multiple_number' => '',
+        'multiple_from' => '',
+        'multiple_reversed' => FALSE,
+      ),
+      'exclude' => 0,
+      'id' => 'field_cr_logo_fid',
+      'table' => 'node_data_field_cr_logo',
+      'field' => 'field_cr_logo_fid',
+      'override' => array(
+        'button' => 'Override',
+      ),
+      'relationship' => 'none',
+    ),
+    'title' => array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => 1,
+        'text' => '<strong>[title]</strong>',
+        'make_link' => 0,
+        'path' => '',
+        'absolute' => 0,
+        'link_class' => '',
+        'alt' => '',
+        'rel' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'hide_alter_empty' => 1,
       'link_to_node' => 0,
       'spaces' => array(
         'frontpage' => 0,
@@ -52,37 +97,9 @@ function elms_id_best_practices_views_default_views() {
       'table' => 'node',
       'field' => 'title',
       'relationship' => 'none',
-    ),
-    'body' => array(
-      'label' => '',
-      'alter' => array(
-        'alter_text' => 0,
-        'text' => '',
-        'make_link' => 0,
-        'path' => '',
-        'absolute' => 0,
-        'link_class' => '',
-        'alt' => '',
-        'rel' => '',
-        'prefix' => '',
-        'suffix' => '',
-        'target' => '',
-        'help' => '',
-        'trim' => 0,
-        'max_length' => '',
-        'word_boundary' => 1,
-        'ellipsis' => 1,
-        'html' => 0,
-        'strip_tags' => 0,
+      'override' => array(
+        'button' => 'Override',
       ),
-      'empty' => '',
-      'hide_empty' => 0,
-      'empty_zero' => 0,
-      'exclude' => 0,
-      'id' => 'body',
-      'table' => 'node_revisions',
-      'field' => 'body',
-      'relationship' => 'none',
     ),
     'field_resource_link_url' => array(
       'label' => '',
@@ -122,6 +139,86 @@ function elms_id_best_practices_views_default_views() {
       'id' => 'field_resource_link_url',
       'table' => 'node_data_field_resource_link',
       'field' => 'field_resource_link_url',
+      'relationship' => 'none',
+    ),
+    'field_short_description_value' => array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'absolute' => 0,
+        'link_class' => '',
+        'alt' => '',
+        'rel' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 1,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'hide_alter_empty' => 1,
+      'link_to_node' => 0,
+      'label_type' => 'none',
+      'format' => 'default',
+      'multiple' => array(
+        'group' => TRUE,
+        'multiple_number' => '',
+        'multiple_from' => '',
+        'multiple_reversed' => FALSE,
+      ),
+      'exclude' => 0,
+      'id' => 'field_short_description_value',
+      'table' => 'node_data_field_short_description',
+      'field' => 'field_short_description_value',
+      'override' => array(
+        'button' => 'Override',
+      ),
+      'relationship' => 'none',
+    ),
+    'view_node' => array(
+      'label' => '',
+      'alter' => array(
+        'alter_text' => 0,
+        'text' => '',
+        'make_link' => 0,
+        'path' => '',
+        'absolute' => 0,
+        'link_class' => '',
+        'alt' => '',
+        'rel' => '',
+        'prefix' => '',
+        'suffix' => '',
+        'target' => '',
+        'help' => '',
+        'trim' => 0,
+        'max_length' => '',
+        'word_boundary' => 1,
+        'ellipsis' => 1,
+        'html' => 0,
+        'strip_tags' => 0,
+      ),
+      'empty' => '',
+      'hide_empty' => 0,
+      'empty_zero' => 0,
+      'hide_alter_empty' => 0,
+      'text' => 'More Info',
+      'exclude' => 0,
+      'id' => 'view_node',
+      'table' => 'node',
+      'field' => 'view_node',
+      'override' => array(
+        'button' => 'Override',
+      ),
       'relationship' => 'none',
     ),
   ));
@@ -170,30 +267,71 @@ function elms_id_best_practices_views_default_views() {
     'type' => 'none',
   ));
   $handler->override_option('cache', array(
-    'type' => 'none',
+    'type' => 'time',
+    'results_lifespan' => '21600',
+    'output_lifespan' => '-1',
   ));
-  $handler->override_option('title', 'Resources');
+  $handler->override_option('title', 'Applications');
   $handler->override_option('items_per_page', 0);
   $handler->override_option('style_plugin', 'fluid_grid');
   $handler->override_option('style_options', array(
-    'advanced_layout' => array(),
-    'items_width' => '250',
-    'items_height' => '250',
+    'grouping' => '',
+    'advanced_layout' => array(
+      'align' => TRUE,
+      'margins' => TRUE,
+      'css3' => TRUE,
+    ),
+    'items_width' => '200',
+    'items_height' => '300',
     'list_alignment' => '',
-    'items_alignment' => '',
-    'items_h_margin' => '',
-    'items_v_margin' => '',
-    'box_shadow' => '0',
-    'border_radius' => '0',
+    'items_alignment' => 'center',
+    'items_h_margin' => '2px',
+    'items_v_margin' => '2px',
+    'box_shadow' => '1',
+    'border_radius' => '1',
+  ));
+  $handler->override_option('row_options', array(
+    'inline' => array(
+      'field_short_description_value' => 'field_short_description_value',
+      'view_node' => 'view_node',
+    ),
+    'separator' => ' ',
+    'hide_empty' => 0,
   ));
   $handler = $view->new_display('page', 'Page', 'page_1');
-  $handler->override_option('path', 'course_resources');
+  $handler->override_option('cache', array(
+    'type' => 'time',
+    'results_lifespan' => '518400',
+    'output_lifespan' => '518400',
+  ));
+  $handler->override_option('path', 'course_applications');
   $handler->override_option('menu', array(
     'type' => 'normal',
-    'title' => 'Resources',
-    'description' => 'List of all Course Resources',
+    'title' => 'Applications',
+    'description' => 'List of all Course Applications',
     'weight' => '0',
     'name' => 'menu-usermenu',
+  ));
+  $handler->override_option('tab_options', array(
+    'type' => 'none',
+    'title' => '',
+    'description' => '',
+    'weight' => 0,
+    'name' => 'navigation',
+  ));
+  $handler = $view->new_display('page', 'Page', 'page_2');
+  $handler->override_option('access', array(
+    'type' => 'spaces_feature',
+    'spaces_feature' => 'elms_id_best_practices',
+    'perm' => 'access content',
+  ));
+  $handler->override_option('path', 'applications');
+  $handler->override_option('menu', array(
+    'type' => 'normal',
+    'title' => 'Applications',
+    'description' => 'Overview of applications used in the course',
+    'weight' => '2',
+    'name' => 'features',
   ));
   $handler->override_option('tab_options', array(
     'type' => 'none',

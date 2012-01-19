@@ -1,5 +1,6 @@
 core = "6.x"
 dependencies[] = "context"
+dependencies[] = "elms_course_content"
 dependencies[] = "features"
 dependencies[] = "masquerade"
 dependencies[] = "menu"

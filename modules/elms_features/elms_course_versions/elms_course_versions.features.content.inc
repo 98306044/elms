@@ -6,6 +6,70 @@
 function elms_course_versions_content_default_fields() {
   $fields = array();
 
+  // Exported field: field_activation_codes
+  $fields['version-field_activation_codes'] = array(
+    'field_name' => 'field_activation_codes',
+    'type_name' => 'version',
+    'display_settings' => array(
+      'weight' => '22',
+      'parent' => 'group_section_info',
+      'label' => array(
+        'format' => 'above',
+      ),
+      'teaser' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      'full' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      '5' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '2' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '3' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      'token' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+    ),
+    'widget_active' => '1',
+    'type' => 'text',
+    'required' => '0',
+    'multiple' => '0',
+    'module' => 'text',
+    'active' => '1',
+    'text_processing' => '0',
+    'max_length' => '',
+    'allowed_values' => '1|Yes',
+    'allowed_values_php' => '',
+    'widget' => array(
+      'default_value' => array(
+        '0' => array(
+          'value' => '',
+        ),
+      ),
+      'default_value_php' => NULL,
+      'label' => 'Activation Codes',
+      'weight' => '22',
+      'description' => 'Does this course have activation codes?',
+      'type' => 'optionwidgets_select',
+      'module' => 'optionwidgets',
+    ),
+  );
+
   // Exported field: field_campus
   $fields['version-field_campus'] = array(
     'field_name' => 'field_campus',
@@ -22,7 +86,7 @@ function elms_course_versions_content_default_fields() {
       ),
       'full' => array(
         'format' => 'default',
-        'exclude' => 1,
+        'exclude' => 0,
       ),
       '5' => array(
         'format' => 'default',
@@ -111,7 +175,7 @@ yk|York Campus',
       ),
       'full' => array(
         'format' => 'default',
-        'exclude' => 1,
+        'exclude' => 0,
       ),
       '5' => array(
         'format' => 'default',
@@ -185,13 +249,80 @@ yk|York Campus',
     ),
   );
 
+  // Exported field: field_footer
+  $fields['version-field_footer'] = array(
+    'field_name' => 'field_footer',
+    'type_name' => 'version',
+    'display_settings' => array(
+      'weight' => '23',
+      'parent' => 'group_site_settings',
+      'label' => array(
+        'format' => 'above',
+      ),
+      'teaser' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      'full' => array(
+        'format' => 'default',
+        'exclude' => 1,
+      ),
+      '5' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '2' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '3' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      'token' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+    ),
+    'widget_active' => '1',
+    'type' => 'text',
+    'required' => '0',
+    'multiple' => '0',
+    'module' => 'text',
+    'active' => '1',
+    'text_processing' => '0',
+    'max_length' => '',
+    'allowed_values' => '',
+    'allowed_values_php' => '',
+    'widget' => array(
+      'rows' => '3',
+      'size' => 60,
+      'default_value' => array(
+        '0' => array(
+          'value' => '',
+          '_error_element' => 'default_value_widget][field_footer][0][value',
+        ),
+      ),
+      'default_value_php' => NULL,
+      'label' => 'Footer',
+      'weight' => '23',
+      'description' => '',
+      'type' => 'text_textarea',
+      'module' => 'text',
+    ),
+  );
+
   // Exported field: field_inst_contact_block
   $fields['version-field_inst_contact_block'] = array(
     'field_name' => 'field_inst_contact_block',
     'type_name' => 'version',
     'display_settings' => array(
       'weight' => '22',
-      'parent' => 'group_instructor_contact_info',
+      'parent' => 'group_site_settings',
       'label' => array(
         'format' => 'above',
       ),
@@ -417,7 +548,7 @@ else {
       ),
       'full' => array(
         'format' => 'default',
-        'exclude' => 1,
+        'exclude' => 0,
       ),
       '5' => array(
         'format' => 'default',
@@ -485,7 +616,7 @@ else {
       ),
       'full' => array(
         'format' => 'default',
-        'exclude' => 1,
+        'exclude' => 0,
       ),
       '5' => array(
         'format' => 'default',
@@ -554,7 +685,7 @@ su2|Summer 2',
       ),
       'full' => array(
         'format' => 'default',
-        'exclude' => 1,
+        'exclude' => 0,
       ),
       '5' => array(
         'format' => 'default',
@@ -611,9 +742,11 @@ su2|Summer 2',
 
   // Translatables
   // Included for use with string extractors like potx.
+  t('Activation Codes');
   t('Campus');
   t('Contact Block');
   t('Course');
+  t('Footer');
   t('Instructional Template');
   t('Lessons');
   t('Section Number');
