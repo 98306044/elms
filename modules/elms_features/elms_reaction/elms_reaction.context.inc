@@ -22,9 +22,9 @@ function elms_reaction_context_default_contexts() {
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
-        'views-course_reaction_list-block_1' => array(
+        'views-elms_reaction_list-block_1' => array(
           'module' => 'views',
-          'delta' => 'course_reaction_list-block_1',
+          'delta' => 'elms_reaction_list-block_1',
           'region' => 'regions_elms_navigation_right',
           'weight' => 0,
         ),
@@ -54,9 +54,9 @@ function elms_reaction_context_default_contexts() {
     ),
     'views' => array(
       'values' => array(
-        'course_reaction_list:page_1' => 'course_reaction_list:page_1',
-        'course_reaction_list:page_2' => 'course_reaction_list:page_2',
-        'course_reaction_list:page_3' => 'course_reaction_list:page_3',
+        'elms_reaction_list:page_1' => 'elms_reaction_list:page_1',
+        'elms_reaction_list:page_2' => 'elms_reaction_list:page_2',
+        'elms_reaction_list:page_3' => 'elms_reaction_list:page_3',
       ),
     ),
   );

@@ -1,5 +1,4 @@
 <?php
-// $Id: data.views.inc,v 1.7.2.5 2010/03/03 17:11:28 alexb Exp $
 /**
  * @file
  * Views hooks and utility functions.
@@ -125,29 +124,26 @@ function data_get_views_handler_options($type = NULL, $reset = FALSE) {
   static $handlers;
   if (!isset($handlers) || $reset) {
     $handlers = array();
-    $handlers['field'] = array(
-      'views_handler_field' => 'views_handler_field',
-      'views_handler_field_numeric' => 'views_handler_field_numeric',
-      'views_handler_field_date' => 'views_handler_field_date',
-      'views_handler_field_url' => 'views_handler_field_url',
-      'views_handler_field_data_markup' => 'views_handler_field_data_markup',
+    module_load_include('inc', 'views', 'includes/base');
+    module_load_include('inc', 'views', 'includes/handlers');
+    $available_handlers = views_discover_handlers();
+    $handlers = array(
+      'field',
+      'filter',
+      'argument',
+      'sort',
     );
-    $handlers['filter'] = array(
-      'views_handler_filter_date' => 'views_handler_filter_date',
-      'views_handler_filter_float' => 'views_handler_filter_float',
-      'views_handler_filter_numeric' => 'views_handler_filter_numeric',
-      'views_handler_filter_string' => 'views_handler_filter_string',
-    );
-    $handlers['argument'] = array(
-      'views_handler_argument' => 'views_handler_argument',
-      'views_handler_argument_date' => 'views_handler_argument_date',
-      'views_handler_argument_numeric' => 'views_handler_argument_numeric',
-      'views_handler_argument_string' => 'views_handler_argument_string',
-    );
-    $handlers['sort'] = array(
-      'views_handler_sort' => 'views_handler_sort',
-      'views_handler_sort_date' => 'views_handler_sort_date',
-    );
+    foreach ($available_handlers as $available_handler => $def) {
+      foreach ($handlers as $handler) {
+        // Look for handler names of the form 'views_handler_TYPE.*'.
+        $pattern = '/^views_handler_';
+        $pattern .= $handler;
+        $pattern .= '([_][^_.]+)*$/';
+        if (preg_match($pattern, $available_handler)) {
+          $handlers[$handler][$available_handler] = $available_handler;
+        };
+      };
+    };
     // Allow other modules to alter the list of available handlers.
     drupal_alter('data_views_handlers', $handlers);
   }

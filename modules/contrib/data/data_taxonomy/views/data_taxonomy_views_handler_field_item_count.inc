@@ -1,5 +1,4 @@
 <?php
-// $Id: data_taxonomy_views_handler_field_item_count.inc,v 1.1.2.1 2010/01/21 22:39:22 davidg Exp $
 /**
  * @file
  * Class defition for data_node_views_handler_field_item_count.

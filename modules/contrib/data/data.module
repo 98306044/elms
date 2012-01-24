@@ -1,5 +1,4 @@
 <?php
-// $Id: data.module,v 1.34.2.22 2010/09/09 20:23:10 alexb Exp $
 /**
  * @file
  * Hooks and API functions for data module.

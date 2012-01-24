@@ -7,9 +7,9 @@ function elms_schedule_content_default_fields() {
   $fields = array();
 
   // Exported field: field_color
-  $fields['course_event-field_color'] = array(
+  $fields['elms_event-field_color'] = array(
     'field_name' => 'field_color',
-    'type_name' => 'course_event',
+    'type_name' => 'elms_event',
     'display_settings' => array(
       'weight' => '13',
       'parent' => 'group_additional_settings',
@@ -61,16 +61,16 @@ function elms_schedule_content_default_fields() {
       'default_value_php' => NULL,
       'label' => 'Color',
       'weight' => '13',
-      'description' => 'The background color of the item in course schedules and related displays',
+      'description' => 'The background color of the item in schedules and related displays',
       'type' => 'colorpicker_cck',
       'module' => 'colorpicker_cck',
     ),
   );
 
   // Exported field: field_content_ref
-  $fields['course_event-field_content_ref'] = array(
+  $fields['elms_event-field_content_ref'] = array(
     'field_name' => 'field_content_ref',
-    'type_name' => 'course_event',
+    'type_name' => 'elms_event',
     'display_settings' => array(
       'weight' => '14',
       'parent' => 'group_additional_settings',
@@ -115,15 +115,15 @@ function elms_schedule_content_default_fields() {
     'referenceable_types' => array(
       'accessibility_guideline' => 0,
       'accessibility_test' => 0,
-      'course_event' => 0,
-      'course' => 0,
+      'elms_event' => 0,
+      'parent' => 0,
       'folder' => 0,
       'link' => 0,
       'page' => 0,
       'promo' => 0,
-      'version' => 0,
+      'site' => 0,
     ),
-    'advanced_view' => 'elms_core_get_course_outlines',
+    'advanced_view' => 'elms_site_get_outlines',
     'advanced_view_args' => '',
     'widget' => array(
       'autocomplete_match' => 'contains',
@@ -144,9 +144,9 @@ function elms_schedule_content_default_fields() {
   );
 
   // Exported field: field_date_mod_text
-  $fields['course_event-field_date_mod_text'] = array(
+  $fields['elms_event-field_date_mod_text'] = array(
     'field_name' => 'field_date_mod_text',
-    'type_name' => 'course_event',
+    'type_name' => 'elms_event',
     'display_settings' => array(
       'weight' => '4',
       'parent' => 'group_dates',
@@ -210,9 +210,9 @@ Attend on',
   );
 
   // Exported field: field_detail_text
-  $fields['course_event-field_detail_text'] = array(
+  $fields['elms_event-field_detail_text'] = array(
     'field_name' => 'field_detail_text',
-    'type_name' => 'course_event',
+    'type_name' => 'elms_event',
     'display_settings' => array(
       'weight' => '1',
       'parent' => 'group_event_text',
@@ -277,9 +277,9 @@ Attend on',
   );
 
   // Exported field: field_due_date
-  $fields['course_event-field_due_date'] = array(
+  $fields['elms_event-field_due_date'] = array(
     'field_name' => 'field_due_date',
-    'type_name' => 'course_event',
+    'type_name' => 'elms_event',
     'display_settings' => array(
       'weight' => '5',
       'parent' => 'group_dates',
@@ -352,9 +352,9 @@ Attend on',
   );
 
   // Exported field: field_due_time
-  $fields['course_event-field_due_time'] = array(
+  $fields['elms_event-field_due_time'] = array(
     'field_name' => 'field_due_time',
-    'type_name' => 'course_event',
+    'type_name' => 'elms_event',
     'display_settings' => array(
       'weight' => '6',
       'parent' => 'group_dates',
@@ -419,9 +419,9 @@ Attend on',
   );
 
   // Exported field: field_end_date
-  $fields['course_event-field_end_date'] = array(
+  $fields['elms_event-field_end_date'] = array(
     'field_name' => 'field_end_date',
-    'type_name' => 'course_event',
+    'type_name' => 'elms_event',
     'display_settings' => array(
       'weight' => '7',
       'parent' => 'group_dates',
@@ -494,9 +494,9 @@ Attend on',
   );
 
   // Exported field: field_event_name
-  $fields['course_event-field_event_name'] = array(
+  $fields['elms_event-field_event_name'] = array(
     'field_name' => 'field_event_name',
-    'type_name' => 'course_event',
+    'type_name' => 'elms_event',
     'display_settings' => array(
       'weight' => 0,
       'parent' => 'group_event_text',
@@ -561,9 +561,9 @@ Attend on',
   );
 
   // Exported field: field_event_type
-  $fields['course_event-field_event_type'] = array(
+  $fields['elms_event-field_event_type'] = array(
     'field_name' => 'field_event_type',
-    'type_name' => 'course_event',
+    'type_name' => 'elms_event',
     'display_settings' => array(
       'weight' => '-4',
       'parent' => '',
@@ -630,9 +630,9 @@ reading|Reading',
   );
 
   // Exported field: field_score_value
-  $fields['course_event-field_score_value'] = array(
+  $fields['elms_event-field_score_value'] = array(
     'field_name' => 'field_score_value',
-    'type_name' => 'course_event',
+    'type_name' => 'elms_event',
     'display_settings' => array(
       'weight' => '12',
       'parent' => 'group_additional_settings',
@@ -697,9 +697,9 @@ reading|Reading',
   );
 
   // Exported field: field_task_link
-  $fields['course_event-field_task_link'] = array(
+  $fields['elms_event-field_task_link'] = array(
     'field_name' => 'field_task_link',
-    'type_name' => 'course_event',
+    'type_name' => 'elms_event',
     'display_settings' => array(
       'weight' => '15',
       'parent' => 'group_additional_settings',

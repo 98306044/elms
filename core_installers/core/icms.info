@@ -5,6 +5,7 @@ type = "installer"
 ; Outline Designer
 dependencies[] = "outline_designer"
 dependencies[] = "outline_designer_og"
+dependencies[] = "book_outline_builder"
 ; Flags
 dependencies[] = "flag"
 ; Feeds
@@ -16,10 +17,9 @@ dependencies[] = "feeds_xpathparser"
 ; Data
 dependencies[] = "data"
 ; ELMS Core - Features
-dependencies[] = "elms_course_content"
-dependencies[] = "elms_course_content_import"
-dependencies[] = "elms_course_content_export"
+dependencies[] = "elms_content"
 dependencies[] = "elms_id_best_practices"
-dependencies[] = "elms_user_management"
+dependencies[] = "elms_content_import"
+dependencies[] = "elms_content_export"
 ; ELMS ICMS Core Installer
 dependencies[] = "elms_icms"

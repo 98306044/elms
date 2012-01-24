@@ -6,11 +6,11 @@
 function elms_schedule_views_default_views() {
   $views = array();
 
-  // Exported view: course_schedule
+  // Exported view: elms_schedule
   $view = new view;
-  $view->name = 'course_schedule';
-  $view->description = 'All views course Schedule related';
-  $view->tag = 'course, schedule';
+  $view->name = 'elms_schedule';
+  $view->description = 'All views Schedule related';
+  $view->tag = 'schedule';
   $view->base_table = 'node';
   $view->core = 0;
   $view->api_version = '2';
@@ -575,8 +575,8 @@ function elms_schedule_views_default_views() {
       'style_options' => array(),
       'wildcard' => 'all',
       'wildcard_substitution' => 'All',
-      'title' => '%1 Course Schedule',
-      'breadcrumb' => 'Course Schedule',
+      'title' => '%1 Schedule',
+      'breadcrumb' => ' Schedule',
       'default_argument_type' => 'og_group_node',
       'default_argument' => '',
       'validate_type' => 'none',
@@ -607,15 +607,15 @@ function elms_schedule_views_default_views() {
       'validate_argument_node_type' => array(
         'accessibility_guideline' => 0,
         'accessibility_test' => 0,
-        'course_event' => 0,
-        'course' => 0,
+        'elms_event' => 0,
+        'parent' => 0,
         'folder' => 0,
         'link' => 0,
         'page' => 0,
         'promo' => 0,
         'reaction' => 0,
         'studio_submission' => 0,
-        'version' => 0,
+        'site' => 0,
       ),
       'validate_argument_node_access' => 0,
       'validate_argument_nid_type' => 'nid',
@@ -633,7 +633,7 @@ function elms_schedule_views_default_views() {
       'validate_argument_user_flag_id_type' => 'id',
       'validate_argument_is_member' => 'OG_VIEWS_DO_NOT_VALIDATE_MEMBERSHIP',
       'validate_argument_group_node_type' => array(
-        'version' => 'version',
+        'site' => 'site',
       ),
       'validate_argument_php' => '',
     ),
@@ -642,7 +642,7 @@ function elms_schedule_views_default_views() {
     'type' => array(
       'operator' => 'in',
       'value' => array(
-        'course_event' => 'course_event',
+        'elms_event' => 'elms_event',
       ),
       'group' => '0',
       'exposed' => FALSE,
@@ -667,7 +667,7 @@ function elms_schedule_views_default_views() {
   $handler->override_option('cache', array(
     'type' => 'none',
   ));
-  $handler->override_option('title', 'Course Schedule');
+  $handler->override_option('title', 'Schedule');
   $handler->override_option('header_format', '1');
   $handler->override_option('header_empty', 0);
   $handler->override_option('items_per_page', 0);
@@ -879,7 +879,7 @@ function elms_schedule_views_default_views() {
   $handler->override_option('access', array(
     'type' => 'spaces_feature',
     'spaces_feature' => 'elms_schedule',
-    'perm' => 'edit own course_event content',
+    'perm' => 'edit own elms_event content',
   ));
   $handler->override_option('title', 'Reorder Schedule');
   $handler->override_option('style_plugin', 'draggabletable');
@@ -969,7 +969,7 @@ function elms_schedule_views_default_views() {
     'weight' => 0,
     'name' => 'navigation',
   ));
-  $handler = $view->new_display('page', 'Edit Course Schedule', 'page_3');
+  $handler = $view->new_display('page', 'Edit Schedule', 'page_3');
   $handler->override_option('relationships', array());
   $handler->override_option('fields', array(
     'field_event_type_value' => array(
@@ -1509,7 +1509,7 @@ function elms_schedule_views_default_views() {
   $handler->override_option('access', array(
     'type' => 'spaces_feature',
     'spaces_feature' => 'elms_schedule',
-    'perm' => 'edit own course_event content',
+    'perm' => 'edit own elms_event content',
   ));
   $handler->override_option('title', 'Edit Offering Schedule');
   $handler->override_option('style_options', array(
@@ -1524,7 +1524,7 @@ function elms_schedule_views_default_views() {
   $handler->override_option('menu', array(
     'type' => 'tab',
     'title' => 'Edit',
-    'description' => 'Edit Course Schedule',
+    'description' => 'Edit Schedule',
     'weight' => '1',
     'name' => 'navigation',
   ));
@@ -1583,7 +1583,7 @@ function elms_schedule_views_default_views() {
   $handler->override_option('access', array(
     'type' => 'spaces_feature',
     'spaces_feature' => 'elms_schedule',
-    'perm' => 'delete any course_event content',
+    'perm' => 'delete any elms_event content',
   ));
   $handler->override_option('title', 'Delete Offering Events');
   $handler->override_option('style_plugin', 'bulk');
@@ -1855,14 +1855,14 @@ function elms_schedule_views_default_views() {
   $handler->override_option('menu', array(
     'type' => 'normal',
     'title' => 'Schedule',
-    'description' => 'Course Schedule',
+    'description' => 'Schedule',
     'weight' => '1',
     'name' => 'features',
   ));
   $handler->override_option('tab_options', array(
     'type' => 'none',
     'title' => 'Schedule',
-    'description' => 'Course Schedule',
+    'description' => 'Schedule',
     'weight' => '0',
     'name' => 'features',
   ));
@@ -1871,7 +1871,7 @@ function elms_schedule_views_default_views() {
   $handler->override_option('menu', array(
     'type' => 'default tab',
     'title' => 'View',
-    'description' => 'Course Schedule',
+    'description' => 'Schedule',
     'weight' => '0',
     'name' => 'navigation',
   ));

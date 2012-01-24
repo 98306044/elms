@@ -73,8 +73,8 @@ function elms_navigation_left_block($op = 'list', $delta = 0, $edit = array()) {
     switch ($delta) {
       case 1:
         if (isset($group->nid)) {
-          $block['title'] = t('Course');
-          $block['content'] = _elms_navigation_left_course_block($group);
+          $block['title'] = t('Site');
+          $block['content'] = _elms_navigation_left_parent_block($group);
         }
       break;
       case 2:
@@ -118,14 +118,14 @@ function _elms_navigation_left_page_block() {
 }
 
 //helper function Course level tasks
-function _elms_navigation_left_course_block($group) {
+function _elms_navigation_left_parent_block($group) {
   $output = '';
 	//make the current workflow state as visible as possible
   if (user_access('administer workflow')) {
     $output .= theme('menu_item', l(t(workflow_get_state_name($group->_workflow)),  'node/'. $group->nid .'/workflow', array('query' => 'destination='. $_GET['q'], 'attributes' => array('title' => t('Course State: @workflow', array('@workflow' => workflow_get_state_name($group->_workflow)))))), 0, '', FALSE, 'workflow_state workflow_state_'. $group->_workflow);
   }
   //if course content active, add the outline designer link
-  if (spaces_access_feature('view', 'elms_course_content')) {
+  if (spaces_access_feature('view', 'elms_content')) {
     if (user_access('administer book outlines')) {
 	  $output .= theme('menu_item', l(t('Content Outline'), 'outline_designer/book/'. $group->book_nid, array('attributes' => array('title' => 'Content Outline'))), 0, '', FALSE, 'content_outline');
     }
@@ -134,7 +134,7 @@ function _elms_navigation_left_course_block($group) {
     $output .= theme('menu_item', l(t('Course Settings'), 'node/'. $group->nid, array('attributes' => array('title' => 'Course Settings'))), 0, '', FALSE, 'system');
 	}
   //import content
-  if (module_exists('elms_course_content_import') && user_access('access administration pages')) {
+  if (module_exists('elms_content_import') && user_access('access administration pages')) {
     if (user_access('import elms_node_import feeds')) {
       $output .= theme('menu_item', l(t('Import Content'), 'import/elms_node_import', array('attributes' => array('title' => 'Import Outline'))), 0, '', FALSE, 'manage_content');
     }

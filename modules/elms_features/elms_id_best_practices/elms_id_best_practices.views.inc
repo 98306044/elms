@@ -5,7 +5,7 @@
 function elms_id_best_practices_views_query_alter(&$view, &$query) {
   //for the included view, allow for additional processing
 	$group = og_get_group_context();
-  if ($view->name == 'course_resources' && isset($group->nid)) {
+  if ($view->name == 'elms_resources' && isset($group->nid)) {
     //need to filter out data from the query based on Spaces settings
 		$resources = variable_get('elms_id_bp_resources', array());
 		//make sure resources have been set

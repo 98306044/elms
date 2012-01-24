@@ -6,10 +6,10 @@
 function elms_id_best_practices_views_default_views() {
   $views = array();
 
-  // Exported view: course_resources
+  // Exported view: elms_resources
   $view = new view;
-  $view->name = 'course_resources';
-  $view->description = 'Course Resource list';
+  $view->name = 'elms_resources';
+  $view->description = 'ELMS Resource list';
   $view->tag = 'resources';
   $view->base_table = 'node';
   $view->core = 6;
@@ -45,7 +45,7 @@ function elms_id_best_practices_views_default_views() {
       'hide_alter_empty' => 1,
       'link_to_node' => 0,
       'label_type' => 'none',
-      'format' => 'course_resource-list_default',
+      'format' => 'elms_resource-list_default',
       'multiple' => array(
         'group' => TRUE,
         'multiple_number' => '',
@@ -249,7 +249,7 @@ function elms_id_best_practices_views_default_views() {
     'type' => array(
       'operator' => 'in',
       'value' => array(
-        'course_resource' => 'course_resource',
+        'elms_resource' => 'elms_resource',
       ),
       'group' => '0',
       'exposed' => FALSE,
@@ -304,11 +304,11 @@ function elms_id_best_practices_views_default_views() {
     'results_lifespan' => '518400',
     'output_lifespan' => '518400',
   ));
-  $handler->override_option('path', 'course_applications');
+  $handler->override_option('path', 'elms_applications');
   $handler->override_option('menu', array(
     'type' => 'normal',
     'title' => 'Applications',
-    'description' => 'List of all Course Applications',
+    'description' => 'List of all Applications',
     'weight' => '-46',
     'name' => 'menu-usermenu',
   ));

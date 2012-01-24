@@ -1,4 +1,4 @@
-ELMS: Export HTML- Export your ELMS Course Version to HTML
+ELMS: Export HTML- Export your ELMS Site to HTML
 Copyright (C) 2011  The Pennsylvania State University
 
 Bryan Ollendyke

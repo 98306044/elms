@@ -40,7 +40,7 @@ function elms_id_best_practices_menu() {
     'title' => 'ID Best Practices',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('elms_id_best_practices_settings'),
-    'access callback' => '_elms_course_content_access_check',
+    'access callback' => '_elms_content_access_check',
 		'access arguments' => array(),
     'type' => MENU_LOCAL_TASK,
     'file' => 'elms_id_best_practices.pages.inc',
@@ -72,7 +72,7 @@ function _elms_id_best_practices_access_check_admin() {
 }
 
 /**
- * Implementation of hook_elms_instructional_template().
+ * Implementation content generation from wysiwyg templates module.
  */
 function _elms_id_best_practices_get_template($tid) {
   $body = '';
@@ -84,9 +84,9 @@ function _elms_id_best_practices_get_template($tid) {
 }
 
 /**
- * Implementation of hook_elms_instructional_template().
+ * Implementation of hook_book_outline_builder_template().
  */
-function elms_id_best_practices_elms_instructional_template() {
+function elms_id_best_practices_book_outline_builder_template() {
   $outline['unit_outline'] = array(
     'title' => 'Unit / Topical Outline',
       array(

@@ -14,7 +14,7 @@
  * Implementation of hook_perm().
  */
 function elms_export_html_perm() {
-  return array('export course as html');
+  return array('export site as html');
 }
 
 /**
@@ -23,7 +23,7 @@ function elms_export_html_perm() {
 function elms_export_html_help($section) {
   switch ($section) {
     case 'admin':
-      return t("ELMS Export HTML lets you export your course version to static HTML.");
+      return t("ELMS Export HTML lets you export your site to static HTML.");
   }
 }
 
@@ -37,7 +37,7 @@ function elms_export_html_menu() {
     'description' => 'Export your drupal site to static html page',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('elms_export_html_settings'),
-    'access arguments' => array('export course as html'),
+    'access arguments' => array('export site as html'),
     'type' => MENU_NORMAL_ITEM,
   );
   return $items;
@@ -49,7 +49,7 @@ function elms_export_html_menu() {
 function elms_export_html_settings() {
   $form['submit'] = array(
     '#type' => 'submit',
-  '#description' => 'This will export your current course version to HTML.',
+  '#description' => 'This will export your current site to HTML.',
     '#value' => t('Export to HTML'),
     '#weight' => 10,
     '#submit' => array('elms_export_html_settings_submit'),

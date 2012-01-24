@@ -18,13 +18,13 @@ function elms_data_out_views_default_views() {
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
   $handler = $view->new_display('default', 'Defaults', 'default');
   $handler->override_option('relationships', array(
-    'field_course_ref_nid' => array(
-      'label' => 'Course',
+    'field_parent_ref_nid' => array(
+      'label' => 'Parent',
       'required' => 1,
       'delta' => -1,
-      'id' => 'field_course_ref_nid',
-      'table' => 'node_data_field_course_ref',
-      'field' => 'field_course_ref_nid',
+      'id' => 'field_parent_ref_nid',
+      'table' => 'node_data_field_parent_ref',
+      'field' => 'field_parent_ref_nid',
       'relationship' => 'none',
     ),
   ));
@@ -139,7 +139,7 @@ function elms_data_out_views_default_views() {
     'type' => array(
       'operator' => 'in',
       'value' => array(
-        'version' => 'version',
+        'site' => 'site',
       ),
       'group' => '0',
       'exposed' => FALSE,
@@ -208,7 +208,7 @@ function elms_data_out_views_default_views() {
     'header' => 1,
   ));
   $handler->override_option('row_plugin', '');
-  $handler->override_option('path', 'data_feeds/course_list');
+  $handler->override_option('path', 'data_feeds/parent_list');
   $handler->override_option('menu', array(
     'type' => 'none',
     'title' => '',

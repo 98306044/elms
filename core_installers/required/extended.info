@@ -1,10 +1,10 @@
 name = "ELMS Core Install Extended"
-description = "Extended Core installation, second pass"
+description = "Extended Core installation, second pass for ELMS Core"
 type = "required"
 
 ; ELMS Core
-dependencies[] = "elms_course"
-dependencies[] = "elms_course_versions"
+dependencies[] = "elms_parent"
+dependencies[] = "elms_site"
 dependencies[] = "elms_helper"
 dependencies[] = "elms_user_management"
 ; ELMS UI
@@ -15,7 +15,7 @@ dependencies[] = "elms_navigation_bottom"
 dependencies[] = "elms_navigation_right"
 ; ELMS Core Optional
 dependencies[] = "elms_export_html"
-dependencies[] = "elms_course_resources"
+dependencies[] = "elms_resources"
 dependencies[] = "elms_helpdesk"
 
 ; Contrib
@@ -28,7 +28,6 @@ dependencies[] = "adminrole"
 dependencies[] = "module_filter"
 dependencies[] = "protect_critical_users"
 
-; Other
 ; CCK
 dependencies[] = "content"
 dependencies[] = "masquerade"
@@ -105,7 +104,7 @@ dependencies[] = "views_slideshow"
 dependencies[] = "filefield_paths"
 
 
-; Printer, e-mail and PDF versions
+; Printer, e-mail and PDF
 dependencies[] = "print"
 ; Requirement Dashboard
 dependencies[] = "requirement_dashboard"
@@ -116,8 +115,5 @@ dependencies[] = "workflow"
 dependencies[] = "workflow_purl"
 ; Accessible Content
 dependencies[] = "accessible_content"
-; Performance and scalability
-dependencies[] = "javascript_aggregator"
-dependencies[] = "css_emimage"
 ; Context
 dependencies[] = "context_var"

@@ -1,5 +1,4 @@
 <?php
-// $Id: data_node.views.inc,v 1.1.2.1 2009/09/22 17:40:45 alexb Exp $
 /**
  * @file
  * Views hooks.

@@ -1,5 +1,4 @@
 <?php
-// $Id: data_node_views_handler_field_add_remove.inc,v 1.1.2.2 2009/09/25 21:15:16 yhahn Exp $
 /**
  * @file
  * Class defition for data_node_views_handler_field_add_remove.

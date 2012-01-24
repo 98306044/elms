@@ -45,7 +45,7 @@ function elms_id_best_practices_settings() {
     '#title' => t('Help Page'),
   );
 	//render a select list based on a list of all available resources
-	$result = db_query("SELECT nid,title FROM {node} WHERE type='course_resource'");
+	$result = db_query("SELECT nid,title FROM {node} WHERE type='elms_resource'");
 	$options = array();
 	while ($val = db_fetch_array($result)) {
 		$options[$val['nid']] = $val['title'];

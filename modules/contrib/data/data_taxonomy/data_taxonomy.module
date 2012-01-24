@@ -1,5 +1,4 @@
 <?php
-// $Id: data_taxonomy.module,v 1.1.2.42 2010/09/28 16:31:01 alexb Exp $
 
 /**
  * @file
@@ -82,7 +81,7 @@ function data_taxonomy_data_insert($record, $table_name) {
     $id = $record[$info['id']];
     foreach ($info['vocabularies'] as $vid) {
       if (isset($record['data_taxonomy:'. $vid])) {
-        _data_taxonomy_insert_terms($table_name, $id, $record['data_taxonomy:'. $vid], data_taxonomy_get_vocabulary($vid));
+        _data_taxonomy_save_terms($table_name, $id, $record['data_taxonomy:'. $vid], data_taxonomy_get_vocabulary($vid));
       }
     }
   }
@@ -97,8 +96,7 @@ function data_taxonomy_data_update($record, $table_name) {
     foreach ($info['vocabularies'] as $vid) {
       if (isset($record['data_taxonomy:'. $vid])) {
         $vocabulary = data_taxonomy_get_vocabulary($vid);
-        db_query("DELETE dt FROM {data_taxonomy} dt JOIN {term_data} td ON dt.tid = td.tid WHERE td.vid = %d", $vocabulary->vid);
-        _data_taxonomy_insert_terms($table_name, $id, $record['data_taxonomy:'. $vid], $vocabulary);
+        _data_taxonomy_save_terms($table_name, $id, $record['data_taxonomy:'. $vid], $vocabulary);
       }
     }
   }
@@ -114,7 +112,7 @@ function data_taxonomy_taxonomy($op = NULL, $type = NULL, $term = NULL) {
 }
 
 /**
- * Helper function, inserts a series of taxonomy terms for a record.
+ * Helper function, saves a series of taxonomy terms for a record.
  *
  * Creates new taxonomy terms on the fly for vocabularies that are tags.
  *
@@ -129,7 +127,7 @@ function data_taxonomy_taxonomy($op = NULL, $type = NULL, $term = NULL) {
  * @param $vocabulary
  *   A vocuabulary object.
  */
-function _data_taxonomy_insert_terms($table_name, $id, $terms, $vocabulary) {
+function _data_taxonomy_save_terms($table_name, $id, $terms, $vocabulary) {
   if (!is_array($terms)) {
     $terms = array($terms);
   }
@@ -153,9 +151,9 @@ function _data_taxonomy_insert_terms($table_name, $id, $terms, $vocabulary) {
     }
     if (is_numeric($term) && !isset($tids[$term])) {
       $tids[$term] = $term;
-      db_query("INSERT INTO {data_taxonomy}(id, data_table_name, tid) VALUES(%d, '%s', %d)", $id, $table_name, $term);
     }
   }
+  _data_taxonomy_save_relations($vocabulary->vid, $id, $table_name, $tids);
 }
 
 /**
@@ -273,13 +271,13 @@ function data_taxonomy_tagging_form_submit($form, &$form_state) {
   // a screen.
   $post = $form_state['clicked_button']['#post'];
   $tids = data_taxonomy_save_tags($form_state['values']['tags'], $post['vid']);
-  data_taxonomy_save_relations($post['vid'], $post['id'], $post['table_name'], $tids);
+  _data_taxonomy_save_relations($post['vid'], $post['id'], $post['table_name'], $tids);
 }
 
 /**
  * Save term_data - data table relationships in data_taxonomy table.
  */
-function data_taxonomy_save_relations($vid, $id, $table_name, $tids) {
+function _data_taxonomy_save_relations($vid, $id, $table_name, $tids) {
   db_query("DELETE dt FROM {data_taxonomy} dt JOIN {term_data} td ON dt.tid = td.tid WHERE dt.id = %d AND dt.data_table_name = '%s' AND td.vid = %d", $id, $table_name, $vid);
   foreach ($tids as $tid) {
     db_query('INSERT INTO {data_taxonomy} (id, data_table_name, tid) VALUES (%d, "%s", %d)', $id, $table_name, $tid);
@@ -426,7 +424,7 @@ function data_taxonomy_ajax_save() {
     // Process and save terms & relations.
     $values = $form_state['values'];
     $terms = data_taxonomy_save_tags($values['tags'], $values['vid']);
-    data_taxonomy_save_relations($values['vid'], $values['id'], $values['table_name'], array_keys($terms));
+    _data_taxonomy_save_relations($values['vid'], $values['id'], $values['table_name'], array_keys($terms));
     drupal_json(array('status' => 1, 'data' => theme('links', data_taxonomy_tag_links($terms, $_POST['path'], explode('&', $_POST['args'])), array('class' => 'links data-taxonomy-tags'))));
     exit;
   }

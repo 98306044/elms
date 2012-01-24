@@ -1,0 +1,6 @@
+name = "Performance Enhancements"
+description = "Enable modules to help with performance optimization"
+type = "add-on"
+; Performance and scalability
+dependencies[] = "javascript_aggregator"
+dependencies[] = "css_emimage"

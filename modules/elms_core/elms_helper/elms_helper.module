@@ -60,6 +60,8 @@ function elms_helper_init() {
     }
     else {
       $group = og_get_group_context();
+			//unset breadcrumbs while in a group as elms takes care of pathing
+      drupal_set_breadcrumb(array());
       if (isset($group->type)) {
         $theme_settings = variable_get('theme_'. $group->og_theme .'_settings', array());
         //add in custom font setting, a none file exists too
@@ -108,7 +110,7 @@ function elms_helper_settings() {
   }
   $form['elms_helper_default_theme'] = array(
     '#default_value' => variable_get('elms_helper_default_theme', 'chamfer'),
-    '#description' => t('The default theme for newly created courses'),
+    '#description' => t('The default theme for newly created sites'),
     '#type' => 'select',
     '#multiple' => FALSE,
     '#title' => t('Default Theme'),
@@ -116,7 +118,7 @@ function elms_helper_settings() {
   );
   $form['elms_helper_disallowed_themes'] = array(
     '#default_value' => variable_get('elms_helper_disallowed_themes', array('cube')),
-    '#description' => t("These are themes that should not be allowed to be used in courses. Typical usage for this would be hiding the default system or admin themes so that versions don't look the same as the system creating them."),
+    '#description' => t("These are themes that should not be allowed to be used in sites. Typical usage for this would be hiding the default system or admin themes so that versions don't look the same as the system creating them."),
     '#type' => 'select',
     '#multiple' => TRUE,
     '#title' => t('Disallowed Themes'),
@@ -210,7 +212,7 @@ function elms_helper_form_alter(&$form, &$form_state, $form_id) {
       '#type' => 'select',
       '#options' => $options,
       '#title' => t("Font"),
-      '#description' => 'Select a font for all content in the course version.  Leaving default will use whatever your theme has indicated.',
+      '#description' => 'Select a font for all content in this site.  Leaving default will use whatever your theme has indicated.',
       '#required' => TRUE,
       '#default_value' => $settings['font'],
     );
@@ -231,7 +233,7 @@ function elms_helper_form_alter(&$form, &$form_state, $form_id) {
       '#type' => 'file',
       '#size' => '10',
       '#title' => t("Upload CSS File"),
-      '#description' => 'Upload your own CSS file for use in this course version',
+      '#description' => 'Upload your own CSS file for use in this site',
       '#required' => FALSE,
     );
     if ($form['themes']['theme']['#default_value'] == 'chamfer') {

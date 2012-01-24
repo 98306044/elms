@@ -1,8 +1,8 @@
 ; $Id: elms_export_html.info
 name = ELMS Export HTML
-description = This allows course versions to export themselves as HTML
+description = This allows sites to export themselves as HTML
 core = "6.x"
 project = "elms_export_html"
-package = "ELMS Core"
+package = "ELMS"
 version = "6.x-1.0-alpha5"
 project status url = "http://drupal.psu.edu/fserver"

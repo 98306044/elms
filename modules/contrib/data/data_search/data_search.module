@@ -1,5 +1,4 @@
 <?php
-// $Id: data_search.module,v 1.1.2.5 2010/01/22 23:03:32 alexb Exp $
 
 /**
  * Implementation of hook_menu()
@@ -78,7 +77,7 @@ function data_search_update_index() {
 
   $tables = data_search_get_tables();
   foreach ($tables as $table) {
-    $name = $table->get('name');
+    $name = db_escape_table($table->get('name'));
     $schema = $table->get('table_schema');
 
     $fields = data_search_get_fields($table);
@@ -96,7 +95,7 @@ function data_search_update_index() {
       search_index($row->id, $name, $fulltext);
     }
     // Delete orphaned data search records, no nodeapi to take care of this as it occurs.
-    db_query("DELETE sd, si, snl FROM {search_dataset} sd LEFT JOIN {{$name}} dt ON sd.type = '{$name}' AND sd.sid = dt.{$base_field} LEFT JOIN {search_index} si ON sd.sid = si.sid AND sd.type = si.type LEFT JOIN {search_node_links} snl ON sd.sid = snl.sid AND sd.type = snl.type WHERE dt.{$base_field} IS NULL");
+    db_query("DELETE sd, si, snl FROM {search_dataset} sd LEFT JOIN {{$name}} dt ON sd.type = '{$name}' AND sd.sid = dt.{$base_field} LEFT JOIN {search_index} si ON sd.sid = si.sid AND sd.type = si.type LEFT JOIN {search_node_links} snl ON sd.sid = snl.sid AND sd.type = snl.type WHERE sd.type = '{$name}' AND dt.{$base_field} IS NULL");
   }
 }
 
@@ -120,7 +119,7 @@ function data_search_search($op = 'search', $keys = NULL) {
       $total = $remaining = 0;
       $tables = data_search_get_tables();
       foreach ($tables as $table) {
-        $name = $table->get('name');
+        $name = db_escape_table($table->get('name'));
         $schema = $table->get('table_schema');
         $base_field = current($schema['primary key']);
 
@@ -145,7 +144,7 @@ function data_search_search($op = 'search', $keys = NULL) {
 function data_search_wipe($table) {
   $schema = $table->get('table_schema');
   $name = db_escape_table($table->get('name'));
-  $field = db_escape_string(current($schema['primary key']));
+  $field = current($schema['primary key']);
 
   db_query("DELETE s FROM {search_dataset} s LEFT JOIN {{$name}} t ON s.sid = t.$field WHERE s.type = '%s' AND t.$field IS NULL", $table->get('name'));
   db_query("DELETE s FROM {search_index} s LEFT JOIN {{$name}} t ON s.sid = t.$field WHERE s.type = '%s' AND t.$field IS NULL", $table->get('name'));
@@ -175,7 +174,7 @@ function data_search_get_fields($table) {
   $meta = $table->get('meta');
   foreach (array_keys($schema['fields']) as $field_name) {
     if (!empty($meta['fields'][$field_name]['search'])) {
-      $fields[] = $field_name;
+      $fields[] = db_escape_table($field_name);
     }
   }
   return $fields;

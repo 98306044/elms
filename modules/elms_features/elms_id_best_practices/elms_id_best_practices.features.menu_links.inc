@@ -6,15 +6,15 @@
 function elms_id_best_practices_menu_default_menu_links() {
   $menu_links = array();
 
-  // Exported menu link: menu-usermenu:course_resources
-  $menu_links['menu-usermenu:course_resources'] = array(
+  // Exported menu link: menu-usermenu:elms_resources
+  $menu_links['menu-usermenu:elms_resources'] = array(
     'menu_name' => 'menu-usermenu',
-    'link_path' => 'course_resources',
-    'router_path' => 'course_resources',
+    'link_path' => 'elms_resources',
+    'router_path' => 'elms_resources',
     'link_title' => 'Resources',
     'options' => array(
       'attributes' => array(
-        'title' => 'List of all Course Resources',
+        'title' => 'List of all ELMS Resources',
       ),
     ),
     'module' => 'system',

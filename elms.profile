@@ -159,7 +159,9 @@ function elms_profile_tasks(&$task, $url) {
     // Create batch
     foreach ($modules as $module) {
       $batch['operations'][] = array('_install_module_batch', array($module, $files[$module]->info['name']));
-    }    
+    }
+		//build directories
+		$batch['operations'][] = array('_elms_build_directories', array());
     $batch['finished'] = '_elms_module_batch_1_finished';
     $batch['title'] = st('Installing @drupal Base', array('@drupal' => drupal_install_profile_name()));
     $batch['error_message'] = st('The installation has encountered an error.');
@@ -278,10 +280,6 @@ function _elms_installer_configure() {
     db_query("DELETE FROM {filters} WHERE format = %d", $row->format);
   }
 
-  // Create user picture directory
-  $picture_path = file_create_path(variable_get('user_picture_path', 'pictures'));
-  file_check_directory($picture_path, 1, 'user_picture_path');
-
   // Set time zone
   // @TODO: This is not sufficient. We either need to display a message or
   // derive a default date API location.
@@ -293,22 +291,34 @@ function _elms_installer_configure() {
  * Configuration. Second stage.
  */
 function _elms_installer_configure_check() {
-	//accessibility cleanup
-	$guidelines = _elms_get_guidelines();
-	//find the node created based on the spec requested
-	$guide_nid = db_result(db_query("SELECT nid FROM {node} WHERE type='%s' AND title='%s'", 'accessibility_guideline', $guidelines[variable_get('install-accessibility-guideline', 'wcag2aa')]));
-	//associate known content types to this guideline and set defaults
-	$types = node_get_types();
-	foreach ($types as $key => $type) {
-	  variable_set($key .'_course_resource', $guide_nid);
-	  variable_set($key .'_accessibility_guideline_nid', $guide_nid);
-	  variable_set($key .'_ac_after_filter', 1);
-    variable_set($key .'_ac_display_level', array(1 => 1, 2 => 2, 3 => 3));
-    variable_set($key .'_ac_enable', 1);
-    variable_set($key .'_ac_fail', 1);
-		variable_set($key .'_ac_ignore_cms_off', 1);
+	//setup private directory defaults
+	$filename = file_directory_path() .'/'. variable_get('private_download_directory','private') .'/.htaccess';
+  if (!private_download_write($filename, variable_get('private_download_htaccess',''))) {
+    // failed to write htaccess file; report to log and return
+    watchdog('private_download', t('Unable to write data to file: !filename', array('!filename' => $filename)), 'error');
+  }
+	//set default workflow states, in the future workflow states will be exportable via Features
+  _elms_workflow_query();
+	
+	//accessibility cleanup if active
+	if (variable_get('install-accessibility-guideline', 'wcag2aa') != 'none') {
+	  $guidelines = _elms_get_guidelines();
+	  //find the node created based on the spec requested
+	  $guide_nid = db_result(db_query("SELECT nid FROM {node} WHERE type='%s' AND title='%s'", 'accessibility_guideline', $guidelines[variable_get('install-accessibility-guideline', 'wcag2aa')]));
+	  //associate known content types to this guideline and set defaults
+	  $types = node_get_types();
+	  foreach ($types as $key => $type) {
+	    variable_set($key .'_accessibility_guideline_nid', $guide_nid);
+	    variable_set($key .'_ac_after_filter', 1);
+      variable_set($key .'_ac_display_level', array(1 => 1, 2 => 2, 3 => 3));
+		  //defaults laid out for site and parent but not activated by default
+		  if ($key != 'site' && $key != 'parent') {
+        variable_set($key .'_ac_enable', 1);
+		  }
+      variable_set($key .'_ac_fail', 1);
+		  variable_set($key .'_ac_ignore_cms_off', 1);
+	  }
 	}
-
   //final clean up stuff
   _elms_role_query();
   //delete book content type
@@ -325,8 +335,6 @@ function _elms_installer_configure_check() {
   //contact form for the default helpdesk
   _elms_contact_query();
   _elms_contact_fields_query();
-  //set default workflow states, in the future workflow states will be exportable via Features
-  _elms_workflow_query();
   //create default vocab and terms
   _elms_vocab_query();
   // This isn't actually necessary as there are no node_access() entries,
@@ -367,23 +375,27 @@ function _elms_installer_configure_check() {
   // as overrides. See og_node_type()
   $revert = array(
     //revert core architecture
-    'elms_course' => array('content', 'fieldgroup'),
-    'elms_course_versions' => array('content', 'fieldgroup'),
+    'elms_parent' => array('content', 'fieldgroup', 'node', 'views', 'views_api', 'variable'),
+    'elms_site' => array('content', 'fieldgroup', 'node', 'views', 'views_api', 'variable'),
     //revert default features
-    'elms_course_content' => array('content'),
-    'elms_course_resources' => array('content'),
-    'elms_id_best_practices' => array('views'),
+    'elms_content' => array('content', 'flag', 'node'),
+    'elms_resources' => array('content', 'menu_links', 'node', 'variable'),
+    'elms_id_best_practices' => array('views', 'views_api'),
     //revert data passers
-    'elms_course_content_export' => array('content', 'fieldgroup'),
-    'elms_course_content_import' => array('content', 'fieldgroup'),
+    'elms_content_export' => array('content', 'fieldgroup'),
+    'elms_content_import' => array('content', 'fieldgroup'),
     //revert nav
     'elms_navigation_top' => array('menu_links', 'menu_custom'),
     'elms_navigation_left' => array('menu_links', 'menu_custom'),
   );
+	//revert core installers last as they take priority
+	$revert['elms_'. variable_get('install-core-installer', '')] = array('variable');
   features_revert($revert);
-	//try rebuilding caches prior to system load
-	module_rebuild_cache();
-	drupal_set_message(st('Welcome to your new ELMS system!'));
+	//clear caches so they rebuild
+	$core = array('cache', 'cache_block', 'cache_filter', 'cache_page', 'cache_form', 'cache_menu');
+  foreach ($core as $table) {
+    cache_clear_all(NULL, $table);
+  }
 }
 
 /**
@@ -575,6 +587,16 @@ function elms_install_configure_form_submit(&$form, &$form_state) {
 	variable_set('install-accessibility-guideline', $form_state['values']['guideline']);
 }
 
+// Create required directories, taken from Commons
+function _elms_build_directories() {
+  $dirs = array('user_picture_path', 'ctools', 'ctools/css', 'pictures', 'imagecache', 'css', 'js', 'private');
+  
+  foreach ($dirs as $dir) {
+    $dir = file_directory_path() . '/' . $dir;
+    file_check_directory($dir, TRUE);
+  }
+}
+
 /**
  * Reimplementation of system_theme_data(). The core function's static cache
  * is populated during install prior to active install profile awareness.
@@ -740,22 +762,18 @@ function _elms_role_query() {
  * Helper function to install workflow states.
  */
 function _elms_workflow_query() {
-  $ary = array (
-  'wid' => '1',
-  'name' => 'Status',
-  'tab_roles' => 'author,3,6',
-  'options' => 
-  serialize(array (
-    'comment_log_node' => 1,
-    'comment_log_tab' => 1,
-    'name_as_title' => 1,
-  )),
-  );
-  drupal_write_record('workflows', $ary);
+	//insert the workflow state name
+	$options = serialize(array (
+      'comment_log_node' => 1,
+      'comment_log_tab' => 1,
+      'name_as_title' => 1,
+  ));
+	db_query("INSERT INTO {workflows} VALUES('1', 'Status', 'author,3,6', '%s')", $options);
+	
   //insert the content type association
-  db_query("INSERT INTO {workflow_type_map} VALUES ('accessibility_guideline', '0'), ('accessibility_test', '0'), ('blog', '0'), ('course', '0'), ('course_event', '0'), ('feed_reader', '0'), ('feed_user_import', '0'), ('folder', '0'), ('link', '0'), ('page', '0'), ('promo', '0'), ('reaction', '0'), ('studio_submission', '0'), ('version', '1')");
+  db_query("INSERT INTO {workflow_type_map} VALUES ('accessibility_guideline', '0'), ('accessibility_test', '0'), ('blog', '0'), ('parent', '0'), ('elms_event', '0'), ('feed_user_import', '0'), ('folder', '0'), ('link', '0'), ('page', '0'), ('reaction', '0'), ('studio_submission', '0'), ('site', '1')");
   //define the workflow states
-  db_query("INSERT INTO {workflow_states} VALUES ('2', '1', '(creation)', '-50', '1', '1'), ('3', '1', 'Development Sandbox', '0', '0', '1'), ('4', '1', 'Inactive', '1', '0', '0'), ('5', '1', 'Active Offering', '2', '0', '1'), ('6', '1', 'Archived Offering', '3', '0', '1'), ('7', '1', 'Course Promo', '4', '0', '1'), ('8', '1', 'Master', '8', '0', '0'), ('9', '1', 'Staging', '0', '0', '0'), ('10', '1', 'Master Version', '1', '0', '1')");
+  db_query("INSERT INTO {workflow_states} VALUES ('2', '1', '(creation)', '-50', '1', '1'), ('3', '1', 'Development Sandbox', '0', '0', '1'), ('4', '1', 'Inactive', '1', '0', '0'), ('5', '1', 'Active Offering', '2', '0', '1'), ('6', '1', 'Archived Offering', '3', '0', '1'), ('7', '1', 'Promo', '4', '0', '1'), ('8', '1', 'Master', '8', '0', '0'), ('9', '1', 'Staging', '0', '0', '0'), ('10', '1', 'Master', '1', '0', '1')");
   //define allowed workflow state transitions
   db_query("INSERT INTO {workflow_transitions} VALUES ('1', '2', '3', 'author,3,6'), ('3', '3', '7', 'author,3,6'), ('6', '5', '3', 'author,3,6'), ('8', '5', '6', 'author,3,6'), ('9', '7', '3', 'author,3,6'), ('14', '3', '5', 'author,3,6'), ('15', '6', '5', 'author,3,6'), ('17', '3', '10', 'author,3,6'), ('18', '10', '3', 'author,3,6'), ('19', '6', '3', 'author,3,6')");
 }
@@ -1058,14 +1076,16 @@ function _elms_wysiwyg_query() {
  * Helper function to install default filter formats.
  */
 function _elms_filter_formats_query() {
-  db_query("INSERT INTO {filter_formats} VALUES ('1', 'Comment Filter', ',1,2,3,6,4,9,10,8,', '1'), ('2', 'Content Filter', ',3,6,4,9,11,8,', '0'), ('4', 'Course Event', ',3,6,4,9,11,8,', '1')");
+  db_query("INSERT INTO {filter_formats} VALUES ('1', 'Comment Filter', ',1,2,3,6,4,9,10,8,', '1'), ('2', 'Content Filter', ',3,6,4,9,11,8,', '0'), ('4', 'Event', ',3,6,4,9,11,8,', '1')");
 }
 
 /**
  * Helper function to set the defaults defined by better formats module.
  */
 function _elms_better_formats_defaults_query() {
-  db_query("INSERT INTO {better_formats_defaults} VALUES ('1', 'block', '0', '1', '25'), ('1', 'comment', '0', '1', '0'), ('1', 'comment/course', '0', '2', '0'), ('1', 'comment/course_resource', '0', '2', '0'), ('1', 'comment/folder', '0', '2', '0'), ('1', 'comment/page', '0', '2', '0'), ('1', 'comment/referenced_page', '0', '2', '0'), ('1', 'node', '0', '1', '0'), ('1', 'node/course', '0', '2', '0'), ('1', 'node/course_resource', '0', '2', '0'), ('1', 'node/folder', '0', '2', '0'), ('1', 'node/page', '0', '2', '0'), ('1', 'node/referenced_page', '0', '2', '0'), ('2', 'block', '0', '1', '25'), ('2', 'comment', '0', '1', '0'), ('2', 'comment/course', '0', '2', '0'), ('2', 'comment/course_resource', '0', '2', '0'), ('2', 'comment/folder', '0', '2', '0'), ('2', 'comment/page', '0', '2', '0'), ('2', 'comment/referenced_page', '0', '2', '0'), ('2', 'node', '0', '1', '0'), ('2', 'node/course', '0', '2', '0'), ('2', 'node/course_resource', '0', '2', '0'), ('2', 'node/folder', '0', '2', '0'), ('2', 'node/page', '0', '2', '0'), ('2', 'node/referenced_page', '0', '2', '0'), ('3', 'block', '0', '1', '25'), ('3', 'comment', '0', '1', '0'), ('3', 'comment/course', '0', '2', '0'), ('3', 'comment/course_resource', '0', '2', '0'), ('3', 'comment/folder', '0', '2', '0'), ('3', 'comment/page', '0', '2', '0'), ('3', 'comment/referenced_page', '0', '2', '0'), ('3', 'node', '0', '1', '0'), ('3', 'node/course', '0', '2', '0'), ('3', 'node/course_resource', '0', '2', '0'), ('3', 'node/folder', '0', '2', '0'), ('3', 'node/page', '0', '2', '0'), ('3', 'node/referenced_page', '0', '2', '0'), ('11', 'block', '0', '1', '25'), ('11', 'comment', '0', '1', '25'), ('11', 'comment/course_resource', '0', '2', '25'), ('11', 'comment/folder', '0', '2', '25'), ('11', 'comment/page', '0', '2', '25'), ('11', 'comment/referenced_page', '0', '2', '25'), ('11', 'node', '0', '1', '25'), ('11', 'node/course_resource', '0', '2', '25'), ('11', 'node/folder', '0', '2', '25'), ('11', 'node/page', '0', '2', '25'), ('11', 'node/referenced_page', '0', '2', '25')");  
+	//clear better formats before running
+	db_query("DELETE FROM {better_formats_defaults} WHERE rid > 0");
+  db_query("INSERT INTO {better_formats_defaults} VALUES ('1', 'block', '0', '1', '25'), ('1', 'comment', '0', '1', '0'), ('1', 'comment/parent', '0', '2', '0'), ('1', 'comment/elms_resource', '0', '2', '0'), ('1', 'comment/folder', '0', '2', '0'), ('1', 'comment/page', '0', '2', '0'), ('1', 'comment/referenced_page', '0', '2', '0'), ('1', 'node', '0', '1', '0'), ('1', 'node/parent', '0', '2', '0'), ('1', 'node/elms_resource', '0', '2', '0'), ('1', 'node/folder', '0', '2', '0'), ('1', 'node/page', '0', '2', '0'), ('1', 'node/referenced_page', '0', '2', '0'), ('2', 'block', '0', '1', '25'), ('2', 'comment', '0', '1', '0'), ('2', 'comment/parent', '0', '2', '0'), ('2', 'comment/elms_resource', '0', '2', '0'), ('2', 'comment/folder', '0', '2', '0'), ('2', 'comment/page', '0', '2', '0'), ('2', 'comment/referenced_page', '0', '2', '0'), ('2', 'node', '0', '1', '0'), ('2', 'node/parent', '0', '2', '0'), ('2', 'node/elms_resource', '0', '2', '0'), ('2', 'node/folder', '0', '2', '0'), ('2', 'node/page', '0', '2', '0'), ('2', 'node/referenced_page', '0', '2', '0'), ('3', 'block', '0', '1', '25'), ('3', 'comment', '0', '1', '0'), ('3', 'comment/parent', '0', '2', '0'), ('3', 'comment/elms_resource', '0', '2', '0'), ('3', 'comment/folder', '0', '2', '0'), ('3', 'comment/page', '0', '2', '0'), ('3', 'comment/referenced_page', '0', '2', '0'), ('3', 'node', '0', '1', '0'), ('3', 'node/parent', '0', '2', '0'), ('3', 'node/elms_resource', '0', '2', '0'), ('3', 'node/folder', '0', '2', '0'), ('3', 'node/page', '0', '2', '0'), ('3', 'node/referenced_page', '0', '2', '0'), ('11', 'block', '0', '1', '25'), ('11', 'comment', '0', '1', '25'), ('11', 'comment/elms_resource', '0', '2', '25'), ('11', 'comment/folder', '0', '2', '25'), ('11', 'comment/page', '0', '2', '25'), ('11', 'comment/referenced_page', '0', '2', '25'), ('11', 'node', '0', '1', '25'), ('11', 'node/elms_resource', '0', '2', '25'), ('11', 'node/folder', '0', '2', '25'), ('11', 'node/page', '0', '2', '25'), ('11', 'node/referenced_page', '0', '2', '25')");  
 }
 
 /**
@@ -1079,10 +1099,6 @@ function _elms_filters_query() {
  * Helper function to install default vocabulary.
  */
 function _elms_vocab_query() {
-  //create vocab as first item
-  db_query("INSERT INTO {vocabulary} VALUES ('1', 'Academic Unit', 'Academic Unit that is offering this course', 'Choose the Academic Unit offering this course', '1', '0', '0', '1', '0', 'features_academicunit', '0')");
-  //populate hierarchy
-  db_query("INSERT INTO {vocabulary_node_types} VALUES ('1', 'course')");
   //populate terms
   db_query("INSERT INTO {term_data} VALUES ('1', '1', 'Department 1', '', '0'), ('2', '1', 'Department 4', '', '1'), ('3', '1', 'Department 3', '', '2'), ('4', '1', 'Department 4', '', '3')");
   //populate hierarchy
@@ -1092,6 +1108,7 @@ function _elms_vocab_query() {
 //helper for guidelines
 function _elms_get_guidelines() {
 	return array(
+	  'none' => "None",
 	  '508' => 'Section 508',
 		'wcag1a' => 'WCAG 1.0 (A)',
 		'wcag1aa' => 'WCAG 1.0 (AA)',

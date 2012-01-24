@@ -1,5 +1,4 @@
 <?php
-// $Id: data_ui.views_default.inc,v 1.6.2.1 2009/10/15 02:34:07 alexb Exp $
 /**
  * @file
  * Views default views implementation.
@@ -50,7 +49,7 @@ function data_ui_views_default_views() {
     $meta_fields = $meta['fields'];
     foreach ($schema['fields'] as $field_name => $field) {
       $fields[$field_name] = array(
-        'label' => isset($meta_fields[$field_name]['label']) ? $meta_fields[$field_name]['label'] : $field_name,
+        'label' => $meta_fields[$field_name]['label'] ? $meta_fields[$field_name]['label'] : $field_name,
         'id' => $field_name,
         'table' => $table->get('name'),
         'field' => $field_name,

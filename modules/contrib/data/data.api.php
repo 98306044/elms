@@ -1,5 +1,4 @@
 <?php
-// $Id: data.api.php,v 1.1.2.3 2010/01/21 20:51:40 alexb Exp $
 
 /**
  * @file

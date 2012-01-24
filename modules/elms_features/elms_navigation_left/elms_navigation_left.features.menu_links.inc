@@ -6,11 +6,11 @@
 function elms_navigation_left_menu_default_menu_links() {
   $menu_links = array();
 
-  // Exported menu link: menu-elms-system:node/add/course
-  $menu_links['menu-elms-system:node/add/course'] = array(
+  // Exported menu link: menu-elms-system:node/add/parent
+  $menu_links['menu-elms-system:node/add/parent'] = array(
     'menu_name' => 'menu-elms-system',
-    'link_path' => 'node/add/course',
-    'router_path' => 'node/add/course',
+    'link_path' => 'node/add/parent',
+    'router_path' => 'node/add/parent',
     'link_title' => 'Add Course',
     'options' => array(
       'purl' => 'disabled',
@@ -25,11 +25,11 @@ function elms_navigation_left_menu_default_menu_links() {
     'expanded' => '0',
     'weight' => '-49',
   );
-  // Exported menu link: menu-elms-system:node/add/version
-  $menu_links['menu-elms-system:node/add/version'] = array(
+  // Exported menu link: menu-elms-system:node/add/site
+  $menu_links['menu-elms-system:node/add/site'] = array(
     'menu_name' => 'menu-elms-system',
-    'link_path' => 'node/add/version',
-    'router_path' => 'node/add/version',
+    'link_path' => 'node/add/site',
+    'router_path' => 'node/add/site',
     'link_title' => 'Create Sandbox',
     'options' => array(
       'purl' => 'disabled',

@@ -1,5 +1,4 @@
 <?php
-// $Id: data_ui.module,v 1.15.2.7 2009/10/29 14:59:35 alexb Exp $
 /**
  * @file
  * Hooks and API functions for Data UI module.
@@ -11,7 +10,7 @@
 function data_ui_help($path, $arg) {
   switch ($path) {
     case 'admin/content/data':
-      $output = '<p>'. t('View content in data tables. If you would like to edit these tables, visit the !data_manage_page.', array('!data_manage_page' => l(t('Data table management page'), 'admin/build/data'))) .'</p>';
+      $output = '<p>'. t('View content in data tables. If you would like to edit these tables, visit the !data_manage_page.', array('!data_manage_page' => l(t('Data table management page'), 'admin/build/data'))) .'</p><p>' . t('Some tables may not have a \'view\' link; this happens when a table doesn\'t have a \'primary key\' or is not joined to another table with a primary key. You can add a primary key field or a join from the table\'s \'Edit schema\' page.') . '</p>';
       return $output;
     case 'admin/build/data/adopt':
       $output = '<p>' . t('Manage database tables that aren\'t claimed by other modules. Adopting tables listed here will add them to Data\'s list of tables.') . '</p>';
@@ -189,7 +188,7 @@ function data_ui_table_load($table_name) {
  * Title callback.
  */
 function data_ui_title($title) {
-  return t('Edit table !table', array('!table' => $table->get('title')));
+  return t('Edit table @table', array('@table' => $table->get('title')));
 }
 
 /**
@@ -233,17 +232,23 @@ function data_ui_perm() {
  */
 function data_ui_get_default_path($name) {
   if ($table = data_get_table($name)) {
-    // Check, whether there is a data mananged table to the left.
+    // Check whether this can be a Views base table.
+    $table_schema = $table->get('table_schema');
+    if (isset($table_schema['primary key'])) {
+      return 'admin/content/data/view/'. $name;
+    }
+
+    // Check whether there is a data mananged table to the left.
     // @todo: go all the way to the left.
     $path = '';
     $meta = $table->get('meta');
-    if (isset($meta['join']) && is_array($meta['join'])) {
+    if (isset($meta['join']) && is_array($meta['join']) && !empty($meta['join'])) {
       $left_table_name = key($meta['join']);
       if ($left_table = data_get_table($left_table_name)) {
         $path .= $left_table_name .'/';
       }
+      return 'admin/content/data/view/'. $path . $name;
     }
-    return 'admin/content/data/view/'. $path . $name;
   }
   return '';
 }

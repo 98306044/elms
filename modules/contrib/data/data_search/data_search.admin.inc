@@ -1,11 +1,10 @@
 <?php
-// $Id: data_search.admin.inc,v 1.1.2.4 2009/10/19 20:06:11 alexb Exp $
 
 /**
  * Views handler configuration form.
  */
 function data_search_admin_form(&$form_state, $table) {
-  drupal_set_title($table->get('title'));
+  drupal_set_title(check_plain($table->get('title')));
 
   $schema = $table->get('table_schema');
   $meta = $table->get('meta');

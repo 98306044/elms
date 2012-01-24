@@ -52,7 +52,7 @@ Solving Drupal White screen of Death
 * if that doesn't work, remove the php_value part and see if it works otherwise you'll need to change it in the php.ini
 
 Annoying MYSQL max packet error
-*run the following command in mysql console: "set global max_allowed_packet = 10 * 1024 * 1024;"
+*run the following command in mysql console: "SET GLOBAL max_allowed_packet=10*1024*1024;"
 * This error is caused mostly in localhost installs or shared environments and is caused by all the caching going on
 * Review this page to help resolve it http://drupal.org/node/321210
 

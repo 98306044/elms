@@ -9,7 +9,7 @@ function elms_id_best_practices_strongarm() {
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'content_extra_weights_course_resource';
+  $strongarm->name = 'content_extra_weights_elms_resource';
   $strongarm->value = array(
     'title' => '-5',
     'body_field' => '-4',
@@ -25,17 +25,17 @@ function elms_id_best_practices_strongarm() {
     'purl' => '-1',
     'themes' => '-2',
   );
-  $export['content_extra_weights_course_resource'] = $strongarm;
+  $export['content_extra_weights_elms_resource'] = $strongarm;
 
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'node_options_course_resource';
+  $strongarm->name = 'node_options_elms_resource';
   $strongarm->value = array(
     0 => 'status',
     1 => 'revision',
   );
-  $export['node_options_course_resource'] = $strongarm;
+  $export['node_options_elms_resource'] = $strongarm;
 
   return $export;
 }

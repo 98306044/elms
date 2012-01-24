@@ -1,5 +1,4 @@
 <?php
-// $Id: data_node.admin.inc,v 1.1.2.2 2009/10/16 00:57:57 alexb Exp $
 /**
  * @file
  * Admin UI functionality.
@@ -9,7 +8,7 @@
  * Form callback for relating a data table to a node.
  */
 function data_node_settings_form(&$form_state, $table) {
-  drupal_set_title($table->get('title'));
+  drupal_set_title(check_plain($table->get('title')));
 
   $form = array();
   $content_types = array('' => t('None'));

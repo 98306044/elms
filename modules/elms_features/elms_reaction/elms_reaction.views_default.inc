@@ -6,9 +6,9 @@
 function elms_reaction_views_default_views() {
   $views = array();
 
-  // Exported view: course_reaction_list
+  // Exported view: elms_reaction_list
   $view = new view;
-  $view->name = 'course_reaction_list';
+  $view->name = 'elms_reaction_list';
   $view->description = 'List all reactions for a page';
   $view->tag = 'reaction';
   $view->view_php = '';
@@ -487,14 +487,14 @@ function elms_reaction_views_default_views() {
         'folder' => 0,
         'link' => 0,
         'page' => 0,
-        'course_event' => 0,
+        'elms_event' => 0,
         'studio_submission' => 0,
         'reaction' => 0,
         'accessibility_guideline' => 0,
         'accessibility_test' => 0,
-        'course' => 0,
+        'parent' => 0,
         'promo' => 0,
-        'version' => 0,
+        'site' => 0,
       ),
       'validate_argument_node_access' => 0,
       'validate_argument_nid_type' => 'nid',
@@ -512,7 +512,7 @@ function elms_reaction_views_default_views() {
       'validate_argument_user_flag_id_type' => 'id',
       'validate_argument_is_member' => 'OG_VIEWS_DO_NOT_VALIDATE_MEMBERSHIP',
       'validate_argument_group_node_type' => array(
-        'version' => 'version',
+        'site' => 'site',
       ),
       'validate_argument_php' => '',
     ),
@@ -524,14 +524,14 @@ function elms_reaction_views_default_views() {
   $handler->override_option('menu', array(
     'type' => 'normal',
     'title' => 'Reactions',
-    'description' => 'List of all Course Reactions',
+    'description' => 'List of all Reactions',
     'weight' => '0',
     'name' => 'features',
   ));
   $handler->override_option('tab_options', array(
     'type' => 'normal',
     'title' => 'Reactions',
-    'description' => 'reactions to course materials',
+    'description' => 'reactions to content',
     'weight' => '0',
     'name' => 'features',
   ));
@@ -633,14 +633,14 @@ function elms_reaction_views_default_views() {
   $handler->override_option('menu', array(
     'type' => 'normal',
     'title' => 'All Reactions',
-    'description' => 'View all Reactions in this course',
+    'description' => 'View all Reactions',
     'weight' => '0',
     'name' => 'menu-elms-reactions',
   ));
   $handler->override_option('tab_options', array(
     'type' => 'normal',
     'title' => 'All Reactions',
-    'description' => 'View all Reactions in this course',
+    'description' => 'View all Reactions',
     'weight' => '0',
     'name' => 'menu-elms-reactions',
   ));
@@ -715,7 +715,7 @@ function elms_reaction_views_default_views() {
   $handler->override_option('menu', array(
     'type' => 'normal',
     'title' => 'My Reactions',
-    'description' => 'All reactions across courses',
+    'description' => 'All reactions',
     'weight' => '0',
     'name' => 'menu-usermenu',
   ));

@@ -1,5 +1,5 @@
 name = "ELMS Default Core Install"
-description = "ELMS installation, first pass"
+description = "ELMS installation, first pass for Drupal Core"
 type = "required"
 ; Core - required
 dependencies[] = "block"

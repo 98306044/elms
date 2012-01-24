@@ -4,38 +4,8 @@
  right:0px;
 }
 
-.node-promo, .node-course {
+.node-parent {
 background-image:none !important;    
-}
-.node-promo .column-side {
- display:none;
-}
-.node-promo .column-main {
- width:100%;
-}
-
-
-body.node-type-promo {
- background-image:url(/sites/default/files/promo/watermark.png) !important;
- background-repeat:no-repeat !important;
- background-attachment:fixed !important;
- background-position:bottom right !important;    
-}
-body.node-type-promo #page {
-    opacity:.8;
-}
-body.node-type-promo #footer {
-    opacity:.8;
-}
-
-body.node-type-promo #block-block-1 .block-content {
- text-align:center;    
-}
-
-.promo-image {
- float:left;
- display:inline;
- margin: 0px 0px 0px 6px;    
 }
 
 .dev-timer {

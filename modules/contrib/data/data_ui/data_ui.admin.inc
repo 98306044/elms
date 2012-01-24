@@ -1,5 +1,4 @@
 <?php
-// $Id: data_ui.admin.inc,v 1.25.2.18 2010/09/09 20:23:10 alexb Exp $
 /**
  * @file
  * Admin UI functions.
@@ -18,7 +17,8 @@ function data_ui_view() {
       db_result(db_query('SELECT COUNT(*) FROM {'. db_escape_table($table->get('name')) .'}')),
     );
     if (module_exists('views')) {
-      $row[] = l(t('View'), data_ui_get_default_path($table->get('name')));
+      $path = data_ui_get_default_path($table->get('name'));
+      $row[] = $path ? l(t('View'), $path) : l(t('Edit schema'), 'admin/build/data/edit/' . $table->get('name'));
     }
     $rows[] = $row;
   }
@@ -57,8 +57,8 @@ function data_ui_manage() {
     }
 
     $row = array();
-    $row[] = $table->get('title');
-    $row[] = $table->get('name');
+    $row[] = check_plain($table->get('title'));
+    $row[] = check_plain($table->get('name'));
     $row[] = $status;
     $row[] = implode(' | ', $operations);
 
@@ -83,7 +83,7 @@ function data_ui_compare() {
   foreach ($tables as $table) {
     $row = array();
     $comp = $table->compareSchema();
-    $row[] = $table->get('name');
+    $row[] = check_plain($table->get('name'));
     $status = $comp['status'];
     if ($status != 'same') {
       $status .= ' - '. l(t('adjust'), 'admin/build/data/compare/'. $table->get('name'));
@@ -105,7 +105,7 @@ function data_ui_compare() {
  * - leave it.
  */
 function data_ui_adjust_form(&$form_state, $table) {
-  drupal_set_title(t('Adjust !table', array('!table' => $table->get('name'))));
+  drupal_set_title(t('Adjust @table', array('@table' => $table->get('name'))));
   $comparison = $table->compareSchema();
 
   $form = array();
@@ -179,7 +179,7 @@ function data_ui_adjust_form_submit_update_schema($form, &$form_state) {
   $schema = schema_invoke('inspect');
   if (isset($schema[$table->get('name')])) {
     $table->update(array('table_schema' => $schema[$table->get('name')]));
-    drupal_set_message(t('Updated schema for !table', array('!table' => $table->get('name'))));
+    drupal_set_message(t('Updated schema for @table', array('@table' => $table->get('name'))));
   }
   else {
     drupal_set_message(t('Error updating schema'), 'error');
@@ -219,7 +219,7 @@ function data_ui_adjust_form_submit_create_table($form, &$form_state) {
   db_create_table($ret, $table->get('name'), $table->get('table_schema'));
   drupal_get_schema($table->get('name'), TRUE);
   if ($ret[0]['success']) {
-    drupal_set_message(t('Created table !table', array('!table' => $table->get('name'))));
+    drupal_set_message(t('Created table @table', array('@table' => $table->get('name'))));
   }
   else {
     drupal_set_message(t('Error creating table'), 'error');
@@ -373,8 +373,10 @@ function data_ui_create_form_submit($form, &$form_state) {
     // Create a schema from user input.
     $schema = $index = $primary = $meta = array();
     foreach ($form_state['values']['fields'] as $field) {
+      $field['name'] = db_escape_table($field['name']);
+      
       $schema['fields'][$field['name']] = data_build_field_definition($field);
-      $meta['fields'][$field['name']]['label'] = $field['label'];
+      $meta['fields'][$field['name']]['label'] = check_plain($field['label']);
 
       // Limit index if field type is text.
       if (!empty($field['index'])) {
@@ -390,7 +392,7 @@ function data_ui_create_form_submit($form, &$form_state) {
     // Create table.
     if ($table = data_create_table(trim($form_state['storage']['name']), $schema, trim($form_state['storage']['title']))) {
       $meta = $table->update(array('meta' => $meta));
-      drupal_set_message(t('Created table !table', array('!table' => $table->get('name'))));
+      drupal_set_message(t('Created table @table', array('@table' => $table->get('name'))));
     }
     else {
       drupal_set_message(t('Error creating table'), 'error');
@@ -413,7 +415,7 @@ function data_ui_revert_form(&$form_state, $table) {
   return confirm_form($form,
     t('Revert this table?'),
     'admin/build/data',
-    t('Are you sure you would like to revert table !table? This will reset all information about this table its definition in code. This action cannot be undone.', array('!table' => $table->get('name'))),
+    t('Are you sure you would like to revert table @table? This will reset all information about this table its definition in code. This action cannot be undone.', array('@table' => $table->get('name'))),
     t('Revert'), t('Cancel')
   );
 }
@@ -437,7 +439,7 @@ function data_ui_drop_form(&$form_state, $table) {
   return confirm_form($form,
     t('Drop this table?'),
     'admin/build/data',
-    t('Are you sure you would like to drop table !table? This action cannot be undone.', array('!table' => $table->get('name'))),
+    t('Are you sure you would like to drop table @table? This action cannot be undone.', array('@table' => $table->get('name'))),
     t('Drop'), t('Cancel')
   );
 }
@@ -447,14 +449,14 @@ function data_ui_drop_form(&$form_state, $table) {
  */
 function data_ui_drop_form_submit($form, &$form_state) {
   $table = $form['#table'];
-  data_drop_table($table->get('name'));
+  data_drop_table(db_escape_table($table->get('name')));
 }
 
 /**
  * Form callback for editing a table.
  */
 function data_ui_edit_form(&$form_state, $table) {
-  drupal_set_title($table->get('title'));
+  drupal_set_title(check_plain($table->get('title')));
 
   $schema = $table->get('table_schema');
   $meta = $table->get('meta');
@@ -474,7 +476,7 @@ function data_ui_edit_form(&$form_state, $table) {
       $form['fields'][$field_name]['selected'] = array(
         '#type' => 'checkbox',
       );
-      $form['fields'][$field_name]['name'] = array('#value' => $field_name);
+      $form['fields'][$field_name]['name'] = array('#value' => check_plain($field_name));
       $form['fields'][$field_name]['label'] = array(
         '#type' => 'textfield',
         '#size' => 20,
@@ -563,6 +565,7 @@ function data_ui_edit_form_submit($form, &$form_state) {
   try {
     if ($form_state['clicked_button']['#value'] == t('Save')) {
       $fields = $schema['fields'];
+      
       $new_fields = $form_state['values']['fields'];
 
       $new_index = array();
@@ -572,15 +575,17 @@ function data_ui_edit_form_submit($form, &$form_state) {
 
         // Convert schema.
         foreach ($fields as $field_name => $field) {
-          if ($new_spec = _data_ui_changed($new_fields[$field_name], $field)) {
-            $table->changeField($field_name, $new_spec);
-            drupal_set_message(t('Changed field !field_name', array('!field_name' => $field_name)));
+          $safe_field_name = db_escape_table($field_name);
+          
+          if ($new_spec = _data_ui_changed($new_fields[$safe_field_name], $field)) {
+            $table->changeField($safe_field_name, $new_spec);
+            drupal_set_message(t('Changed field !field_name', array('!field_name' => $safe_field_name)));
           }
-          if ($new_fields[$field_name]['index']) {
-            $new_index[] = $field_name;
+          if ($new_fields[$safe_field_name]['index']) {
+            $new_index[] = $safe_field_name;
           }
-          if ($new_fields[$field_name]['primary']) {
-            $new_primary_key[] = $field_name;
+          if ($new_fields[$safe_field_name]['primary']) {
+            $new_primary_key[] = $safe_field_name;
           }
         }
         $table->changeIndex($new_index);
@@ -588,8 +593,8 @@ function data_ui_edit_form_submit($form, &$form_state) {
 
         // Update meta data.
         $meta = $table->get('meta');
-        foreach ($new_fields as $field_name => $field) {
-          $meta['fields'][$field_name]['label'] = $field['label'];
+        foreach ($new_fields as $safe_field_name => $field) {
+          $meta['fields'][$safe_field_name]['label'] = check_plain($field['label']);
         }
         $table->update(array('meta' => $meta));
         drupal_set_message(t('Saved changes'));
@@ -599,12 +604,13 @@ function data_ui_edit_form_submit($form, &$form_state) {
         switch ($form_state['values']['bulk_operation']) {
           case 'delete':
             foreach ($new_fields as $field_name => $field) {
+              
               if (!empty($field['selected'])) {
                 // One field must stay.
                 $schema = $table->get('table_schema');
                 if (count($schema['fields']) > 1) {
-                  $table->dropField($field_name);
-                  drupal_set_message(t('Deleted field !field_name', array('!field_name' => $field_name)));
+                  $table->dropField(db_escape_table($field_name));
+                  drupal_set_message(t('Deleted field !field_name', array('!field_name' => check_plain($field_name))));
                 }
                 else {
                   drupal_set_message('You cannot delete all fields from a table, drop the table instead.', 'error');
@@ -618,14 +624,14 @@ function data_ui_edit_form_submit($form, &$form_state) {
     elseif ($form_state['clicked_button']['#value'] == t('Add new')) {
       $new = $form_state['values']['new'];
       $spec = data_build_field_definition($new);
-      $table->addField($new['name'], $spec);
-      drupal_set_message(t('Added field !field', array('!field' => $new['name'])));
+      $table->addField(db_escape_table($new['name']), $spec);
+      drupal_set_message(t('Added field !field', array('!field' => check_plain($new['name']))));
       if (!empty($new['index'])) {
-        $table->addIndex($new['name']);
-        drupal_set_message(t('Added index for field !field', array('!field' => $new['name'])));
+        $table->addIndex(db_escape_table($new['name']));
+        drupal_set_message(t('Added index for field !field', array('!field' => check_plain($new['name']))));
       }
       $meta = $table->get('meta');
-      $meta['fields'][$new['name']]['label'] = $new['label'];
+      $meta['fields'][db_escape_table($new['name'])]['label'] = check_plain($new['label']);
       $table->update(array('meta' => $meta));
     }
   }
@@ -638,7 +644,7 @@ function data_ui_edit_form_submit($form, &$form_state) {
  * Edit title form.
  */
 function data_ui_edit_title_form(&$form_state, $table) {
-  drupal_set_title($table->get('title'));
+  drupal_set_title(check_plain($table->get('title')));
 
   $form = array();
   $form['#table'] = $table;
@@ -647,7 +653,7 @@ function data_ui_edit_title_form(&$form_state, $table) {
     '#type' => 'textfield',
     '#title' => t('Title'),
     '#description' => t('Natural name of the table.'),
-    '#default_value' => $table->get('title'),
+    '#default_value' => db_escape_table($table->get('title')),
   );
   $form['submit'] = array(
     '#type' => 'submit',
@@ -660,14 +666,14 @@ function data_ui_edit_title_form(&$form_state, $table) {
  * Submit handler for data_ui_edit_title_form().
  */
 function data_ui_edit_title_form_submit($form, &$form_state) {
-  $form['#table']->update(array('title' => $form_state['values']['title']));
+  $form['#table']->update(array('title' => db_escape_table($form_state['values']['title'])));
 }
 
 /**
  * Views handler configuration form.
  */
 function data_ui_views_form(&$form_state, $table) {
-  drupal_set_title($table->get('title'));
+  drupal_set_title(check_plain($table->get('title')));
 
   module_load_include('inc', 'data', 'data.views');
 
@@ -683,7 +689,7 @@ function data_ui_views_form(&$form_state, $table) {
   if (isset($schema['fields'])) {
     foreach ($schema['fields'] as $field_name => $field) {
       $form['fields'][$field_name] = array();
-      $form['fields'][$field_name]['name'] = array('#value' => $field_name);
+      $form['fields'][$field_name]['name'] = array('#value' => check_plain($field_name));
       $form['fields'][$field_name]['views_field_handler'] = array(
         '#type' => 'select',
         '#options' => data_get_views_handler_options('field'),
@@ -706,6 +712,10 @@ function data_ui_views_form(&$form_state, $table) {
       );
     }
   }
+  $form['notice'] = array(
+    '#type' => 'markup',
+    '#value' => '<p>' . t('Note that not every handler will make sense or function correctly with every type of field.') . '</p>',
+  );
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),
@@ -743,7 +753,7 @@ function data_ui_join_form(&$form_state, $table, $field_name) {
   // Validate input.
   if (!isset($field_name) || !isset($schema['fields'][$field_name])) {
     drupal_set_message(t('Invalid field.'), 'error');
-    drupal_goto('admin/build/data/edit/'. $table->get('name'));
+    drupal_goto('admin/build/data/edit/'. check_url($table->get('name')));
   }
 
   // List all tables that schema API knows about as optoins.
@@ -763,12 +773,12 @@ function data_ui_join_form(&$form_state, $table, $field_name) {
   $form = array();
   $form['#table'] = $table;
   $form['#field_name'] = $field_name;
-  $form['#redirect'] = 'admin/build/data/edit/'. $table->get('name');
+  $form['#redirect'] = 'admin/build/data/edit/'. check_url($table->get('name'));
   $join = _data_ui_get_join($meta['join'], $field_name);
   $form['#original_join'] = $join;
   $form['left'] = array(
     '#type' => 'select',
-    '#title' => t('Join !table_field to', array('!table_field' => $table->get('name') .'.'. $field_name)),
+    '#title' => t('Join @table_field to ', array('@table_field' => $table->get('name') .'.'. $field_name)),
     '#options' => $options,
     '#default_value' => $join['left_table'] .'.'. $join['left_field'],
   );
@@ -782,7 +792,7 @@ function data_ui_join_form(&$form_state, $table, $field_name) {
   // Use confirm form for its formatting.
   $form = confirm_form($form,
     t('Join field'),
-    'admin/build/data/edit/'. $table->get('name'),
+    'admin/build/data/edit/'. check_url($table->get('name')),
     '',
     t('Save'), t('Cancel')
   );
@@ -818,7 +828,7 @@ function data_ui_join_form_submit_delete($form, &$form_state) {
  * Export form.
  */
 function data_ui_export_form(&$form_state, $table) {
-  $code = data_export($table->get('name'));
+  $code = data_export(db_escape_table($table->get('name')));
 
   $form['export'] = array(
     '#title' => t('Export table definition'),
@@ -833,9 +843,11 @@ function data_ui_export_form(&$form_state, $table) {
  * View table with krumo().
  */
 function data_ui_view_schema($table) {
-  drupal_set_title($table->get('title'));
+  drupal_set_title(check_plain($table->get('title')));
   $output = '<H3>'. t('Schema') .'</H3>';
-  $output .= kprint_r($table->get('table_schema'), TRUE);
+  $output .= kprint_r( $table->get('table_schema'), TRUE);
+  
+  
   if ($meta = $table->get('meta')) {
     $output .= '<H3>'. t('Meta info') .'</H3>';
     $output .= kprint_r($table->get('meta'), TRUE);

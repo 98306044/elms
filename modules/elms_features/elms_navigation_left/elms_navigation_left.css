@@ -161,7 +161,7 @@ div#admin-toolbar {
 #regions_elms_navigation_left .export {
   background-image:url(images/export.png);
 }
-#regions_elms_navigation_left .new_course_version {
+#regions_elms_navigation_left .new_parent_site {
   background-image:url(images/newversion.png);
 }
 #regions_elms_navigation_left  a[original-title="Add Course"] {

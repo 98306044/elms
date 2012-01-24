@@ -115,9 +115,9 @@ function _elms_navigation_top_system_path() {
     $site_name = unserialize(db_result(db_query("SELECT value FROM {variable} WHERE name='site_name'")));
     $output = theme('menu_item', l(t($site_name), $site_frontpage, array('attributes' => array('title' => t('Home')), 'purl' => array('disabled' => TRUE))), 0);
     //add the course home if this version is part of a course
-    if ($group->field_course_ref[0]['nid'] != '') {
-	  $course_name = db_result(db_query("SELECT title FROM {node} WHERE nid=%d", $group->field_course_ref[0]['nid']));
-      $output .= theme('menu_item', l(t($course_name), 'node/'. $group->field_course_ref[0]['nid'], array('attributes' => array('title' => t('Public Course Listing')), 'purl' => array('disabled' => TRUE))), 0);
+    if ($group->field_parent_ref[0]['nid'] != '') {
+	  $parent_name = db_result(db_query("SELECT title FROM {node} WHERE nid=%d", $group->field_parent_ref[0]['nid']));
+      $output .= theme('menu_item', l(t($parent_name), 'node/'. $group->field_parent_ref[0]['nid'], array('attributes' => array('title' => t('Public Course Listing')), 'purl' => array('disabled' => TRUE))), 0);
     }
   //add the current group homepage to the trail
     $output .= theme('menu_item', l(t($group->title), variable_get('site_frontpage', 'node/'. $group->nid), array('attributes' => array('title' => t($group->title)))), 0);
@@ -132,12 +132,16 @@ function _elms_navigation_top_system_path() {
       $type = db_result(db_query("SELECT type FROM {node} WHERE nid=%d", $nid));
     }
   }
-  //unify everything that's not in the courses view
-  if (arg(0) != 'courses') {
+  //unify everything that's not in the parents view
+  if (arg(0) != 'parents') {
     //dig out current menu path based on whats active
     $active_menu = menu_set_active_trail();
     //pop off the home link
     if ($active_menu[0]['title'] == 'Home') {
+      array_shift($active_menu);
+    }
+		//pop off content if its the first part of the path as its redundant
+		if ($active_menu[0]['title'] == 'Content') {
       array_shift($active_menu);
     }
     //iterate each menu item and convert to valid breadcrumb

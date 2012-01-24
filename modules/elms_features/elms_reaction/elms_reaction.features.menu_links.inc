@@ -14,11 +14,7 @@ function elms_reaction_menu_default_menu_links() {
     'link_title' => 'All Reactions',
     'options' => array(
       'attributes' => array(
-        'title' => 'View all Course Reactions',
-      ),
-      'menu_icon' => array(
-        'enable' => 0,
-        'path' => 'profiles/elms/modules/elms_features/elms_navigation/images/placeholder.png',
+        'title' => 'View all Reactions',
       ),
     ),
     'module' => 'menu',
@@ -37,10 +33,6 @@ function elms_reaction_menu_default_menu_links() {
     'options' => array(
       'attributes' => array(
         'title' => 'View all my reactions',
-      ),
-      'menu_icon' => array(
-        'enable' => 0,
-        'path' => 'profiles/elms/modules/elms_features/elms_navigation/images/placeholder.png',
       ),
     ),
     'module' => 'menu',

@@ -15,7 +15,7 @@ function elms_navigation_left_context_default_contexts() {
   $context->conditions = array(
     'context_og_condition_group_type' => array(
       'values' => array(
-        'version' => 'version',
+        'site' => 'site',
       ),
       'options' => array(
         'node_form' => 1,
@@ -62,7 +62,7 @@ function elms_navigation_left_context_default_contexts() {
   $context->conditions = array(
     'context_og_condition_group_type' => array(
       'values' => array(
-        'version' => 'version',
+        'site' => 'site',
       ),
       'options' => array(
         'node_form' => 1,

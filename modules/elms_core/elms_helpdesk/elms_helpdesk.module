@@ -85,9 +85,9 @@ function elms_helpdesk_form_alter(&$form, &$form_state, $form_id) {
     $group = og_get_group_context();
     if (isset($group->nid)) {
       //see if this is a sandbox or not
-      if (isset($group->field_course_ref[0]['nid'])) {
-        $course = node_load($group->field_course_ref[0]['nid']);    
-        $form['subject']['#default_value'] = 'Issue in '. $course->title;
+      if (isset($group->field_parent_ref[0]['nid'])) {
+        $parent = node_load($group->field_parent_ref[0]['nid']);    
+        $form['subject']['#default_value'] = 'Issue in '. $parent->title;
       }
       $form['subject']['#default_value'] .= ' - '. $group->title;
       $form['subject']['#type'] = 'hidden';
@@ -228,7 +228,7 @@ function elms_helpdesk_settings() {
     '#title' => t('Browsers'),
     '#collapsed' => FALSE,
     '#collapsible' => TRUE,
-  '#description' => t('Select the browsers that you require globally in order to take courses.  Treat these as minimum requirements.'),
+  '#description' => t('Select the browsers that you require globally.  Treat these as minimum requirements.'),
   );
   $form['browsers']['elms_helpdesk_browser_list'] = array(
     '#type' => 'select',
@@ -281,13 +281,10 @@ function _elms_helpdesk_add_js() {
 	$group = og_get_group_context();
 	if (isset($group->nid)) {
 		//merge in course specific ones if they exist, this is a list of what's acceptable
-		if (isset($group->field_course_ref[0]['nid'])) {
-		  $course = node_load($group->field_course_ref[0]['nid']);
+		if (isset($group->field_parent_ref[0]['nid'])) {
+		  $parent = node_load($group->field_parent_ref[0]['nid']);
 			//rebuild arrays with cck based values
-			foreach ($course->field_supported_browsers as $key => $ary) {
-				$settings['elms_helpdesk']['browser_list'][$ary['value']] = $ary['value'];
-			}
-			foreach ($course->field_required_plugins as $key => $ary) {
+			foreach ($parent->field_required_plugins as $key => $ary) {
 				$settings['elms_helpdesk']['plugin_list'][$ary['value']] = $ary['value'];
 			}
 		}

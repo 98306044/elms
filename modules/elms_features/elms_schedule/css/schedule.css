@@ -52,7 +52,7 @@
 }
 
 /* schedule container */
-.view-edit-course-schedule .view-content {
+.view-edit-parent-schedule .view-content {
 }
 
 .schedule_task_wrapper {
@@ -329,7 +329,7 @@ font-size: 16px !important;
 
 }
 
-.view-edit-course-schedule .views-field-value0 {
+.view-edit-parent-schedule .views-field-value0 {
  display:none;
 }
 

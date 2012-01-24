@@ -1,5 +1,4 @@
 <?php
-// $Id: data_taxonomy.views.inc,v 1.1.2.6 2010/09/08 01:54:47 alexb Exp $
 /**
  * @file
  * Views hooks.

@@ -54,55 +54,55 @@ function elms_schedule_theme_registry_alter(&$vars) {
   $vars['date_all_day_label']['function'] = '_elms_schedule_date_all_day_label';
   $vars['date_all_day_label']['theme paths'] = array(0 => drupal_get_path('module', 'elms_schedule'));
   //schedule reorder view is now cross-theme
-  $vars['views_view__course_schedule__page_2']['template'] = 'views-view--course-schedule--page-2';
-  $vars['views_view__course_schedule__page_2']['path'] = drupal_get_path('module', 'elms_schedule') .'/views';
-  $vars['views_view__course_schedule__page_2']['arguments'] = array('view' => '');
-  $vars['views_view__course_schedule__page_2']['original hook'] = 'views_view';
-  $vars['views_view__course_schedule__page_2']['include files'] = array(0 => './' . drupal_get_path('module', 'views') .'/theme/theme.inc');
-  $vars['views_view__course_schedule__page_2']['type'] = 'theme_engine';
-  $vars['views_view__course_schedule__page_2']['theme path'] = drupal_get_path('module', 'elms_schedule') .'/views';
-  $vars['views_view__course_schedule__page_2']['theme paths'] = array(0 => drupal_get_path('module', 'elms_schedule') .'/views');
-  $vars['views_view__course_schedule__page_2']['preprocess functions'] = array(0 => 'template_preprocess', 1 => 'template_preprocess_views_view');
+  $vars['views_view__elms_schedule__page_2']['template'] = 'views-view--parent-schedule--page-2';
+  $vars['views_view__elms_schedule__page_2']['path'] = drupal_get_path('module', 'elms_schedule') .'/views';
+  $vars['views_view__elms_schedule__page_2']['arguments'] = array('view' => '');
+  $vars['views_view__elms_schedule__page_2']['original hook'] = 'views_view';
+  $vars['views_view__elms_schedule__page_2']['include files'] = array(0 => './' . drupal_get_path('module', 'views') .'/theme/theme.inc');
+  $vars['views_view__elms_schedule__page_2']['type'] = 'theme_engine';
+  $vars['views_view__elms_schedule__page_2']['theme path'] = drupal_get_path('module', 'elms_schedule') .'/views';
+  $vars['views_view__elms_schedule__page_2']['theme paths'] = array(0 => drupal_get_path('module', 'elms_schedule') .'/views');
+  $vars['views_view__elms_schedule__page_2']['preprocess functions'] = array(0 => 'template_preprocess', 1 => 'template_preprocess_views_view');
   //schedule edit view is now cross-theme
-  $vars['views_view_unformatted__course_schedule__page_3']['template'] = 'views-view-unformatted--course-schedule--page-3';
-  $vars['views_view_unformatted__course_schedule__page_3']['path'] = drupal_get_path('module', 'elms_schedule') .'/views';
-  $vars['views_view_unformatted__course_schedule__page_3']['arguments'] = array('view' => '', 'options' => '', 'rows' => '', 'title' => '');
-  $vars['views_view_unformatted__course_schedule__page_3']['original hook'] = 'views_view_unformatted';
-  $vars['views_view_unformatted__course_schedule__page_3']['include files'] = array(0 => './' . drupal_get_path('module', 'views') .'/theme/theme.inc');
-  $vars['views_view_unformatted__course_schedule__page_3']['type'] = 'theme_engine';
-  $vars['views_view_unformatted__course_schedule__page_3']['theme path'] = drupal_get_path('module', 'elms_schedule') .'/views';
-  $vars['views_view_unformatted__course_schedule__page_3']['theme paths'] = array(0 => drupal_get_path('module', 'elms_schedule') .'/views');
-  $vars['views_view_unformatted__course_schedule__page_3']['preprocess functions'] = array(0 => 'template_preprocess', 1 => 'template_preprocess_views_view_unformatted');
+  $vars['views_view_unformatted__elms_schedule__page_3']['template'] = 'views-view-unformatted--parent-schedule--page-3';
+  $vars['views_view_unformatted__elms_schedule__page_3']['path'] = drupal_get_path('module', 'elms_schedule') .'/views';
+  $vars['views_view_unformatted__elms_schedule__page_3']['arguments'] = array('view' => '', 'options' => '', 'rows' => '', 'title' => '');
+  $vars['views_view_unformatted__elms_schedule__page_3']['original hook'] = 'views_view_unformatted';
+  $vars['views_view_unformatted__elms_schedule__page_3']['include files'] = array(0 => './' . drupal_get_path('module', 'views') .'/theme/theme.inc');
+  $vars['views_view_unformatted__elms_schedule__page_3']['type'] = 'theme_engine';
+  $vars['views_view_unformatted__elms_schedule__page_3']['theme path'] = drupal_get_path('module', 'elms_schedule') .'/views';
+  $vars['views_view_unformatted__elms_schedule__page_3']['theme paths'] = array(0 => drupal_get_path('module', 'elms_schedule') .'/views');
+  $vars['views_view_unformatted__elms_schedule__page_3']['preprocess functions'] = array(0 => 'template_preprocess', 1 => 'template_preprocess_views_view_unformatted');
   //fields view that is now cross-theme
-  $vars['views_view_fields__course_schedule__page_3']['template'] = 'views-view-fields--course-schedule--page-3';
-  $vars['views_view_fields__course_schedule__page_3']['path'] = drupal_get_path('module', 'elms_schedule') .'/views';
-  $vars['views_view_fields__course_schedule__page_3']['arguments'] = array('view' => '', 'options' => '', 'row' => '', 'field_alias' => '');
-  $vars['views_view_fields__course_schedule__page_3']['original hook'] = 'views_view_fields';
-  $vars['views_view_fields__course_schedule__page_3']['include files'] = array(0 => './' . drupal_get_path('module', 'views') .'/theme/theme.inc');
-  $vars['views_view_fields__course_schedule__page_3']['type'] = 'theme_engine';
-  $vars['views_view_fields__course_schedule__page_3']['theme path'] = drupal_get_path('module', 'elms_schedule') .'/views';
-  $vars['views_view_fields__course_schedule__page_3']['theme paths'] = array(0 => drupal_get_path('module', 'elms_schedule') .'/views');
-  $vars['views_view_fields__course_schedule__page_3']['preprocess functions'] = array(0 => 'template_preprocess', 1 => 'template_preprocess_views_view_fields');
+  $vars['views_view_fields__elms_schedule__page_3']['template'] = 'views-view-fields--parent-schedule--page-3';
+  $vars['views_view_fields__elms_schedule__page_3']['path'] = drupal_get_path('module', 'elms_schedule') .'/views';
+  $vars['views_view_fields__elms_schedule__page_3']['arguments'] = array('view' => '', 'options' => '', 'row' => '', 'field_alias' => '');
+  $vars['views_view_fields__elms_schedule__page_3']['original hook'] = 'views_view_fields';
+  $vars['views_view_fields__elms_schedule__page_3']['include files'] = array(0 => './' . drupal_get_path('module', 'views') .'/theme/theme.inc');
+  $vars['views_view_fields__elms_schedule__page_3']['type'] = 'theme_engine';
+  $vars['views_view_fields__elms_schedule__page_3']['theme path'] = drupal_get_path('module', 'elms_schedule') .'/views';
+  $vars['views_view_fields__elms_schedule__page_3']['theme paths'] = array(0 => drupal_get_path('module', 'elms_schedule') .'/views');
+  $vars['views_view_fields__elms_schedule__page_3']['preprocess functions'] = array(0 => 'template_preprocess', 1 => 'template_preprocess_views_view_fields');
   //schedule view is now cross-theme
-  $vars['views_view_unformatted__course_schedule__page_4']['template'] = 'views-view-unformatted--course-schedule--page-4';
-  $vars['views_view_unformatted__course_schedule__page_4']['path'] = drupal_get_path('module', 'elms_schedule') .'/views';
-  $vars['views_view_unformatted__course_schedule__page_4']['arguments'] = array('view' => '', 'options' => '', 'rows' => '', 'title' => '');
-  $vars['views_view_unformatted__course_schedule__page_4']['original hook'] = 'views_view_unformatted';
-  $vars['views_view_unformatted__course_schedule__page_4']['include files'] = array(0 => './'. drupal_get_path('module', 'views') .'/theme/theme.inc');
-  $vars['views_view_unformatted__course_schedule__page_4']['type'] = 'theme_engine';
-  $vars['views_view_unformatted__course_schedule__page_4']['theme path'] = drupal_get_path('module', 'elms_schedule') .'/views';
-  $vars['views_view_unformatted__course_schedule__page_4']['theme paths'] = array(0 => drupal_get_path('module', 'elms_schedule') .'/views');
-  $vars['views_view_unformatted__course_schedule__page_4']['preprocess functions'] = array(0 => 'template_preprocess', 1 => 'template_preprocess_views_view_unformatted');
+  $vars['views_view_unformatted__elms_schedule__page_4']['template'] = 'views-view-unformatted--parent-schedule--page-4';
+  $vars['views_view_unformatted__elms_schedule__page_4']['path'] = drupal_get_path('module', 'elms_schedule') .'/views';
+  $vars['views_view_unformatted__elms_schedule__page_4']['arguments'] = array('view' => '', 'options' => '', 'rows' => '', 'title' => '');
+  $vars['views_view_unformatted__elms_schedule__page_4']['original hook'] = 'views_view_unformatted';
+  $vars['views_view_unformatted__elms_schedule__page_4']['include files'] = array(0 => './'. drupal_get_path('module', 'views') .'/theme/theme.inc');
+  $vars['views_view_unformatted__elms_schedule__page_4']['type'] = 'theme_engine';
+  $vars['views_view_unformatted__elms_schedule__page_4']['theme path'] = drupal_get_path('module', 'elms_schedule') .'/views';
+  $vars['views_view_unformatted__elms_schedule__page_4']['theme paths'] = array(0 => drupal_get_path('module', 'elms_schedule') .'/views');
+  $vars['views_view_unformatted__elms_schedule__page_4']['preprocess functions'] = array(0 => 'template_preprocess', 1 => 'template_preprocess_views_view_unformatted');
   //fields view for schedule render is cross-theme
-  $vars['views_view_fields__course_schedule__page_4']['template'] = 'views-view-fields--course-schedule--page-4';
-  $vars['views_view_fields__course_schedule__page_4']['path'] = drupal_get_path('module', 'elms_schedule') .'/views';
-  $vars['views_view_fields__course_schedule__page_4']['arguments'] = array('view' => '', 'options' => '', 'row' => '', 'field_alias' => '');
-  $vars['views_view_fields__course_schedule__page_4']['original hook'] = 'views_view_fields';
-  $vars['views_view_fields__course_schedule__page_4']['include files'] = array(0 => './'. drupal_get_path('module', 'views') .'/theme/theme.inc');
-  $vars['views_view_fields__course_schedule__page_4']['type'] = 'theme_engine';
-  $vars['views_view_fields__course_schedule__page_4']['theme path'] = drupal_get_path('module', 'elms_schedule') .'/views';
-  $vars['views_view_fields__course_schedule__page_4']['theme paths'] = array(0 => drupal_get_path('module', 'elms_schedule') .'/views');
-  $vars['views_view_fields__course_schedule__page_4']['preprocess functions'] = array(0 => 'template_preprocess', 1 => 'template_preprocess_views_view_fields');
+  $vars['views_view_fields__elms_schedule__page_4']['template'] = 'views-view-fields--parent-schedule--page-4';
+  $vars['views_view_fields__elms_schedule__page_4']['path'] = drupal_get_path('module', 'elms_schedule') .'/views';
+  $vars['views_view_fields__elms_schedule__page_4']['arguments'] = array('view' => '', 'options' => '', 'row' => '', 'field_alias' => '');
+  $vars['views_view_fields__elms_schedule__page_4']['original hook'] = 'views_view_fields';
+  $vars['views_view_fields__elms_schedule__page_4']['include files'] = array(0 => './'. drupal_get_path('module', 'views') .'/theme/theme.inc');
+  $vars['views_view_fields__elms_schedule__page_4']['type'] = 'theme_engine';
+  $vars['views_view_fields__elms_schedule__page_4']['theme path'] = drupal_get_path('module', 'elms_schedule') .'/views';
+  $vars['views_view_fields__elms_schedule__page_4']['theme paths'] = array(0 => drupal_get_path('module', 'elms_schedule') .'/views');
+  $vars['views_view_fields__elms_schedule__page_4']['preprocess functions'] = array(0 => 'template_preprocess', 1 => 'template_preprocess_views_view_fields');
 }
 
 function elms_schedule_help($path, $arg) {
@@ -177,7 +177,7 @@ function _elms_schedule_rebuild_schedule($group, &$context) {
   $date_diff = '';
   //grab all the course events, ordered by date that are part of this group
   //we do checking upstream to ensure there are course events
-  $result = db_rewrite_sql(db_query("SELECT {node}.nid FROM {draggableviews_structure} JOIN {node} ON {node}.nid = {draggableviews_structure}.nid JOIN {og_ancestry} ON {og_ancestry}.nid = {draggableviews_structure}.nid JOIN {content_type_course_event} ON {content_type_course_event}.vid = {node}.vid WHERE {og_ancestry}.group_nid=%d AND {draggableviews_structure}.delta=1 AND {draggableviews_structure}.view_name='course_schedule' AND {content_type_course_event}.field_due_date_value IS NOT NULL ORDER BY {content_type_course_event}.field_due_date_value ASC", $group->nid));
+  $result = db_rewrite_sql(db_query("SELECT {node}.nid FROM {draggableviews_structure} JOIN {node} ON {node}.nid = {draggableviews_structure}.nid JOIN {og_ancestry} ON {og_ancestry}.nid = {draggableviews_structure}.nid JOIN {content_type_elms_event} ON {content_type_elms_event}.vid = {node}.vid WHERE {og_ancestry}.group_nid=%d AND {draggableviews_structure}.delta=1 AND {draggableviews_structure}.view_name='elms_schedule' AND {content_type_elms_event}.field_due_date_value IS NOT NULL ORDER BY {content_type_elms_event}.field_due_date_value ASC", $group->nid));
   while ($event = db_fetch_array($result)) {
     $node = NULL;
     $node = node_load($event['nid']);
@@ -381,11 +381,11 @@ function _elms_schedule_build_schedule($group, &$context) {
   $node1->title = t('Course Event #'. $node1->nid);
   node_save($node1);
     //get the current max weight since we add all new objects to the end
-    $weight1 = db_result(db_query("SELECT MAX(value) FROM {draggableviews_structure} WHERE delta=0 AND view_name='%s'", 'course_schedule'));
+    $weight1 = db_result(db_query("SELECT MAX(value) FROM {draggableviews_structure} WHERE delta=0 AND view_name='%s'", 'elms_schedule'));
     //insert the weight value
-    db_query("INSERT INTO {draggableviews_structure}(view_name, nid, delta, value, args) VALUES('%s', %d, %d, %d, '%s')", 'course_schedule', $node1->nid, 0, ($weight1+1), '');
+    db_query("INSERT INTO {draggableviews_structure}(view_name, nid, delta, value, args) VALUES('%s', %d, %d, %d, '%s')", 'elms_schedule', $node1->nid, 0, ($weight1+1), '');
     //insert that this has no parent at the moment
-    db_query("INSERT INTO {draggableviews_structure}(view_name, nid, delta, value, args) VALUES('%s', %d, %d, %d, '%s')", 'course_schedule', $node1->nid, 1, 0, '');
+    db_query("INSERT INTO {draggableviews_structure}(view_name, nid, delta, value, args) VALUES('%s', %d, %d, %d, '%s')", 'elms_schedule', $node1->nid, 1, 0, '');
     //we've detected a special case for a single day event in a week based structure so see which event to create
     if ($single_day_event) {
       $node2 = NULL;
@@ -422,11 +422,11 @@ function _elms_schedule_build_schedule($group, &$context) {
     $node2->title = t('Course Event #'. $node2->nid);
     node_save($node2);
       //get the current max weight since we add all new objects to the end
-      $weight2 = db_result(db_query("SELECT MAX(value) FROM {draggableviews_structure} WHERE delta=0 AND view_name='%s'", 'course_schedule'));
+      $weight2 = db_result(db_query("SELECT MAX(value) FROM {draggableviews_structure} WHERE delta=0 AND view_name='%s'", 'elms_schedule'));
       //insert the weight value
-      db_query("INSERT INTO {draggableviews_structure}(view_name, nid, delta, value, args) VALUES('%s', %d, %d, %d, '%s')", 'course_schedule', $node2->nid, 0, ($weight2+1), '');
+      db_query("INSERT INTO {draggableviews_structure}(view_name, nid, delta, value, args) VALUES('%s', %d, %d, %d, '%s')", 'elms_schedule', $node2->nid, 0, ($weight2+1), '');
       //insert that this has no parent at the moment
-      db_query("INSERT INTO {draggableviews_structure}(view_name, nid, delta, value, args) VALUES('%s', %d, %d, %d, '%s')", 'course_schedule', $node2->nid, 1, $node1->nid, '');
+      db_query("INSERT INTO {draggableviews_structure}(view_name, nid, delta, value, args) VALUES('%s', %d, %d, %d, '%s')", 'elms_schedule', $node2->nid, 1, $node1->nid, '');
     }
     //now we have the parent node built, build the children
   if (!$week_event) {
@@ -542,11 +542,11 @@ function _elms_schedule_build_schedule($group, &$context) {
     $node2->title = t('course Event #'. $node2->nid);
     node_save($node2);
       //get the current max weight since we add all new objects to the end
-      $weight2 = db_result(db_query("SELECT MAX(value) FROM {draggableviews_structure} WHERE delta=0 AND view_name='%s'", 'course_schedule'));
+      $weight2 = db_result(db_query("SELECT MAX(value) FROM {draggableviews_structure} WHERE delta=0 AND view_name='%s'", 'elms_schedule'));
       //insert the weight value
-      db_query("INSERT INTO {draggableviews_structure}(view_name, nid, delta, value, args) VALUES('%s', %d, %d, %d, '%s')", 'course_schedule', $node2->nid, 0, ($weight2+1), '');
+      db_query("INSERT INTO {draggableviews_structure}(view_name, nid, delta, value, args) VALUES('%s', %d, %d, %d, '%s')", 'elms_schedule', $node2->nid, 0, ($weight2+1), '');
       //insert that this has no parent at the moment
-      db_query("INSERT INTO {draggableviews_structure}(view_name, nid, delta, value, args) VALUES('%s', %d, %d, %d, '%s')", 'course_schedule', $node2->nid, 1, $node1->nid, '');
+      db_query("INSERT INTO {draggableviews_structure}(view_name, nid, delta, value, args) VALUES('%s', %d, %d, %d, '%s')", 'elms_schedule', $node2->nid, 1, $node1->nid, '');
       //we go 3 levels if this is topic based
   if ($sched_type == 'topic' && !$week_event) {
     //need to check for special events at this depth too
@@ -586,11 +586,11 @@ function _elms_schedule_build_schedule($group, &$context) {
     $node3->title = t('Course Event #'. $node3->nid);
     node_save($node3);
       //get the current max weight since we add all new objects to the end
-      $weight3 = db_result(db_query("SELECT MAX(value) FROM {draggableviews_structure} WHERE delta=0 AND view_name='%s'", 'course_schedule'));
+      $weight3 = db_result(db_query("SELECT MAX(value) FROM {draggableviews_structure} WHERE delta=0 AND view_name='%s'", 'elms_schedule'));
       //insert the weight value
-      db_query("INSERT INTO {draggableviews_structure}(view_name, nid, delta, value, args) VALUES('%s', %d, %d, %d, '%s')", 'course_schedule', $node3->nid, 0, ($weight3+1), '');
+      db_query("INSERT INTO {draggableviews_structure}(view_name, nid, delta, value, args) VALUES('%s', %d, %d, %d, '%s')", 'elms_schedule', $node3->nid, 0, ($weight3+1), '');
       //insert that this has no parent at the moment
-      db_query("INSERT INTO {draggableviews_structure}(view_name, nid, delta, value, args) VALUES('%s', %d, %d, %d, '%s')", 'course_schedule', $node3->nid, 1, $node2->nid, '');
+      db_query("INSERT INTO {draggableviews_structure}(view_name, nid, delta, value, args) VALUES('%s', %d, %d, %d, '%s')", 'elms_schedule', $node3->nid, 1, $node2->nid, '');
     }
         for ($k=0; $k<count($context['sandbox']['level3']); $k++) {
       $node3 = NULL;
@@ -615,11 +615,11 @@ function _elms_schedule_build_schedule($group, &$context) {
         $node3->title = t('course Event #'. $node3->nid);
         node_save($node3);
           //get the current max weight since we add all new objects to the end
-          $weight3 = db_result(db_query("SELECT MAX(value) FROM {draggableviews_structure} WHERE delta=0 AND view_name='%s'", 'course_schedule'));
+          $weight3 = db_result(db_query("SELECT MAX(value) FROM {draggableviews_structure} WHERE delta=0 AND view_name='%s'", 'elms_schedule'));
           //insert the weight value
-          db_query("INSERT INTO {draggableviews_structure}(view_name, nid, delta, value, args) VALUES('%s', %d, %d, %d, '%s')", 'course_schedule', $node3->nid, 0, ($weight3+1), '');
+          db_query("INSERT INTO {draggableviews_structure}(view_name, nid, delta, value, args) VALUES('%s', %d, %d, %d, '%s')", 'elms_schedule', $node3->nid, 0, ($weight3+1), '');
           //insert that this has no parent at the moment
-          db_query("INSERT INTO {draggableviews_structure}(view_name, nid, delta, value, args) VALUES('%s', %d, %d, %d, '%s')", 'course_schedule', $node3->nid, 1, $node2->nid, '');
+          db_query("INSERT INTO {draggableviews_structure}(view_name, nid, delta, value, args) VALUES('%s', %d, %d, %d, '%s')", 'elms_schedule', $node3->nid, 1, $node2->nid, '');
         }
       }
     }
@@ -658,14 +658,14 @@ function _elms_schedule_build_schedule($group, &$context) {
     $node1->title = t('Course Event #'. $node1->nid);
     node_save($node1);
     //get the current max weight since we add all new objects to the end
-    $weight1 = db_result(db_query("SELECT MAX(value) FROM {draggableviews_structure} WHERE delta=0 AND view_name='%s'", 'course_schedule'));
+    $weight1 = db_result(db_query("SELECT MAX(value) FROM {draggableviews_structure} WHERE delta=0 AND view_name='%s'", 'elms_schedule'));
     //insert the weight value
-    db_query("INSERT INTO {draggableviews_structure}(view_name, nid, delta, value, args) VALUES('%s', %d, %d, %d, '%s')", 'course_schedule', $node1->nid, 0, ($weight1+1), '');
+    db_query("INSERT INTO {draggableviews_structure}(view_name, nid, delta, value, args) VALUES('%s', %d, %d, %d, '%s')", 'elms_schedule', $node1->nid, 0, ($weight1+1), '');
     //insert that this has no parent at the moment
-    db_query("INSERT INTO {draggableviews_structure}(view_name, nid, delta, value, args) VALUES('%s', %d, %d, %d, '%s')", 'course_schedule', $node1->nid, 1, 0, '');
+    db_query("INSERT INTO {draggableviews_structure}(view_name, nid, delta, value, args) VALUES('%s', %d, %d, %d, '%s')", 'elms_schedule', $node1->nid, 1, 0, '');
     $context['message'] = t('Assembling Schedule: Creating Final Exam Event');
   }
-  // Multistep processing : report progress.
+  // Batch processing : report progress.
   if ($context['sandbox']['current_record'] != $context['sandbox']['level1']) {
     //need to pass through the map that's been built
     $context['finished'] = $context['sandbox']['current_record'] / $context['sandbox']['level1'];
@@ -689,7 +689,7 @@ function _elms_schedule_clean_node() {
   //creating a blank node
   $node = new stdClass();
   $node->uid = $user->uid;
-  $node->type = 'course_event';
+  $node->type = 'elms_event';
   $node->status = 1;
   $node->log = 'ELMS outline root created';
   $node->revision = 1;

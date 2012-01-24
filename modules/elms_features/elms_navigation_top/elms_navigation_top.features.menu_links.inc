@@ -16,11 +16,7 @@ function elms_navigation_top_menu_default_menu_links() {
       'purl' => 'disabled',
       'attributes' => array(
         'title' => 'My Bookmarks',
-        'class' => 'menu_icon menu-16504',
-      ),
-      'menu_icon' => array(
-        'enable' => 1,
-        'path' => 'sites/default/files/menu_icons/menu_icon_16504.png',
+        'class' => 'menu-16504',
       ),
     ),
     'module' => 'menu',
@@ -30,21 +26,17 @@ function elms_navigation_top_menu_default_menu_links() {
     'expanded' => '0',
     'weight' => '-48',
   );
-  // Exported menu link: menu-usermenu:courses/my
-  $menu_links['menu-usermenu:courses/my'] = array(
+  // Exported menu link: menu-usermenu:parents/my
+  $menu_links['menu-usermenu:parents/my'] = array(
     'menu_name' => 'menu-usermenu',
-    'link_path' => 'courses/my',
-    'router_path' => 'courses',
+    'link_path' => 'parents/my',
+    'router_path' => 'parents',
     'link_title' => 'My Courses',
     'options' => array(
       'purl' => 'disabled',
       'attributes' => array(
         'title' => 'My Courses',
-        'class' => 'menu_icon menu-16495',
-      ),
-      'menu_icon' => array(
-        'enable' => 1,
-        'path' => 'sites/default/files/menu_icons/menu_icon_16495.png',
+        'class' => 'menu-16495',
       ),
     ),
     'module' => 'menu',
@@ -64,11 +56,7 @@ function elms_navigation_top_menu_default_menu_links() {
       'purl' => 'disabled',
       'attributes' => array(
         'title' => 'Logout of ELMS',
-        'class' => 'menu_icon menu-16499',
-      ),
-      'menu_icon' => array(
-        'enable' => 1,
-        'path' => 'sites/default/files/menu_icons/menu_icon_16499.png',
+        'class' => 'menu-16499',
       ),
     ),
     'module' => 'menu',

@@ -7,10 +7,10 @@ function elms_helper_requirements($phase) {
  $requirements = array();
  $t = get_t();
  if ($phase === 'runtime' && file_exists('profiles/elms/VERSION.txt')) {
-    $version = trim(file_get_contents('profiles/elms/VERSION.txt'));
+    $elms_version = trim(file_get_contents('profiles/elms/VERSION.txt'));
     $requirements['elms'] = array(
       'title' => $t('ELMS Version'), 
-      'value' => check_plain($version),
+      'value' => check_plain($elms_version),
       'severity' => REQUIREMENT_OK,
     );
   }

@@ -1,5 +1,4 @@
 <?php
-// $Id: DataTable.inc,v 1.1.2.11 2010/07/28 20:21:19 alexb Exp $
 /**
  * @file
  * Contains class definition for DataTable.

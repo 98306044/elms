@@ -1,5 +1,4 @@
 <?php
-// $Id: views_handler_field_data_markup.inc,v 1.1.2.1 2010/03/03 17:11:28 alexb Exp $
 
 /**
  * A handler to run a field through check_markup.

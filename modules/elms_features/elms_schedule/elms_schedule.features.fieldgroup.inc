@@ -7,9 +7,9 @@ function elms_schedule_fieldgroup_default_groups() {
   $groups = array();
 
   // Exported group: group_additional_settings
-  $groups['course_event-group_additional_settings'] = array(
+  $groups['elms_event-group_additional_settings'] = array(
     'group_type' => 'standard',
-    'type_name' => 'course_event',
+    'type_name' => 'elms_event',
     'group_name' => 'group_additional_settings',
     'label' => 'Additional Settings',
     'settings' => array(
@@ -60,9 +60,9 @@ function elms_schedule_fieldgroup_default_groups() {
   );
 
   // Exported group: group_dates
-  $groups['course_event-group_dates'] = array(
+  $groups['elms_event-group_dates'] = array(
     'group_type' => 'standard',
-    'type_name' => 'course_event',
+    'type_name' => 'elms_event',
     'group_name' => 'group_dates',
     'label' => 'Dates',
     'settings' => array(

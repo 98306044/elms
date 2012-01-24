@@ -56,7 +56,7 @@ function elms_schedule_flag_default_flags() {
  */
 function elms_schedule_node_info() {
   $items = array(
-    'course_event' => array(
+    'elms_event' => array(
       'name' => t('Course Event'),
       'module' => 'features',
       'description' => t('Use this to add an event / task / container to the course\'s schedule'),

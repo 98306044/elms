@@ -398,7 +398,7 @@ $(document).ready(function(){
 		msg_class = 'warning';
 	}
 	else {
-		//version check, need to wait til I get a browser version per browser property
+		//check, need to wait til I get a browser version per browser property
 		/*
 		if (typeof Drupal.settings.elms_helpdesk.browser_list[BrowserDetect.browser.toLowerCase() + BrowserDetect.version] == 'undefined') {
 	    Drupal.elms_navigation.add_message('browser', Drupal.t(BrowserDetect.browser +' is a supported browser but your version ('+ BrowserDetect.version +') is too low.  Please ugrade if possible.'));
