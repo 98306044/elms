@@ -8,10 +8,10 @@
  * Implementation of hook_init().
  */
 function elms_styles_init() {
-	//include the style guide and treat it as theme layer
+  //include the style guide and treat it as theme layer
   drupal_add_css(drupal_get_path('module', 'elms_styles') .'/elms_styles.css', 'theme');
-	//include the collapse.js so it gets loaded on every page as core doesn't do this
-	drupal_add_js('misc/collapse.js');
+  //include the collapse.js so it gets loaded on every page as core doesn't do this
+  drupal_add_js('misc/collapse.js');
 }
 
 /**
@@ -21,7 +21,7 @@ function elms_styles_wysiwyg_editor_settings_alter(&$settings, $context) {
   //check for ckeditor as that's the college default
   if($context['profile']->editor == 'ckeditor') {
     $settings['undoStackSize'] = 40; //increase the undo history
-		$settings['fillEmptyBlocks'] = FALSE;
+    $settings['fillEmptyBlocks'] = FALSE;
     $settings['stylesSet'] = _elms_styles_styles(); //apply our styles
   }
 }
@@ -36,14 +36,14 @@ function _elms_styles_styles() {
           'class' => 'elms_center'
         ),
       ),
-			array(
+      array(
         'name' => 'DIV Right',
         'element' => 'div',
         'attributes' => array(
           'class' => 'elms_right'
         ),
       ),
-			array(
+      array(
         'name' => 'H2 Large',
         'element' => 'h2',
         'attributes' => array(
@@ -64,14 +64,14 @@ function _elms_styles_styles() {
           'class' => 'elms_header3'
         ),
       ),
-			array(
+      array(
         'name' => 'P Large',
         'element' => 'p',
         'attributes' => array(
           'class' => 'elms_size1'
         ),
       ),
-			array(
+      array(
         'name' => 'P Small',
         'element' => 'p',
         'attributes' => array(
@@ -82,60 +82,60 @@ function _elms_styles_styles() {
         'name' => 'Emphasis (italic)',
         'element' => 'em',
       ),
-			array(
+      array(
         'name' => 'Strong (bold)',
         'element' => 'strong',
       ),
-			array(
+      array(
         'name' => 'Superscript',
         'element' => 'sup',
       ),
-			array(
+      array(
         'name' => 'Subscript',
         'element' => 'sub',
       ),
-			array(
-			  'name' => 'Color 1',
-				'element' => 'span',
-				'attributes' => array(
-				  'class' => 'elms_color1',
-				)
-			),
-			array(
-			  'name' => 'Color 2',
-				'element' => 'span',
-				'attributes' => array(
-				  'class' => 'elms_color2',
-				)
-			),
-			array(
-			  'name' => 'Color 3',
-				'element' => 'span',
-				'attributes' => array(
-				  'class' => 'elms_color3',
-				)
-			),
-			array(
-			  'name' => 'Color 4',
-				'element' => 'span',
-				'attributes' => array(
-				  'class' => 'elms_color4',
-				)
-			),
-			array(
-			  'name' => 'Color 5',
-				'element' => 'span',
-				'attributes' => array(
-				  'class' => 'elms_color5',
-				)
-			),
-			array(
-			  'name' => 'Color 6',
-				'element' => 'span',
-				'attributes' => array(
-				  'class' => 'elms_color6',
-				)
-			),
+      array(
+        'name' => 'Color 1',
+        'element' => 'span',
+        'attributes' => array(
+          'class' => 'elms_color1',
+        )
+      ),
+      array(
+        'name' => 'Color 2',
+        'element' => 'span',
+        'attributes' => array(
+          'class' => 'elms_color2',
+        )
+      ),
+      array(
+        'name' => 'Color 3',
+        'element' => 'span',
+        'attributes' => array(
+          'class' => 'elms_color3',
+        )
+      ),
+      array(
+        'name' => 'Color 4',
+        'element' => 'span',
+        'attributes' => array(
+          'class' => 'elms_color4',
+        )
+      ),
+      array(
+        'name' => 'Color 5',
+        'element' => 'span',
+        'attributes' => array(
+          'class' => 'elms_color5',
+        )
+      ),
+      array(
+        'name' => 'Color 6',
+        'element' => 'span',
+        'attributes' => array(
+          'class' => 'elms_color6',
+        )
+      ),
     );
   return $styles;
 }

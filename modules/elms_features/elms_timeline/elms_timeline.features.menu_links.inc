@@ -34,14 +34,13 @@ function elms_timeline_menu_default_menu_links() {
       'attributes' => array(
         'title' => 'All timlines across your courses',
       ),
-      'purl' => 'disabled',
     ),
     'module' => 'system',
     'hidden' => '0',
     'external' => '0',
     'has_children' => '0',
     'expanded' => '0',
-    'weight' => '-44',
+    'weight' => '0',
   );
   // Translatables
   // Included for use with string extractors like potx.

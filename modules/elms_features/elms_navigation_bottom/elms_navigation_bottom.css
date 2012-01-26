@@ -97,25 +97,25 @@ body {
 
 /* icons for the bottom items */
 #regions_block_elms_navigation_bottom_0 .elms_zoom_in {
-  background-image:url(images/zoomin.png);	
+  background-image:url(images/zoomin.png);  
 }
 #regions_block_elms_navigation_bottom_0 .elms_zoom_out {
-  background-image:url(images/zoomout.png);	
+  background-image:url(images/zoomout.png);  
 }
 #regions_block_elms_navigation_bottom_0 .elms_zoom_reset {
-  background-image:url(images/zoomreset.png);	
+  background-image:url(images/zoomreset.png);  
 }
 #regions_block_elms_navigation_bottom_0 .elms_next_page {
-  background-image:url(images/nextpage.png);	
+  background-image:url(images/nextpage.png);  
 }
 #regions_block_elms_navigation_bottom_0 .elms_prev_page {
-  background-image:url(images/prevpage.png);	
+  background-image:url(images/prevpage.png);  
 }
 #regions_block_elms_navigation_bottom_0 .elms_print_page {
-  background-image:url(images/print.png);	
+  background-image:url(images/print.png);  
 }
 #regions_block_elms_navigation_bottom_0 .elms_book_toc {
-  background-image:url(images/table_of_contents.png);	
+  background-image:url(images/table_of_contents.png);  
 }
 #regions_block_elms_navigation_bottom_0 .elms_reactions {
   background-image:url(images/reactions.png);
@@ -132,7 +132,7 @@ body {
 
 /* always hide the flag state change message when in the bottom bar */
 #regions_block_elms_navigation_bottom_0 .flag-message {
- display:none !important;	
+ display:none !important;  
 }
 #regions_block_elms_navigation_bottom_0 a:hover {
  background-color:transparent;

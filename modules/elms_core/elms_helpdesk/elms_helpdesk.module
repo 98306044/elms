@@ -128,12 +128,12 @@ function elms_helpdesk_map_notification() {
       'icon' => base_path() . drupal_get_path('module', 'elms_helpdesk') .'/images/notifications/earth.png',
       'bar_icon' => base_path() . drupal_get_path('module', 'elms_helpdesk') .'/images/notifications/earth_bar.png',
     ),
-		'flash' => array(
+    'flash' => array(
       'title' => 'Flash Plugin Missing',
       'icon' => base_path() . drupal_get_path('module', 'elms_helpdesk') .'/images/notifications/flash.png',
       'bar_icon' => base_path() . drupal_get_path('module', 'elms_helpdesk') .'/images/notifications/flash_bar.png',
     ),
-		'flash-version' => array(
+    'flash-version' => array(
       'title' => 'Flash out of date',
       'icon' => base_path() . drupal_get_path('module', 'elms_helpdesk') .'/images/notifications/flash.png',
       'parent' => 'flash',
@@ -161,12 +161,12 @@ function elms_helpdesk_map_notification() {
     'connection-speed' => array(
       'title' => 'Speed / Performance',
       'icon' => base_path() . drupal_get_path('module', 'elms_helpdesk') .'/images/notifications/globe.png',
-			'parent' => 'connection',
+      'parent' => 'connection',
     ),
     'connection-country' => array(
       'title' => 'Connecting Overseas',
       'icon' => base_path() . drupal_get_path('module', 'elms_helpdesk') .'/images/notifications/globe.png',
-			'parent' => 'connection',
+      'parent' => 'connection',
     ),
   );
   return $map;
@@ -210,18 +210,18 @@ function elms_helpdesk_settings() {
     'quicktime' => t('Quick Time'),
     'java' => ('Java'),
     'html5' => t('HTML5'),
-		'realplayer' => t('Real Player'),
-		'wmp' => t('Windows Media Player'),
-		'gears' => t('Google Gears'),
-		'director' => t('Adobe Director'),
+    'realplayer' => t('Real Player'),
+    'wmp' => t('Windows Media Player'),
+    'gears' => t('Google Gears'),
+    'director' => t('Adobe Director'),
   );
-	$form['elms_helpdesk_country_origin'] = array(
+  $form['elms_helpdesk_country_origin'] = array(
     '#type' => 'textfield',
     '#title' => t('Country of Origin '),
     '#default_value' => variable_get('elms_helpdesk_country_origin', 'US'),
-		'#description' => t("Set the country code of origin, this is used to indicate to others in the test that they may have connection issues if connecting outside your country.  If you set this to empty this test won't be used (useful for cloud where this shouldn't be an issue)."),
+    '#description' => t("Set the country code of origin, this is used to indicate to others in the test that they may have connection issues if connecting outside your country.  If you set this to empty this test won't be used (useful for cloud where this shouldn't be an issue)."),
   );
-	
+  
   //collapse default state
   $form['browsers'] = array(
     '#type' => 'fieldset',
@@ -263,32 +263,32 @@ function _elms_helpdesk_add_js() {
     'elms_helpdesk' => array(
     'test_image' => '/'. drupal_get_path('module', 'elms_helpdesk') .'/speedtest.png',
     'icon_map' => _elms_navigation_top_get_map(),
-		'country' => geoip_country_code(),
-		'server_country' => variable_get('elms_helpdesk_country_origin', 'US'),
+    'country' => geoip_country_code(),
+    'server_country' => variable_get('elms_helpdesk_country_origin', 'US'),
     ),
   );
-	//add flag for appending stuff to the screen for contact form
-	if (arg(0) == 'contact') {
+  //add flag for appending stuff to the screen for contact form
+  if (arg(0) == 'contact') {
     $settings['elms_helpdesk']['contact_form'] = TRUE;
-	}
-	else {
-		$settings['elms_helpdesk']['contact_form'] = FALSE;
-	}
-	//set the system defaults
-		$settings['elms_helpdesk']['browser_list'] = variable_get('elms_helpdesk_browser_list', array());
+  }
+  else {
+    $settings['elms_helpdesk']['contact_form'] = FALSE;
+  }
+  //set the system defaults
+    $settings['elms_helpdesk']['browser_list'] = variable_get('elms_helpdesk_browser_list', array());
     $settings['elms_helpdesk']['plugin_list'] = variable_get('elms_helpdesk_plugin_list', array());
-	//pull in requirements
-	$group = og_get_group_context();
-	if (isset($group->nid)) {
-		//merge in course specific ones if they exist, this is a list of what's acceptable
-		if (isset($group->field_parent_ref[0]['nid'])) {
-		  $parent = node_load($group->field_parent_ref[0]['nid']);
-			//rebuild arrays with cck based values
-			foreach ($parent->field_required_plugins as $key => $ary) {
-				$settings['elms_helpdesk']['plugin_list'][$ary['value']] = $ary['value'];
-			}
-		}
-	}
-	//dpm($settings);
+  //pull in requirements
+  $group = og_get_group_context();
+  if (isset($group->nid)) {
+    //merge in course specific ones if they exist, this is a list of what's acceptable
+    if (isset($group->field_parent_ref[0]['nid'])) {
+      $parent = node_load($group->field_parent_ref[0]['nid']);
+      //rebuild arrays with cck based values
+      foreach ($parent->field_required_plugins as $key => $ary) {
+        $settings['elms_helpdesk']['plugin_list'][$ary['value']] = $ary['value'];
+      }
+    }
+  }
+  //dpm($settings);
   drupal_add_js($settings, 'setting');
 }

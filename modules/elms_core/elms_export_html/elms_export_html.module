@@ -62,46 +62,46 @@ function elms_export_html_settings() {
  */
 function elms_export_html_settings_submit($form_id, $form_values) {
     $group = og_get_group_context();
-		$nids = array();
-		//create a folder html_export to put the directory in if it doesnt exist
+    $nids = array();
+    //create a folder html_export to put the directory in if it doesnt exist
     $dir = file_create_path(file_directory_path() . '/html_export');
     file_check_directory($dir, 1);
-		//make the directory path for this export (just timestamp)
+    //make the directory path for this export (just timestamp)
     $export_path = $dir .'/export'. time();
     file_check_directory(file_create_path($export_path), 1);
     //build a list of nodes for path translation
     $result = db_query(db_rewrite_sql("SELECT {node}.nid FROM {node} JOIN {og_ancestry} ON {og_ancestry}.nid={node}.nid WHERE status=1 AND group_nid=%d ORDER BY nid DESC"), $group->nid);
     while ($val = db_fetch_array($result)) {
       $nids['node/'. $val['nid']] = 'node-'. $val['nid'] .'.html';
-		}
-		//make all the files
-		$result = db_query(db_rewrite_sql("SELECT {node}.nid FROM {node} JOIN {og_ancestry} ON {og_ancestry}.nid={node}.nid WHERE status=1 AND group_nid=%d ORDER BY nid DESC"), $group->nid);
+    }
+    //make all the files
+    $result = db_query(db_rewrite_sql("SELECT {node}.nid FROM {node} JOIN {og_ancestry} ON {og_ancestry}.nid={node}.nid WHERE status=1 AND group_nid=%d ORDER BY nid DESC"), $group->nid);
     while ($val = db_fetch_array($result)) {
-			menu_set_active_item('node/'. $val['nid']);
+      menu_set_active_item('node/'. $val['nid']);
       $return = menu_execute_active_handler();
       $data = theme('page', $return);
-			//convert all paths to the new ones based on what we know will be exported
-			foreach ($nids as $path => $new_path) {
-			  $data = str_replace($path, $new_path, $data);
-			}
-			//open a file for writing with the new path
-			$file = fopen($export_path .'/'. $nids['node/'. $val['nid']] , 'w');
+      //convert all paths to the new ones based on what we know will be exported
+      foreach ($nids as $path => $new_path) {
+        $data = str_replace($path, $new_path, $data);
+      }
+      //open a file for writing with the new path
+      $file = fopen($export_path .'/'. $nids['node/'. $val['nid']] , 'w');
       fwrite($file, $data);
       fclose($file);
-		}
-		//create index page which is the book root node id
-		menu_set_active_item('node/'. $group->book_nid);
+    }
+    //create index page which is the book root node id
+    menu_set_active_item('node/'. $group->book_nid);
     $return = menu_execute_active_handler();
     $data = theme('page', $return);
-		//convert all paths to the new ones based on what we know will be exported
-		foreach ($nids as $path => $new_path) {
-		  $data = str_replace($path, $new_path, $data);
-		}
+    //convert all paths to the new ones based on what we know will be exported
+    foreach ($nids as $path => $new_path) {
+      $data = str_replace($path, $new_path, $data);
+    }
     $file = fopen($export_path . '/index.html', 'w');
     fwrite($file, $data);
     fclose($file);
     //need to generate a list of modules and themes to copy as well as files directory except for html_export folder
   drupal_set_message("If you don't see any errors the site was exported successfully! @link here to access the export.", array('@link' => l('Click', drupal_substr($export_path, strpos($export_path, $dir)) . "/index.html")));
-	//seems silly but needed because we are manipulating the location upstream
-	drupal_goto('node/'. $group->nid .'/html_export');
+  //seems silly but needed because we are manipulating the location upstream
+  drupal_goto('node/'. $group->nid .'/html_export');
 }

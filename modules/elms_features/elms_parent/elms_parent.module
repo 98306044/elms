@@ -33,7 +33,7 @@ function _elms_parent_create_default($parent) {
   $group->type = ELMS_GROUP_TYPE;
   $group->status = 1;
   $group->log = 'ELMS Parent: Default settings used to create an initial site sandbox';
-	//don't need to bloat revisions table
+  //don't need to bloat revisions table
   $group->revision = 0;
   $group->field_footer[0]['value'] = variable_get('site_footer','');
   //Set the course reference
@@ -70,26 +70,26 @@ function elms_parent_requirement_dashboard_provider() {
 function elms_parent_dashboard_requirements($provider) {
   switch ($provider) {
     case 'og':
-	  $group = og_get_group_context();
-	  //get a list of users per role
-	  $counts = array(
-	    'instructor' => 0,
-		'student' => 0,
-		'teaching assistant' => 0,
-	  );
-	  $result = db_query("SELECT r.name AS rolename FROM {users} AS u JOIN {og_users_roles} AS ur ON u.uid=ur.uid JOIN {role} AS r ON ur.rid=r.rid WHERE r.name IN('instructor', 'student', 'teaching assistant') AND status=1");
-	  while ($val = db_fetch_array($result)) {
-		$counts[$val['rolename']]++;
-	  }
-	  //loop through and render all this info
-	  foreach ($counts as $rolename => $count) {
+    $group = og_get_group_context();
+    //get a list of users per role
+    $counts = array(
+      'instructor' => 0,
+    'student' => 0,
+    'teaching assistant' => 0,
+    );
+    $result = db_query("SELECT r.name AS rolename FROM {users} AS u JOIN {og_users_roles} AS ur ON u.uid=ur.uid JOIN {role} AS r ON ur.rid=r.rid WHERE r.name IN('instructor', 'student', 'teaching assistant') AND status=1");
+    while ($val = db_fetch_array($result)) {
+    $counts[$val['rolename']]++;
+    }
+    //loop through and render all this info
+    foreach ($counts as $rolename => $count) {
         $requirements['og_active_'. str_replace(' ', '', $rolename) .'_count'] = array(
           'title' => t('@account', array('@account' => ucwords($rolename .'s'))), 
           'value' => $count,
           'severity' => REQUIREMENT_INFO,
         );
-	  }
-	break;
+    }
+  break;
     case 'elms_parent':
       $node = node_load(arg(1));
       //add name
@@ -116,7 +116,7 @@ function elms_parent_dashboard_requirements($provider) {
       $count_parents = db_result(db_query("SELECT COUNT(nid) FROM {node} WHERE type='%s'", ELMS_ROOT_TYPE));
       $requirements['total_parents'] = array(
         'title' => t('Total Parents'),
-	      'value' => $count_parents,
+        'value' => $count_parents,
         'severity' => REQUIREMENT_INFO,
       );
     break;
@@ -134,9 +134,9 @@ function elms_parent_menu() {
     'page arguments' => array(1),
     'access callback' => 'elms_parent_add_redirect_access',
     'access arguments' => array(1),
-		'type' => MENU_LOCAL_TASK,
+    'type' => MENU_LOCAL_TASK,
   );
-	return $items;
+  return $items;
 }
 
 //redirect to the noderef url
@@ -147,10 +147,10 @@ function elms_parent_add_redirect($node) {
 function elms_parent_add_redirect_access($node) {
   if(node_access('create', ELMS_GROUP_TYPE) && $node->type == ELMS_ROOT_TYPE) {
     return TRUE;
-	}
-	else {
+  }
+  else {
     return FALSE;
-	}
+  }
 }
 /**
  * Implementation of hook_menu_alter().

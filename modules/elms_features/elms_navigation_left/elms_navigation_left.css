@@ -12,7 +12,7 @@
   margin:0px;
   text-align:left;
   font-size:12px;
-	font-weight: normal;
+  font-weight: normal;
   color:#ccc;
   background-image:url(images/sidebarbgtop.png);
   background-repeat:repeat-y;
@@ -32,14 +32,14 @@ div#admin-toolbar {
 }
 
 #regions_block_elms_navigation_left_3 div.regions_block_title {
-	display:none;
+  display:none;
 }
 
 #regions_elms_navigation_left li {
   list-style-type: none;
   list-style-image: none;
   padding: 0px 0px 0px 10px;
-	border:none;
+  border:none;
   clear: both;
   height:24px;
   line-height:24px;
@@ -83,8 +83,8 @@ div#admin-toolbar {
   height:24px;
   width:100%;
   line-height:24px;
-	font-weight: normal;
-	font-size:12px;
+  font-weight: normal;
+  font-size:12px;
 }
 #regions_elms_navigation_left .regions_block_title {
   font-size:16px;

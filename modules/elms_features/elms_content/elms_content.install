@@ -4,12 +4,12 @@
  * Implementation of hook_install().
  */
 function elms_content_install() {
-	$types = array(
+  $types = array(
     0 => 'folder',
     1 => 'link',
     2 => 'page',
     3 => 'referenced_page',
   );
-	variable_set('book_allowed_types', $types);
-	variable_set('book_child_type', 'page');
+  variable_set('book_allowed_types', $types);
+  variable_set('book_child_type', 'page');
 }

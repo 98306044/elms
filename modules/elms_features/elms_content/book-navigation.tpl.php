@@ -19,12 +19,12 @@
       print _elms_content_toc($book_id);
     }
     else {
-	  $node = node_load($nid);  
-	  if ($node->type == 'folder') {
-		print $tree;  
-	  }
+    $node = node_load($nid);  
+    if ($node->type == 'folder') {
+    print $tree;  
     }
-	?>
+    }
+  ?>
   </div>
 <?php endif; 
   }

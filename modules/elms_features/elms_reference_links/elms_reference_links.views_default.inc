@@ -95,21 +95,19 @@ function elms_reference_links_views_default_views() {
   ));
   $handler->override_option('access', array(
     'type' => 'spaces_feature',
-    'spaces_feature' => 'elms_places',
+    'spaces_feature' => 'elms_reference_links',
     'perm' => 'access content',
   ));
   $handler->override_option('cache', array(
     'type' => 'none',
   ));
-  $handler->override_option('title', 'Related Links');
+  $handler->override_option('title', 'Links');
   $handler->override_option('footer_format', '1');
   $handler->override_option('footer_empty', 0);
   $handler->override_option('items_per_page', 0);
   $handler->override_option('use_pager', '0');
-  $handler->override_option('style_plugin', 'list');
   $handler->override_option('style_options', array(
     'grouping' => '',
-    'type' => 'ul',
   ));
   $handler->override_option('row_options', array(
     'inline' => array(

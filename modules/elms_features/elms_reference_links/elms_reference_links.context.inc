@@ -22,11 +22,11 @@ function elms_reference_links_context_default_contexts() {
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
-        'views-449339bf8f8381c68227b25b18dda495' => array(
+        'views-elms_related_links_list-block_1' => array(
           'module' => 'views',
-          'delta' => '449339bf8f8381c68227b25b18dda495',
+          'delta' => 'elms_related_links_list-block_1',
           'region' => 'regions_elms_navigation_right',
-          'weight' => 0,
+          'weight' => NULL,
         ),
       ),
     ),

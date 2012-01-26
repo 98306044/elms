@@ -377,6 +377,13 @@ function elms_icms_strongarm() {
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'jquery_colorpicker_ie6_page';
+  $strongarm->value = 0;
+  $export['jquery_colorpicker_ie6_page'] = $strongarm;
+
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'beautytips_defaults';
   $strongarm->value = array(
     'fill' => '#F4F4F4',
@@ -403,16 +410,23 @@ function elms_icms_strongarm() {
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'jquery_colorpicker_ie6_page';
-  $strongarm->value = 0;
-  $export['jquery_colorpicker_ie6_page'] = $strongarm;
+  $strongarm->name = 'views_bulk_operations_actions';
+  $strongarm->value = 'a:11:{i:0;s:6:"fields";i:1;s:6:"script";i:2;s:7:"ruleset";i:3;s:4:"book";i:4;s:6:"delete";i:5;s:16:"content_taxonomy";i:6;s:7:"profile";i:7;s:10:"user_roles";i:8;s:8:"taxonomy";i:9;s:17:"argument_selector";i:10;s:7:"archive";}';
+  $export['views_bulk_operations_actions'] = $strongarm;
 
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'views_bulk_operations_actions';
-  $strongarm->value = 'a:11:{i:0;s:6:"fields";i:1;s:6:"script";i:2;s:7:"ruleset";i:3;s:4:"book";i:4;s:6:"delete";i:5;s:16:"content_taxonomy";i:6;s:7:"profile";i:7;s:10:"user_roles";i:8;s:8:"taxonomy";i:9;s:17:"argument_selector";i:10;s:7:"archive";}';
-  $export['views_bulk_operations_actions'] = $strongarm;
+  $strongarm->name = 'site_frontpage';
+  $strongarm->value = 'parents';
+  $export['site_frontpage'] = $strongarm;
+
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'site_frontpage_path';
+  $strongarm->value = 'parents';
+  $export['site_frontpage_path'] = $strongarm;
 
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -3905,6 +3919,7 @@ news',
     'toggle_comment_user_picture' => 0,
     'toggle_primary_links' => 0,
     'toggle_secondary_links' => 0,
+    'toggle_node_info_poll' => 1,
     'toggle_node_info_accessibility_guideline' => 0,
     'toggle_node_info_accessibility_test' => 0,
     'toggle_node_info_folder' => 0,
@@ -3912,7 +3927,12 @@ news',
     'toggle_node_info_page' => 0,
     'toggle_node_info_referenced_page' => 0,
     'toggle_node_info_parent' => 0,
+    'toggle_node_info_place' => 1,
+    'toggle_node_info_reaction' => 1,
+    'toggle_node_info_content_links' => 1,
     'toggle_node_info_elms_resource' => 1,
+    'toggle_node_info_term' => 1,
+    'toggle_node_info_timeline_item' => 1,
     'toggle_node_info_site' => 0,
     'toggle_node_info_parent_resource' => 0,
     'logo_upload' => '',
@@ -3937,13 +3957,19 @@ news',
     'toggle_secondary_links' => 0,
     'toggle_node_info_accessibility_guideline' => 0,
     'toggle_node_info_accessibility_test' => 0,
-    'toggle_node_info_parent_resource' => 0,
+    'toggle_node_info_content_links' => 0,
     'toggle_node_info_parent' => 0,
-    'toggle_node_info_site' => 0,
+    'toggle_node_info_elms_resource' => 0,
     'toggle_node_info_folder' => 0,
     'toggle_node_info_link' => 0,
     'toggle_node_info_page' => 0,
+    'toggle_node_info_place' => 0,
+    'toggle_node_info_poll' => 0,
+    'toggle_node_info_reaction' => 0,
     'toggle_node_info_referenced_page' => 0,
+    'toggle_node_info_term' => 0,
+    'toggle_node_info_timeline_item' => 0,
+    'toggle_node_info_site' => 0,
     'default_logo' => 1,
     'logo_path' => '',
     'logo_upload' => '',

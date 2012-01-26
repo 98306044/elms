@@ -28,7 +28,7 @@ function elms_navigation_top_define_regions() {
     'js' => drupal_get_path('module', 'elms_navigation_top') .'/elms_navigation_top.js',
     'css' => drupal_get_path('module', 'elms_navigation_top') .'/elms_navigation_top.css',
     'render_callback' => '_elms_navigation_top_render_region',
-	);
+  );
   return $region;
 }
 
@@ -38,7 +38,7 @@ function elms_navigation_top_define_regions() {
 function elms_navigation_top_init() {
   $settings = array(
     'elms_navigation_top' => array(
-			'msg_count' => array(),
+      'msg_count' => array(),
     )
   );
   drupal_add_js($settings, 'setting');
@@ -116,7 +116,7 @@ function _elms_navigation_top_system_path() {
     $output = theme('menu_item', l(t($site_name), $site_frontpage, array('attributes' => array('title' => t('Home')), 'purl' => array('disabled' => TRUE))), 0);
     //add the course home if this version is part of a course
     if ($group->field_parent_ref[0]['nid'] != '') {
-	  $parent_name = db_result(db_query("SELECT title FROM {node} WHERE nid=%d", $group->field_parent_ref[0]['nid']));
+    $parent_name = db_result(db_query("SELECT title FROM {node} WHERE nid=%d", $group->field_parent_ref[0]['nid']));
       $output .= theme('menu_item', l(t($parent_name), 'node/'. $group->field_parent_ref[0]['nid'], array('attributes' => array('title' => t('Public Course Listing')), 'purl' => array('disabled' => TRUE))), 0);
     }
   //add the current group homepage to the trail
@@ -140,8 +140,8 @@ function _elms_navigation_top_system_path() {
     if ($active_menu[0]['title'] == 'Home') {
       array_shift($active_menu);
     }
-		//pop off content if its the first part of the path as its redundant
-		if ($active_menu[0]['title'] == 'Content') {
+    //pop off content if its the first part of the path as its redundant
+    if ($active_menu[0]['title'] == 'Content') {
       array_shift($active_menu);
     }
     //iterate each menu item and convert to valid breadcrumb
@@ -181,14 +181,14 @@ function _elms_navigation_top_notifications() {
     foreach ($title_messages as $key => $message_group) {
       //if this item actually has a parent, move it's status messages in there
       if (isset($map[$key]['parent'])) {
-		//test to see if this item came across itself to merge under, otherwise 
-		if (isset($title_messages[$map[$key]['parent']])) {
+    //test to see if this item came across itself to merge under, otherwise 
+    if (isset($title_messages[$map[$key]['parent']])) {
           $title_messages[$map[$key]['parent']] = array_merge($title_messages[$map[$key]['parent']], $message_group);
-		}
-		else {
+    }
+    else {
           //this is basically just a push of the value into its parent
           $title_messages[$map[$key]['parent']] = $message_group;
-		}
+    }
         unset($title_messages[$key]);
       }
     }
@@ -211,7 +211,7 @@ function _elms_navigation_top_notifications() {
     }
     //build out the message array
     foreach ($messages as $key => $message_group) {
-	  //see if we have a map, if not use default
+    //see if we have a map, if not use default
       if (isset($map[$key])) {
         $type = $key;
       }
@@ -226,7 +226,7 @@ function _elms_navigation_top_notifications() {
     }
     //add arrow to right side to indicate this can be opened
     $title .= '<a href="#" title="Click to see notifications"><img src="'. base_path() . drupal_get_path('module', 'elms_navigation_top') .'/images/notifications/arrow_down.png" alt="Click to see notifications" class="elms_nav_top_arrow"/></a>';
-	//construct the block for display
+  //construct the block for display
     $block = array('subject' => $title, 'content' => $content);
   }
   return $block;
@@ -274,7 +274,7 @@ function _elms_navigation_top_get_map() {
  */
 function elms_navigation_top_regions_region_alter(&$region, $region_name) {
   // Example to add an inner DIV to the region markup.
-	if ($region_name == 'regions_elms_navigation_top' && !empty($region['blocks'])) {
+  if ($region_name == 'regions_elms_navigation_top' && !empty($region['blocks'])) {
     $new_markup = array(
       'start' => $region['start'],
       'inner' => '<div class="regions_pre_block_container"></div><div class="regions_block_container">',
@@ -283,20 +283,20 @@ function elms_navigation_top_regions_region_alter(&$region, $region_name) {
       'end' => $region['end'],
     );
     $region = $new_markup;
-	}
+  }
 }
 
 /**
  * Implementation of hook_regions_blocks_alter().
  */
 function elms_navigation_top_regions_blocks_alter(&$blocks = array(), $region_name = NULL) {
-	if ($region_name == 'regions_elms_navigation_top') {
+  if ($region_name == 'regions_elms_navigation_top') {
     // Example to support HTML titles, with a safe but unorthodox workaround.
     foreach ($blocks as $key => $block) {
       $block->subject = filter_xss_admin(html_entity_decode($block->subject));
       $blocks[$key] = $block;
     }
-	}
+  }
 }
 
 
@@ -305,11 +305,11 @@ function elms_navigation_top_regions_blocks_alter(&$blocks = array(), $region_na
  */
 function _elms_navigation_top_render_region($block_html, $block) {
   //build a unique key for this block for theming
-	static $count = 0;
-	$count++;
+  static $count = 0;
+  $count++;
   $key = $block->module .'_'. $block->delta;
   $output .= '<div class="regions_block regions_'. $count .'" id="regions_block_'. $key .'"><div class="regions_block_title">';
-	$output .= $block->subject;
+  $output .= $block->subject;
   $output .= '</div><div class="regions_block_content">'. $block->content .'</div></div>';
   //if we returned blocks then render the region
   if ($output != '') {

@@ -164,7 +164,7 @@ h2.elms_header {
 }
 .elms_stepstocompletion-table {
   background-color:#BBD3DD;
-	color:#222;
+  color:#222;
   width:99%;
   margin:0px;
   padding:0px;
@@ -175,7 +175,7 @@ h2.elms_header {
 }
 .elms_stepstocompletion-table th{
   background-color:#DDD;
-	color:#222;
+  color:#222;
   font-weight:bold;
   text-align:left;
   margin:0px;
@@ -189,7 +189,7 @@ h2.elms_header {
   background:#9CF;
 }
 .elms_stepstocompletion-table td {
-	background:none;
+  background:none;
 }
 .elms_stepstocompletion-table .elms_col1{
   font-weight:bold;
@@ -202,8 +202,8 @@ h2.elms_header {
   -moz-border-radius: 10px;
   border-radius: 10px;
   margin:20px;
-	padding:5px;
-	color:#222;
+  padding:5px;
+  color:#222;
 }
 .elms_assignment h2.elms_header{
   padding:15px 0px 0px 42px !important;
@@ -216,11 +216,11 @@ h2.elms_header {
 .elms_directions {
   margin:0px;
   padding:0px 5px 5px 5px;
-	color:#222;
+  color:#222;
 }
 .elms_directions .citation{
   font-size:10px;
-	text-align:center;
+  text-align:center;
 }
 
 /* Fact template */
@@ -246,8 +246,8 @@ h2.elms_header {
 div.node .elms_collapse-text a,div.node .elms_collapse-text a:link,div.node .elms_collapse-text a:visited{
   text-decoration:none;
   background-color:transparent;
-	font-size:14px;
-	font-weight:bold;
+  font-size:14px;
+  font-weight:bold;
 }
 
 .elms_collapse-body {
@@ -263,8 +263,8 @@ caption.elms_objectives-header {
   margin:0px;
   clear:both;
   padding:10px;
-	font-size:16px;
-	font-weight:bold;
+  font-size:16px;
+  font-weight:bold;
   background-color:#EEE;
   width:auto;
   -moz-border-radius-topright: 10px;

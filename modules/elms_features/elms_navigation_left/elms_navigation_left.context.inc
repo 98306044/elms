@@ -111,7 +111,7 @@ function elms_navigation_left_context_default_contexts() {
           'region' => 'regions_elms_navigation_left',
           'weight' => '4',
         ),
-				'elms_navigation_left-3' => array(
+        'elms_navigation_left-3' => array(
           'module' => 'elms_navigation_left',
           'delta' => 3,
           'region' => 'regions_elms_navigation_left',
@@ -120,7 +120,7 @@ function elms_navigation_left_context_default_contexts() {
       ),
     ),
   );
-	
+  
   $context->condition_mode = 0;
 
   // Translatables

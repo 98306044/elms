@@ -20,6 +20,6 @@ $(document).ready(function(){
   });
   //focus / select the masquerade text field if you click to open it
   $('#regions_elms_navigation_left .click_handler').click(function(){
-	$('#regions_elms_navigation_left #edit-masquerade-user-field').focus().select();
+  $('#regions_elms_navigation_left #edit-masquerade-user-field').focus().select();
   });
 });

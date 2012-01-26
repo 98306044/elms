@@ -40,8 +40,8 @@ body {
 }
 #regions_block_elms_navigation_top_2 .regions_block_content {
   display:none;
-	top:20px;
-	clear:both;
+  top:20px;
+  clear:both;
 }
 #regions_block_elms_navigation_top_2 ul.menu {
   background-color:#555;
@@ -98,8 +98,8 @@ body {
   float: left;
   height: 20px;
   padding: 0px;
-	font-weight: normal;
-	font-size:11px;
+  font-weight: normal;
+  font-size:11px;
 }
 
 #regions_elms_navigation_top ul.links {
@@ -123,7 +123,7 @@ body {
   text-shadow:#333 0px 1px 0px;
 }
 #regions_block_elms_navigation_top_0 li a.active {
-background-color:#666;	
+background-color:#666;  
 }
 
 #regions_block_elms_navigation_top_3 {
@@ -153,25 +153,25 @@ background-color:#666;
 
 /* icons for the top items */
 #regions_block_elms_navigation_top_3 .elms_zoom_in {
-  background-image:url(images/zoomin.png);	
+  background-image:url(images/zoomin.png);  
 }
 #regions_block_elms_navigation_top_3 .elms_zoom_out {
-  background-image:url(images/zoomout.png);	
+  background-image:url(images/zoomout.png);  
 }
 #regions_block_elms_navigation_top_3 .elms_zoom_reset {
-  background-image:url(images/zoomreset.png);	
+  background-image:url(images/zoomreset.png);  
 }
 #regions_block_elms_navigation_top_3 .elms_next_page {
-  background-image:url(images/nextpage.png);	
+  background-image:url(images/nextpage.png);  
 }
 #regions_block_elms_navigation_top_3 .elms_prev_page {
-  background-image:url(images/prevpage.png);	
+  background-image:url(images/prevpage.png);  
 }
 #regions_block_elms_navigation_top_3 .elms_print_page {
-  background-image:url(images/print.png);	
+  background-image:url(images/print.png);  
 }
 #regions_block_elms_navigation_top_3 .elms_book_toc {
-  background-image:url(images/table_of_contents.png);	
+  background-image:url(images/table_of_contents.png);  
 }
 #regions_block_elms_navigation_top_3 .elms_reactions {
   background-image:url(images/reactions.png);
@@ -184,7 +184,7 @@ background-color:#666;
 }
 /* always hide the flag state change message when in the top bar */
 #regions_block_elms_navigation_top_3 .flag-message {
- display:none !important;	
+ display:none !important;  
 }
 #regions_block_elms_navigation_top_3 a:hover {
  background-color:transparent;
@@ -241,7 +241,7 @@ background-color:#666;
 }
 #regions_block_elms_navigation_top_1 .regions_block_content {
   width:300px;
-	display:none;
+  display:none;
   top:20px;
   border-left:solid 2px #444;
   border-right:solid 1px #444;
@@ -275,10 +275,10 @@ background-color:#666;
  font-weight:bold;
  font-size:15px;
  text-shadow:
-	 -1px -1px 0 #000,
-		1px -1px 0 #000,
-		-1px 1px 0 #000,
-		 1px 1px 0 #000;
+   -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+     1px 1px 0 #000;
 }
 #regions_elms_navigation_top .elms_nav_top_icon {
   float:left;

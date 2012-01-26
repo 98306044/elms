@@ -60,7 +60,7 @@ function elms_helper_init() {
     }
     else {
       $group = og_get_group_context();
-			//unset breadcrumbs while in a group as elms takes care of pathing
+      //unset breadcrumbs while in a group as elms takes care of pathing
       drupal_set_breadcrumb(array());
       if (isset($group->type)) {
         $theme_settings = variable_get('theme_'. $group->og_theme .'_settings', array());
@@ -82,7 +82,7 @@ function elms_helper_init() {
  */
 function elms_helper_menu() {
   $items = array();
-	$items['admin/elms'] = array(
+  $items['admin/elms'] = array(
     'title' => 'ELMS',
     'access arguments' => array('administer site configuration'),
   );
@@ -136,7 +136,7 @@ function elms_helper_menu_alter(&$items) {
   $items['node/%node/outline']['type'] = MENU_CALLBACK;
   $items['node/%/outline_designer']['type'] = MENU_CALLBACK;
   $items['og/activity']['type'] = MENU_CALLBACK;
-	
+  
   //add additional protection to user search functionality
   //we don't want ANYONE to be able to search for users
   //except for admins
@@ -570,24 +570,24 @@ function elms_helper_dashboard_requirements($provider) {
 
 //organizing function for all advanced help topics
 function _elms_helper_adv_help(&$form, &$form_state, $form_id) {
-	//dpm($form_id);
+  //dpm($form_id);
   switch ($form_id) {
-		case 'book_admin_edit':
-		$form['#prefix'] .= theme('advanced_help_topic', 'elms_helper', 'outline_designer');
-		break;
+    case 'book_admin_edit':
+    $form['#prefix'] .= theme('advanced_help_topic', 'elms_helper', 'outline_designer');
+    break;
     case 'folder_node_form':
-		$form['#prefix'] .= theme('advanced_help_topic', 'elms_helper', 'cm_folder');
-		$form['body_field']['#prefix'] .= theme('advanced_help_topic', 'elms_helper', 'text_editor');
+    $form['#prefix'] .= theme('advanced_help_topic', 'elms_helper', 'cm_folder');
+    $form['body_field']['#prefix'] .= theme('advanced_help_topic', 'elms_helper', 'text_editor');
     break;
-		case 'page_node_form':
-		$form['#prefix'] .= theme('advanced_help_topic', 'elms_helper', 'cm_page');
-		$form['body_field']['#prefix'] .= theme('advanced_help_topic', 'elms_helper', 'text_editor');
+    case 'page_node_form':
+    $form['#prefix'] .= theme('advanced_help_topic', 'elms_helper', 'cm_page');
+    $form['body_field']['#prefix'] .= theme('advanced_help_topic', 'elms_helper', 'text_editor');
     break;
-		case 'reference_page_node_form':
-		$form['#prefix'] .= theme('advanced_help_topic', 'elms_helper', 'cm_ref');
+    case 'reference_page_node_form':
+    $form['#prefix'] .= theme('advanced_help_topic', 'elms_helper', 'cm_ref');
     break;
-		case 'link_node_form':
-		$form['#prefix'] .= theme('advanced_help_topic', 'elms_helper', 'cm_link');
+    case 'link_node_form':
+    $form['#prefix'] .= theme('advanced_help_topic', 'elms_helper', 'cm_link');
     break;
   }
 }

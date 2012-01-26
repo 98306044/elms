@@ -26,7 +26,7 @@ function elms_navigation_left_define_regions() {
     'title' => 'ELMS Nav Left',
     'js' => drupal_get_path('module', 'elms_navigation_left') .'/elms_navigation_left.js',
     'css' => drupal_get_path('module', 'elms_navigation_left') .'/elms_navigation_left.css',
-		'render_callback' => '_elms_navigation_left_render_region',
+    'render_callback' => '_elms_navigation_left_render_region',
   );
   return $region;
 }
@@ -36,13 +36,13 @@ function elms_navigation_left_define_regions() {
  */
 function elms_navigation_left_form_alter(&$form, &$form_state, $form_id) {
   //make the masquerade block display differently in the left hand menu to fit one line
-	
+  
   if ($form_id == 'masquerade_block_1' && isset($form['masquerade_user_field'])) {
-		//remove message
-		unset($form['masquerade_desc']);
-		//help it fit in the left collapse
+    //remove message
+    unset($form['masquerade_desc']);
+    //help it fit in the left collapse
     $form['masquerade_user_field']['#size'] = 8;
-	$form['#prefix'] .='<li class="leaf click_handler"><a name="masquerade" title="Open to Masquerade"></a></li>';
+  $form['#prefix'] .='<li class="leaf click_handler"><a name="masquerade" title="Open to Masquerade"></a></li>';
   }
 }
 
@@ -61,7 +61,7 @@ function elms_navigation_left_block($op = 'list', $delta = 0, $edit = array()) {
       'weight' => 0,
       'status' => 0,
     );
-		$blocks[3] = array(
+    $blocks[3] = array(
       'info' => t('Help Popup'),
       'weight' => 0,
       'status' => 0,
@@ -78,15 +78,15 @@ function elms_navigation_left_block($op = 'list', $delta = 0, $edit = array()) {
         }
       break;
       case 2:
-			  //remove tabs and display as a block only if this is content in a group
+        //remove tabs and display as a block only if this is content in a group
         if (isset($group->nid) && arg(1) != $group->nid) {
           $block['title'] = t('Content');
           $block['content'] = _elms_navigation_left_page_block();
-					drupal_add_css(drupal_get_path('module', 'elms_navigation_left') .'/hide_tabs.css');
+          drupal_add_css(drupal_get_path('module', 'elms_navigation_left') .'/hide_tabs.css');
         }
-			break;
-			case 3:
-			  $block['title'] = '<none>';
+      break;
+      case 3:
+        $block['title'] = '<none>';
         $block['content'] = _elms_navigation_left_help_block();
       break;
     }
@@ -97,8 +97,8 @@ function elms_navigation_left_block($op = 'list', $delta = 0, $edit = array()) {
 //helper function for Help icon addition
 function _elms_navigation_left_help_block() {
   if (user_access('view advanced help popup')) {
-	  return theme('menu_item', l(t('ELMS Help'), 'admin/advanced_help/elms_helper', array('query'  => array('popup' => TRUE), 'attributes' => array('onclick' => "var w=window.open(this.href, 'advanced_help_window', 'width=640,height=480,scrollbars,resizable'); w.focus(); return false;", 'title' => 'ELMS Help'))), 0, '', FALSE, 'help');
-	}
+    return theme('menu_item', l(t('ELMS Help'), 'admin/advanced_help/elms_helper', array('query'  => array('popup' => TRUE), 'attributes' => array('onclick' => "var w=window.open(this.href, 'advanced_help_window', 'width=640,height=480,scrollbars,resizable'); w.focus(); return false;", 'title' => 'ELMS Help'))), 0, '', FALSE, 'help');
+  }
 }
 
 //helper function Page level tasks
@@ -114,16 +114,17 @@ function _elms_navigation_left_page_block() {
   $output = str_replace('/track">', '/track" class="page_track" title="'. t('Track') .'">', $output);
   //add devel class -- admin/developer only
   $output = str_replace('/devel">', '/devel" class="page_devel" title="'. t('Developer Node Debug') .'">', $output);
-	if (is_numeric(arg(1))) {
-	  $node = node_load(arg(1));
-	  if (isset($node->nid)) {
+  if (is_numeric(arg(1))) {
+    $node = node_load(arg(1));
+    if (isset($node->nid)) {
     //check for node reference url links
     $tmp_ref_links = nodereference_url_build_all_links($node, 0);
     $features = variable_get('spaces_features', array());
     //account for reactions being active as this should go in the top menu
-    if (isset($features['elms_reaction']) && $features['elms_reaction']) {
-      unset($tmp_ref_links['reaction_field_related_content']);
-    }
+    //if (isset($features['elms_reaction']) && $features['elms_reaction']) {
+      //unset($tmp_ref_links['reaction_field_related_content']);
+    //}
+    //if (isset($active_features['elms_content']) && $active_features['elms_content'] == 1) {
     //if there are links then append them
     if (count($tmp_ref_links) != 0) {
       //loop through and add the links for contextual reference to this material
@@ -132,26 +133,26 @@ function _elms_navigation_left_page_block() {
       }
     }
     }
-	}
+  }
   return $output;
 }
 
 //helper function Course level tasks
 function _elms_navigation_left_parent_block($group) {
   $output = '';
-	//make the current workflow state as visible as possible
+  //make the current workflow state as visible as possible
   if (user_access('administer workflow')) {
     $output .= theme('menu_item', l(t(workflow_get_state_name($group->_workflow)),  'node/'. $group->nid .'/workflow', array('query' => 'destination='. $_GET['q'], 'attributes' => array('title' => t('Course State: @workflow', array('@workflow' => workflow_get_state_name($group->_workflow)))))), 0, '', FALSE, 'workflow_state workflow_state_'. $group->_workflow);
   }
   //if course content active, add the outline designer link
   if (spaces_access_feature('view', 'elms_content')) {
     if (user_access('administer book outlines')) {
-	  $output .= theme('menu_item', l(t('Content Outline'), 'outline_designer/book/'. $group->book_nid, array('attributes' => array('title' => 'Content Outline'))), 0, '', FALSE, 'content_outline');
+    $output .= theme('menu_item', l(t('Content Outline'), 'outline_designer/book/'. $group->book_nid, array('attributes' => array('title' => 'Content Outline'))), 0, '', FALSE, 'content_outline');
     }
   }
-	if (user_access('edit version content')) {
+  if (user_access('edit version content')) {
     $output .= theme('menu_item', l(t('Course Settings'), 'node/'. $group->nid, array('attributes' => array('title' => 'Course Settings'))), 0, '', FALSE, 'system');
-	}
+  }
   //import content
   if (module_exists('elms_content_import') && user_access('access administration pages')) {
     if (user_access('import elms_node_import feeds')) {
@@ -166,7 +167,7 @@ function _elms_navigation_left_parent_block($group) {
  */
 function elms_navigation_left_regions_region_alter(&$region, $region_name) {
   // Example to add an inner DIV to the region markup.
-	if ($region_name == 'regions_elms_navigation_left' && !empty($region['blocks'])) {
+  if ($region_name == 'regions_elms_navigation_left' && !empty($region['blocks'])) {
     $new_markup = array(
       'start' => $region['start'],
       'inner' => '<div class="regions_pre_block_container"></div><div class="regions_block_container">',
@@ -175,7 +176,7 @@ function elms_navigation_left_regions_region_alter(&$region, $region_name) {
       'end' => $region['end'],
     );
     $region = $new_markup;
-	}
+  }
 }
 
 /**
@@ -183,11 +184,11 @@ function elms_navigation_left_regions_region_alter(&$region, $region_name) {
  */
 function _elms_navigation_left_render_region($block_html, $block) {
   //build a unique key for this block for theming
-	static $count = 0;
-	$count++;
+  static $count = 0;
+  $count++;
   $key = $block->module .'_'. $block->delta;
   $output .= '<div class="regions_block regions_'. $count .'" id="regions_block_'. $key .'"><div class="regions_block_title">';
-	$output .= $block->subject;
+  $output .= $block->subject;
   $output .= '</div><div class="regions_block_content">'. $block->content .'</div></div>';
   //if we returned blocks then render the region
   if ($output != '') {

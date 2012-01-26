@@ -38,8 +38,8 @@ function elms_places_strongarm() {
     1 => 'revision',
   );
   $export['node_options_place'] = $strongarm;
-	
-	$strongarm = new stdClass;
+
+  $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'og_content_type_usage_place';

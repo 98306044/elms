@@ -24,12 +24,12 @@ include_once('elms_navigation_bottom.features.inc');
  */
 function elms_navigation_bottom_define_regions() {
   //implementation of the regions API
-	$region['regions_elms_navigation_bottom'] = array(
+  $region['regions_elms_navigation_bottom'] = array(
     'title' => 'ELMS Nav Bottom',
     'js' => drupal_get_path('module', 'elms_navigation_bottom') .'/elms_navigation_bottom.js',
     'css' => drupal_get_path('module', 'elms_navigation_bottom') .'/elms_navigation_bottom.css',
     'render_callback' => '_elms_navigation_bottom_render_region',
-	);
+  );
   return $region;
 }
 
@@ -72,13 +72,13 @@ function elms_navigation_bottom_block($op = 'list', $delta = 0, $edit = array())
  * Implementation of hook_regions_blocks_alter().
  */
 function elms_navigation_bottom_regions_blocks_alter(&$blocks = array(), $region_name = NULL) {
-	if ($region_name == 'regions_elms_navigation_bottom') {
+  if ($region_name == 'regions_elms_navigation_bottom') {
     // Example to support HTML titles, with a safe but unorthodox workaround.
     foreach ($blocks as $key => $block) {
       $block->subject = filter_xss_admin(html_entity_decode($block->subject));
       $blocks[$key] = $block;
     }
-	}
+  }
 }
 
 
@@ -87,11 +87,11 @@ function elms_navigation_bottom_regions_blocks_alter(&$blocks = array(), $region
  */
 function _elms_navigation_bottom_render_region($block_html, $block) {
   //build a unique key for this block for theming
-	static $count = 0;
-	$count++;
+  static $count = 0;
+  $count++;
   $key = $block->module .'_'. $block->delta;
   $output .= '<div class="regions_block regions_'. $count .'" id="regions_block_'. $key .'"><div class="regions_block_title">';
-	$output .= $block->subject;
+  $output .= $block->subject;
   $output .= '</div><div class="regions_block_content">'. $block->content .'</div></div>';
   //if we returned blocks then render the region
   if ($output != '') {
@@ -109,10 +109,10 @@ function _elms_navigation_bottom_page_controls() {
       $node = node_load(arg(1));  
       //if there is a previous page in this book, and its not the root, link
       if ($prev = book_prev($node->book)) {
-				//make sure this isn't pointing to the root
-				if ($prev['p2'] != 0) {
+        //make sure this isn't pointing to the root
+        if ($prev['p2'] != 0) {
           $output .= theme('menu_item', l('', $prev['href'], array('attributes' => array('title' => t('Previous Page')))), 0, '', FALSE, 'elms_prev_page');
-				}
+        }
       }
       //if there is a next page in this book link to it
       if ($next = book_next($node->book)) {
@@ -126,10 +126,10 @@ function _elms_navigation_bottom_page_controls() {
         //if this has flags then render them here
         if (count($flag_links)) {
           foreach ($flag_links as $key => $flag) {
-						$flagclass = $key;
-						if (strpos($flag['title'], 'unflag-action')) {
-							$flagclass .= '-flagged';
-						}
+            $flagclass = $key;
+            if (strpos($flag['title'], 'unflag-action')) {
+              $flagclass .= '-flagged';
+            }
             $output .= theme('menu_item', $flag['title'], 0, '', FALSE, $flagclass);
           }
         }

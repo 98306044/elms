@@ -625,7 +625,7 @@ function elms_install_configure_form_submit(&$form, &$form_state) {
 
 // Create required directories, taken from Commons
 function _elms_build_directories() {
-  $dirs = array('user_picture_path', 'ctools', 'ctools/css', 'pictures', 'imagecache', 'css', 'js', 'private');
+  $dirs = array('user_picture_path', 'ctools', 'ctools/css', 'pictures', 'imagecache', 'imagecache/elms_navigation_top', 'css', 'js', 'private', 'spaces_theme_logos', 'spaces_theme_favicons', 'syllabi');
   
   foreach ($dirs as $dir) {
     $dir = file_directory_path() . '/' . $dir;
