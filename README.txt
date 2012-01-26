@@ -46,6 +46,14 @@ TROUBLESHOOTING INSTALLATION / SETUP
 PHP lower then 5.2
 -- Unsupported because of date module though you can activate the date 5.2 emulation module and it should work
 
+Installing on 1and1
+-- Try making an access file that allows for clean URLS
+-- add a php.ini file to the root of the installation with the following in it:
+allow_url_fopen = TRUE
+memory_limit = 80M
+post_max_size = 10M
+upload_max_filesize = 10M
+
 Solving Drupal White screen of Death
 *Try setting the following settings in included .htaccess file:
   php_value memory_limit 128M

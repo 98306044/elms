@@ -240,6 +240,24 @@ function elms_profile_tasks(&$task, $url) {
   // @todo Review all the cache/rebuild options at the end, some of them may not be needed
   // @todo Review for localization, the time zone cannot be set that way either
   if ($task == 'elms-install-configure') {
+		//build revert array for passing through 1 and a time
+		$revert = array(
+      //revert core architecture
+      array('elms_parent' => array('content', 'fieldgroup', 'node', 'views', 'views_api', 'variable')),
+      array('elms_site' => array('content', 'fieldgroup', 'node', 'views', 'views_api', 'variable')),
+      //revert potentially enabled features
+      array('elms_content' => array('content', 'flag', 'node')),
+      array('elms_resources' => array('content', 'menu_links', 'node', 'variable')),
+      array('elms_id_best_practices' => array('views', 'views_api')),
+      //revert data passers
+      array('elms_content_export' => array('content', 'fieldgroup')),
+      array('elms_content_import' => array('content', 'fieldgroup')),
+      //revert nav
+      array('elms_navigation_top' => array('menu_links', 'menu_custom')),
+      array('elms_navigation_left' => array('menu_links', 'menu_custom')),
+		  //revert core installer last as they take priority
+		  array('elms_'. variable_get('install-core-installer', '') => array('variable')),
+    );
     $batch['title'] = st('Install Cleanup');
     $batch['operations'][] = array('_elms_installer_configure', array());
 		$batch['operations'][] = array('_elms_installer_configure_cleanup', array());
@@ -265,7 +283,11 @@ function elms_profile_tasks(&$task, $url) {
 	  $batch['operations'][] = array('drupal_flush_all_caches', array());
 	  $batch['operations'][] = array('_elms_system_theme_data', array());
     $batch['operations'][] = array('_elms_installer_configure_system_cleanup', array());
-		$batch['operations'][] = array('_elms_installer_configure_revert', array());
+		//revert all components 1 and a time to help avoid timeout
+		foreach ($revert as $feature) {
+		  $batch['operations'][] = array('features_revert', array($feature));
+		}
+		$batch['operations'][] = array('_elms_installer_configure_clear_cache', array());
     $batch['finished'] = '_elms_installer_configure_finished';
     variable_set('install_task', 'elms-install-configure-batch');
     batch_set($batch);
@@ -360,47 +382,23 @@ function _elms_installer_configure_system_cleanup() {
   db_query("UPDATE {system} SET status = 0 WHERE type = 'theme' and name ='%s'", 'tao');
   db_query("UPDATE {system} SET status = 0 WHERE type = 'theme' and name ='%s'", 'rubik');
   variable_set('theme_default', 'cube');
+  // In Aegir install processes, we need to init strongarm manually as a
+  // separate page load isn't available to do this for us.
+  if (function_exists('strongarm_init')) {
+    strongarm_init();
+  }
 }
 
 /**
  * Configuration. Last stage.
  */
-function _elms_installer_configure_revert() {
-// In Aegir install processes, we need to init strongarm manually as a
-  // separate page load isn't available to do this for us.
-  if (function_exists('strongarm_init')) {
-    strongarm_init();
-  }
-
-  // Revert key components that are overridden by others on install.
-  // Note that this comes after all other processes have run, as some cache
-  // clears/rebuilds actually set variables or other settings that would count
-  // as overrides. See og_node_type()
-  $revert = array(
-    //revert core architecture
-    'elms_parent' => array('content', 'fieldgroup', 'node', 'views', 'views_api', 'variable'),
-    'elms_site' => array('content', 'fieldgroup', 'node', 'views', 'views_api', 'variable'),
-    //revert default features
-    'elms_content' => array('content', 'flag', 'node'),
-    'elms_resources' => array('content', 'menu_links', 'node', 'variable'),
-    'elms_id_best_practices' => array('views', 'views_api'),
-    //revert data passers
-    'elms_content_export' => array('content', 'fieldgroup'),
-    'elms_content_import' => array('content', 'fieldgroup'),
-    //revert nav
-    'elms_navigation_top' => array('menu_links', 'menu_custom'),
-    'elms_navigation_left' => array('menu_links', 'menu_custom'),
-  );
-	//revert core installers last as they take priority
-	$revert['elms_'. variable_get('install-core-installer', '')] = array('variable');
-  features_revert($revert);
-	//clear caches so they rebuild
+function _elms_installer_configure_clear_cache() {
+//clear caches so they rebuild
 	$core = array('cache', 'cache_block', 'cache_filter', 'cache_page', 'cache_form', 'cache_menu');
   foreach ($core as $table) {
     cache_clear_all(NULL, $table);
   }
 }
-
 /**
  * Finished callback for the modules install batch.
  *
