@@ -35,6 +35,13 @@ function elms_reference_links_strongarm() {
     0 => 'status',
   );
   $export['node_options_content_links'] = $strongarm;
+	
+	$strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'og_content_type_usage_content_links';
+  $strongarm->value = 'group_post_standard';
+  $export['og_content_type_usage_content_links'] = $strongarm;
 
   return $export;
 }
