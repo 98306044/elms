@@ -280,10 +280,10 @@ function elms_timeline_views_default_views() {
       'values' => '',
     ),
     'display' => array(
-      'width' => '90%',
+      'width' => '100%',
       'height' => '400px',
       'appearance' => array(
-        'theme' => 'sites/all/modules/timeline/themes/ClassicTheme',
+        'theme' => 'profiles/elms/modules/contrib/timeline/themes/ClassicTheme',
         'bubble_width' => '250',
         'bubble_height' => '',
       ),
