@@ -46,16 +46,6 @@ function elms_content_theme_registry_alter(&$vars) {
  */
 function elms_content_init() {
   drupal_add_css(drupal_get_path('module', 'elms_content') .'/css/style.css', 'theme');
-  //offer to continue where they left off if we can grab it
-  /*if (arg(0) == 'course_content' && module_exists('statistics')) {
-    $group = og_get_group_context();
-  global $user;
-  $result = db_query_range("SELECT {accesslog}.title,{accesslog}.path FROM {accesslog} JOIN {menu_links} ON {menu_links}.link_path = {accesslog}.path JOIN {book} ON {menu_links}.mlid = {book}.mlid JOIN {og_ancestry} ON {book}.nid={og_ancestry}.nid WHERE {accesslog}.uid=%d AND {og_ancestry}.group_nid=%d ORDER BY {accesslog}.timestamp DESC", array($user->uid, $group->nid), 1);
-    $val = db_fetch_array($result);
-    if ($val['title'] != '') {
-      drupal_set_message(t('Continue where you left off? %link', array('%link' => l($val['title'], $val['path']))), 'elms-message');
-    }
-  }*/
 }
 
 /**
@@ -70,25 +60,6 @@ function elms_content_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'elms_content.pages.inc',
   );
-  $items['features/elms_content'] = array(
-    'title' => 'Settings',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('elms_content_settings'),
-    'access callback' => '_elms_content_access_check_admin',
-    'access arguments' => module_exists('spaces') ? array() : array('administer site configuration'),
-    'type' => MENU_CALLBACK,
-    'file' => 'elms_content.pages.inc',
-  );
-	$items['features/parent_content'] = array(
-    'title' => 'Course Content',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('elms_content_settings'),
-    'access callback' => '_elms_content_access_check',
-		'access arguments' => array(),
-    'type' => MENU_LOCAL_TASK,
-    'file' => 'elms_content.pages.inc',
-  );
-	
 	
   return $items;
 }
@@ -165,47 +136,6 @@ function elms_content_block($op = 'list', $delta = 0, $edit = array()) {
     }
     return $block;
   }
-}
-
-
-/**
- * Implementation of hook_link().
- */
-function elms_content_link($type, $object, $teaser = FALSE) {
-  $links = array();
-  $print_option = variable_get('elms_print_options', 'both');
-  if ($type == 'node' && isset($object->book['plid']) && !$teaser && user_access('see printer-friendly version')) {
-  $book_parent = book_link_load($object->book['plid']);
-  //verify print setting
-  if ($print_option == 'print_lesson' || $print_option == 'print_course' && $object->book['bid'] != $book_parent['nid']) {
-      $links['book_print_lesson'] = array(
-      'href' => 'print/book/export/html/'. $book_parent['nid'],
-      'title' => '<img src="/sites/all/modules/print/icons/print_icon.gif" alt="Print Lesson" title="Print Lesson" width="16" height="16" class="print-icon" />',
-      'attributes' => array(
-        'title' => t('Display a printer-friendly version of this page.'),
-        'class' => 'print-page-lesson',
-        'onclick' => 'window.open(this.href); return false',
-        'rel' => 'nofollow',
-      ),
-      'html' => 1,
-      );
-  }
-  //verify print setting
-  if ($print_option == 'print_course') {
-    $links['book_print_course'] = array(
-      'href' => 'book/export/html/'. $object->book['bid'],
-      'title' => '<img src="/sites/all/modules/print/icons/print_icon.gif" alt="Print Course" title="Print Course" width="16" height="16" class="print-icon" />',
-      'attributes' => array(
-        'title' => t('Display a printer-friendly version of this page.'),
-        'class' => 'print-page-lesson',
-        'onclick' => 'window.open(this.href); return false',
-        'rel' => 'nofollow',
-      ),
-      'html' => 1,
-      );
-  }
-  }
-  return $links;
 }
 
 /**

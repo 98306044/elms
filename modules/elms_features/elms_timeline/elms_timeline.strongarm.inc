@@ -38,6 +38,13 @@ function elms_timeline_strongarm() {
     1 => 'revision',
   );
   $export['node_options_timeline_item'] = $strongarm;
+	
+	$strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'og_content_type_usage_timeline_item';
+  $strongarm->value = 'group_post_standard';
+  $export['og_content_type_usage_timeline_item'] = $strongarm;
 
   return $export;
 }

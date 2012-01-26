@@ -6,11 +6,11 @@
 function elms_terms_menu_default_menu_links() {
   $menu_links = array();
 
-  // Exported menu link: features:course_terms
-  $menu_links['features:course_terms'] = array(
+  // Exported menu link: features:elms_terms
+  $menu_links['features:elms_terms'] = array(
     'menu_name' => 'features',
-    'link_path' => 'course_terms',
-    'router_path' => 'course_terms',
+    'link_path' => 'elms_terms',
+    'router_path' => 'elms_terms',
     'link_title' => 'Terms',
     'options' => array(
       'attributes' => array(

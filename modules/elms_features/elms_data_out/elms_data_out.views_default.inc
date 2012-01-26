@@ -69,7 +69,7 @@ function elms_data_out_views_default_views() {
       ),
     ),
     'title' => array(
-      'label' => 'versiontitle',
+      'label' => 'sitetitle',
       'alter' => array(
         'alter_text' => 0,
         'text' => '',

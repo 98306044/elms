@@ -6,9 +6,9 @@
 function elms_polls_views_default_views() {
   $views = array();
 
-  // Exported view: course_poll_list
+  // Exported view: elms_poll_list
   $view = new view;
-  $view->name = 'course_poll_list';
+  $view->name = 'elms_poll_list';
   $view->description = 'List all polls for a page';
   $view->tag = 'poll';
   $view->base_table = 'node';
@@ -170,7 +170,7 @@ function elms_polls_views_default_views() {
   ));
   $handler->override_option('access', array(
     'type' => 'spaces_feature',
-    'spaces_feature' => 'elms_reaction',
+    'spaces_feature' => 'elms_polls',
     'perm' => 'access content',
   ));
   $handler->override_option('cache', array(
@@ -308,8 +308,8 @@ function elms_polls_views_default_views() {
         'reaction' => 0,
         'accessibility_guideline' => 0,
         'accessibility_test' => 0,
-        'course_event' => 0,
-        'version' => 0,
+        'elms_event' => 0,
+        'site' => 0,
         'feed_user_import' => 0,
         'place' => 0,
         'promo' => 0,
@@ -332,7 +332,7 @@ function elms_polls_views_default_views() {
       'validate_argument_user_flag_id_type' => 'id',
       'validate_argument_is_member' => 'OG_VIEWS_DO_NOT_VALIDATE_MEMBERSHIP',
       'validate_argument_group_node_type' => array(
-        'version' => 0,
+        'site' => 0,
       ),
       'validate_argument_php' => '',
     ),
@@ -396,7 +396,7 @@ function elms_polls_views_default_views() {
       'override' => array(
         'button' => 'Use default',
       ),
-      'relationship' => 'field_course_ref_nid',
+      'relationship' => 'field_parent_ref_nid',
     ),
     'title_1' => array(
       'label' => 'Displayed On',

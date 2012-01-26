@@ -22,9 +22,9 @@ function elms_timeline_context_default_contexts() {
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
-        'views-course_timeline_list-block_1' => array(
+        'views-elms_timeline_list-block_1' => array(
           'module' => 'views',
-          'delta' => 'course_timeline_list-block_1',
+          'delta' => 'elms_timeline_list-block_1',
           'region' => 'regions_elms_navigation_right',
           'weight' => 0,
         ),

@@ -6,9 +6,9 @@
 function elms_timeline_views_default_views() {
   $views = array();
 
-  // Exported view: course_timeline_list
+  // Exported view: elms_timeline_list
   $view = new view;
-  $view->name = 'course_timeline_list';
+  $view->name = 'elms_timeline_list';
   $view->description = 'List all timeline items for a page';
   $view->tag = 'timeline';
   $view->base_table = 'node';
@@ -262,7 +262,7 @@ function elms_timeline_views_default_views() {
   ));
   $handler->override_option('access', array(
     'type' => 'spaces_feature',
-    'spaces_feature' => 'elms_reaction',
+    'spaces_feature' => 'elms_timeline',
     'perm' => 'access content',
   ));
   $handler->override_option('cache', array(
@@ -527,8 +527,8 @@ function elms_timeline_views_default_views() {
         'reaction' => 0,
         'accessibility_guideline' => 0,
         'accessibility_test' => 0,
-        'course_event' => 0,
-        'version' => 0,
+        'elms_event' => 0,
+        'site' => 0,
         'feed_user_import' => 0,
         'place' => 0,
         'promo' => 0,
@@ -550,7 +550,7 @@ function elms_timeline_views_default_views() {
       'validate_argument_user_flag_id_type' => 'id',
       'validate_argument_is_member' => 'OG_VIEWS_DO_NOT_VALIDATE_MEMBERSHIP',
       'validate_argument_group_node_type' => array(
-        'version' => 0,
+        'site' => 0,
       ),
       'validate_argument_php' => '',
     ),
@@ -586,13 +586,13 @@ function elms_timeline_views_default_views() {
       ),
       'relationship' => 'none',
     ),
-    'field_course_ref_nid' => array(
+    'field_parent_ref_nid' => array(
       'label' => 'Course',
       'required' => 0,
       'delta' => -1,
-      'id' => 'field_course_ref_nid',
-      'table' => 'node_data_field_course_ref',
-      'field' => 'field_course_ref_nid',
+      'id' => 'field_parent_ref_nid',
+      'table' => 'node_data_field_parent_ref',
+      'field' => 'field_parent_ref_nid',
       'override' => array(
         'button' => 'Use default',
       ),
@@ -649,7 +649,7 @@ function elms_timeline_views_default_views() {
       'override' => array(
         'button' => 'Use default',
       ),
-      'relationship' => 'field_course_ref_nid',
+      'relationship' => 'field_parent_ref_nid',
     ),
     'title_1' => array(
       'label' => 'Displayed On',

@@ -17,7 +17,7 @@ function elms_id_best_practices_menu() {
     'file' => 'elms_id_best_practices.pages.inc',
     'weight' => -2,
   );
-  $items['course_help'] = array(
+  $items['elms_help'] = array(
     'title' => 'Help',
     'page callback' => '_elms_id_best_practices_page_help',
     'access callback' => 'spaces_access_feature',

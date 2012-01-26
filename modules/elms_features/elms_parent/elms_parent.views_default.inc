@@ -2412,7 +2412,7 @@ function elms_parent_views_default_views() {
   $view = new view;
   $view->name = 'parents';
   $view->description = 'Course pages, and tabs for displaying either a listing of versions by course, versions of a course, or a list of all';
-  $view->tag = 'course, version';
+  $view->tag = 'parent, site';
   $view->base_table = 'node';
   $view->core = 0;
   $view->api_version = '2';

@@ -22,9 +22,9 @@ function elms_polls_context_default_contexts() {
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
-        'views-course_poll_list-block_1' => array(
+        'views-elms_poll_list-block_1' => array(
           'module' => 'views',
-          'delta' => 'course_poll_list-block_1',
+          'delta' => 'elms_poll_list-block_1',
           'region' => 'regions_elms_navigation_right',
           'weight' => 0,
         ),

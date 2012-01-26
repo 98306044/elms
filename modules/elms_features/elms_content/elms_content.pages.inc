@@ -20,27 +20,3 @@ function _elms_content_root() {
   //if it didn't find anything do nothing cause something went wrong
   return 1;
 }
-
-
-/**
- * Settings form for book feature.
- */
-function elms_content_settings() {
-  $form = array();
-  $form['elms_print_options'] = array(
-    '#key_type_toggled' => '1',
-    '#required' => '1',
-    '#description' => t('What formats should students be able to print the course content in?'),
-    '#multiple_toggle' => '1',
-    '#type' => 'select',
-    '#title' => t('Print Options'),
-    '#options' => array(
-      'print' => t('Print Page Only'),
-      'print_lesson' => t('Print Lesson or Page'),
-      'print_course' => t('Print Course, Lesson or Page'),
-      'none' => t('Can not print'),
-    ),
-    '#default_value' => variable_get('elms_print_options', 'print'),
-  );
-  return system_settings_form($form);
-}
