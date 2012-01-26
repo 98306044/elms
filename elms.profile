@@ -240,9 +240,32 @@ function elms_profile_tasks(&$task, $url) {
   // @todo Review all the cache/rebuild options at the end, some of them may not be needed
   // @todo Review for localization, the time zone cannot be set that way either
   if ($task == 'elms-install-configure') {
-    $batch['title'] = st('Finalize Configuration');
+    $batch['title'] = st('Install Cleanup');
     $batch['operations'][] = array('_elms_installer_configure', array());
-    $batch['operations'][] = array('_elms_installer_configure_check', array());
+		$batch['operations'][] = array('_elms_installer_configure_cleanup', array());
+		//set default workflow states, in the future workflow states will be exportable via Features
+    $batch['operations'][] = array('_elms_workflow_query', array());
+		//final clean up stuff
+    $batch['operations'][] = array('_elms_role_query', array());  
+    //apply elms default filters
+    $batch['operations'][] = array('_elms_filters_query', array()); ;
+    $batch['operations'][] = array('_elms_filter_formats_query', array()); 
+    //apply defaults for better formats
+    $batch['operations'][] = array('_elms_better_formats_defaults_query', array()); 
+    //wysiwyg defaults
+    $batch['operations'][] = array('_elms_wysiwyg_query', array()); 
+    //add profile fields
+    $batch['operations'][] = array('_elms_profile_fields_query', array()); 
+    //contact form for the default helpdesk
+    $batch['operations'][] = array('_elms_contact_query', array()); 
+    $batch['operations'][] = array('_elms_contact_fields_query', array()); 
+    //create default vocab and terms
+    $batch['operations'][] = array('_elms_vocab_query', array()); 
+	  $batch['operations'][] = array('node_access_rebuild', array());
+	  $batch['operations'][] = array('drupal_flush_all_caches', array());
+	  $batch['operations'][] = array('_elms_system_theme_data', array());
+    $batch['operations'][] = array('_elms_installer_configure_system_cleanup', array());
+		$batch['operations'][] = array('_elms_installer_configure_revert', array());
     $batch['finished'] = '_elms_installer_configure_finished';
     variable_set('install_task', 'elms-install-configure-batch');
     batch_set($batch);
@@ -287,19 +310,17 @@ function _elms_installer_configure() {
   variable_set('date_default_timezone', $tz_offset);
 }
 
+
 /**
  * Configuration. Second stage.
  */
-function _elms_installer_configure_check() {
+function _elms_installer_configure_cleanup() {
 	//setup private directory defaults
 	$filename = file_directory_path() .'/'. variable_get('private_download_directory','private') .'/.htaccess';
   if (!private_download_write($filename, variable_get('private_download_htaccess',''))) {
     // failed to write htaccess file; report to log and return
     watchdog('private_download', t('Unable to write data to file: !filename', array('!filename' => $filename)), 'error');
-  }
-	//set default workflow states, in the future workflow states will be exportable via Features
-  _elms_workflow_query();
-	
+  }	
 	//accessibility cleanup if active
 	if (variable_get('install-accessibility-guideline', 'wcag2aa') != 'none') {
 	  $guidelines = _elms_get_guidelines();
@@ -319,36 +340,13 @@ function _elms_installer_configure_check() {
 		  variable_set($key .'_ac_ignore_cms_off', 1);
 	  }
 	}
-  //final clean up stuff
-  _elms_role_query();
-  //delete book content type
-  db_query("DELETE FROM {node_type} WHERE type='book'");
-  //apply elms default filters
-  _elms_filters_query();
-  _elms_filter_formats_query();
-  //apply defaults for better formats
-  _elms_better_formats_defaults_query();
-  //wysiwyg defaults
-  _elms_wysiwyg_query();
-  //add profile fields
-  _elms_profile_fields_query();
-  //contact form for the default helpdesk
-  _elms_contact_query();
-  _elms_contact_fields_query();
-  //create default vocab and terms
-  _elms_vocab_query();
-  // This isn't actually necessary as there are no node_access() entries,
-  // but we run it to prevent the "rebuild node access" message from being
-  // shown on install.
-  node_access_rebuild();
+	db_query("DELETE FROM {node_type} WHERE type='book'");
+}
 
-  // Rebuild key tables/caches
-  drupal_flush_all_caches();
-
-  // Set default theme. This must happen after drupal_flush_all_caches(), which
-  // will run system_theme_data() without detecting themes in the install
-  // profile directory.
-  _elms_system_theme_data();
+/**
+ * Configuration. Third stage.
+ */
+function _elms_installer_configure_system_cleanup() {
   // disable all DB blocks
   db_query("UPDATE {blocks} SET status = 0, region = ''");
   // activate all themes first
@@ -362,8 +360,13 @@ function _elms_installer_configure_check() {
   db_query("UPDATE {system} SET status = 0 WHERE type = 'theme' and name ='%s'", 'tao');
   db_query("UPDATE {system} SET status = 0 WHERE type = 'theme' and name ='%s'", 'rubik');
   variable_set('theme_default', 'cube');
- 
-  // In Aegir install processes, we need to init strongarm manually as a
+}
+
+/**
+ * Configuration. Last stage.
+ */
+function _elms_installer_configure_revert() {
+// In Aegir install processes, we need to init strongarm manually as a
   // separate page load isn't available to do this for us.
   if (function_exists('strongarm_init')) {
     strongarm_init();
