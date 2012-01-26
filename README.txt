@@ -43,25 +43,24 @@ INSTALLATION
 ------------
 TROUBLESHOOTING INSTALLATION / SETUP
 ------------
-PHP lower then 5.2
--- Unsupported because of date module though you can activate the date 5.2 emulation module and it should work
+PHP > 5.2
+-- Unsupported because of date module though you can activate the date 5.2 emulation module and it should work.  This has been installed many times on 5.2 and 5.3 respectively.
+
+Solving Drupal White screen of Death
+*Try setting the following settings in included .htaccess file:
+  php_value memory_limit 96M or set memory limit per the instructions in the "installing on 1and1"
 
 Installing on 1and1
 -- Try making an access file that allows for clean URLS
 -- add a php.ini file to the root of the installation with the following in it:
 allow_url_fopen = TRUE
-memory_limit = 80M
+memory_limit = 96M
 post_max_size = 10M
 upload_max_filesize = 10M
 
-Solving Drupal White screen of Death
-*Try setting the following settings in included .htaccess file:
-  php_value memory_limit 128M
-* if that doesn't work, remove the php_value part and see if it works otherwise you'll need to change it in the php.ini
-
 Annoying MYSQL max packet error
 *run the following command in mysql console: "SET GLOBAL max_allowed_packet=10*1024*1024;"
-* This error is caused mostly in localhost installs or shared environments and is caused by all the caching going on
+* This error is caused mostly in localhost installs or shared environments and is caused by all the caching going on.
 * Review this page to help resolve it http://drupal.org/node/321210
 
 ------------
