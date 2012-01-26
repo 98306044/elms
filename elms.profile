@@ -263,8 +263,10 @@ function elms_profile_tasks(&$task, $url) {
 		$batch['operations'][] = array('_elms_installer_configure_cleanup', array());
 		//set default workflow states, in the future workflow states will be exportable via Features
     $batch['operations'][] = array('_elms_workflow_query', array());
-		//final clean up stuff
+		//insert roles
     $batch['operations'][] = array('_elms_role_query', array());  
+		//insert permissions to match
+		$batch['operations'][] = array('_elms_perm_query', array());
     //apply elms default filters
     $batch['operations'][] = array('_elms_filters_query', array()); ;
     $batch['operations'][] = array('_elms_filter_formats_query', array()); 
@@ -285,7 +287,7 @@ function elms_profile_tasks(&$task, $url) {
     $batch['operations'][] = array('_elms_installer_configure_system_cleanup', array());
 		//revert all components 1 and a time to help avoid timeout
 		foreach ($revert as $feature) {
-		  $batch['operations'][] = array('features_revert', array($feature));
+		  $batch['operations'][] = array('_elms_installer_configure_revert', array($feature));
 		}
 		$batch['operations'][] = array('_elms_installer_configure_clear_cache', array());
     $batch['finished'] = '_elms_installer_configure_finished';
@@ -310,7 +312,7 @@ function _elms_language_selected() {
 /**
  * Configuration. First stage.
  */
-function _elms_installer_configure() {
+function _elms_installer_configure(&$context) {
   global $install_locale;
 
   // Disable the english locale if using a different default locale.
@@ -330,13 +332,14 @@ function _elms_installer_configure() {
   // derive a default date API location.
   $tz_offset = date('Z');
   variable_set('date_default_timezone', $tz_offset);
+	$context['message'] = st('Set language and content filter defaults');
 }
 
 
 /**
  * Configuration. Second stage.
  */
-function _elms_installer_configure_cleanup() {
+function _elms_installer_configure_cleanup(&$context) {
 	//set front page to site default, this way if other features strongarm it they can but the default was set at least so we don't get the stupid 'welcome to your site' page
 	variable_set('site_frontpage', 'parents');
 	variable_set('site_frontpage_path', 'parents');
@@ -366,12 +369,13 @@ function _elms_installer_configure_cleanup() {
 	  }
 	}
 	db_query("DELETE FROM {node_type} WHERE type='book'");
+	$context['message'] = st('Accessibility tests implemented');
 }
 
 /**
  * Configuration. Third stage.
  */
-function _elms_installer_configure_system_cleanup() {
+function _elms_installer_configure_system_cleanup(&$context) {
   // disable all DB blocks
   db_query("UPDATE {blocks} SET status = 0, region = ''");
   // activate all themes first
@@ -390,13 +394,22 @@ function _elms_installer_configure_system_cleanup() {
   if (function_exists('strongarm_init')) {
     strongarm_init();
   }
+	$context['message'] = st('Set language and content filter defaults');
 }
 
 /**
+ * Configuration. Revert stage.
+ */
+function _elms_installer_configure_revert($feature, &$context) {
+	//revert the passed features so we can keep memory limit low
+	features_revert($feature);
+  $context['message'] = st('Reverted %module feature.', array('%module' => key($feature)));
+}
+/**
  * Configuration. Last stage.
  */
-function _elms_installer_configure_clear_cache() {
-//clear caches so they rebuild
+function _elms_installer_configure_clear_cache(&$context) {
+//clear caches after everything is reverted
 	$core = array('cache', 'cache_block', 'cache_filter', 'cache_page', 'cache_form', 'cache_menu');
   foreach ($core as $table) {
     cache_clear_all(NULL, $table);
@@ -606,7 +619,7 @@ function _elms_build_directories() {
  * is populated during install prior to active install profile awareness.
  * This workaround makes enabling themes in profiles/[profile]/themes possible.
  */
-function _elms_system_theme_data() {
+function _elms_system_theme_data(&$context) {
   global $profile;
   $profile = 'elms';
 
@@ -683,6 +696,7 @@ function _elms_system_theme_data() {
     $theme->owner = !isset($theme->owner) ? '' : $theme->owner;
     db_query("INSERT INTO {system} (name, owner, info, type, filename, status, throttle, bootstrap) VALUES ('%s', '%s', '%s', '%s', '%s', %d, %d, %d)", $theme->name, $theme->owner, serialize($theme->info), 'theme', $theme->filename, isset($theme->status) ? $theme->status : 0, 0, 0);
   }
+	$context['message'] = st('Theme cache rebuilt');
 }
 
 /**
@@ -752,20 +766,33 @@ function elms_parse_info_file($data) {
 /**
  * Helper function to install roles with RID defaults.
  */
-function _elms_profile_fields_query() {
+function _elms_profile_fields_query(&$context) {
   db_query("INSERT INTO {profile_fields} VALUES ('1', 'First Name', 'profile_first_name', '', 'Personal', '', 'textfield', '-10', '0', '0', '1', '0', ''), ('2', 'Last Name', 'profile_last_name', '', 'Personal', '', 'textfield', '-9', '0', '0', '1', '0', ''), ('3', 'Campus', 'profile_campus', 'The LDAP Campus association for this member', 'Personal', '', 'textfield', '0', '0', '0', '1', '0', ''), ('4', 'Administrative Area', 'profile_administrative_area', '', 'Personal', '', 'textfield', '0', '0', '0', '1', '0', ''), ('5', 'Title', 'profile_title', '', 'Personal', '', 'textfield', '0', '0', '0', '1', '0', '')");
+	$context['message'] = st('User Profile fields installed');
 }
 
 /**
  * Helper function to install roles with RID defaults.
  */
-function _elms_role_query() {
+function _elms_role_query(&$context) {
   db_query("INSERT INTO {role} VALUES ('6', 'instructional designer'), ('4', 'instructor'), ('9', 'staff'), ('10', 'student'), ('8', 'teaching assistant');");  
+	$context['message'] = st('User Roles installed');
 }
+
+/**
+ * Helper function to install permissions for roles
+ */
+function _elms_perm_query(&$context) {
+	//clear anon / auth user permission defaults as we will apply our own prebuilt ones
+	db_query("DELETE FROM {permissions} WHERE pid>0");
+	db_query("INSERT INTO {permission} VALUES ('1', '1', 'collapse format fieldset by default, collapsible format selection, view field_campus, view field_course_name, view field_course_promotion, view field_course_ref, view field_course_title, view field_description, view field_initial_course_launch, view field_link, view field_prerequisites, view field_reference_page, view field_required_plugins, view field_sample_materials, view field_section_number, view field_section_semester, view field_section_year, view field_supported_browsers, view imagecache chamfer-banner, view imagecache course_promo, view imagecache course_promo_listing, view imagecache elms_navigation_top, access content, access print, view regions_elms_navigation_bottom region, view regions_elms_navigation_left region, view regions_elms_navigation_right region, view regions_elms_navigation_top region', '0'), ('2', '2', 'collapse format fieldset by default, collapsible format selection, access printer-friendly version, view field_campus, view field_course_name, view field_course_promotion, view field_course_ref, view field_course_title, view field_description, view field_initial_course_launch, view field_link, view field_prerequisites, view field_reference_page, view field_required_plugins, view field_sample_materials, view field_section_number, view field_section_semester, view field_section_year, view field_supported_browsers, view imagecache chamfer-banner, view imagecache course_promo, view imagecache course_promo_listing, view imagecache elms_navigation_top, access content, opt-in or out of tracking, access print, view regions_elms_navigation_bottom region, view regions_elms_navigation_left region, view regions_elms_navigation_right region, view regions_elms_navigation_top region', '0'), ('6', '6', 'view advanced help index, view advanced help popup, view advanced help topic, add content to books, administer book outlines, create new books, bypass redirection, access ckeditor link, access site-wide contact form, edit field_campus, edit field_course_name, edit field_course_promotion, edit field_course_ref, edit field_course_title, edit field_description, edit field_faculty_resources, edit field_id_of_record, edit field_initial_course_launch, edit field_inst_contact_block, edit field_instructional_template, edit field_lead_faculty, edit field_lesson_count, edit field_link, edit field_link_more_info, edit field_listing_only, edit field_past_faculty, edit field_prerequisites, edit field_reference_page, edit field_required_plugins, edit field_sample_materials, edit field_section_number, edit field_section_semester, edit field_section_year, edit field_supported_browsers, view field_faculty_resources, view field_id_of_record, view field_inst_contact_block, view field_instructional_template, view field_lead_faculty, view field_lesson_count, view field_link, view field_link_more_info, view field_listing_only, view field_past_faculty, create course content, create course_resource content, create folder content, create link content, create page content, create version content, delete any course_resource content, delete any folder content, delete any link content, delete any page content, delete any version content, delete own course_resource content, delete own folder content, delete own link content, delete own page content, delete own version content, edit any course content, edit any course_resource content, edit any folder content, edit any link content, edit any page content, edit any version content, edit own course content, edit own course_resource content, edit own folder content, edit own link content, edit own page content, edit own version content, manage features, import elms_node_import feeds, import psu_angel_course_list feeds, import psu_angel_teamlist2 feeds, tamper elms_node_import, tamper psu_angel_course_list, tamper psu_angel_teamlist2, download original image, masquerade as user, administer nodes, create referenced_page content, delete any referenced_page content, delete own referenced_page content, edit any referenced_page content, edit own referenced_page content, revert revisions, view revisions, administer organic groups, create url aliases, access private download directory, view elms_course requirements dashboard, view og requirements dashboard, view system requirements dashboard, view users outside groups, access spaces og clone, select different theme, access user profiles, access workflow summary views, administer workflow, schedule workflow transitions', '0'), ('4', '4', 'view advanced help index, view advanced help popup, view advanced help topic, add content to books, administer book outlines, create new books, bypass redirection, access ckeditor link, access site-wide contact form, edit field_link, edit field_reference_page, view field_faculty_resources, view field_id_of_record, view field_inst_contact_block, view field_instructional_template, view field_lead_faculty, view field_lesson_count, view field_link, view field_link_more_info, view field_listing_only, view field_past_faculty, create folder content, create link content, create page content, delete any folder content, delete any link content, delete any page content, delete own folder content, delete own link content, delete own page content, edit any folder content, edit any link content, edit any page content, edit own folder content, edit own link content, edit own page content, download original image, masquerade as user, revert revisions, view revisions, create url aliases, access private download directory, view og requirements dashboard, view users outside groups, select different theme, access user profiles', '0'), ('9', '9', 'view advanced help index, view advanced help popup, view advanced help topic, add content to books, administer book outlines, create new books, bypass redirection, access ckeditor link, access site-wide contact form, edit field_campus, edit field_course_name, edit field_course_promotion, edit field_course_ref, edit field_course_title, edit field_description, edit field_faculty_resources, edit field_id_of_record, edit field_initial_course_launch, edit field_inst_contact_block, edit field_instructional_template, edit field_lead_faculty, edit field_lesson_count, edit field_link, edit field_link_more_info, edit field_listing_only, edit field_past_faculty, edit field_prerequisites, edit field_reference_page, edit field_required_plugins, edit field_sample_materials, edit field_section_number, edit field_section_semester, edit field_section_year, edit field_supported_browsers, view field_faculty_resources, view field_id_of_record, view field_inst_contact_block, view field_instructional_template, view field_lead_faculty, view field_lesson_count, view field_link, view field_link_more_info, view field_listing_only, view field_past_faculty, create course content, create course_resource content, create folder content, create link content, create page content, create version content, delete any course_resource content, delete any folder content, delete any link content, delete any page content, delete any version content, delete own course_resource content, delete own folder content, delete own link content, delete own page content, delete own version content, edit any course content, edit any course_resource content, edit any folder content, edit any link content, edit any page content, edit any version content, edit own course content, edit own course_resource content, edit own folder content, edit own link content, edit own page content, edit own version content, manage features, import elms_node_import feeds, import psu_angel_course_list feeds, import psu_angel_teamlist2 feeds, tamper elms_node_import, tamper psu_angel_course_list, tamper psu_angel_teamlist2, download original image, masquerade as user, administer nodes, create referenced_page content, delete any referenced_page content, delete own referenced_page content, edit any referenced_page content, edit own referenced_page content, revert revisions, view revisions, administer organic groups, create url aliases, access private download directory, view elms_course requirements dashboard, view og requirements dashboard, view system requirements dashboard, view users outside groups, access spaces og clone, select different theme, access user profiles, access workflow summary views, administer workflow, schedule workflow transitions', '0'), ('10', '10', 'access site-wide contact form, view field_inst_contact_block, access private download directory, view users outside groups', '0'), ('11', '11', 'view advanced help index, view advanced help popup, view advanced help topic, add content to books, administer book outlines, create new books, bypass redirection, access ckeditor link, access site-wide contact form, edit field_course_name, edit field_course_promotion, edit field_faculty_resources, edit field_id_of_record, edit field_initial_course_launch, edit field_inst_contact_block, edit field_instructional_template, edit field_lead_faculty, edit field_lesson_count, edit field_link, edit field_reference_page, edit field_required_plugins, edit field_sample_materials, edit field_supported_browsers, view field_faculty_resources, view field_id_of_record, view field_inst_contact_block, view field_instructional_template, view field_lead_faculty, view field_lesson_count, view field_link, view field_link_more_info, view field_listing_only, view field_past_faculty, create folder content, create link content, create page content, edit any course content, edit any folder content, edit any link content, edit any page content, edit own course content, edit own folder content, edit own link content, edit own page content, download original image, masquerade as user, create referenced_page content, edit any referenced_page content, edit own referenced_page content, create url aliases, view elms_course requirements dashboard, view users outside groups', '0'), ('8', '8', 'view advanced help index, view advanced help popup, view advanced help topic, bypass redirection, access ckeditor link, access site-wide contact form, edit field_link, edit field_reference_page, view field_faculty_resources, view field_id_of_record, view field_inst_contact_block, view field_instructional_template, view field_lead_faculty, view field_lesson_count, view field_link, view field_link_more_info, view field_listing_only, view field_past_faculty, create folder content, create link content, create page content, edit any folder content, edit any link content, edit any page content, edit own folder content, edit own link content, edit own page content, masquerade as user, create url aliases, access private download directory, view og requirements dashboard, view users outside groups, access user profiles', '0'), ('3', '3', 'masquerade as user, masquerade as admin, administer masquerade, configure member roles, override group default role, administer spaces, administer blocks, use PHP for block visibility, add content to books, administer book outlines, create new books, access printer-friendly version, access site-wide contact form, administer site-wide contact form, administer filters, administer menu, administer content types, administer nodes, access content, view revisions, revert revisions, delete revisions, create referenced_page content, delete own referenced_page content, delete any referenced_page content, edit own referenced_page content, edit any referenced_page content, create url aliases, administer url aliases, search content, use advanced search, administer search, administer site configuration, access administration pages, administer actions, access site reports, select different theme, administer files, administer taxonomy, administer permissions, administer users, access user profiles, change own username, view advanced help topic, view advanced help popup, view advanced help index, access backup and migrate, perform backup, access backup files, delete backup files, restore from backup, administer backup and migrate, Use PHP input for field settings (dangerous - grant with care), edit field_course_name, view field_course_name, edit field_listing_only, view field_listing_only, edit field_course_title, view field_course_title, edit field_description, view field_description, edit field_link_more_info, view field_link_more_info, edit field_course_promotion, view field_course_promotion, edit field_supported_browsers, view field_supported_browsers, edit field_required_plugins, view field_required_plugins, edit field_sample_materials, view field_sample_materials, edit field_id_of_record, view field_id_of_record, edit field_initial_course_launch, view field_initial_course_launch, edit field_lead_faculty, view field_lead_faculty, edit field_past_faculty, view field_past_faculty, edit field_faculty_resources, view field_faculty_resources, edit field_prerequisites, view field_prerequisites, edit field_link, view field_link, edit field_reference_page, view field_reference_page, edit field_cr_logo, view field_cr_logo, edit field_resource_link, view field_resource_link, edit field_short_description, view field_short_description, edit field_course_ref, view field_course_ref, edit field_instructional_template, view field_instructional_template, edit field_lesson_count, view field_lesson_count, edit field_section_semester, view field_section_semester, edit field_section_year, view field_section_year, edit field_campus, view field_campus, edit field_section_number, view field_section_number, edit field_activation_codes, view field_activation_codes, edit field_inst_contact_block, view field_inst_contact_block, edit field_footer, view field_footer, bypass redirection, use bulk exporter, view date repeats, Allow Reordering, administer feeds, import psu_angel_teamlist2 feeds, clear psu_angel_teamlist2 feeds, import elms_node_import feeds, clear elms_node_import feeds, import psu_angel_course_list feeds, clear psu_angel_course_list feeds, administer feeds_tamper, tamper psu_angel_teamlist2, tamper elms_node_import, tamper psu_angel_course_list, administer flags, administer imageapi, administer imagecache, flush imagecache, view imagecache course_promo_listing, view imagecache course_resource-list, view imagecache course_promo, view imagecache elms_navigation_top, view imagecache chamfer-banner, administer imce(execute PHP), administer jquery colorpicker, administer lightbox2, download original image, administer module filter, administer organic groups, access print, administer print, node-specific print configuration, use PHP for link visibility, access private download directory, administer profiler builder, view regions_elms_navigation_bottom region, view regions_elms_navigation_right region, view regions_elms_navigation_left region, view regions_elms_navigation_top region, view og requirements dashboard, view system requirements dashboard, view elms_course requirements dashboard, administer string overrides, designate fields as unique, bypass requirement that fields are unique, administer workflow, schedule workflow transitions, access workflow summary views, export course as html, access accessibility guidelines, access accessibility tests, create accessibility guidelines, edit accessibility guidelines, delete accessibility guidelines, delete accessibility tests, create accessibility tests, edit accessibility tests, view accessibility information, manually override tests, administer piwik, opt-in or out of tracking, use PHP for tracking visibility, administer jwplayermodule, use admin toolbar, access ckeditor link, administer ckeditor link, administer pathauto, notify of path changes, view users outside groups, use PHP for title patterns, administer conditional fields, access spaces og clone, access all views, administer views, administer features, manage features, create course content, delete own course content, delete any course content, edit own course content, edit any course content, create folder content, delete own folder content, delete any folder content, edit own folder content, edit any folder content, create link content, delete own link content, delete any link content, edit own link content, edit any link content, create page content, delete own page content, delete any page content, edit own page content, edit any page content, create course_resource content, delete own course_resource content, delete any course_resource content, edit own course_resource content, edit any course_resource content, create version content, delete own version content, delete any version content, edit own version content, edit any version content, access devel information, execute php code, switch users, display source code, show format selection for nodes, show format selection for comments, show format selection for blocks, show format tips, show more format tips link, collapse format fieldset by default, collapsible format selection, administer tipsy, access per-page statistics, access files on CDN when in testing mode, touch files', '0')");
+  $context['message'] = st('Permissions established for roles');
+}
+
 /**
  * Helper function to install workflow states.
  */
-function _elms_workflow_query() {
+function _elms_workflow_query(&$context) {
 	//insert the workflow state name
 	$options = serialize(array (
       'comment_log_node' => 1,
@@ -780,19 +807,21 @@ function _elms_workflow_query() {
   db_query("INSERT INTO {workflow_states} VALUES ('2', '1', '(creation)', '-50', '1', '1'), ('3', '1', 'Development Sandbox', '0', '0', '1'), ('4', '1', 'Inactive', '1', '0', '0'), ('5', '1', 'Active Offering', '2', '0', '1'), ('6', '1', 'Archived Offering', '3', '0', '1'), ('7', '1', 'Promo', '4', '0', '1'), ('8', '1', 'Master', '8', '0', '0'), ('9', '1', 'Staging', '0', '0', '0'), ('10', '1', 'Master', '1', '0', '1')");
   //define allowed workflow state transitions
   db_query("INSERT INTO {workflow_transitions} VALUES ('1', '2', '3', 'author,3,6'), ('3', '3', '7', 'author,3,6'), ('6', '5', '3', 'author,3,6'), ('8', '5', '6', 'author,3,6'), ('9', '7', '3', 'author,3,6'), ('14', '3', '5', 'author,3,6'), ('15', '6', '5', 'author,3,6'), ('17', '3', '10', 'author,3,6'), ('18', '10', '3', 'author,3,6'), ('19', '6', '3', 'author,3,6')");
+	$context['message'] = st('Publishing Workflows installed');
 }
 
 /**
  * Helper function to install default contact form.
  */
-function _elms_contact_query() {
+function _elms_contact_query(&$context) {
   db_query("INSERT INTO {contact} VALUES ('1','Helpdesk', '%s', 'Thank you for contacting the Helpdesk.  We will contact you within 24 hours during normal business hours or 48 hours during off-peak times.', '0', '1')", variable_get('site_mail', ''));
+	$context['message'] = st('Contact form installed');
 }
 
 /**
  * Helper function to install default contact fields.
  */
-function _elms_contact_fields_query() {
+function _elms_contact_fields_query(&$context) {
   $ary = array (
   'field_name' => 'name',
   'field_type' => 'textfield',
@@ -928,12 +957,13 @@ function _elms_contact_fields_query() {
   'field_group' => '',
   );
   drupal_write_record('contact_fields', $ary);
+	$context['message'] = st('Contact form built');
 }
 
 /**
  * Helper function to install default wysiwyg settings.
  */
-function _elms_wysiwyg_query() {
+function _elms_wysiwyg_query(&$context) {
   drupal_write_record('wysiwyg', $insert);
   $insert = array (
   'format' => '1',
@@ -1079,30 +1109,33 @@ function _elms_wysiwyg_query() {
 /**
  * Helper function to install default filter formats.
  */
-function _elms_filter_formats_query() {
+function _elms_filter_formats_query(&$context) {
   db_query("INSERT INTO {filter_formats} VALUES ('1', 'Comment Filter', ',1,2,3,6,4,9,10,8,', '1'), ('2', 'Content Filter', ',3,6,4,9,11,8,', '0'), ('4', 'Event', ',3,6,4,9,11,8,', '1')");
+	$context['message'] = st('Input Filters installed');
 }
 
 /**
  * Helper function to set the defaults defined by better formats module.
  */
-function _elms_better_formats_defaults_query() {
+function _elms_better_formats_defaults_query(&$context) {
 	//clear better formats before running
 	db_query("DELETE FROM {better_formats_defaults} WHERE rid > 0");
-  db_query("INSERT INTO {better_formats_defaults} VALUES ('1', 'block', '0', '1', '25'), ('1', 'comment', '0', '1', '0'), ('1', 'comment/parent', '0', '2', '0'), ('1', 'comment/elms_resource', '0', '2', '0'), ('1', 'comment/folder', '0', '2', '0'), ('1', 'comment/page', '0', '2', '0'), ('1', 'comment/referenced_page', '0', '2', '0'), ('1', 'node', '0', '1', '0'), ('1', 'node/parent', '0', '2', '0'), ('1', 'node/elms_resource', '0', '2', '0'), ('1', 'node/folder', '0', '2', '0'), ('1', 'node/page', '0', '2', '0'), ('1', 'node/referenced_page', '0', '2', '0'), ('2', 'block', '0', '1', '25'), ('2', 'comment', '0', '1', '0'), ('2', 'comment/parent', '0', '2', '0'), ('2', 'comment/elms_resource', '0', '2', '0'), ('2', 'comment/folder', '0', '2', '0'), ('2', 'comment/page', '0', '2', '0'), ('2', 'comment/referenced_page', '0', '2', '0'), ('2', 'node', '0', '1', '0'), ('2', 'node/parent', '0', '2', '0'), ('2', 'node/elms_resource', '0', '2', '0'), ('2', 'node/folder', '0', '2', '0'), ('2', 'node/page', '0', '2', '0'), ('2', 'node/referenced_page', '0', '2', '0'), ('3', 'block', '0', '1', '25'), ('3', 'comment', '0', '1', '0'), ('3', 'comment/parent', '0', '2', '0'), ('3', 'comment/elms_resource', '0', '2', '0'), ('3', 'comment/folder', '0', '2', '0'), ('3', 'comment/page', '0', '2', '0'), ('3', 'comment/referenced_page', '0', '2', '0'), ('3', 'node', '0', '1', '0'), ('3', 'node/parent', '0', '2', '0'), ('3', 'node/elms_resource', '0', '2', '0'), ('3', 'node/folder', '0', '2', '0'), ('3', 'node/page', '0', '2', '0'), ('3', 'node/referenced_page', '0', '2', '0'), ('11', 'block', '0', '1', '25'), ('11', 'comment', '0', '1', '25'), ('11', 'comment/elms_resource', '0', '2', '25'), ('11', 'comment/folder', '0', '2', '25'), ('11', 'comment/page', '0', '2', '25'), ('11', 'comment/referenced_page', '0', '2', '25'), ('11', 'node', '0', '1', '25'), ('11', 'node/elms_resource', '0', '2', '25'), ('11', 'node/folder', '0', '2', '25'), ('11', 'node/page', '0', '2', '25'), ('11', 'node/referenced_page', '0', '2', '25')");  
+  db_query("INSERT INTO {better_formats_defaults} VALUES ('1', 'block', '0', '1', '25'), ('1', 'comment', '0', '1', '0'), ('1', 'comment/parent', '0', '2', '0'), ('1', 'comment/elms_resource', '0', '2', '0'), ('1', 'comment/folder', '0', '2', '0'), ('1', 'comment/page', '0', '2', '0'), ('1', 'comment/referenced_page', '0', '2', '0'), ('1', 'node', '0', '1', '0'), ('1', 'node/parent', '0', '2', '0'), ('1', 'node/elms_resource', '0', '2', '0'), ('1', 'node/folder', '0', '2', '0'), ('1', 'node/page', '0', '2', '0'), ('1', 'node/referenced_page', '0', '2', '0'), ('2', 'block', '0', '1', '25'), ('2', 'comment', '0', '1', '0'), ('2', 'comment/parent', '0', '2', '0'), ('2', 'comment/elms_resource', '0', '2', '0'), ('2', 'comment/folder', '0', '2', '0'), ('2', 'comment/page', '0', '2', '0'), ('2', 'comment/referenced_page', '0', '2', '0'), ('2', 'node', '0', '1', '0'), ('2', 'node/parent', '0', '2', '0'), ('2', 'node/elms_resource', '0', '2', '0'), ('2', 'node/folder', '0', '2', '0'), ('2', 'node/page', '0', '2', '0'), ('2', 'node/referenced_page', '0', '2', '0'), ('3', 'block', '0', '1', '25'), ('3', 'comment', '0', '1', '0'), ('3', 'comment/parent', '0', '2', '0'), ('3', 'comment/elms_resource', '0', '2', '0'), ('3', 'comment/folder', '0', '2', '0'), ('3', 'comment/page', '0', '2', '0'), ('3', 'comment/referenced_page', '0', '2', '0'), ('3', 'node', '0', '1', '0'), ('3', 'node/parent', '0', '2', '0'), ('3', 'node/elms_resource', '0', '2', '0'), ('3', 'node/folder', '0', '2', '0'), ('3', 'node/page', '0', '2', '0'), ('3', 'node/referenced_page', '0', '2', '0'), ('11', 'block', '0', '1', '25'), ('11', 'comment', '0', '1', '25'), ('11', 'comment/elms_resource', '0', '2', '25'), ('11', 'comment/folder', '0', '2', '25'), ('11', 'comment/page', '0', '2', '25'), ('11', 'comment/referenced_page', '0', '2', '25'), ('11', 'node', '0', '1', '25'), ('11', 'node/elms_resource', '0', '2', '25'), ('11', 'node/folder', '0', '2', '25'), ('11', 'node/page', '0', '2', '25'), ('11', 'node/referenced_page', '0', '2', '25')");
+	$context['message'] = st('Content Formats installed');
 }
 
 /**
  * Helper function to install default filters.
  */
-function _elms_filters_query() {
+function _elms_filters_query(&$context) {
   db_query("INSERT INTO {filters} VALUES ('40', '1', 'filter', '2', '0'), ('37', '1', 'filter', '0', '1'), ('38', '1', 'filter', '1', '2'), ('36', '1', 'filter', '3', '10'), ('39', '1', 'pathologic', '0', '10'), ('118', '2', 'lightbox2', '0', '-10'), ('116', '2', 'ckeditor_link', '0', '-9'), ('119', '2', 'filter', '2', '-8'), ('117', '2', 'htmlpurifier', '1', '-7'), ('82', '4', 'filter', '2', '0'), ('80', '4', 'filter', '0', '1'), ('81', '4', 'filter', '1', '2'), ('79', '4', 'filter', '3', '10'), ('69', '6', 'filter', '1', '2')");
+	$context['message'] = st('Input Filters established');
 }
 
 /**
  * Helper function to install default vocabulary.
  */
-function _elms_vocab_query() {
+function _elms_vocab_query(&$context) {
   //populate terms
   db_query("INSERT INTO {term_data} VALUES ('1', '1', 'Department 1', '', '0'), ('2', '1', 'Department 4', '', '1'), ('3', '1', 'Department 3', '', '2'), ('4', '1', 'Department 4', '', '3')");
   //populate hierarchy
