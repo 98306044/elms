@@ -118,17 +118,21 @@ function _elms_navigation_bottom_page_controls() {
       if ($next = book_next($node->book)) {
         $output .= theme('menu_item', l('', $next['href'], array('attributes' => array('title' => t('Next Page')))), 0, '', FALSE, 'elms_next_page');
       }
-    //check for node reference url links
+      //check for node reference url links
       $tmp_ref_links = nodereference_url_build_all_links($node, 0);
       //account for possible flags
-    if (module_exists('flag')) {
-      $flag_links = flag_link('node', $node);
-    //if this has flags then render them here
-    if (count($flag_links)) {
-      foreach ($flag_links as $key => $flag) {
-            $output .= theme('menu_item', $flag['title'], 0, '', FALSE, $key);
+      if (module_exists('flag')) {
+        $flag_links = flag_link('node', $node);
+        //if this has flags then render them here
+        if (count($flag_links)) {
+          foreach ($flag_links as $key => $flag) {
+						$flagclass = $key;
+						if (strpos($flag['title'], 'unflag-action')) {
+							$flagclass .= '-flagged';
+						}
+            $output .= theme('menu_item', $flag['title'], 0, '', FALSE, $flagclass);
           }
-    }
+        }
       }
       //see if we should display the page print
       if (module_exists('print')) {

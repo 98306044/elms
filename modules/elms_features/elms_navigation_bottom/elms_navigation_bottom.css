@@ -126,6 +126,10 @@ body {
 #regions_block_elms_navigation_bottom_0 .flag-bookmarks {
   background-image:url(images/bookmark.png);
 }
+#regions_block_elms_navigation_bottom_0 .flag-bookmarks-flagged {
+  background-image:url(images/bookmarked.png);
+}
+
 /* always hide the flag state change message when in the bottom bar */
 #regions_block_elms_navigation_bottom_0 .flag-message {
  display:none !important;	
