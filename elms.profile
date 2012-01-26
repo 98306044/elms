@@ -109,7 +109,7 @@ function elms_profile_task_list() {
   $tasks['elms-install-modules-2-batch'] = st('Install Core Focus');
 	$tasks['elms-install-modules-3-batch'] = st('Install Add Ons');
 	$tasks['elms-install-ac-batch'] = st('Configure Accessibility');
-	$tasks['elms-install-configure-batch'] = st('Finalize Configuration');
+	$tasks['elms-install-configure-batch'] = st('Finalize Install');
   return $tasks;
 }
 
@@ -258,7 +258,7 @@ function elms_profile_tasks(&$task, $url) {
 		  //revert core installer last as they take priority
 		  array('elms_'. variable_get('install-core-installer', '') => array('variable')),
     );
-    $batch['title'] = st('Install Cleanup');
+    $batch['title'] = st('Finalize Install');
     $batch['operations'][] = array('_elms_installer_configure', array());
 		$batch['operations'][] = array('_elms_installer_configure_cleanup', array());
 		//set default workflow states, in the future workflow states will be exportable via Features
@@ -337,6 +337,9 @@ function _elms_installer_configure() {
  * Configuration. Second stage.
  */
 function _elms_installer_configure_cleanup() {
+	//set front page to site default, this way if other features strongarm it they can but the default was set at least so we don't get the stupid 'welcome to your site' page
+	variable_set('site_frontpage', 'parents');
+	variable_set('site_frontpage_path', 'parents');
 	//setup private directory defaults
 	$filename = file_directory_path() .'/'. variable_get('private_download_directory','private') .'/.htaccess';
   if (!private_download_write($filename, variable_get('private_download_htaccess',''))) {
