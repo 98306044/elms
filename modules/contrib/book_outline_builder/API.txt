@@ -1,4 +1,3 @@
-
 Book Outline Builder API
 --------------------------------
 
@@ -17,9 +16,6 @@ $outline['YOUR_TEMPLATE_MACHINE_NAME'] = array(
 			   //SAME STRUCTURE AS ABOVE NOW
 			 )
      ));
-
---Acceptable values for type is link, page, folder
---'link' is only used if type is link
 --@i can be used in the title of something that's going to be duplicated as to where the incemental value should be placed.  This is not required.
 --duplicate: number of times to duplicate, the loop value can be altered based on criteria, see hook_book_outline_builder_loop_alter.
 --children: An array of additional items that make up the full outline
