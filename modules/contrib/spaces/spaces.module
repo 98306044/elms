@@ -807,7 +807,7 @@ function spaces_init() {
   }
 
   // If the space is incorrect, reroute.
-  if ($type && !spaces_is_spaces_object($type, $object)) {
+  if (isset($type) && !spaces_is_spaces_object($type, $object)) {
     spaces_router($type, $object);
   }
 }

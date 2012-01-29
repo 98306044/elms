@@ -111,7 +111,7 @@ class space_type extends space {
    * @return
    *   TRUE if access should be granted. FALSE if not.
    */
-  function access_user($op = 'view', $account) {
+  function access_user($op = 'view', $account = NULL) {
     return TRUE;
   }
 

@@ -1,9 +1,13 @@
 ; $Id: context_var
 name = "Context: Variable"
 description = "Context condition: Show when site variables equal a defined value"
-core = 6.x
 package = "Context"
-version = "6.x-1.0-beta2"
 project = "context_var"
-project status url = "http://drupal.psu.edu/fserver"
 dependencies[] = "context"
+
+; Information added by drupal.org packaging script on 2012-01-29
+version = "6.x-1.0-beta3"
+core = "6.x"
+project = "context_var"
+datestamp = "1327813838"
+

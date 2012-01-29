@@ -1,0 +1,11 @@
+; $Id $
+name = "Link node"
+description = "Provides an input filter that allows a node to link to other nodes."
+core = 6.x
+
+; Information added by drupal.org packaging script on 2010-06-17
+version = "6.x-1.3"
+core = "6.x"
+project = "link_node"
+datestamp = "1276793408"
+

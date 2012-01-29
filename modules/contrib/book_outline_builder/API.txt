@@ -10,8 +10,7 @@ $outline['YOUR_TEMPLATE_MACHINE_NAME'] = array(
       array(
        'type' => '',
        'title' => '',
-       'link' => '',
-			 'content => '', //optional body content
+       'content => '', //optional body content
 			 'format' => '', //optional text input format
 			 'duplicate' => TRUE //or number of times to replicate,
 			 'children' => array(
@@ -72,7 +71,7 @@ function YOURMODULENAME_book_outline_builder_loop_alter(&$book_item, &$loop, $ad
  * Implementation of hook_book_outline_builder_node_alter().
  */
 function YOURMODULENAME_book_outline_builder_node_alter(&$node, &$book_item, $additional_parms) {
-  if ($node->type == 'cool') {
+  if ($node->type == 'link') {
 	  $node->field_link[0]['value'] = 'http://www.google.com/';
 	}
 }

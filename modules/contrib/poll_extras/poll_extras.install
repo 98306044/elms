@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * Implementation of hook_install().
+ */
+function poll_extras_install() {
+	db_query("ALTER TABLE {poll} ADD COLUMN message text AFTER active");
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function poll_extras_uninstall() {
+	db_query("ALTER TABLE {poll} DROP COLUMN message");
+}
+
+/**
+ * Implementation of hook_schema_alter().
+ */
+function poll_extras_schema_alter(&$schema) {
+	//add support for custom message to display if unable to view a poll
+	$schema['poll']['fields']['message'] = array(
+        'description' => 'The message to display if the user is not allowed to view results',
+        'type' => 'text',
+        'not null' => FALSE,
+        'size' => 'big');
+}
