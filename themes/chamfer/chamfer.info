@@ -31,9 +31,6 @@ features[] = comment_user_picture
 features[] = favicon
 features[] = primary_links
 
-; Information added by drupal.org packaging script on 2010-05-27
-version = "6.x-0.3"
-core = "6.x"
-project = "chamfer"
-datestamp = "1274988303"
-
+version = "6.x-1.0-beta3"
+core="6.x"
+project="chamfer"

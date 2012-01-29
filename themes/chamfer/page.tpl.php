@@ -163,12 +163,10 @@ if ($left && $right) {
         <div class="banner-image-holder">
           <div class="banner-image" <?php if ($logo && !theme_get_setting('default_logo')) { print 'style="background-image:url(' . $logo .')"';} ?>>
             <div class="banner-crop">
-            <?php if ($primary_links || $superfish): ?>
+            <?php if ($primary_menu || $superfish): ?>
               <!-- Primary || Superfish -->
-              <div class="main-menu <?php print $primary_links ? 'primary' : 'superfish' ; ?>" id="<?php print $primary_links ? 'primary' : 'superfish' ; ?>">
-              <?php if (isset($primary_links)) : ?>
-          <?php print theme('links', $primary_links, array('class' => 'links primary-links')) ?>
-        <?php endif; ?>
+              <div class="main-menu <?php print $primary_menu ? 'primary' : 'superfish' ; ?>" id="<?php print $primary_menu ? 'primary' : 'superfish' ; ?>">
+              <?php if ($primary_menu): print $primary_menu; elseif ($superfish): print $superfish; endif; ?>
               </div>
               <!-- /primary || superfish -->
             <?php endif; ?>
