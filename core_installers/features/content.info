@@ -1,0 +1,4 @@
+name = "ELMS Content"
+description = "Enable content outlining capabilities"
+type = "features"
+dependencies[] = "elms_content"

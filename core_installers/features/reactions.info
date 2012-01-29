@@ -1,0 +1,4 @@
+name = "ELMS Reactions"
+description = "Enable commenting functionality"
+type = "features"
+dependencies[] = "elms_reactions"

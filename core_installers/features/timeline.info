@@ -1,0 +1,4 @@
+name = "ELMS Timeline"
+description = "Enable SIMILE timeline functionality"
+type = "features"
+dependencies[] = "elms_timeline"

@@ -1,0 +1,4 @@
+name = "ELMS Places"
+description = "Enable google maps functionality"
+type = "features"
+dependencies[] = "elms_places"
