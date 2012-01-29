@@ -1,5 +1,7 @@
 <?php
 
+define('ELMS_MAX_ALLOWED_PACKET', 10);
+
 /**
  * Implementation of hook_profile_details().
  */
@@ -552,6 +554,9 @@ function system_form_install_configure_form_alter(&$form, $form_state) {
 		if ($install_file['type'] == 'add-on') {
 			$add_ons[$install_file['file']] = $install_file['name'];
 		}
+		if ($install_file['type'] == 'features') {
+			$features[$install_file['file']] = $install_file['name'];
+		}
 	}
 	//sort alphabetically
 	asort($installers);
@@ -565,12 +570,12 @@ function system_form_install_configure_form_alter(&$form, $form_state) {
 		'#default_value' => 'icms',
 		'#required' => TRUE,
 	);
-	$form['core_installer']['add_ons'] = array(
+	$form['core_installer']['features'] = array(
 	  '#type' => 'checkboxes',
-		'#options' => $add_ons,
-		'#default_value' => array('developer_ui'),
-		'#title' => st('Optional Add-ons'),
-		'#description' => st('Functionality to extend your instance'),
+		'#options' => $features,
+		'#default_value' => array('content'),
+		'#title' => st('Features'),
+		'#description' => st('Features that you would like to have access to, you can always turn these on after install'),
 	);
 	//accessibility
 	$guidelines = _elms_get_guidelines();
@@ -590,6 +595,60 @@ function system_form_install_configure_form_alter(&$form, $form_state) {
 		'#default_value' => 'wcag2aa',
 		'#required' => TRUE,
 	);
+	$form['developer'] = array(
+	  '#type' => 'fieldset',
+		'#title' => st('Developer Settings'),
+		'#collapsed' => FALSE,
+		'#collapsible' => TRUE,
+		'#description' => st('A listing of developer centric options.'),
+		'#weight' => -9,
+	);
+	$form['developer']['add_ons'] = array(
+	  '#type' => 'checkboxes',
+		'#options' => $add_ons,
+		'#default_value' => array('developer_ui'),
+		'#title' => st('Optional Add-ons'),
+		'#description' => st('Functionality to extend your instance'),
+	);
+	
+	//this is a critical step to ensuring a stable environment installation
+	//max packet is an extremely common error with large platform installations and this needs to be perfect
+	//attempt to calculate max allowed packet
+	$result =  db_query("SHOW VARIABLES LIKE 'max_allowed_packet'");
+  while ($variables = db_fetch_object($result)) {
+    $current_max_packet = $variables->Value / (1024 * 1024);
+  }
+	$max_allowed_capable = FALSE;
+	//test if current is equal to or greater then max allowed
+	if ($current_max_packet >= ELMS_MAX_ALLOWED_PACKET) {
+		$max_allowed_capable = TRUE;
+		if ($_GET['set_map'] == 1) {
+			drupal_set_message(st("The database setting `max_allowed_packet` was successfully set to @megs", array('@megs' => ELMS_MAX_ALLOWED_PACKET)));
+		}
+	}
+	else {
+		//attempt to set it higher automatically but most likely can't
+		if ($_GET['set_map'] != 1) {
+		  drupal_set_message(st("Database setting `max_allowed_packet` makes ELMS happy at @megs or higher. Your current setting is @urmegs. <a href='@link'>Click to attempt to fix this</a>.", array('@megs' => ELMS_MAX_ALLOWED_PACKET,'@urmegs' => $current_max_packet, '@link' => 'install.php?locale='. check_plain($_GET['locale']) .'&profile='. check_plain($_GET['profile']) .'&set_map=1')), 'error');
+		db_query('SET GLOBAL max_allowed_packet=%d*1024*1024', ELMS_MAX_ALLOWED_PACKET);
+		  $result =  db_query("SHOW VARIABLES LIKE 'max_allowed_packet'");
+      while ($variables = db_fetch_object($result)) {
+       $current_max_packet = $variables->Value / (1024 * 1024);
+		  }
+		}
+		else {
+			drupal_set_message(st("ELMS attempt to set `max_allowed_packet` @megs failed. This is most likely a permission issue. You can still install without issue but read the included README.txt for ways of solving this to prevent future problems.", array('@megs' => $current_max_packet)));
+		}
+	}
+	$form['developer']['run_cron'] = array(
+	  '#type' => 'checkbox',
+		'#options' => 'Run Cron',
+		'#default_value' => $max_allowed_capable,
+		'#disabled' => !($max_allowed_capable),
+		'#title' => st('Run Cron'),
+		'#description' => st('Run cron as a final cleanup at the end of the system installation'),
+	);
+	//make other fieldsets collapsible for consistency
 	$form['site_information']['#collapsible'] = TRUE;
   $form['site_information']['site_name']['#default_value'] = 'ELMS';
   $form['site_information']['site_mail']['#default_value'] = 'admin@'. $_SERVER['HTTP_HOST'];
@@ -619,7 +678,8 @@ function system_form_install_configure_form_alter(&$form, $form_state) {
 function elms_install_configure_form_submit(&$form, &$form_state) {
 	//store the values selected for installer and add ons
 	variable_set('install-core-installer', $form_state['values']['installer']);
-	variable_set('install-add-ons', $form_state['values']['add_ons']);
+	$add_ons = array_merge($form_state['values']['add_ons'], $form_state['values']['features']);
+	variable_set('install-add-ons', $add_ons);
 	variable_set('install-accessibility-guideline', $form_state['values']['guideline']);
 }
 
