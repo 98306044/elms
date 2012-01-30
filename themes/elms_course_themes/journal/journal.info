@@ -1,0 +1,14 @@
+name = Journal
+description = Journal Theme for AA 100
+core = 6.x
+engine = phptemplate
+
+regions[left] = Left sidebar
+regions[content] = Content
+regions[footer] = Footer
+regions[header] = Header
+
+stylesheets[all][] = css/style.css
+stylesheets[all][] = css/reset.css
+stylesheets[print][] = css/print.css
+stylesheets[all][] = css/sftheme_override.css
