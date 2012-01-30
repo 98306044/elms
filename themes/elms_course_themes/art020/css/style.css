@@ -25,14 +25,6 @@ margin-top:-5px;
   width: auto;
   height: auto;
 }
-@font-face {
-  font-family: 'ArtBrushMedium';
-  src: url('../fonts/Artbrush.eot');
-  src: local('ArtBrush Medium'), local('ArtBrush'),
-    url("../fonts/Artbrush.woff") format("woff"),
-    url("../fonts/Artbrush.otf") format("opentype"),
-    url("../fonts/Artbrush.svg#Artbrush") format("svg");
-}
 
 body {
 	font-family:Helvetica, Arial, sans-serif
