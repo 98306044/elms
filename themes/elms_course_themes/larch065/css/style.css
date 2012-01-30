@@ -220,6 +220,7 @@ p {
 #banner { /************************************ CONTAINS THE BANNER *******/
 	height: 76px;
 	width: 1024px;
+	background-image: url(../images/banner.gif);
 	border-bottom: 1px solid #000000;
 	}
 	

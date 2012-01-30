@@ -13,11 +13,11 @@
 <div id="container">
   <div id="elearningmain">
     <div id="header">
-      <div id="banner"> <img src="<?php print $base_path . $directory; ?>/images/larch65_3_r1_c1.gif" alt="course banner" title="course banner" width="1024" height="76" border="0" usemap="#map2"/>
-
+      <div id="banner">
       </div>
-      <div id="imagebar"></div>
+      <?php if($header) { ?>
       <div id="header-nice-menu"><?php print $header; ?></div>
+      <?php } ?>
     </div>
     <div id="maincontainer">
       <div id="sidebar-left">
@@ -27,13 +27,10 @@
         <div id="rightcontainer">
         <a name="main-content"></a>
           <div id="content">
-            <?php 
-			print $breadcrumb;
-			if(!isset($node->nid)){
-				print '<h1>' . $title . '</h1>';
-			}
-			?>
-            <?php print $messages; ?> <?php print $tabs; ?> <?php print $content; ?>
+          <?php print $tabs; ?>
+            <h1><?php print $title; ?></h1>
+            <?php print $messages; ?>
+						<?php print $content; ?>
           </div>
         </div>
       </div>
