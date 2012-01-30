@@ -1,0 +1,10 @@
+; $Id: music009.info,v 1.4 2008/10/28 05:50:58 btopro Exp $
+name = Music 009 ao
+description = Port of the Music 009 Interface
+version = 6.x-0.0-dev
+core = 6.x
+engine = phptemplate
+
+
+stylesheets[all][] = css/style.css
+stylesheets[all][] = css/accessibility.css

@@ -1,0 +1,8 @@
+name = Theatre 107
+description = Poster theme for Theatre 107 Elearning Institute
+core = 6.x
+version = 6.x-1.0
+engine = phptemplate
+
+stylesheets[all][] = css/style.css
+stylesheets[all][] = css/accessibility.css
