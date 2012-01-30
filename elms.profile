@@ -245,12 +245,12 @@ function elms_profile_tasks(&$task, $url) {
 		//build revert array for passing through 1 and a time
 		$revert = array(
       //revert core architecture
-      array('elms_parent' => array('content', 'fieldgroup', 'node', 'views', 'views_api', 'variable')),
-      array('elms_site' => array('content', 'fieldgroup', 'node', 'views', 'views_api', 'variable')),
+      array('elms_parent' => array('content', 'fieldgroup', 'node', 'views', 'variable')),
+      array('elms_site' => array('content', 'fieldgroup', 'node', 'views', 'variable')),
       //revert potentially enabled features
       array('elms_content' => array('content', 'flag', 'node')),
       array('elms_resources' => array('content', 'menu_links', 'node', 'variable')),
-      array('elms_id_best_practices' => array('views', 'views_api')),
+      array('elms_id_best_practices' => array('views')),
       //revert data passers
       array('elms_content_export' => array('content', 'fieldgroup')),
       array('elms_content_import' => array('content', 'fieldgroup')),

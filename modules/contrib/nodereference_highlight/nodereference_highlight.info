@@ -1,0 +1,4 @@
+name = "Node Reference Highlight"
+description = "Adds the ability to highlight text in the body content of nodes and streamline the association of other node types"
+dependencies[] = "nodereference"
+package = "CCK"

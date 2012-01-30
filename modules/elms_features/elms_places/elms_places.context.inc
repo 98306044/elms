@@ -26,7 +26,7 @@ function elms_places_context_default_contexts() {
           'module' => 'views',
           'delta' => 'elms_place_list-block_1',
           'region' => 'regions_elms_navigation_right',
-          'weight' => 0,
+          'weight' => '1',
         ),
       ),
     ),

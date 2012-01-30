@@ -28,7 +28,8 @@ function elms_icms_strongarm() {
     0 => 'folder',
     1 => 'link',
     2 => 'page',
-    3 => 'referenced_page',
+    3 => 'poll',
+    4 => 'referenced_page',
   );
   $export['book_allowed_types'] = $strongarm;
 
@@ -194,6 +195,13 @@ function elms_icms_strongarm() {
     ),
   );
   $export['imce_roles_profiles'] = $strongarm;
+
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'jquery_colorpicker_ie6_page';
+  $strongarm->value = 0;
+  $export['jquery_colorpicker_ie6_page'] = $strongarm;
 
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -373,13 +381,6 @@ function elms_icms_strongarm() {
   $strongarm->name = 'pathauto_punctuation_hyphen';
   $strongarm->value = '1';
   $export['pathauto_punctuation_hyphen'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'jquery_colorpicker_ie6_page';
-  $strongarm->value = 0;
-  $export['jquery_colorpicker_ie6_page'] = $strongarm;
 
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -1992,108 +1993,106 @@ news',
     'title' => array(
       'region' => 'main',
       'weight' => '0',
-      'has_required' => '1',
+      'has_required' => TRUE,
       'title' => 'Title',
     ),
     'menu' => array(
       'region' => 'right',
-      'weight' => '2',
-      'has_required' => '',
+      'weight' => '3',
+      'has_required' => FALSE,
       'title' => 'Menu settings',
-      'collapsed' => '1',
-      'hidden' => '1',
+      'collapsed' => 1,
+      'hidden' => 1,
     ),
     'revision_information' => array(
       'region' => 'right',
-      'weight' => '6',
-      'has_required' => '',
+      'weight' => '7',
+      'has_required' => FALSE,
       'title' => 'Revision information',
-      'collapsed' => '1',
-      'hidden' => '1',
+      'collapsed' => 1,
+      'hidden' => 1,
     ),
     'comment_settings' => array(
       'region' => 'right',
-      'weight' => '9',
-      'has_required' => '',
-      'title' => 'Comment settings',
-      'collapsed' => '1',
-      'hidden' => '1',
+      'weight' => '10',
+      'has_required' => FALSE,
+      'title' => NULL,
+      'hidden' => 1,
     ),
     'path' => array(
       'region' => 'right',
-      'weight' => '8',
-      'has_required' => '',
+      'weight' => '9',
+      'has_required' => FALSE,
       'title' => 'URL path settings',
-      'collapsed' => '1',
-      'hidden' => '1',
+      'collapsed' => 1,
+      'hidden' => 1,
     ),
     'options' => array(
       'region' => 'right',
-      'weight' => '7',
-      'has_required' => '',
+      'weight' => '8',
+      'has_required' => FALSE,
       'title' => 'Publishing options',
-      'collapsed' => '1',
-      'hidden' => '1',
+      'collapsed' => 1,
+      'hidden' => 1,
     ),
     'author' => array(
       'region' => 'right',
-      'weight' => '5',
-      'has_required' => '',
+      'weight' => '6',
+      'has_required' => FALSE,
       'title' => 'Authoring information',
-      'collapsed' => '1',
-      'hidden' => '1',
+      'collapsed' => 1,
+      'hidden' => 1,
     ),
     'buttons' => array(
       'region' => 'main',
       'weight' => '3',
-      'has_required' => '',
-      'title' => '',
-      'hidden' => '0',
+      'has_required' => FALSE,
+      'title' => NULL,
+      'hidden' => 0,
     ),
     'book' => array(
       'region' => 'right',
-      'weight' => '1',
-      'has_required' => '',
+      'weight' => '2',
+      'has_required' => FALSE,
       'title' => 'Book outline',
-      'collapsed' => '1',
-      'hidden' => '1',
+      'collapsed' => 1,
+      'hidden' => 1,
     ),
     'og_nodeapi' => array(
-      'region' => 'main',
-      'weight' => '2',
-      'has_required' => '',
-      'title' => 'Courses',
-      'collapsed' => '1',
-      'hidden' => '0',
+      'region' => 'right',
+      'weight' => '1',
+      'has_required' => FALSE,
+      'title' => 'Course Versions',
+      'collapsed' => 1,
+      'hidden' => 1,
     ),
     'print' => array(
       'region' => 'right',
-      'weight' => '3',
-      'has_required' => '',
+      'weight' => '4',
+      'has_required' => FALSE,
       'title' => 'Printer, e-mail and PDF versions',
-      'collapsed' => '1',
-      'hidden' => '1',
+      'collapsed' => 1,
+      'hidden' => 1,
     ),
     'field_link' => array(
       'region' => 'main',
       'weight' => '1',
-      'has_required' => '1',
+      'has_required' => TRUE,
       'title' => 'Link',
     ),
     'sections' => array(
       'region' => 'right',
       'weight' => '0',
-      'has_required' => '',
-      'title' => '',
-      'hidden' => '1',
+      'has_required' => FALSE,
+      'title' => NULL,
+      'hidden' => 1,
     ),
     'custom_breadcrumbs' => array(
       'region' => 'right',
-      'weight' => '4',
-      'has_required' => '',
-      'title' => 'Custom Breadcrumbs',
-      'collapsed' => '1',
-      'hidden' => '1',
+      'weight' => '5',
+      'has_required' => FALSE,
+      'title' => NULL,
+      'hidden' => 1,
     ),
   );
   $export['nodeformscols_field_placements_link_default'] = $strongarm;
@@ -2106,127 +2105,199 @@ news',
     'title' => array(
       'region' => 'main',
       'weight' => '2',
-      'has_required' => '1',
+      'has_required' => TRUE,
       'title' => 'Title',
     ),
     'body_field' => array(
       'region' => 'main',
       'weight' => '3',
-      'has_required' => '',
-      'title' => '',
-      'hidden' => '0',
+      'has_required' => FALSE,
+      'title' => NULL,
+      'hidden' => 0,
     ),
     'menu' => array(
       'region' => 'right',
-      'weight' => '3',
-      'has_required' => '',
+      'weight' => '4',
+      'has_required' => FALSE,
       'title' => 'Menu settings',
-      'collapsed' => '1',
-      'hidden' => '1',
+      'collapsed' => 1,
+      'hidden' => 1,
     ),
     'revision_information' => array(
       'region' => 'right',
-      'weight' => '5',
-      'has_required' => '',
+      'weight' => '6',
+      'has_required' => FALSE,
       'title' => 'Revision information',
-      'collapsed' => '1',
-      'hidden' => '1',
-    ),
-    'comment_settings' => array(
-      'region' => 'main',
-      'weight' => '5',
-      'has_required' => '',
-      'title' => 'Comment settings',
-      'collapsed' => '1',
-      'hidden' => '0',
+      'collapsed' => 1,
+      'hidden' => 1,
     ),
     'path' => array(
       'region' => 'right',
-      'weight' => '7',
-      'has_required' => '',
+      'weight' => '8',
+      'has_required' => FALSE,
       'title' => 'URL path settings',
-      'collapsed' => '1',
-      'hidden' => '1',
+      'collapsed' => 1,
+      'hidden' => 1,
     ),
     'options' => array(
       'region' => 'right',
-      'weight' => '6',
-      'has_required' => '',
+      'weight' => '7',
+      'has_required' => FALSE,
       'title' => 'Publishing options',
-      'collapsed' => '1',
-      'hidden' => '1',
+      'collapsed' => 1,
+      'hidden' => 1,
     ),
     'author' => array(
       'region' => 'right',
-      'weight' => '4',
-      'has_required' => '',
+      'weight' => '5',
+      'has_required' => FALSE,
       'title' => 'Authoring information',
-      'collapsed' => '1',
-      'hidden' => '1',
+      'collapsed' => 1,
+      'hidden' => 1,
     ),
     'buttons' => array(
       'region' => 'main',
       'weight' => '7',
-      'has_required' => '',
-      'title' => '',
-      'hidden' => '0',
+      'has_required' => FALSE,
+      'title' => NULL,
+      'hidden' => 0,
     ),
     'book' => array(
       'region' => 'right',
-      'weight' => '0',
-      'has_required' => '',
+      'weight' => '1',
+      'has_required' => FALSE,
       'title' => 'Book outline',
-      'collapsed' => '1',
-      'hidden' => '1',
+      'collapsed' => 1,
+      'hidden' => 1,
     ),
     'og_nodeapi' => array(
-      'region' => 'main',
-      'weight' => '6',
-      'has_required' => '',
+      'region' => 'right',
+      'weight' => '0',
+      'has_required' => FALSE,
       'title' => 'Course Versions',
-      'collapsed' => '1',
-      'hidden' => '0',
+      'collapsed' => 1,
+      'hidden' => 1,
     ),
     'print' => array(
       'region' => 'right',
-      'weight' => '2',
-      'has_required' => '',
+      'weight' => '3',
+      'has_required' => FALSE,
       'title' => 'Printer, e-mail and PDF versions',
-      'collapsed' => '1',
-      'hidden' => '1',
+      'collapsed' => 1,
+      'hidden' => 1,
     ),
     'custom_breadcrumbs' => array(
       'region' => 'right',
-      'weight' => '1',
-      'has_required' => '',
-      'title' => '',
-      'hidden' => '1',
-    ),
-    'attachments' => array(
-      'region' => 'main',
-      'weight' => '4',
-      'has_required' => '',
-      'title' => 'File attachments',
-      'collapsed' => '1',
-      'hidden' => '0',
-    ),
-    'contentanalysis' => array(
-      'region' => 'main',
-      'weight' => '0',
-      'has_required' => '',
-      'title' => 'Content analysis',
-      'collapsed' => '1',
-      'hidden' => '0',
-    ),
-    'vertical_tab_default' => array(
-      'region' => 'main',
-      'weight' => '1',
-      'has_required' => '',
-      'title' => 'Content',
-      'hidden' => '0',
+      'weight' => '2',
+      'has_required' => FALSE,
+      'title' => NULL,
+      'hidden' => 1,
     ),
   );
   $export['nodeformscols_field_placements_page_default'] = $strongarm;
+
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'nodeformscols_field_placements_elms_resource_default';
+  $strongarm->value = array(
+    'title' => array(
+      'region' => 'main',
+      'weight' => '-5',
+      'has_required' => TRUE,
+      'title' => 'Title',
+    ),
+    'body_field' => array(
+      'region' => 'main',
+      'weight' => '0.008',
+      'has_required' => FALSE,
+      'title' => NULL,
+      'hidden' => 0,
+    ),
+    'menu' => array(
+      'region' => 'right',
+      'weight' => '0',
+      'has_required' => FALSE,
+      'title' => 'Menu settings',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'revision_information' => array(
+      'region' => 'right',
+      'weight' => '4',
+      'has_required' => FALSE,
+      'title' => 'Revision information',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'path' => array(
+      'region' => 'right',
+      'weight' => '6',
+      'has_required' => FALSE,
+      'title' => 'URL path settings',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'options' => array(
+      'region' => 'right',
+      'weight' => '5',
+      'has_required' => FALSE,
+      'title' => 'Publishing options',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'author' => array(
+      'region' => 'right',
+      'weight' => '3',
+      'has_required' => FALSE,
+      'title' => 'Authoring information',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'buttons' => array(
+      'region' => 'main',
+      'weight' => '100',
+      'has_required' => FALSE,
+      'title' => NULL,
+      'hidden' => 0,
+    ),
+    'book' => array(
+      'region' => 'right',
+      'weight' => '2',
+      'has_required' => FALSE,
+      'title' => 'Book outline',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'field_cr_logo' => array(
+      'region' => 'main',
+      'weight' => '-4',
+      'has_required' => FALSE,
+      'title' => 'Logo',
+      'hidden' => 0,
+    ),
+    'field_resource_link' => array(
+      'region' => 'main',
+      'weight' => '-3',
+      'has_required' => TRUE,
+      'title' => 'Link to Resource',
+    ),
+    'field_short_description' => array(
+      'region' => 'main',
+      'weight' => '-2',
+      'has_required' => TRUE,
+      'title' => 'Short Description',
+    ),
+    'print' => array(
+      'region' => 'right',
+      'weight' => '1',
+      'has_required' => FALSE,
+      'title' => 'Printer, e-mail and PDF versions',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+  );
+  $export['nodeformscols_field_placements_elms_resource_default'] = $strongarm;
 
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -3129,19 +3200,22 @@ news',
         'unchecked' => TRUE,
       ),
     ),
-    11 => array(
-      'delete' => array(
-        'unchecked' => TRUE,
-      ),
-      'duplicate' => array(
-        'unchecked' => TRUE,
-      ),
-      'change_type' => array(
-        'unchecked' => TRUE,
-      ),
-    ),
   );
   $export['outline_designer_context_menu_exclusion_matrix'] = $strongarm;
+
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'outline_designer_accessibility_guideline_icon';
+  $strongarm->value = '';
+  $export['outline_designer_accessibility_guideline_icon'] = $strongarm;
+
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'outline_designer_accessibility_test_icon';
+  $strongarm->value = '';
+  $export['outline_designer_accessibility_test_icon'] = $strongarm;
 
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -3919,7 +3993,7 @@ news',
     'toggle_comment_user_picture' => 0,
     'toggle_primary_links' => 0,
     'toggle_secondary_links' => 0,
-    'toggle_node_info_poll' => 1,
+    'toggle_node_info_poll' => 0,
     'toggle_node_info_accessibility_guideline' => 0,
     'toggle_node_info_accessibility_test' => 0,
     'toggle_node_info_folder' => 0,
@@ -3927,14 +4001,14 @@ news',
     'toggle_node_info_page' => 0,
     'toggle_node_info_referenced_page' => 0,
     'toggle_node_info_parent' => 0,
-    'toggle_node_info_place' => 1,
-    'toggle_node_info_reaction' => 1,
-    'toggle_node_info_content_links' => 1,
-    'toggle_node_info_elms_resource' => 1,
-    'toggle_node_info_term' => 1,
-    'toggle_node_info_timeline_item' => 1,
+    'toggle_node_info_place' => 0,
+    'toggle_node_info_reaction' => 0,
+    'toggle_node_info_content_links' => 0,
+    'toggle_node_info_elms_resource' => 0,
+    'toggle_node_info_term' => 0,
+    'toggle_node_info_timeline_item' => 0,
+    'toggle_node_info_elms_event' => 1,
     'toggle_node_info_site' => 0,
-    'toggle_node_info_parent_resource' => 0,
     'logo_upload' => '',
     'favicon_upload' => '',
   );
@@ -4470,6 +4544,592 @@ news',
     'posts_by_term' => TRUE,
   );
   $export['views_defaults'] = $strongarm;
+
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'nodeformscols_field_placements_poll_default';
+  $strongarm->value = array(
+    'title' => array(
+      'region' => 'main',
+      'weight' => '-5',
+      'has_required' => TRUE,
+      'title' => 'Question',
+    ),
+    'menu' => array(
+      'region' => 'right',
+      'weight' => '0',
+      'has_required' => FALSE,
+      'title' => 'Menu settings',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'revision_information' => array(
+      'region' => 'right',
+      'weight' => '5',
+      'has_required' => FALSE,
+      'title' => 'Revision information',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'path' => array(
+      'region' => 'right',
+      'weight' => '7',
+      'has_required' => FALSE,
+      'title' => 'URL path settings',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'options' => array(
+      'region' => 'right',
+      'weight' => '6',
+      'has_required' => FALSE,
+      'title' => 'Publishing options',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'author' => array(
+      'region' => 'right',
+      'weight' => '4',
+      'has_required' => FALSE,
+      'title' => 'Authoring information',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'buttons' => array(
+      'region' => 'main',
+      'weight' => '100',
+      'has_required' => FALSE,
+      'title' => NULL,
+      'hidden' => 0,
+    ),
+    'choice_wrapper' => array(
+      'region' => 'main',
+      'weight' => '-4',
+      'has_required' => FALSE,
+      'title' => NULL,
+      'hidden' => 0,
+    ),
+    'settings' => array(
+      'region' => 'main',
+      'weight' => '-3',
+      'has_required' => FALSE,
+      'title' => 'Poll settings',
+      'collapsed' => 0,
+      'hidden' => 0,
+    ),
+    'book' => array(
+      'region' => 'right',
+      'weight' => '2',
+      'has_required' => FALSE,
+      'title' => 'Book outline',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'field_poll_content_ref' => array(
+      'region' => 'main',
+      'weight' => '-3',
+      'has_required' => FALSE,
+      'title' => 'Referenced Content',
+      'hidden' => 0,
+    ),
+    'og_nodeapi' => array(
+      'region' => 'right',
+      'weight' => '3',
+      'has_required' => FALSE,
+      'title' => 'Course Versions',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'print' => array(
+      'region' => 'right',
+      'weight' => '1',
+      'has_required' => FALSE,
+      'title' => 'Printer, e-mail and PDF versions',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+  );
+  $export['nodeformscols_field_placements_poll_default'] = $strongarm;
+
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'nodeformscols_field_placements_place_default';
+  $strongarm->value = array(
+    'title' => array(
+      'region' => 'main',
+      'weight' => '-5',
+      'has_required' => TRUE,
+      'title' => 'Title',
+    ),
+    'body_field' => array(
+      'region' => 'main',
+      'weight' => '0.008',
+      'has_required' => FALSE,
+      'title' => NULL,
+      'hidden' => 0,
+    ),
+    'menu' => array(
+      'region' => 'right',
+      'weight' => '0',
+      'has_required' => FALSE,
+      'title' => 'Menu settings',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'revision_information' => array(
+      'region' => 'right',
+      'weight' => '5',
+      'has_required' => FALSE,
+      'title' => 'Revision information',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'path' => array(
+      'region' => 'right',
+      'weight' => '7',
+      'has_required' => FALSE,
+      'title' => 'URL path settings',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'options' => array(
+      'region' => 'right',
+      'weight' => '6',
+      'has_required' => FALSE,
+      'title' => 'Publishing options',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'author' => array(
+      'region' => 'right',
+      'weight' => '1',
+      'has_required' => FALSE,
+      'title' => 'Authoring information',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'buttons' => array(
+      'region' => 'main',
+      'weight' => '100',
+      'has_required' => FALSE,
+      'title' => NULL,
+      'hidden' => 0,
+    ),
+    'book' => array(
+      'region' => 'right',
+      'weight' => '4',
+      'has_required' => FALSE,
+      'title' => 'Book outline',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'field_location_content_ref' => array(
+      'region' => 'main',
+      'weight' => '-4',
+      'has_required' => FALSE,
+      'title' => 'Content Reference',
+      'hidden' => 0,
+    ),
+    'og_nodeapi' => array(
+      'region' => 'right',
+      'weight' => '2',
+      'has_required' => FALSE,
+      'title' => 'Course Versions',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'print' => array(
+      'region' => 'right',
+      'weight' => '3',
+      'has_required' => FALSE,
+      'title' => 'Printer, e-mail and PDF versions',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+  );
+  $export['nodeformscols_field_placements_place_default'] = $strongarm;
+
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'nodeformscols_field_placements_elms_event_default';
+  $strongarm->value = array(
+    'title' => array(
+      'region' => 'main',
+      'weight' => '-5',
+      'has_required' => TRUE,
+      'title' => 'Title',
+    ),
+    'menu' => array(
+      'region' => 'right',
+      'weight' => '0',
+      'has_required' => FALSE,
+      'title' => 'Menu settings',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'revision_information' => array(
+      'region' => 'right',
+      'weight' => '5',
+      'has_required' => FALSE,
+      'title' => 'Revision information',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'path' => array(
+      'region' => 'right',
+      'weight' => '7',
+      'has_required' => FALSE,
+      'title' => 'URL path settings',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'options' => array(
+      'region' => 'right',
+      'weight' => '6',
+      'has_required' => FALSE,
+      'title' => 'Publishing options',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'author' => array(
+      'region' => 'right',
+      'weight' => '3',
+      'has_required' => FALSE,
+      'title' => 'Authoring information',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'buttons' => array(
+      'region' => 'main',
+      'weight' => '100',
+      'has_required' => FALSE,
+      'title' => NULL,
+      'hidden' => 0,
+    ),
+    'book' => array(
+      'region' => 'right',
+      'weight' => '4',
+      'has_required' => FALSE,
+      'title' => 'Book outline',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'field_event_name' => array(
+      'region' => 'main',
+      'weight' => '-4',
+      'has_required' => FALSE,
+      'title' => 'Name',
+      'hidden' => 0,
+    ),
+    'field_detail_text' => array(
+      'region' => 'main',
+      'weight' => '-3',
+      'has_required' => FALSE,
+      'title' => 'Details',
+      'hidden' => 0,
+    ),
+    'field_event_type' => array(
+      'region' => 'main',
+      'weight' => '-2',
+      'has_required' => FALSE,
+      'title' => 'Type',
+      'hidden' => 0,
+    ),
+    'og_nodeapi' => array(
+      'region' => 'right',
+      'weight' => '2',
+      'has_required' => FALSE,
+      'title' => 'Course Versions',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'print' => array(
+      'region' => 'right',
+      'weight' => '1',
+      'has_required' => FALSE,
+      'title' => 'Printer, e-mail and PDF versions',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'group_dates' => array(
+      'region' => 'main',
+      'weight' => '0',
+      'has_required' => FALSE,
+      'title' => 'Dates',
+      'collapsed' => 0,
+      'hidden' => 0,
+    ),
+    'group_additional_settings' => array(
+      'region' => 'main',
+      'weight' => '1',
+      'has_required' => FALSE,
+      'title' => 'Additional Settings',
+      'collapsed' => 0,
+      'hidden' => 0,
+    ),
+  );
+  $export['nodeformscols_field_placements_elms_event_default'] = $strongarm;
+
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'nodeformscols_field_placements_timeline_item_default';
+  $strongarm->value = array(
+    'title' => array(
+      'region' => 'main',
+      'weight' => '0',
+      'has_required' => TRUE,
+      'title' => 'Title',
+    ),
+    'body_field' => array(
+      'region' => 'main',
+      'weight' => '3',
+      'has_required' => FALSE,
+      'title' => NULL,
+      'hidden' => 0,
+    ),
+    'menu' => array(
+      'region' => 'right',
+      'weight' => '2',
+      'has_required' => FALSE,
+      'title' => 'Menu settings',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'revision_information' => array(
+      'region' => 'right',
+      'weight' => '5',
+      'has_required' => FALSE,
+      'title' => 'Revision information',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'path' => array(
+      'region' => 'right',
+      'weight' => '7',
+      'has_required' => FALSE,
+      'title' => 'URL path settings',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'options' => array(
+      'region' => 'right',
+      'weight' => '6',
+      'has_required' => FALSE,
+      'title' => 'Publishing options',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'author' => array(
+      'region' => 'right',
+      'weight' => '4',
+      'has_required' => FALSE,
+      'title' => 'Authoring information',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'buttons' => array(
+      'region' => 'main',
+      'weight' => '4',
+      'has_required' => FALSE,
+      'title' => NULL,
+      'hidden' => 0,
+    ),
+    'book' => array(
+      'region' => 'right',
+      'weight' => '1',
+      'has_required' => FALSE,
+      'title' => 'Book outline',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'field_timeline_content_ref' => array(
+      'region' => 'main',
+      'weight' => '2',
+      'has_required' => FALSE,
+      'title' => 'Content Reference',
+      'hidden' => 0,
+    ),
+    'field_time' => array(
+      'region' => 'main',
+      'weight' => '1',
+      'has_required' => TRUE,
+      'title' => 'Time',
+    ),
+    'og_nodeapi' => array(
+      'region' => 'right',
+      'weight' => '0',
+      'has_required' => FALSE,
+      'title' => 'Course Versions',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'print' => array(
+      'region' => 'right',
+      'weight' => '3',
+      'has_required' => FALSE,
+      'title' => 'Printer, e-mail and PDF versions',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+  );
+  $export['nodeformscols_field_placements_timeline_item_default'] = $strongarm;
+
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'nodeformscols_field_placements_reaction_default';
+  $strongarm->value = array(
+    'title' => array(
+      'region' => 'main',
+      'weight' => '0',
+      'has_required' => TRUE,
+      'title' => 'Title',
+    ),
+    'body_field' => array(
+      'region' => 'main',
+      'weight' => '4',
+      'has_required' => FALSE,
+      'title' => NULL,
+      'hidden' => 0,
+    ),
+    'menu' => array(
+      'region' => 'right',
+      'weight' => '0',
+      'has_required' => FALSE,
+      'title' => 'Menu settings',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'revision_information' => array(
+      'region' => 'right',
+      'weight' => '5',
+      'has_required' => FALSE,
+      'title' => 'Revision information',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'path' => array(
+      'region' => 'right',
+      'weight' => '7',
+      'has_required' => FALSE,
+      'title' => 'URL path settings',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'options' => array(
+      'region' => 'right',
+      'weight' => '6',
+      'has_required' => FALSE,
+      'title' => 'Publishing options',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'author' => array(
+      'region' => 'right',
+      'weight' => '4',
+      'has_required' => FALSE,
+      'title' => 'Authoring information',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'buttons' => array(
+      'region' => 'main',
+      'weight' => '5',
+      'has_required' => FALSE,
+      'title' => NULL,
+      'hidden' => 0,
+    ),
+    'book' => array(
+      'region' => 'right',
+      'weight' => '2',
+      'has_required' => FALSE,
+      'title' => 'Book outline',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'field_related_content' => array(
+      'region' => 'main',
+      'weight' => '1',
+      'has_required' => TRUE,
+      'title' => 'Related Content',
+    ),
+    'field_related_reaction' => array(
+      'region' => 'main',
+      'weight' => '2',
+      'has_required' => FALSE,
+      'title' => 'Related Reaction',
+      'hidden' => 1,
+    ),
+    'field_reaction_feeling' => array(
+      'region' => 'main',
+      'weight' => '3',
+      'has_required' => TRUE,
+      'title' => 'Reaction Feeling',
+    ),
+    'og_nodeapi' => array(
+      'region' => 'right',
+      'weight' => '1',
+      'has_required' => FALSE,
+      'title' => 'Course Versions',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+    'print' => array(
+      'region' => 'right',
+      'weight' => '3',
+      'has_required' => FALSE,
+      'title' => 'Printer, e-mail and PDF versions',
+      'collapsed' => 1,
+      'hidden' => 1,
+    ),
+  );
+  $export['nodeformscols_field_placements_reaction_default'] = $strongarm;
+
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'outline_designer_poll_icon';
+  $strongarm->value = 'profiles/elms/modules/contrib/outline_designer/images/additional_icons/node.png';
+  $export['outline_designer_poll_icon'] = $strongarm;
+
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'outline_designer_place_icon';
+  $strongarm->value = '';
+  $export['outline_designer_place_icon'] = $strongarm;
+
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'outline_designer_reaction_icon';
+  $strongarm->value = '';
+  $export['outline_designer_reaction_icon'] = $strongarm;
+
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'outline_designer_elms_resource_icon';
+  $strongarm->value = '';
+  $export['outline_designer_elms_resource_icon'] = $strongarm;
+
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'outline_designer_timeline_item_icon';
+  $strongarm->value = '';
+  $export['outline_designer_timeline_item_icon'] = $strongarm;
+
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'outline_designer_elms_event_icon';
+  $strongarm->value = '';
+  $export['outline_designer_elms_event_icon'] = $strongarm;
 
   return $export;
 }

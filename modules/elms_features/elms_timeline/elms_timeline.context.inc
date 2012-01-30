@@ -13,9 +13,12 @@ function elms_timeline_context_default_contexts() {
   $context->description = 'Right hand menu integration with Timelines';
   $context->tag = 'ELMS Timeline';
   $context->conditions = array(
-    'sitewide' => array(
+    'context_og_condition_group_type' => array(
       'values' => array(
-        1 => 1,
+        'site' => 'site',
+      ),
+      'options' => array(
+        'node_form' => 1,
       ),
     ),
   );
@@ -26,12 +29,12 @@ function elms_timeline_context_default_contexts() {
           'module' => 'views',
           'delta' => 'elms_timeline_list-block_1',
           'region' => 'regions_elms_navigation_right',
-          'weight' => 0,
+          'weight' => '2',
         ),
       ),
     ),
   );
-  $context->condition_mode = 0;
+  $context->condition_mode = 1;
 
   // Translatables
   // Included for use with string extractors like potx.

@@ -53,7 +53,6 @@ function _elms_navigation_right_render_region($block_html, $block) {
   //build a unique key for this block for theming
   static $count = 0;
   $count++;
-	dpm($block);
   $key = $block->module .'_'. $block->delta;
   $output .= '<div class="regions_block regions_'. $count .'" id="regions_block_'. $key .'"><div class="regions_block_title">';
   $output .= '<a id="'. $block->delta .'_tab" name="'. $block->module .'_tab">'. $block->subject .'</a>';

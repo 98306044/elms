@@ -26,7 +26,7 @@ function elms_reference_links_context_default_contexts() {
           'module' => 'views',
           'delta' => 'elms_related_links_list-block_1',
           'region' => 'regions_elms_navigation_right',
-          'weight' => NULL,
+          'weight' => '5',
         ),
       ),
     ),

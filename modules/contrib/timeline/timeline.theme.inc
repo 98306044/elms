@@ -36,7 +36,7 @@ function template_preprocess_views_view_timeline(&$vars) {
  * This functions prints a warning when no data is available.
  */
 function theme_timeline_nodata() {
- // drupal_set_message(t('There is no data available to show on the timeline'), 'warning');
+  drupal_set_message(t('There is no data available to show on the timeline'), 'warning');
 }
 
 /**

@@ -156,7 +156,7 @@ function timeline_validate_library() {
       '/timeline_ajax/scripts/signal.js',
     );
     // check if library is available 'sites/all/libraries/simile_timeline'
-    if (is_dir($timeline_path)) {
+    if (file_check_directory($timeline_path)) {
       $messages = '';
       foreach ($timeline_library_files as $file) {
         $file = $timeline_path . $file;

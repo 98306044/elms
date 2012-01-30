@@ -1,3 +1,11 @@
 <?php
 
 include_once('elms_timeline.features.inc');
+
+/**
+ * Implementation of hook_views_plugins_alter().
+ */
+function elms_timeline_views_plugins_alter(&$plugins) {
+  // Prevent the timeline module from displaying when empty
+	$plugins['style']['timeline']['even empty'] = FALSE;
+}
