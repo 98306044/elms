@@ -2,6 +2,11 @@ name = Outline Designer
 description = Usability improvements to the core-optional Book module that allows the rapid building of content outlines.
 dependencies[] = book
 package = Outline Designer
-core = "6.x"
-version = "6.x-1.4"
 project = "outline_designer"
+
+; Information added by drupal.org packaging script on 2012-01-29
+version = "6.x-1.x-dev"
+core = "6.x"
+project = "outline_designer"
+datestamp = "1327840554"
+
