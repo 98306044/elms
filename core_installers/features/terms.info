@@ -1,0 +1,4 @@
+name = "ELMS Terms"
+description = "Enable term functionality"
+type = "features"
+dependencies[] = "elms_terms"

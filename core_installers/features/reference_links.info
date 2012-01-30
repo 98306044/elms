@@ -1,0 +1,4 @@
+name = "ELMS Reference Links"
+description = "Enable reference links functionality"
+type = "features"
+dependencies[] = "elms_reference_links"
