@@ -36,17 +36,9 @@ function elms_id_best_practices_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'elms_id_best_practices.pages.inc',
   );
-  $items['features/id_best_practices'] = array(
-    'title' => 'ID Best Practices',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('elms_id_best_practices_settings'),
-    'access callback' => '_elms_content_access_check',
-    'access arguments' => array(),
-    'type' => MENU_LOCAL_TASK,
-    'file' => 'elms_id_best_practices.pages.inc',
-  );
   $items['admin/elms/id_best_practices'] = array(
     'title' => 'ID Best Practices',
+		'description' => 'Default settings related to instructional best practices',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('elms_id_best_practices_settings'),
     'access arguments' => array('administer site configuration'),
