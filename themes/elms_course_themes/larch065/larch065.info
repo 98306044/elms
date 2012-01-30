@@ -1,0 +1,9 @@
+; $Id: larch065.info,v 1.4 2008/10/28 05:50:58 btopro Exp $
+name = Larch 065
+description = Landscape Architecture 65 Theme
+version = 6.x-1.0
+core = 6.x
+engine = phptemplate
+
+stylesheets[all][] = css/style.css
+stylesheets[all][] = css/accessibility.css

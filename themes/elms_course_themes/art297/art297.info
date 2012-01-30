@@ -1,0 +1,18 @@
+; $Id: art297.info,v 1.0 2009/12/07 05:50:58 btopro Exp $
+name = "Art 297"
+description = "Theme for Art 297"
+version = 6.x-1.0
+;block regions
+regions[content_top]     = "Content top"
+regions[content]         = "Content"
+regions[content_bottom]  = "Content bottom"
+regions[left]            = "Sidebar left"
+regions[right]           = "Sidebar right"
+regions[footer]          = "Footer"
+
+;styles
+stylesheets[all][] = css/style.css
+stylesheets[all][] = css/accessibility.css
+
+core = 6.x
+engine = phptemplate

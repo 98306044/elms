@@ -1,0 +1,16 @@
+name = eLearning Urban
+description = Urban Theme for eLearning
+core = 6.x
+engine = phptemplate
+
+regions[header] = Main Navigation
+regions[content_top] = Sub Navigation
+regions[left] = Extra Blocks
+regions[content] = Content
+regions[right] = Image Gallery
+
+stylesheets[all][] = css/style.css
+stylesheets[all][] = css/accessibility.css
+stylesheets[all][] = css/theme_override.css
+
+scripts[] = js/gallery_region.js

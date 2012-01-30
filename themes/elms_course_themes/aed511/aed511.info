@@ -1,5 +1,5 @@
 ; $Id: aed511.info,v 1.4 2008/10/28 05:50:58 btopro Exp $
-name = AED511
+name = AED 511
 description = Art Education 511 Theme
 version = 6.x-1.0
 core = 6.x

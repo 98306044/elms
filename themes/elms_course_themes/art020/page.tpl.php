@@ -70,7 +70,6 @@
 			<!-- start main content -->
       		<a name="main-content"></a>
 			<?php print $content; ?>
-            <?php print $images; ?>
       		<?php print $feed_icons; ?>
 
             </div>
