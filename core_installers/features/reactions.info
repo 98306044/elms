@@ -1,4 +1,4 @@
-name = "ELMS Reactions"
+name = "ELMS Reaction"
 description = "Enable commenting functionality"
 type = "features"
-dependencies[] = "elms_reactions"
+dependencies[] = "elms_reaction"

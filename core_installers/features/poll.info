@@ -1,4 +1,4 @@
-name = "ELMS Poll"
+name = "ELMS Polls"
 description = "Enable the Poll feature"
 type = "features"
-dependencies[] = "elms_poll"
+dependencies[] = "elms_polls"
