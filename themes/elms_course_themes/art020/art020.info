@@ -1,0 +1,20 @@
+; $Id: art020_ao.info,v 1.0 2009/12/07 05:50:58 btopro Exp $
+name = art020_ao
+description = Theme for Art 020
+version = 6.x-1.0
+core = 6.x
+engine = phptemplate
+
+regions[left] = Left sidebar
+regions[right] = Right sidebar
+regions[content] = Content
+regions[header] = Header
+regions[footer] = Footer
+regions[images] = Image Illustrations
+
+stylesheets[all][] = css/style.css
+stylesheets[all][] = css/accessibility.css
+
+scripts[] = js/script.js
+scripts[] = js/jquery.accordion.pack.js
+scripts[] = js/jquery.easing.js

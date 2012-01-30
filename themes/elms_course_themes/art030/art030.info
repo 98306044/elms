@@ -1,0 +1,23 @@
+; $Id: art020_ao.info,v 1.0 2009/12/07 05:50:58 btopro Exp $
+name = art030
+description = Theme for Art 30 ao
+version = 6.x-1.0
+core = 6.x
+engine = phptemplate
+
+;block regions
+regions[image_gallery]       = Image Gallery
+regions[superfish]       = Superfish menu
+regions[content_top]     = Content top
+regions[content]         = Content
+regions[content_bottom]  = Content bottom
+regions[left]            = Sidebar left
+regions[right]           = Sidebar right
+regions[footer]          = footer
+
+;styles
+stylesheets[all][] = css/style.css
+stylesheets[all][] = css/accessibility.css
+stylesheets[all][] = superfish/css/superfish.css
+stylesheets[all][] = css/nav_horizontal.css
+
