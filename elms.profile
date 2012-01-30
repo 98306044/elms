@@ -292,7 +292,10 @@ function elms_profile_tasks(&$task, $url) {
 		  $batch['operations'][] = array('_elms_installer_configure_revert', array($feature));
 		}
 		$batch['operations'][] = array('_elms_installer_configure_clear_cache', array());
-		$batch['operations'][] = array('_elms_installer_configure_run_cron', array());
+		//check to see if we were asked to run cron
+		if (variable_get('install-run_cron', 0)) {
+		  $batch['operations'][] = array('_elms_installer_configure_run_cron', array());
+		}
     $batch['finished'] = '_elms_installer_configure_finished';
     variable_set('install_task', 'elms-install-configure-batch');
     batch_set($batch);
@@ -681,6 +684,7 @@ function elms_install_configure_form_submit(&$form, &$form_state) {
 	$add_ons = array_merge($form_state['values']['add_ons'], $form_state['values']['features']);
 	variable_set('install-add-ons', $add_ons);
 	variable_set('install-accessibility-guideline', $form_state['values']['guideline']);
+	variable_set('install-run_cron', $form_state['values']['run_cron']);
 }
 
 // Create required directories, taken from Commons
