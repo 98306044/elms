@@ -9,3 +9,10 @@ project status url = "http://drupal.psu.edu/fserver"
 dependencies[] = og
 dependencies[] = spaces
 dependencies[] = spaces_og
+
+; Information added by drupal.org packaging script on 2011-12-14
+version = "6.x-1.x-dev"
+core = "6.x"
+project = "spaces_og_clone"
+datestamp = "1323823726"
+
