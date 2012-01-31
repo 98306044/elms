@@ -138,7 +138,7 @@ function _workflow_purl_get_purl($node) {
 /*
  * Implementation of hook_exit().
  */
-function workflow_exit($destination = NULL) {
+function workflow_purl_exit($destination = NULL) {
   //test for the workflow purl redirect flag
   if ($GLOBALS['workflow_purl_redirect_required']) {
     //flag is only triggered on node form so this should be in the clear to load
