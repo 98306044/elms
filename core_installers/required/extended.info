@@ -65,7 +65,6 @@ dependencies[] = "extlink"
 dependencies[] = "vertical_tabs"
 dependencies[] = "nodeformcols"
 ; CCK
-dependencies[] = "content_permissions"
 dependencies[] = "nodereference"
 dependencies[] = "number"
 dependencies[] = "optionwidgets"
