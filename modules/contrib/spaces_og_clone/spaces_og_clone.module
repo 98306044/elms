@@ -117,10 +117,12 @@ function spaces_og_clone_include_files() {
     $modules = array(
       'book',
       'boxes',
+      'content',
       'features',
+      'node',
+      'nodereference',
       'spaces_og',
       'user',
-      'nodereference',
     );
     foreach ($modules as $module) {
       if (module_exists($module)) {

@@ -360,3 +360,35 @@ function _spaces_og_clone_second_pass($nids, &$sandbox) {
     spaces_set_space(FALSE);
   }
 }
+
+/**
+ * Processes a string, replacing old links with new.
+ *
+ * @param $text
+ *   A string of text that may contain links to other content.
+ * @param $map
+ *   A map of NIDs from old NIDs to new NIDs.
+ *
+ * @return
+ *   The processed string.
+ * @see node_spaces_og_clone_node_cleanup.
+ */
+function spaces_og_clone_replace_links($text, $map) {
+  static $maps = array();
+  $key = implode('+', $map);
+  if (!isset($maps[$key])) {
+    $replacements = array(
+      'original' => array(),
+      'replacements' => array(),
+    );
+    foreach ($map as $old_nid => $new_nid) {
+      $replacements['original'][] = 'node/' . $old_nid;
+      $replacements['replacements'][] = 'node/' . $new_nid;
+      $replacements['original'][] = url('node/' . $old_nid);
+      $replacements['replacements'][] = url('node/' . $new_nid);
+    }
+    $maps[$key] = $replacements;
+  }
+
+  return str_replace($maps[$key]['original'], $maps[$key]['replacements'], $text);
+}
