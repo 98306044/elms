@@ -17,6 +17,7 @@ function _elms_content_root() {
       drupal_goto('node/'. $group->book_nid);
     }
   }
-  //if it didn't find anything do nothing cause something went wrong
+  //if it didn't find anything go to the course node
+	drupal_goto('node/'. $group->nid);
   return 1;
 }
