@@ -19,7 +19,6 @@ function elms_site_form_alter(&$form, &$form_state, $form_id) {
       if (variable_get('elms_helper_default_theme', 'chamfer') != variable_get('theme_default', '')) {
       $form['themes']['theme']['#default_value'] = variable_get('elms_helper_default_theme', 'chamfer');
       }
-      
       //auto populate the descriptive field if it isn't set
       if ($form['og_description']['#value'] == '') {
         $nid = arg(3);
@@ -46,6 +45,18 @@ function elms_site_form_alter(&$form, &$form_state, $form_id) {
         unset($form['themes'][$key]);
         unset($form['themes']['theme']['#options'][$key]);
       }
+    }
+    //account for space cloning
+    if (arg(0) == 'spaces_og_clone') {
+      //set a random value initially to work with workflow_purl
+      $form['purl']['value']['#default_value'] = '_tmp_'. rand(1, 1000);
+      //account for space_og submit and kill it
+      foreach ($form['buttons']['submit']['#submit'] as $key => $val) {
+        if ($val == 'spaces_og_form_group_submit') {
+          unset($form['buttons']['submit']['#submit'][$key]);
+        }
+      }
+      $form['buttons']['submit']['#submit'] = array_values($form['buttons']['submit']['#submit']);
     }
   }
 }
@@ -101,8 +112,8 @@ function elms_site_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
       if (!isset($node->default_version) && !isset($node->spaces_og_clone)) {
         _elms_content_create_root($node, $node->field_instructional_template[0]['value']);
       }
-      }
     }
+  }
   break;
   case 'update':
     if (og_is_group_type($node->type)) {
