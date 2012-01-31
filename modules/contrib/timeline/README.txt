@@ -1,4 +1,3 @@
-// $Id: README.txt,v 1.7.2.1.2.4 2009/11/10 16:22:23 xamanu Exp $
 
 DESCRIPTION
 -----------
@@ -14,23 +13,20 @@ This module is a style plugin for the Views module that represents date
 information of nodes on horizontal timeline display.
 - http://drupal.org/project/views
 
+The SIMILE Timeline (and Ajax) libraries have to be downloaded and placed into 
+your (local) Drupal installation using the libraries module. 
+- http://drupal.org/project/libraries (See INSTALL.txt for more information).
+
 The timeline provides support for the Date module. CCK date fields can be used
 to display all kinds of information on the timeline.
 - http://drupal.org/project/cck
 - http://drupal.org/project/date
-
-The SIMILE Timeline (and Ajax) libraries can be used from the SIMILE server 
-or can be downloaded and installed into your (local) Drupal installation using 
-the libraries module. (See INSTALL.txt for more information). By default, the 
-SIMILE Timeline (and Ajax) libraries can be used from the SIMILE server.
-- http://drupal.org/project/libraries
 
 Further the module optionally can make use of the Imagefield, Imagecache, and 
 Taxonomy Image modules for icons on the events.
 - http://drupal.org/project/imagefield
 - http://drupal.org/project/imagecache
 - http://drupal.org/project/taxonomy_image
-
 
 A view is provided by default to get you started quickly: 
 * timeline_nodes: plots any nodes by their created date
@@ -79,7 +75,7 @@ After installing the module, do the following to create a new timeline view:
 
 CREDITS
 ---------------
-Version 2.x 
+Version 2.x and 3.x
 Largely rewritten and maintained by Felix Delattre [1]
 
 Version 1.x 
@@ -87,7 +83,8 @@ Originally created by David Donohue [3] and further developed by Arto Bendiken [
 Jeff Miccolis (Development Seed) [2].
 
 
-Both timelines are based on the Timeline developed by the SIMILE project [5]
+All versions of the timeline module are based on the Timeline developed by the 
+SIMILE project [5]
 
 
 [1] Felix Delattre -> xamanu -> http://drupal.org/user/359937

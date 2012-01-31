@@ -1,5 +1,4 @@
 <?php
-// $Id: Timeline.class.inc,v 1.1.2.14 2009/11/10 16:22:23 xamanu Exp $
 
 /**
  * @file
@@ -47,15 +46,13 @@ class Timeline {
     $this->data['controls'] = FALSE; // missing
     $this->data['bands'] = $this->getBands();
     $this->data['summary'] = drupal_strtoupper($view->style_options['bands']['band2_unit']);
+    $this->data['band1_unit_width'] = $view->style_options['bands']['band1_unit_width'];
+    $this->data['band2_unit_width'] = $view->style_options['bands']['band2_unit_width'];
+
     // startsOn ?!? ether.js on line 22 -fd
     //$this->data['timeline_start'] = $this->get_defined_date_field($view->style_options['limit']['start'], $view->style_options['limit']['custom_start']);
     //$this->data['timeline_end'] = $this->get_defined_date_field($view->style_options['limit']['end'], $view->style_options['limit']['custom_end']);
-    if ($view->style_options['display']['appearance']['theme'] == "ClassicTheme") {
-      $this->data['theme'] = "ClassicTheme"; 
-    }
-    else {
-      $this->data['theme'] = drupal_substr(strrchr($view->style_options['display']['appearance']['theme'], '/'), 1);
-    }
+    $this->data['theme'] = $view->style_options['display']['appearance']['theme'];
     $this->data['bubble_max_height'] = $view->style_options['display']['appearance']['bubble_height'];
     $this->data['bubble_width'] = $view->style_options['display']['appearance']['bubble_width'];
   }
@@ -84,12 +81,12 @@ class Timeline {
           $color = $this->getColor();
         }
 
-        foreach ($set as $row) {
+        foreach ($set as $row_key => $row) {
+          $this->view->row_index = $row_key;
           $event = new TimelineEvent($this->view, $row, $this->dateformat, $css_selector, $color);
           if ($event->getData()) {
             $events[] = $event->getData();
           }
-          $this->view->row_index++;
         }
       }
     }
@@ -128,29 +125,52 @@ class Timeline {
     }
     switch ($option) {
       case 'today':
-        return timeline_date_conversion(time(), 'timestamp', 'gregorian');
+        return $this->convertToGregorian(time(), 'timestamp');
       case 'first':
-        return timeline_date_conversion($this->data['events']['events'][0]['start'], 'iso8601', 'gregorian');
+        return $this->convertToGregorian($this->data['events']['events'][0]['start'], 'iso8601');
       case 'last':
-        return timeline_date_conversion($this->data['events']['events'][count($this->data['events']['events']) - 1]['start'], 'iso8601', 'gregorian');
+        return $this->convertToGregorian($this->data['events']['events'][count($this->data['events']['events']) - 1]['start'], 'iso8601');
       case 'middle':
-        $end = timeline_date_conversion($this->data['events']['events'][count($this->data['events']['events']) - 1]['start'], 'iso8601', 'timestamp');
-        $start = timeline_date_conversion($this->data['events']['events'][0]['start'], 'iso8601', 'timestamp');
+        $end = $this->convertToTimestamp($this->data['events']['events'][count($this->data['events']['events']) - 1]['start'], 'iso8601');
+        $start = $this->convertToTimestamp($this->data['events']['events'][0]['start'], 'iso8601');
         $middle = ($start + $end) / 2;
-        return timeline_date_conversion($middle, 'timestamp', 'gregorian');
+        return $this->convertToGregorian($middle, 'timestamp');
       case 'median':
         foreach ($this->data['events']['events'] as $date) {
-          $t[] = timeline_date_conversion($date['start'], 'iso8601', 'timestamp');
+          $t[] = $this->convertToTimestamp($date['start'], 'iso8601');
         }
         sort($t);
-        return timeline_date_conversion($t[round(count($t)/2)], 'timestamp', 'gregorian');
+        return $this->convertToGregorian($t[round(count($t)/2)], 'timestamp');
       case 'custom':
         if ($options_field != '') {
-          return timeline_date_conversion(strtotime($options_field), 'timestamp', 'gregorian');
+          return $this->convertToGregorian(strtotime($options_field), 'timestamp');
         }
     }
     return FALSE;
   }
+
+
+  function convertToGregorian($value, $date_format) {
+    switch ($date_format) {
+      case 'timestamp':
+        return format_date($value + timeline_get_timezone(), 'custom', 'M d Y G:i:s', '0', 'en');
+      case 'iso8601':
+        if (module_exists('date_api') && variable_get('date_api_version', 0) >= 5.2) {
+          return format_date(date_convert($value, DATE_ISO, DATE_UNIX) + timeline_get_timezone(), 'custom', 'M d Y G:i:s', '0', 'en');
+        }
+        else {
+          return format_date(strtotime($value) + timeline_get_timezone(), 'custom', 'M d Y G:i:s', '0', 'en');
+        }
+    }
+  }
+
+  function convertToTimestamp($value, $date_format) {
+    switch ($date_format) {
+      case 'iso8601':
+        return date_convert($date, DATE_ISO, DATE_UNIX) + timeline_get_timezone();
+    }
+  }
+
 
   function getColor() {
     $colors = array(
