@@ -145,7 +145,7 @@ function _spaces_theme_theme_form_validate($form, &$form_state) {
         'file_validate_is_image' => array(),
         'file_validate_size' => array(2000 * 1024),
       );
-      if ($file = file_save_upload('logo_upload', $validators, $dir)) {
+      if ($file = file_save_upload('logo_upload', $validators, $dir, FILE_EXISTS_RENAME)) {
         $form_state['storage']['logo'] = str_replace(' ', '%20', $file->filepath);
       }
     }
@@ -159,7 +159,7 @@ function _spaces_theme_theme_form_validate($form, &$form_state) {
         '_spaces_theme_validate_image_resolution' => array('16x16'),
         'file_validate_size' => array(1000 * 1024),
       );
-      if ($file = file_save_upload('favicon_upload', $validators, $dir)) {
+      if ($file = file_save_upload('favicon_upload', $validators, $dir, FILE_EXISTS_RENAME)) {
         $form_state['storage']['favicon'] = str_replace(' ', '%20', $file->filepath);
       }
     }
@@ -172,7 +172,7 @@ function _spaces_theme_theme_form_validate($form, &$form_state) {
         'file_validate_size' => array(2 * 1024),
         'file_validate_extensions' => array('css'),
       );
-      if ($file = file_save_upload('extra_css_upload', $validators, $dir)) {
+      if ($file = file_save_upload('extra_css_upload', $validators, $dir, FILE_EXISTS_RENAME)) {
         $form_state['storage']['css'] = str_replace(' ', '%20', $file->filepath);
       }
     }
