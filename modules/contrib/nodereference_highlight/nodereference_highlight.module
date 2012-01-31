@@ -1,20 +1,36 @@
 <?php
+
 /**
  * Implementation of hook_init().
  */
 function nodereference_highlight_init() {
   if (arg(0) == 'node' && arg(2) == '') {
-		drupal_add_js(drupal_get_path('module', 'nodereference_highlight') .'/nodereference_highlight.js');
+		drupal_add_js(drupal_get_path('module', 'nodereference_highlight') .'/js/nodereference_highlight.js');
+		drupal_add_css(drupal_get_path('module', 'nodereference_highlight') .'/css/nodereference_highlight.css');
 	}
 }
 
 /**
- * Implementation of hook_form_alter().
+ * Render the highlight list.
  */
-function nodereference_highlight_form_alter(&$form, $form_state, $form_id) {
-  if ($form['#id'] == 'node-form' && (arg(0) .'/'. arg(1) != 'admin/content')) {
-    //TODO: modify the node edit form for nodes that are allowed to have association
-  }
+function _nodereference_highlight_render_items($items) {
+	foreach ($items as $key => $val) {
+    $output .= '<li>'. l('<img src="'. base_path() . $val['icon'] .'" alt="'. $val['display_text'] .'" class="nrhi_icon" />', 'node/add/'. str_replace('_', '-', $key), array('query' => array('destination' => $_GET['q'], 'edit['. $val['ref_field'] .'][nid][nid]' => arg(1), 'edit['. $val['text_field'] .'][0][value]' => ''), 'html' => TRUE)) .'</li>';
+	}
+	return '<div id="nrhi_container"><div class="nrhi_pre"></div><ul class="nrhi_items">'. $output .'</ul><div class="nrhi_post"></div></div>';
+}
+
+/**
+ * Pull together a list of relationships.
+ */
+function nodereference_highlight_get_relationships() {
+	//define all relationships
+	$relationships = module_invoke_all('define_highlight_relationship');
+	//allow other projects to alter relationships
+	drupal_alter('define_highlight_relationship', $relationships);
+	//TODO: figure out who can do what
+	
+	return $relationships;
 }
 
 /**
@@ -29,19 +45,39 @@ function nodereference_highlight_filter($op, $delta = 0, $format = -1, $text = '
       return t('Check content for contextual references');
 
     case 'prepare':
-      $result = db_query("SELECT nid FROM {content_type_poll} WHERE field_poll_content_ref_nid=%d GROUP BY nid", arg(1));
-			while ($val = db_fetch_array($result)) {
-        $node = node_load($val['nid']);
-				$text = str_replace($node->field_poll_text_ref[0]['value'], '[pollref]'. $node->field_poll_text_ref[0]['value'] .'[/pollref]', $text);
+		  //get built definitions
+			$rels = nodereference_highlight_get_relationships();
+			foreach ($rels['elms_content']['highlight_types'] as $key => $highlight_type) {
+			  //convert relationships to query language
+        $result = db_query("SELECT nid FROM {content_type_%s} WHERE %s=%d GROUP BY nid", $key, $highlight_type['ref_field'] .'_nid', arg(1));
+			  while ($val = db_fetch_array($result)) {
+          $node = node_load($val['nid']);
+				  $text = str_replace($node->{$highlight_type['text_field']}[0]['value'], '['. $key .'ref]'. $node->{$highlight_type['text_field']}[0]['value'] .'[/'. $key .'ref]', $text);
+			  }
 			}
       return $text;
 
     case "process":
-      $text = str_replace('[pollref]','<a href="#elms_poll_tab" class="elms_context_tab elms_poll_tab">', $text);
-		  $text = str_replace('[/pollref]','</a>', $text);
+		//get built definitions
+			$rels = nodereference_highlight_get_relationships();
+			foreach ($rels['elms_content']['highlight_types'] as $key => $val) {
+        $text = str_replace('['. $key .'ref]','<a href="#elms_'. $key .'_tab" class="elms_context_tab elms_'. $key .'_tab">', $text);
+		    $text = str_replace('[/'. $key .'ref]','</a>', $text);
+			}
     return $text;
 
     default:
       return $text;
   }
+}
+
+/**
+ * Implementation of hook_footer().
+ */
+function nodereference_highlight_footer() {
+	if (arg(0) == 'node' && arg(2) == '') {
+	  //get all relationships to know what types to add
+	  $rels = nodereference_highlight_get_relationships();
+	  return _nodereference_highlight_render_items($rels['elms_content']['highlight_types']);
+	}
 }

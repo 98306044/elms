@@ -47,3 +47,7 @@ HTML Purifier
 Accessible Content
 -- Fixed glitch where saved settings were not presented
 -- http://drupal.org/node/1006724#comment-5451566
+
+Timeline Library
+-- Fixed glitch where it's searching for history file.
+-- See INSTALL.txt in timeline project

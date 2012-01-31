@@ -3,6 +3,33 @@
 include_once('elms_content.features.inc');
 
 /**
+ * Implementation of hook_define_highlight_relationship
+ */
+function elms_content_define_highlight_relationship() {
+  $relationships['elms_content'] = array(
+	  'type' => array('page'),
+		'name' => t('Associate Content'),
+		'perm' => 'associate content',
+		'highlight_types' => array(
+		  'timeline_item' => array(
+			  'ref_field' => 'field_timeline_content_ref',
+				'text_field' => 'field_timeline_text_ref',
+				'icon' => drupal_get_path('module', 'elms_content') .'/images/node.png',
+				'display_text' => t('Add a Time point'),
+			),
+			'poll' => array(
+			  'ref_field' => 'field_poll_content_ref',
+				'text_field' => 'field_poll_text_ref',
+				'icon' => drupal_get_path('module', 'elms_content') .'/images/poll.png',
+				'display_text' => t('Add a Poll'),
+			),
+		),
+	);
+	//TODO: add relationship that defines note taking
+	return $relationships;
+}
+
+/**
  * Implementation of hook_nodeapi().
  */
 function elms_content_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {

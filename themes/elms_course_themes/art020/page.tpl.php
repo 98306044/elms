@@ -38,7 +38,7 @@
             <div id="middle-top-content">
             	<div id="middle-top-content-navigation">
 					<div id="middle-top-content-navigation-menu"><?php print $header;?></div>
-                    <div id="middle-top-content-navigation-page"><div class="prev-btn"></div><div class="next-btn"></div></div>
+                    
                 </div>
                 <div id="middle-top-content-title"><div id="site-title"><?php print $site_name ?></div><div id="site-sub-title"><?php print $site_slogan ?></div></div>
                 <div id="middle-top-content-header">
