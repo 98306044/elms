@@ -21,42 +21,10 @@ function elms_helper_theme_registry_alter(&$vars) {
 }
 
 /**
- * Implementation of hook_filter().
- */
-function elms_helper_filter($op, $delta = 0, $format = -1, $text = '', $cache_id = 0) {
-  switch ($op) {
-    case 'list':
-      return array(0 => t('Related Nodes'));
-
-    case 'description':
-      return t('Check content for contextual references');
-
-    case 'prepare':
-      $result = db_query("SELECT nid FROM {content_type_poll} WHERE field_poll_content_ref_nid=%d GROUP BY nid", arg(1));
-			while ($val = db_fetch_array($result)) {
-        $node = node_load($val['nid']);
-				$text = str_replace($node->field_poll_text_ref[0]['value'], '[pollref]'. $node->field_poll_text_ref[0]['value'] .'[/pollref]', $text);
-			}
-      return $text;
-
-    case "process":
-      $text = str_replace('[pollref]','<a href="#elms_poll_tab" class="elms_context_tab elms_poll_tab">', $text);
-		  $text = str_replace('[/pollref]','</a>', $text);
-    return $text;
-
-    default:
-      return $text;
-  }
-}
-
-/**
  * Implementation of hook_init().
  */
 function elms_helper_init() {
   global $user;
-	if (arg(0) == 'node' && arg(2) == '') {
-		drupal_add_js(drupal_get_path('module', 'elms_helper') .'/elms_helper.js');
-	}
   if (arg(2) == 'html_export' || arg(2) == 'check_links') {
     drupal_set_message(t('This is still in active development / future planned functionality.'), 'warning');
   }

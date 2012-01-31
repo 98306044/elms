@@ -1,5 +1,47 @@
 <?php
-
+/**
+ * Implementation of hook_init().
+ */
 function nodereference_highlight_init() {
+  if (arg(0) == 'node' && arg(2) == '') {
+		drupal_add_js(drupal_get_path('module', 'nodereference_highlight') .'/nodereference_highlight.js');
+	}
+}
 
+/**
+ * Implementation of hook_form_alter().
+ */
+function nodereference_highlight_form_alter(&$form, $form_state, $form_id) {
+  if ($form['#id'] == 'node-form' && (arg(0) .'/'. arg(1) != 'admin/content')) {
+    //TODO: modify the node edit form for nodes that are allowed to have association
+  }
+}
+
+/**
+ * Implementation of hook_filter().
+ */
+function nodereference_highlight_filter($op, $delta = 0, $format = -1, $text = '', $cache_id = 0) {
+  switch ($op) {
+    case 'list':
+      return array(0 => t('Highlite node references'));
+
+    case 'description':
+      return t('Check content for contextual references');
+
+    case 'prepare':
+      $result = db_query("SELECT nid FROM {content_type_poll} WHERE field_poll_content_ref_nid=%d GROUP BY nid", arg(1));
+			while ($val = db_fetch_array($result)) {
+        $node = node_load($val['nid']);
+				$text = str_replace($node->field_poll_text_ref[0]['value'], '[pollref]'. $node->field_poll_text_ref[0]['value'] .'[/pollref]', $text);
+			}
+      return $text;
+
+    case "process":
+      $text = str_replace('[pollref]','<a href="#elms_poll_tab" class="elms_context_tab elms_poll_tab">', $text);
+		  $text = str_replace('[/pollref]','</a>', $text);
+    return $text;
+
+    default:
+      return $text;
+  }
 }

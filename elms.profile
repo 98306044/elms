@@ -202,9 +202,10 @@ function elms_profile_tasks(&$task, $url) {
     $modules = _elms_add_ons_modules();
     $files = module_rebuild_cache();
     // Create batch
+		$timeline = false;
     foreach ($modules as $module) {
       $batch['operations'][] = array('_install_module_batch', array($module, $files[$module]->info['name']));
-    }    
+    }
     $batch['finished'] = '_elms_module_batch_3_finished';
     $batch['title'] = st('Install Add Ons');
     $batch['error_message'] = st('The installation has encountered an error.');
@@ -695,6 +696,17 @@ function _elms_build_directories() {
     $dir = file_directory_path() . '/' . $dir;
     file_check_directory($dir, TRUE);
   }
+	// Create the js/ within the files folder.
+  $jspath = file_create_path('timeline');
+  file_check_directory($jspath, FILE_CREATE_DIRECTORY);
+	//make timeline settings ahead of time..hehe
+	$timeline_lib_path = base_path() . libraries_get_path('simile_timeline');
+  // Build aggregate JS file.
+  $contents = "var Timeline_ajax_url = '". $timeline_lib_path ."/timeline_ajax/simile-ajax-api.js'; ";
+  $contents .= "var Timeline_urlPrefix= '". $timeline_lib_path ."/timeline_js/'; ";
+  $contents .= "var Timeline_parameters='bundle=true'; ";
+  // Create the JS file.
+  file_save_data($contents, $jspath .'/local_variables.js', FILE_EXISTS_REPLACE);
 }
 
 /**

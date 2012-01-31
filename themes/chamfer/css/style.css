@@ -5,14 +5,6 @@ text-align:center;
 margin:0;
 font: 100% Tahoma, "Helvetica Nue", Helvetica, Verdana, Arial, sans-serif;
 }
-@font-face {
-  font-family: 'League Gothic';
-  src: url('../fonts/LeagueGothic.eot');
-  src: local('League Gothic Regular'), local('League Gothic'),
-    url("../fonts/LeagueGothic.woff") format("woff"),
-    url("../fonts/LeagueGothic.otf") format("opentype"),
-    url("../fonts/LeagueGothic.svg#LeagueGothic") format("svg");
-}
 .form-region-main {
   width:100% !important;
 }

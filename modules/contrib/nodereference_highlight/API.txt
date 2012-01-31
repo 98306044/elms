@@ -1,0 +1,18 @@
+
+
+/**
+ * This hook allows you to define a relationship between content types for highlighting.
+ */
+function hook_define_highlight_relationship() {
+  $items = array(
+	
+	);
+	return $items;
+}
+
+/**
+ * This allows you to alter other relationships
+ */
+function hook_define_highlight_relationship_alter(&$relationships) {
+  
+}
