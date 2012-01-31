@@ -1,4 +1,5 @@
 <?php
+// $Id: TimelineEvent.class.inc,v 1.1.2.6 2009/09/01 19:44:49 xamanu Exp $
 
 /**
  * @file
@@ -40,12 +41,12 @@ class TimelineEvent {
    *
    */
   function buildData($row) {
-
     if (!empty($this->view->result)) {
       $tmp = $this->getDefinedFieldUsage('start');
 
       if (isset($row->{$tmp['alias']})) {
         $data = array();
+
         $tmp = $this->getDefinedFieldUsage('title');
         $data['title'] = theme('timeline_bubble_title', $row, $tmp['alias']);
         $data['link'] = theme('timeline_bubble_url', $row, $this->view->style_options['fields']['link']);
@@ -68,6 +69,7 @@ class TimelineEvent {
         // for better theming we give all grouped events the value of the grouping field
         $data['classname'] = $this->css_selector;
         $data['description'] = $this->view->style_plugin->row_plugin->render($row);
+
         return $data;
       }
     }
@@ -89,11 +91,8 @@ class TimelineEvent {
 
       $field = $this->getDefinedFieldUsage($event_field);
       if (isset($row->{$field['alias']})) {
-        // Loading plugin to handle date format
-        if ($conversion_callback = timeline_plugins_get_callback($field['handler'], 'date_sources')) {
-          $event[$event_field]['formated'] = call_user_func($conversion_callback, $row->{$field['alias']}, 'iso8601', array('field' => $field));
-          $event[$event_field]['timestamp'] = call_user_func($conversion_callback, $row->{$field['alias']}, 'timestamp', array('field' => $field));
-        }
+        $event[$event_field]['formated'] = timeline_date_conversion($row->{$field['alias']}, $field['date_format'], $this->dateformat);
+        $event[$event_field]['timestamp'] = timeline_date_conversion($row->{$field['alias']}, $field['date_format'], 'timestamp');
       }
     }
     // Validate date values
@@ -148,7 +147,6 @@ class TimelineEvent {
    */
   function getDefinedFieldUsage($type) {
 
-
     if ($timeline_settings_fields = $this->view->style_options['fields']) {
       if (isset($timeline_settings_fields[$type])) {
         if (is_string($timeline_settings_fields[$type])) {
@@ -164,7 +162,6 @@ class TimelineEvent {
         $field_information = array(
           'alias' => $this->view->field[$fieldname]->field_alias,
           'handler' => $this->view->field[$fieldname]->definition['handler'],
-          'fieldname' => $fieldname,
         );
         // check how to handle data from supported date fields
         switch ($field_information['handler']) {
@@ -185,19 +182,22 @@ class TimelineEvent {
 
   /**
    * Get the url of an image used as an icon. Based on the settings it can be pushed through an ImageCache preset.
+   * Support for cck imagefields and taxonomy image module
    */
   function getIconUrl($row) {
     $field = $this->getDefinedFieldUsage('icon');
+    if (isset($row->$field['alias'])) {
+      if ($field['handler'] == 'views_handler_field_taxonomy_image' && module_exists('taxonomy_image')) {
+        $path = file_directory_path() . '/' . variable_get('taxonomy_image_path', 'category_pictures') .'/';
+        $path = $path . taxonomy_image_get_object($row->$field['alias'])->path;
+      }
 
-    if (isset($field)) {
-      // getting timeline image source plugins. additional plugins can be implemented by other modules.
-      if ($path_callback = timeline_plugins_get_callback($field['handler'], 'image_sources')) {
-        $path = call_user_func($path_callback, array('fid' => $row->$field['alias'], 'name' => $field['fieldname']), $this->view);
+      elseif ($field['handler'] == 'content_handler_field_multiple') {
+        $path = db_fetch_object(db_query('SELECT filepath FROM {files} WHERE fid = %d', $row->$field['alias']))->filepath;
       }
     }
 
     if (isset($path)) {
-      // push path through imagecache, if activated.
       if (module_exists('imagecache') &&
         $imagecache_namespace = $this->view->style_options['fields']['advanced']['imagecache_icon']) {
         return base_path() . imagecache_create_path($imagecache_namespace, $path);

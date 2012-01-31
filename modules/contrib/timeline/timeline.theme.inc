@@ -1,4 +1,5 @@
 <?php
+// $Id: timeline.theme.inc,v 1.13.2.1.2.13 2009/10/19 13:30:30 xamanu Exp $
 /**
  * @file
  * Theme functions for timeline.
@@ -11,22 +12,21 @@ function template_preprocess_views_view_timeline(&$vars) {
   if (isset($vars['options']['debug'])) {
     $vars['debug'] = theme('timeline_debug', $vars['options']['debug']);
   }
-  // check if data is available
-  if ($vars['options']['timeline']['data_count'] > 0) {
-    // create actual timeline
-    if (_timeline_include($vars['options']['timeline']['theme'])) {
+  // create actual timeline
+  if (_timeline_include($vars['options']['timeline']['theme'])) {
 
-      // preprocess css information for the template
-      $vars['id'] = $vars['options']['timeline']['class'];
-      $vars['class'] = $vars['options']['timeline']['class'];
-      $vars['height'] = $vars['options']['timeline']['height'];
-      $vars['width'] = $vars['options']['timeline']['width'];
-      $vars['controls'] = $vars['options']['misc']['controls'];
-      $vars['timeline_theme'] = $vars['options']['timeline']['theme'];
+    // preprocess css information for the template
+    $vars['id'] = $vars['view']->name;
+    $vars['class'] = $vars['view']->name;
+    $vars['height'] = $vars['options']['timeline']['height'];
+    $vars['width'] = $vars['options']['timeline']['width'];
+    $vars['controls'] = $vars['options']['misc']['controls'];
+    if($vars['options']['timeline']['theme'] == "ClassicTheme") {
+      $vars['timeline_theme'] = "ClassicTheme";
     }
-  }
-  else {
-    theme('timeline_nodata');
+    else {
+      $vars['timeline_theme'] = drupal_substr(strrchr($vars['options']['timeline']['theme'], '/'), 1);
+    }
   }
 }
 
@@ -73,50 +73,37 @@ function theme_timeline_debug($debug_array) {
 
 /**
  * Inlude all js and css files that needs the timeline.
+ * Depending on the timeline views settings the external SIMILE server is used.
+ * Or otherwise a local installation.
  *
  * @return: TRUE if everything could be included properly
- *          FALSE if Simile Exhibit Libraries couldn't be included properly
+ *          FALSE if Simile Exhibit Libraries aren't found
  */
 function _timeline_include($timeline_theme) {
-  static $loaded = FALSE;
   $timeline_mod_path = drupal_get_path('module', 'timeline');
 
-  if (!$loaded) {
-
-    // Check correct inclusion of local timeline library
-    if ($timeline_library_status = timeline_validate_library()) {
-
-      // some error messages are available, because of detected errors during validation
-      if (is_string($timeline_library_status)) {
-        drupal_set_message(check_plain($timeline_library_status));
-        return FALSE;
-      }
-
-      // timeline library has been validated and will be added
-      elseif ($timeline_library_status == TRUE) {
-
-        $timeline_lib_path = libraries_get_path('simile_timeline');
-        drupal_add_js(file_directory_path() . '/timeline/local_variables.js');
-        drupal_add_js($timeline_lib_path . '/timeline_js/timeline-api.js');
-
-        // include custom theme files (if activated)
-        if ($timeline_theme != 'classic_theme' && $timeline_theme != FALSE) {
-          ctools_include('plugins');
-          $timeline_themes = ctools_get_plugins('timeline', 'themes');
-          if (isset($timeline_themes[$timeline_theme])) {
-            drupal_add_js($timeline_themes[$timeline_theme]['files']['js']);
-            drupal_add_css($timeline_themes[$timeline_theme]['files']['css']);
-          }
-        }
-
-        ctools_add_css('timeline', 'timeline');
-        ctools_add_js('timeline', 'timeline');
-        $loaded = TRUE;
-
-        return TRUE;
-      }
-    }
-  drupal_set_message(t('Simile Timeline Libraries not found'), 'error');
-  return FALSE;
+  // Use SIMILE Server
+  if (variable_get('timeline_library_source', 'hosted') == 'hosted') {
+    $timeline_api = 'http://static.simile.mit.edu/timeline/api-2.3.0/timeline-api.js?bundle=true';
+    drupal_set_html_head('<script type="text/javascript" src="'. $timeline_api .'"></script>'); //  We have to wait to D7 to get rid of this: #91250 - fd
   }
+  elseif (variable_get('timeline_library_source', 'hosted') == 'local' && $message = timeline_validate_library()) {
+    $timeline_lib_path = libraries_get_path('simile_timeline');
+    drupal_add_js(file_directory_path() . '/timeline/local_variables.js');
+    drupal_add_js($timeline_lib_path . '/timeline_js/timeline-api.js');
+  }
+  else {
+    drupal_set_message(t('Simile Timeline Libraries not found'), 'error');
+    return FALSE;
+  }
+
+  drupal_add_css($timeline_mod_path . '/css/timeline.css');
+
+  // include custom theme files (if activated)
+  if ($timeline_theme != $timeline_mod_path . '/themes/ClassicTheme' && $timeline_theme != FALSE) {
+    drupal_add_js($timeline_theme . '/theme.js');
+    drupal_add_css($timeline_theme . '/theme.css');
+  }
+  drupal_add_js($timeline_mod_path . '/js/timeline.js');
+  return TRUE;
 }

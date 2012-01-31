@@ -10,8 +10,7 @@ Drupal.timeline = {
   },
 
   createWidget: function(args) {
-    SimileAjax.History.enabled = false;
-    args = eval(args);
+  	args = eval(args);
     var theme = Drupal.timeline.getTheme(args.theme, args.timeline_start, args.timeline_end, args.bubble_max_height, args.bubble_width, args.autoWidth);
     var bandInfos = [];
     var Sources = [];
@@ -31,7 +30,7 @@ Drupal.timeline = {
         Timeline.createBandInfo({
           width:          width + '%',
           intervalUnit:   Timeline.DateTime[v],
-          intervalPixels: args.band2_unit_width,
+          intervalPixels: 200,
           eventSource:    eventSource,
           date:           args.initial_focus,
           timeZone:       args.timezone,
@@ -49,7 +48,6 @@ Drupal.timeline = {
         Timeline.createBandInfo({
           width:          '25%',
           intervalUnit:   Timeline.DateTime[args.summary],
-          intervalPixels: args.band2_unit_width,
           intervalPixels: 200,
           eventSource:    Sources[0],
           date:           args.initial_focus,
@@ -203,16 +201,12 @@ Drupal.timeline.controls = {
 Drupal.behaviors.timeline = function(context) {
   if(Timeline && Drupal.settings.timeline) {
     $.each(Drupal.settings.timeline, function(i, v) {
-      $.each(v, function(i, v) {
-        v.id = i;
-        $('.' + i + '-wrapper:not(.timeline-processed)', context).each(function() {
-          $(this).addClass('timeline-processed');
-          Drupal.timeline.createWidget(v);
-	});
+      $('.' + i + '-wrapper:not(.timeline-processed)', context).each(function() {
+        $(this).addClass('timeline-processed');
+        Drupal.timeline.createWidget(v);
       });
     });
-  }
-
+  } 
   /*if ($controls) {
     $texts = implode(', ', array_map('drupal_to_js', array(t('Filter:'), t('Highlight:'), t('Clear All'))));
     $script = 'var timeline = '. $script ." Drupal.timeline.controls.setup('{$timeline_array->id}-controls', timeline, $texts);";

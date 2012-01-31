@@ -1,4 +1,5 @@
 <?php
+// $Id: timeline.module,v 1.20.2.6.2.12 2009/10/08 12:20:57 xamanu Exp $
 
 /**
  * @file
@@ -70,35 +71,63 @@ function timeline_menu() {
 }
 
 /**
- * Implements hook_ctools_plugin_directory for plugin integration for date sources, image sources and timeline themes
- */
-function timeline_ctools_plugin_directory($module, $plugin) {
-  if ($module == 'timeline') {
-    return 'plugins/' . $plugin;
-  }
-}
-
-/**
- * Returns the date conversion function name of a plugin
- *
- * @param $handler_name
- *   Name of the field handler that the plugin has to support
+ * Converts different expected date formats to one global date format to talk to the timeline.
+ * Respects drupal's timezone handling.
  *
  * @return
- *   Name of the date conversion function
+ *   date in defined output
+ *
+ * Notes: -fd
+ * 1. Adding "Z" to ISO-Date. This is a "dirty" trick to disable timeline's automatic timezone detection of the browswer
+ * 2. Using two date_convert functions to be able to respect timezones. This can be done better!
+ * 3. Drupal's gobal timezone settings are taken. Not the date field specific settings.
  */
-function timeline_plugins_get_callback($handler_name, $plugin_type) {
-  ctools_include('plugins');
-  $plugins = ctools_get_plugins('timeline', $plugin_type);
-  foreach ($plugins as $plugin) {
-    if ($plugin['handler_name'] == $handler_name) {
-      return ctools_plugin_get_function($plugin, 'callback');
-    }
+function timeline_date_conversion($date, $input_format, $output_format = 'iso8601') {
+  switch ($input_format) {
+    case 'date':
+    case 'iso8601':
+      switch ($output_format) {
+        case 'iso8601':
+          return date_convert(date_convert($date, DATE_ISO, DATE_UNIX), DATE_UNIX, DATE_ISO, date_get_timezone('date')) . 'Z';
+        case 'gregorian':
+          if (module_exists('date_api') && variable_get('date_api_version', 0) >= 5.2) {
+            return format_date(date_convert($date, DATE_ISO, DATE_UNIX) + timeline_get_timezone(), 'custom', 'M d Y G:i:s', '0', 'en');
+          }
+          else {
+            return format_date(strtotime($date) + timeline_get_timezone(), 'custom', 'M d Y G:i:s', '0', 'en');
+          }
+        case 'timestamp':
+          return date_convert($date, DATE_ISO, DATE_UNIX) + timeline_get_timezone();
+      }
+    case 'datetime':
+      switch ($output_format) {
+        case 'iso8601':
+          return date_convert(date_convert($date, DATE_DATETIME, DATE_UNIX), DATE_UNIX, DATE_ISO, date_get_timezone('date')) . 'Z';
+        case 'gregorian':
+          return format_date(date_convert($date, DATE_DATETIME, DATE_UNIX)  + timeline_get_timezone(), 'custom', 'M d Y G:i:s', '0', 'en');
+        case 'timestamp':
+          return date_convert($date, DATE_DATETIME, DATE_UNIX) + timeline_get_timezone();
+      }
+    case 'datestamp':
+    case 'timestamp':
+      switch ($output_format) {
+        case 'iso8601':
+          if (module_exists('date_api') && variable_get('date_api_version', 0) >= 5.2) {
+            return date_convert($date, DATE_UNIX, DATE_ISO, date_get_timezone('date')) . 'Z';
+          }
+          else {
+            return format_date($date + timeline_get_timezone(), 'custom', 'Y-m-d\TH:i:s\Z', '0', 'en');
+          }
+        case 'gregorian':
+          return format_date($date + timeline_get_timezone(), 'custom', 'M d Y G:i:s', '0', 'en');
+        case 'timestamp':
+          return $date + timeline_get_timezone();
+      }
   }
 }
 
 
-/**
+  /**
  * Returns the currently logged-in user's timezone, in seconds from GMT.
  *
  * @return an integer representation of a timezone
@@ -108,7 +137,6 @@ function timeline_get_timezone($unit = 'seconds') {
   return (variable_get('configurable_timezones', 1) && $user->uid && drupal_strlen($user->timezone)) ?
     (integer)$user->timezone : (integer)variable_get('date_default_timezone', 0);
 }
-
 
 /**
  * Check if all library files properly exist.
@@ -128,7 +156,7 @@ function timeline_validate_library() {
       '/timeline_ajax/scripts/signal.js',
     );
     // check if library is available 'sites/all/libraries/simile_timeline'
-    if (is_dir($timeline_path)) {
+    if (file_check_directory($timeline_path)) {
       $messages = '';
       foreach ($timeline_library_files as $file) {
         $file = $timeline_path . $file;
@@ -145,6 +173,27 @@ function timeline_validate_library() {
   }
   // no library found
   return FALSE;
+}
+
+/**
+ * Scans the themes directory to include more themes
+ *
+ * @return
+ *   array with the filenames of found theme files plus the classic theme
+ *
+ */
+function timeline_available_themes() {
+  $timeline_theme_path = drupal_get_path('module', 'timeline') .'/themes';
+  $timeline_themes = array($timeline_theme_path . '/ClassicTheme' => 'ClassicTheme');
+  foreach (file_scan_directory($timeline_theme_path, '.*', array('.', '..', 'CVS'), 0, FALSE) as $timeline_theme) {
+    if (is_dir($timeline_theme_path . '/' . $timeline_theme->basename)) {
+      $timeline_themes[$timeline_theme_path . '/' . $timeline_theme->basename] = $timeline_theme->basename;
+    }
+  }
+  
+  // Allow other modules to provide themes for the timeline module
+  drupal_alter('timeline_theme_array', $timeline_themes);
+  return $timeline_themes;
 }
 
 // TODO: REMOVE - jm

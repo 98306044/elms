@@ -85,13 +85,6 @@
   <title><?php print $head_title; ?></title>
   <?php print $styles; ?>
   <?php print $scripts; ?>
-  
-  	<script type="text/javascript">
-  		$(document).ready(function() {
-   	 	$("#superfish ul.menu").superfish();
-  		});
-	</script>
-
 </head>
 <div id="skip-nav" class="offscreen">
   <a href="#main-content"><?php print t('Skip to main content'); ?></a>

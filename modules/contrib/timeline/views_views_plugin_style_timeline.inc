@@ -1,4 +1,5 @@
 <?php
+// $Id: views_views_plugin_style_timeline.inc,v 1.1.2.12 2009/10/08 12:20:57 xamanu Exp $
 
 /**
  * @file
@@ -9,11 +10,6 @@
  * Extending the view_plugin_style class to provide a timeline view style.
  */
 class views_views_plugin_style_timeline extends views_plugin_style {
-
-  // Basic properties that let the row style follow relationships.
-  var $base_table = 'node';
-  var $base_field = 'nid';
-
   /**
    * Set default options
    */
@@ -91,18 +87,13 @@ class views_views_plugin_style_timeline extends views_plugin_style {
       '#description' => t('The height of the timeline (in units of em, px or %), e.g. 400px. Leave blank to use default value.'),
     );
     // Appearance settings
-    ctools_include('plugins');
-    $timeline_themes = ctools_get_plugins('timeline', 'themes');
-    $timeline_themes_select = array('ClassicTheme' => 'Classic Theme');
-    foreach ($timeline_themes as $theme_name => $theme_info) {
-      $timeline_themes_select[$theme_name] = $theme_info['name'];
-    }
+    // TODO make theme options flexible
     $form['display']['appearance'] = array('#type' => 'fieldset', '#title' => t('Appearance and themes'), '#collapsible' => TRUE, '#collapsed' => TRUE);
     $form['display']['appearance']['theme'] = array(
       '#type' => 'select',
       '#title' => t('Theme'),
       '#default_value' => $this->options['display']['appearance']['theme'],
-      '#options' => $timeline_themes_select,
+      '#options' => timeline_available_themes(),
       '#description' => t('Select a theme. You can create our own themes. Read documentation.'),
     );
     $form['display']['appearance']['bubble_width'] = array(
@@ -131,35 +122,32 @@ class views_views_plugin_style_timeline extends views_plugin_style {
       );
     }
     else {
-      // initializing select arrays for field selection form elements
+      // Fields
       $field_names = array('' => '--');
       $date_field_names = array('' => '--');
       $iconimage_field_names = array('' => '--');
+      $supported_date_handlers = array(
+        'views_handler_field_date',
+        'date_handler_field_multiple',
+      );
+      $supported_iconimage_handlers = array(
+        'content_handler_field_multiple',
+        'views_handler_field_taxonomy_image',
+      );
 
-      // load all plugins for date and image field supports. provided by this or other modules
-      ctools_include('plugins');
-      $date_sources = ctools_get_plugins('timeline', 'date_sources');
-      $image_sources = ctools_get_plugins('timeline', 'image_sources');
-
-      // go through all available fields' handlers to check support for certain functionality
       foreach ($handlers as $field => $handler) {
-
-        // obtain nice name of field for the ui
         $field_names[$field] = $handler->ui_name();
         if ($label = $handler->label()) {
           $field_names[$field] .= " (\"$label\")";
         }
-
-        // check if this field is supported as a date source
-        foreach ($date_sources as $date_source) {
-          if (get_class($handler) == $date_source['handler_name']) {
-            $date_field_names[$field] = $field_names[$field];
-          }
+        if (in_array(get_class($handler), $supported_date_handlers)) {
+          $date_field_names[$field] = $field_names[$field];
         }
-
-        // check if this field is supported as an image source
-        foreach ($image_sources as $image_source) {
-          if (get_class($handler) == $image_source['handler_name'] || $handler->content_field['widget']['module'] == 'imagefield') {
+        if (in_array(get_class($handler), $supported_iconimage_handlers)) {
+          if (get_class($handler) == 'views_handler_field_taxonomy_image') {
+            $iconimage_field_names[$field] = $field_names[$field];
+          }
+          elseif ($handler->content_field['widget']['module'] == 'imagefield') {
             $iconimage_field_names[$field] = $field_names[$field];
           }
         }
@@ -244,8 +232,6 @@ class views_views_plugin_style_timeline extends views_plugin_style {
     // Band/interval settings
     $form['bands'] = array('#type' => 'fieldset', '#title' => t('Band/interval settings'), '#collapsible' => TRUE, '#collapsed' => FALSE);
     $intervals = array('second' => t('Second'), 'minute' => t('Minute'), 'hour' => t('Hour'), 'day' => t('Day'), 'week' => t('Week'), 'month' => t('Month'), 'year' => t('Year'), 'decade' => t('Decade'), 'century' => t('Century'), 'millennium' => t('Millennium'));
-    $interval_widths = array(10 => 10, 25 => 25, 50 => 50, 75 => 75, 100 => 100, 150 => 150, 200 => 200, 300 => 300, 400 => 400, 500 => 500, 1000 => 1000);
-
     $form['bands']['band1_unit'] = array(
       '#type' => 'select',
       '#title' => t('Main band interval unit'),
@@ -253,26 +239,12 @@ class views_views_plugin_style_timeline extends views_plugin_style {
       '#options' => $intervals,
       '#description' => t(''),
     );
-    $form['bands']['band1_unit_width'] = array(
-      '#type' => 'select',
-      '#title' => t('Main band interval unit width'),
-      '#default_value' => $this->options['bands']['band1_unit_width'],
-      '#options' => $interval_widths,
-      '#description' => t('Select the width, in pixels, for the interval.'),
-    );
     $form['bands']['band2_unit'] = array(
       '#type' => 'select',
       '#title' => t('Summary band interval unit'),
       '#default_value' => $this->options['bands']['band2_unit'],
       '#options' => array_merge(array('' => t('Not displayed')), $intervals),
       '#description' => t(''),
-    );
-    $form['bands']['band2_unit_width'] = array(
-      '#type' => 'select',
-      '#title' => t('Summary band interval unit width'),
-      '#default_value' => $this->options['bands']['band2_unit_width'],
-      '#options' => $interval_widths,
-      '#description' => t('Select the width, in pixels, for the interval.'),
     );
     $form['bands']['focus'] = array(
       '#type' => 'select',
@@ -337,58 +309,44 @@ class views_views_plugin_style_timeline extends views_plugin_style {
     */
   }
 
-  // Copied from views_plugin_row because not implemented in views_plugin_style to suport $base_table and $_base_field with relationships. -fd
-  function query() {
-    if (isset($this->base_table)) {
-      if (isset($this->options['relationship']) && isset($this->view->relationship[$this->options['relationship']])) {
-        $relationship = $this->view->relationship[$this->options['relationship']];
-        $this->field_alias = $this->view->query->add_field($relationship->alias, $this->base_field);
-      }
-      else {
-        $this->field_alias = $this->view->query->add_field($this->base_table, $this->base_field);
-      }
-    }
-  }
-
   /**
    * Render the timeline style.
    * Data for the simile timeline is getting collected within the view
    */
   function render() {
-    static $delta = 0;
+    // Load only when neccessary
+    module_load_include('inc', 'timeline', 'classes/Timeline.class');
+    module_load_include('inc', 'timeline', 'classes/TimelineEvent.class');
 
     // Group the rows according to the grouping field, if specified.
     $sets = $this->render_grouping($this->view->result, $this->options['grouping']);
 
     // Build data for timeline
-    ctools_include('Timeline.class', 'timeline', 'includes');
-    ctools_include('TimelineEvent.class', 'timeline', 'includes');
     $timeline = new Timeline($this->view, $sets);
 
-    // Allow other modules to alter the data array.
+    // Allow extension module to alter the data array.
     drupal_alter('timeline_data', $timeline->data);
 
     // Convert data to json and push them to drupal's js behaviors
-    $data = array();
-    $data['timeline'][$delta] = array($timeline->data['id'] . '_' . $delta => $timeline->data);
-    drupal_add_js($data, 'setting');
+    $timeline->timeline_to_json();
 
-    // Show debug textarea if enabled
+    // Print warning if no data is available
+    if (count($timeline->data['events']['events']) == 0) {
+      theme_timeline_nodata();
+    }
+
     if (user_access('administer views') && variable_get('timeline_debug', FALSE)) {
       $this->options['debug'] = $timeline->debug();
     }
-
     // options that are used for template preprocessor
     $this->options['timeline'] = array(
-      'class' => $this->view->name .'_'. $delta,
+      'class' => $this->view->name,
       'width' => _timeline_to_dim($this->view->style_options['display']['width']),
       'height' => _timeline_to_dim($this->view->style_options['display']['height']),
       'align' => '',
-      'data_count' => count($timeline->data['events']['events']),
       'controls' => FALSE, // $this->view->style_options['misc']['controls'],
       'theme' => $this->options['display']['appearance']['theme'],
     );
-    $delta++;
     return theme($this->theme_functions(), $this->view, $this->options);
   }
 }
