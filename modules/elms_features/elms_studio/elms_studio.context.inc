@@ -13,6 +13,11 @@ function elms_studio_context_default_contexts() {
   $context->description = 'Course Studio navigation while viewing a submission';
   $context->tag = 'ELMS Studio';
   $context->conditions = array(
+    'context_spaces_features' => array(
+      'values' => array(
+        'elms_studio' => 'elms_studio',
+      ),
+    ),
     'context_var' => array(
       'values' => array(
         'theme_%theme_settings|toggle_primary_links:1' => 'theme_%theme_settings|toggle_primary_links:1',
@@ -35,7 +40,7 @@ function elms_studio_context_default_contexts() {
           'module' => 'menu',
           'delta' => 'menu-studio',
           'region' => 'left',
-          'weight' => 0,
+          'weight' => '0',
         ),
       ),
     ),
@@ -56,6 +61,11 @@ function elms_studio_context_default_contexts() {
   $context->description = 'Course Studio navigation while on views';
   $context->tag = 'ELMS Studio';
   $context->conditions = array(
+    'context_spaces_features' => array(
+      'values' => array(
+        'elms_studio' => 'elms_studio',
+      ),
+    ),
     'context_var' => array(
       'values' => array(
         'theme_%theme_settings|toggle_primary_links:1' => 'theme_%theme_settings|toggle_primary_links:1',
@@ -77,7 +87,7 @@ function elms_studio_context_default_contexts() {
           'module' => 'menu',
           'delta' => 'menu-studio',
           'region' => 'left',
-          'weight' => 0,
+          'weight' => '0',
         ),
       ),
     ),

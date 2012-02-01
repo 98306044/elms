@@ -50,12 +50,11 @@ function elms_schedule_fieldgroup_default_groups() {
         'label' => 'above',
       ),
     ),
-    'weight' => '1',
+    'weight' => '2',
     'fields' => array(
       '0' => 'field_score_value',
       '1' => 'field_color',
-      '2' => 'field_event_content_ref',
-      '3' => 'field_task_link',
+      '2' => 'field_task_link',
     ),
   );
 

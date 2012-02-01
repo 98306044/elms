@@ -4,5 +4,5 @@ description = This allows sites to export themselves as HTML
 core = "6.x"
 project = "elms_export_html"
 package = "ELMS"
-version = "6.x-1.0-alpha5"
+version = "6.x-1.0-alpha6"
 project status url = "http://drupal.psu.edu/fserver"

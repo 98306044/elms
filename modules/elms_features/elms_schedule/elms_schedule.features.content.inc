@@ -67,82 +67,6 @@ function elms_schedule_content_default_fields() {
     ),
   );
 
-  // Exported field: field_event_content_ref
-  $fields['elms_event-field_event_content_ref'] = array(
-    'field_name' => 'field_event_content_ref',
-    'type_name' => 'elms_event',
-    'display_settings' => array(
-      'weight' => '14',
-      'parent' => 'group_additional_settings',
-      'label' => array(
-        'format' => 'above',
-      ),
-      'teaser' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      'full' => array(
-        'format' => 'plain',
-        'exclude' => 0,
-      ),
-      'token' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '5' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '4' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '2' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-      '3' => array(
-        'format' => 'default',
-        'exclude' => 0,
-      ),
-    ),
-    'widget_active' => '1',
-    'type' => 'nodereference',
-    'required' => '0',
-    'multiple' => '0',
-    'module' => 'nodereference',
-    'active' => '1',
-    'referenceable_types' => array(
-      'accessibility_guideline' => 0,
-      'accessibility_test' => 0,
-      'elms_event' => 0,
-      'parent' => 0,
-      'folder' => 0,
-      'link' => 0,
-      'page' => 0,
-      'promo' => 0,
-      'site' => 0,
-    ),
-    'advanced_view' => 'elms_site_get_outlines',
-    'advanced_view_args' => '',
-    'widget' => array(
-      'autocomplete_match' => 'contains',
-      'size' => '10',
-      'default_value' => array(
-        '0' => array(
-          'nid' => NULL,
-          '_error_element' => 'default_value_widget][field_event_content_ref][0][nid][nid',
-        ),
-      ),
-      'default_value_php' => NULL,
-      'label' => 'Content',
-      'weight' => '14',
-      'description' => 'Use this to link a course event to a piece of course content.  Anytime the content lives in this course you should use this field.',
-      'type' => 'nodereference_autocomplete',
-      'module' => 'nodereference',
-    ),
-  );
-
   // Exported field: field_date_mod_text
   $fields['elms_event-field_date_mod_text'] = array(
     'field_name' => 'field_date_mod_text',
@@ -490,6 +414,88 @@ Attend on',
       'description' => 'Only use this if this is a date range',
       'type' => 'date_popup',
       'module' => 'date',
+    ),
+  );
+
+  // Exported field: field_event_content_ref
+  $fields['elms_event-field_event_content_ref'] = array(
+    'field_name' => 'field_event_content_ref',
+    'type_name' => 'elms_event',
+    'display_settings' => array(
+      'weight' => '14',
+      'parent' => 'group_additional_settings',
+      'label' => array(
+        'format' => 'above',
+      ),
+      'teaser' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      'full' => array(
+        'format' => 'plain',
+        'exclude' => 0,
+      ),
+      'token' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '5' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '4' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '2' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+      '3' => array(
+        'format' => 'default',
+        'exclude' => 0,
+      ),
+    ),
+    'widget_active' => '1',
+    'type' => 'nodereference',
+    'required' => '0',
+    'multiple' => '0',
+    'module' => 'nodereference',
+    'active' => '1',
+    'referenceable_types' => array(
+      'folder' => 'folder',
+      'page' => 'page',
+      'accessibility_guideline' => 0,
+      'accessibility_test' => 0,
+      'content_links' => 0,
+      'parent' => 0,
+      'elms_event' => 0,
+      'elms_resource' => 0,
+      'link' => 0,
+      'place' => 0,
+      'poll' => 0,
+      'reaction' => 0,
+      'referenced_page' => 0,
+      'term' => 0,
+      'timeline_item' => 0,
+      'site' => 0,
+    ),
+    'advanced_view' => 'elms_site_get_outlines',
+    'advanced_view_args' => '',
+    'widget' => array(
+      'autocomplete_match' => 'contains',
+      'size' => '10',
+      'default_value' => array(
+        '0' => array(
+          'nid' => '',
+        ),
+      ),
+      'default_value_php' => NULL,
+      'label' => 'Content',
+      'weight' => '4',
+      'description' => 'Use this to link a course event to a piece of course content.  Anytime the content lives in this course you should use this field.',
+      'type' => 'nodereference_select',
+      'module' => 'nodereference',
     ),
   );
 

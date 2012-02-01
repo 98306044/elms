@@ -4,6 +4,6 @@ description = This module tweaks Drupal to make it ELMS without modifying any ot
 core = "6.x"
 dependencies[] = og
 package = "ELMS"
-version = "6.x-1.0-beta1"
+version = "6.x-1.0-alpha6"
 project = "elms_helper"
 project status url = "http://drupal.psu.edu/fserver"
