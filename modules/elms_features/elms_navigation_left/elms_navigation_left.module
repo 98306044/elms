@@ -114,26 +114,6 @@ function _elms_navigation_left_page_block() {
   $output = str_replace('/track">', '/track" class="page_track" title="'. t('Track') .'">', $output);
   //add devel class -- admin/developer only
   $output = str_replace('/devel">', '/devel" class="page_devel" title="'. t('Developer Node Debug') .'">', $output);
-  if (is_numeric(arg(1))) {
-    $node = node_load(arg(1));
-    if (isset($node->nid)) {
-    //check for node reference url links
-    $tmp_ref_links = nodereference_url_build_all_links($node, 0);
-    $features = variable_get('spaces_features', array());
-    //account for reactions being active as this should go in the top menu
-    //if (isset($features['elms_reaction']) && $features['elms_reaction']) {
-      //unset($tmp_ref_links['reaction_field_related_content']);
-    //}
-    //if (isset($active_features['elms_content']) && $active_features['elms_content'] == 1) {
-    //if there are links then append them
-    if (count($tmp_ref_links) != 0) {
-      //loop through and add the links for contextual reference to this material
-      foreach ($tmp_ref_links as $key => $link) {
-        $output .= theme('menu_item', l(t($link['title']), $link['href'], array('query' => $_GET['q'], 'attributes' => $link['attributes'])), 0, '', FALSE, $key);
-      }
-    }
-    }
-  }
   return $output;
 }
 

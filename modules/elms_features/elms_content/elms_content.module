@@ -12,16 +12,32 @@ function elms_content_define_highlight_relationship() {
 		'perm' => 'associate content',
 		'highlight_types' => array(
 		  'timeline_item' => array(
+			  'id' => 'timeline',
 			  'ref_field' => 'field_timeline_content_ref',
 				'text_field' => 'field_timeline_text_ref',
 				'icon' => drupal_get_path('module', 'elms_content') .'/images/node.png',
 				'display_text' => t('Add a Time point'),
 			),
 			'poll' => array(
+			  'id' => 'polls',
 			  'ref_field' => 'field_poll_content_ref',
 				'text_field' => 'field_poll_text_ref',
 				'icon' => drupal_get_path('module', 'elms_content') .'/images/poll.png',
 				'display_text' => t('Add a Poll'),
+			),
+			'place' => array(
+			  'id' => 'places',
+			  'ref_field' => 'field_location_content_ref',
+				'text_field' => 'title',
+				'icon' => drupal_get_path('module', 'elms_content') .'/images/poll.png',
+				'display_text' => t('Reference a Place'),
+			),
+			'term' => array(
+			  'id' => 'glossary',
+			  'ref_field' => '-auto-detect-',
+				'text_field' => 'title',
+				'icon' => drupal_get_path('module', 'elms_content') .'/images/poll.png',
+				'display_text' => t('Add Term to Glossary'),
 			),
 		),
 	);

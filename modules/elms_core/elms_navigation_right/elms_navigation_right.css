@@ -38,6 +38,9 @@
   position:absolute;
   z-index:101;
 }
+#regions_elms_navigation_right .regions_1 .regions_block_content {
+  z-index:102;
+}
 /* colors for the blocks on the right */
 #regions_elms_navigation_right .regions_1 .regions_block_title {
   margin-top:150px;
@@ -85,6 +88,13 @@
 #regions_block_views_elms_related_links_list-block_1 .regions_block_content {
   border-left:solid 10px #e9bdff;
 }
+#regions_block_views_elms_term_list-block_1 .regions_block_title {
+	background-color:#F6B0B8;
+}
+#regions_block_views_elms_term_list-block_1 .regions_block_content {
+  border-left:solid 10px #F6B0B8;
+}
+
 /* open / close block display */
 #regions_elms_navigation_right .regions_toggle_open {
  margin:100px 0px 0px -30px;

@@ -30,4 +30,8 @@ $(document).ready(function(){
       $('#regions_elms_navigation_right').animate({right:'-30%'}, 'fast');
     }
   });
+	//integration with node reference highlight
+  $('.nrhi_body_item').click(function(){
+    $('#'+ $(this).attr('name').replace('_body_item', '')).parent().click();
+  });
 });

@@ -16,17 +16,30 @@ Drupal.nodereference_highlight.getSelected = function(){
 Drupal.nodereference_highlight.mouseup = function(e){
   var text = Drupal.nodereference_highlight.getSelected();
   if(text !=''){
+		//get the selected text
 		Drupal.nodereference_highlight.text = text;
+		//append to each link in case of a click
 		$('#nrhi_container a').each(function(){
 			$(this).attr('href', $(this).attr('href') + Drupal.nodereference_highlight.text);
 		});
+		//display the container and position it near where the mouse was released
 		$("#nrhi_container").css('display', 'block').css('top', e.pageY + 10).css('left', e.pageX - 30);
   }
+	else {
+		//strip the text off the end of each link
+		$('#nrhi_container a').each(function(){
+			var tmp = $(this).attr('href').split('=');
+			tmp.pop();
+			tmp = tmp.join('=') +'=';
+			$(this).attr('href', tmp);
+		});
+		//hide the container
+		$("#nrhi_container").css('display', 'none');
+		//set it back to empty
+		Drupal.nodereference_highlight.text = '';
+	}
 }
 
 $(document).ready(function(){
   $('div.node').bind("mouseup", Drupal.nodereference_highlight.mouseup);
-  $('.elms_poll_tab').click(function(){
-    $('#elms_poll_list-block_1_tab').parent().click();
-  });
 });

@@ -1,3 +1,19 @@
 <?php
 
 include_once('elms_content_import.features.inc');
+
+/**
+ * Implementation of hook_feeds_after_import().
+ */
+function elms_content_import_feeds_after_import($importer, $source) {
+  //need to clear the UUIDs of all imported nodes from the 
+	//get a list of nodes that were just imported
+	$result = db_query("SELECT nid FROM {feeds_node_item} WHERE id='elms_node_import'");
+	while ($val = db_fetch_array($result)) {
+		$ary[] = $val['nid'];
+	}
+	//clear all nodes that came across
+	db_query("DELETE FROM {uuid_node} WHERE nid IN(". db_placeholders($ary) .")", $ary);
+	//clean up original import table
+	db_query("DELETE FROM {feeds_node_item} WHERE id='elms_node_import'");
+}

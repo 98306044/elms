@@ -15,7 +15,22 @@ function nodereference_highlight_init() {
  */
 function _nodereference_highlight_render_items($items) {
 	foreach ($items as $key => $val) {
-    $output .= '<li>'. l('<img src="'. base_path() . $val['icon'] .'" alt="'. $val['display_text'] .'" class="nrhi_icon" />', 'node/add/'. str_replace('_', '-', $key), array('query' => array('destination' => $_GET['q'], 'edit['. $val['ref_field'] .'][nid][nid]' => arg(1), 'edit['. $val['text_field'] .'][0][value]' => ''), 'html' => TRUE)) .'</li>';
+		//account for title field
+		if ($val['text_field'] == 'title') {
+			$text_prop = 'edit['. $val['text_field'] .']';
+		}
+		else {
+			$text_prop = 'edit['. $val['text_field'] .'][0][value]';
+		}
+		//references are not per node based if auto detected
+		if ($val['ref_field'] == '-auto-detect-') {
+			$props = array('attributes' => array('title' => $val['display_text']), 'query' => array('destination' => $_GET['q'], $text_prop => ''), 'html' => TRUE);
+		}
+		else {
+			$props = array('attributes' => array('title' => $val['display_text']), 'query' => array('destination' => $_GET['q'], 'edit['. $val['ref_field'] .'][nid][nid]' => arg(1), $text_prop => ''), 'html' => TRUE);
+		}
+		
+    $output .= '<li>'. l('<img src="'. base_path() . $val['icon'] .'" alt="'. $val['display_text'] .'" class="nrhi_icon" />', 'node/add/'. str_replace('_', '-', $key), $props) .'</li>';
 	}
 	return '<div id="nrhi_container"><div class="nrhi_pre"></div><ul class="nrhi_items">'. $output .'</ul><div class="nrhi_post"></div></div>';
 }
@@ -40,34 +55,46 @@ function nodereference_highlight_filter($op, $delta = 0, $format = -1, $text = '
   switch ($op) {
     case 'list':
       return array(0 => t('Highlite node references'));
-
+    break;
     case 'description':
       return t('Check content for contextual references');
-
+    break;
+		case 'no cache':
+		  return FALSE;
+		break;
     case 'prepare':
 		  //get built definitions
 			$rels = nodereference_highlight_get_relationships();
 			foreach ($rels['elms_content']['highlight_types'] as $key => $highlight_type) {
-			  //convert relationships to query language
-        $result = db_query("SELECT nid FROM {content_type_%s} WHERE %s=%d GROUP BY nid", $key, $highlight_type['ref_field'] .'_nid', arg(1));
-			  while ($val = db_fetch_array($result)) {
-          $node = node_load($val['nid']);
-				  $text = str_replace($node->{$highlight_type['text_field']}[0]['value'], '['. $key .'ref]'. $node->{$highlight_type['text_field']}[0]['value'] .'[/'. $key .'ref]', $text);
-			  }
+			  //convert relationships to query language, ignoring auto detect
+				if ($highlight_type['ref_field'] != '-auto-detect-') {
+          $result = db_query("SELECT nid FROM {content_type_%s} WHERE %s=%d GROUP BY nid", $key, $highlight_type['ref_field'] .'_nid', arg(1));
+			    while ($val = db_fetch_array($result)) {
+            $node = node_load($val['nid']);
+					  //allow for the use of the title field
+					  if ($highlight_type['text_field'] == 'title') {
+						  $text = str_replace($node->title, '['. $key .'ref]'. $node->title .'[/'. $key .'ref]', $text);
+					  }
+					  else {
+				      $text = str_replace($node->{$highlight_type['text_field']}[0]['value'], '['. $key .'ref]'. $node->{$highlight_type['text_field']}[0]['value'] .'[/'. $key .'ref]', $text);
+					  }
+				  }
+				}
 			}
       return $text;
-
+    break;
     case "process":
-		//get built definitions
+		  //get built definitions
 			$rels = nodereference_highlight_get_relationships();
 			foreach ($rels['elms_content']['highlight_types'] as $key => $val) {
-        $text = str_replace('['. $key .'ref]','<a href="#elms_'. $key .'_tab" class="elms_context_tab elms_'. $key .'_tab">', $text);
+        $text = str_replace('['. $key .'ref]','<a href="#nrhi_'. $val['id'] .'" class="nrhi_body_item nrhi_'. $val['id'] .'" name="nrhi_'. $val['id'] .'_body_item">', $text);
 		    $text = str_replace('[/'. $key .'ref]','</a>', $text);
 			}
-    return $text;
-
+      return $text;
+    break;
     default:
       return $text;
+		break;
   }
 }
 

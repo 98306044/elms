@@ -2,7 +2,8 @@
  * This hook allows you to define a relationship between content types for highlighting.
  *These relationships then create permissions as to what roles have the ability to utilize the highlighter.
  * This example shows how to tell the system that pages can be highlighted by timeline and poll content types.
- * The ref_field is the CCK field that will reference the page thats being highlighted.
+ * id is a unique id that may differ from the type machine name
+ * The ref_field is the CCK field that will reference the page thats being highlighted. If ref_field is set to -auto-detect- then it will scan every page against nodes that are allowed to be displayed at that time.
  * The text_field is the CCK field that should be prepopulated with the text that has been highlighted.
  */
 function hook_define_highlight_relationship() {
@@ -12,13 +13,14 @@ function hook_define_highlight_relationship() {
 		'perm' => 'display name for permission',
 		'highlight_types' => array(
 		  'timeline_item' => array(
+			  'id' => 'machinename',
 			  'ref_field' => 'field_node_reference',
 				'text_field' => 'field_text_highlighted',
 				'icon' => 'path/to/icon/file.png',
 				'display_text' => t('Text to display in title info'),
 			),
 			'poll' => array(
-			  'ref_field' => 'field_node_reference',
+			  'ref_field' => '-auto-detect-',
 				'text_field' => 'field_text_highlighted',
 				'icon' => 'path/to/icon/file.png',
 				'display_text' => t('Text to display in title info'),
