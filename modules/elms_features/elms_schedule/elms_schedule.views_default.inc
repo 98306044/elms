@@ -17,13 +17,13 @@ function elms_schedule_views_default_views() {
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
   $handler = $view->new_display('default', 'Defaults', 'default');
   $handler->override_option('relationships', array(
-    'field_content_ref_nid' => array(
+    'field_event_content_ref_nid' => array(
       'label' => 'Content',
       'required' => 0,
       'delta' => -1,
-      'id' => 'field_content_ref_nid',
-      'table' => 'node_data_field_content_ref',
-      'field' => 'field_content_ref_nid',
+      'id' => 'field_event_content_ref_nid',
+      'table' => 'node_data_field_event_content_ref',
+      'field' => 'field_event_content_ref_nid',
       'override' => array(
         'button' => 'Override',
       ),
@@ -475,7 +475,7 @@ function elms_schedule_views_default_views() {
       'override' => array(
         'button' => 'Override',
       ),
-      'relationship' => 'field_content_ref_nid',
+      'relationship' => 'field_event_content_ref_nid',
     ),
     'field_task_link_url' => array(
       'label' => 'Task link',
@@ -1394,13 +1394,13 @@ function elms_schedule_views_default_views() {
       ),
       'relationship' => 'none',
     ),
-    'field_content_ref_nid_1' => array(
+    'field_event_content_ref_nid_1' => array(
       'label' => '',
       'alter' => array(
         'alter_text' => 0,
         'text' => '',
         'make_link' => 0,
-        'path' => 'node/[field_content_ref_nid]',
+        'path' => 'node/[field_event_content_ref_nid]',
         'link_class' => '',
         'alt' => '',
         'prefix' => '',
@@ -1427,9 +1427,9 @@ function elms_schedule_views_default_views() {
         'multiple_reversed' => FALSE,
       ),
       'exclude' => 0,
-      'id' => 'field_content_ref_nid_1',
-      'table' => 'node_data_field_content_ref',
-      'field' => 'field_content_ref_nid',
+      'id' => 'field_event_content_ref_nid_1',
+      'table' => 'node_data_field_event_content_ref',
+      'field' => 'field_event_content_ref_nid',
       'override' => array(
         'button' => 'Use default',
       ),

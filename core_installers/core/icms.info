@@ -6,6 +6,7 @@ type = "installer"
 dependencies[] = "outline_designer"
 dependencies[] = "outline_designer_og"
 dependencies[] = "book_outline_builder"
+dependencies[] = "node_embed"
 ; Flags
 dependencies[] = "flag"
 ; Feeds

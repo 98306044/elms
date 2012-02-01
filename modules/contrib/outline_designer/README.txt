@@ -1,5 +1,5 @@
 ELMS: Outline Designer - Usability improvements for rapid book outline creation
-Copyright (C) 2008-2011  The Pennsylvania State University
+Copyright (C) 2008-2012  The Pennsylvania State University
 
 Bryan Ollendyke
 bto108@psu.edu

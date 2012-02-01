@@ -1136,6 +1136,10 @@ function _elms_wysiwyg_query(&$context) {
       array (
         'Templates' => 1,
       ),
+			'drupal' => 
+      array (
+        'node_embed' => 1,
+      ),
       'elimedia' => 
       array (
         'elimedia' => 1,
@@ -1224,7 +1228,7 @@ function _elms_better_formats_defaults_query(&$context) {
  * Helper function to install default filters.
  */
 function _elms_filters_query(&$context) {
-  db_query("INSERT INTO {filters} VALUES ('40', '1', 'filter', '2', '0'), ('37', '1', 'filter', '0', '1'), ('38', '1', 'filter', '1', '2'), ('36', '1', 'filter', '3', '10'), ('39', '1', 'pathologic', '0', '10'), ('118', '2', 'lightbox2', '0', '-10'), ('116', '2', 'ckeditor_link', '0', '-9'), ('119', '2', 'filter', '2', '-8'), ('117', '2', 'htmlpurifier', '1', '-7'), ('82', '4', 'filter', '2', '0'), ('80', '4', 'filter', '0', '1'), ('81', '4', 'filter', '1', '2'), ('79', '4', 'filter', '3', '10'), ('69', '6', 'filter', '1', '2')");
+  db_query("INSERT INTO {filters} VALUES ('40', '1', 'filter', '2', '0'), ('37', '1', 'filter', '0', '1'), ('38', '1', 'filter', '1', '2'), ('36', '1', 'filter', '3', '10'), ('39', '1', 'pathologic', '0', '10'), ('118', '2', 'lightbox2', '0', '-10'), ('116', '2', 'ckeditor_link', '0', '-9'), ('119', '2', 'filter', '2', '-8'), ('117', '2', 'htmlpurifier', '1', '-7'), ('82', '4', 'filter', '2', '0'), ('80', '4', 'filter', '0', '1'), ('81', '4', 'filter', '1', '2'), ('79', '4', 'filter', '3', '10'), ('69', '6', 'filter', '1', '2'), ('135', '2', 'node_embed', '0','10'), ('131', '2', 'elms_terms', '0' ,'10')");
 	$context['message'] = st('Input Filters established');
 }
 

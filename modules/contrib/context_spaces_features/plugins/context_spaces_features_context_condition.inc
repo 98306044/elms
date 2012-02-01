@@ -1,0 +1,54 @@
+<?php
+
+/**
+ * @file
+ * This class extends the context_condition
+ */
+class context_spaces_features_context_condition extends context_condition {
+  /**
+   * Omit condition values. We will provide a custom input form for our conditions.
+   */
+  function condition_values() {
+    return array();
+  }
+
+  /**
+   * Condition form.
+   */
+  function condition_form($context) {
+    $form = parent::condition_form($context);
+    $form['#type'] = 'select';
+		$features = spaces_features();
+		foreach ($features as $key => $feature) {
+			$options[$key] = $feature->info['name'];
+		}
+		$form['#options'] = $options;
+		$form['#multiple'] = TRUE;
+    $form['#description'] = 'Select the features that you want to check if they verify are active.';
+    $form['#default_value'] = $this->fetch_from_context($context, 'values');
+    return $form;
+  }
+
+  /**
+   * Condition form submit handler.
+   */
+  function condition_form_submit($values) {
+    return $values;
+  }
+
+  /**
+   * Execute.
+   */
+  function execute() {
+    foreach (context_enabled_contexts() as $context) {
+      if ($vars = $this->fetch_from_context($context, 'values')) {
+        dpm($vars);
+				$all_conditions_met = TRUE;
+        //if all the conditions are met, pass ahead that they are met
+        if ($all_conditions_met) {
+          $this->condition_met($context);
+        }
+      }
+    }
+  }
+}

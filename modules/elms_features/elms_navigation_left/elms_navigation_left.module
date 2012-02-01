@@ -32,6 +32,17 @@ function elms_navigation_left_define_regions() {
 }
 
 /**
+ * Implementation of hook_init().
+ */
+function elms_navigation_left_init() {
+	//remove tabs and display as a block only if this is content in a group
+	$group = og_get_group_context();
+	if (isset($group->nid) && arg(1) != $group->nid) {
+    drupal_add_css(drupal_get_path('module', 'elms_navigation_left') .'/hide_tabs.css');
+	}
+}
+
+/**
  * Implementation of hook_form_alter().
  */
 function elms_navigation_left_form_alter(&$form, &$form_state, $form_id) {
@@ -77,12 +88,10 @@ function elms_navigation_left_block($op = 'list', $delta = 0, $edit = array()) {
           $block['content'] = _elms_navigation_left_parent_block($group);
         }
       break;
-      case 2:
-        //remove tabs and display as a block only if this is content in a group
+      case 2:				
         if (isset($group->nid) && arg(1) != $group->nid) {
           $block['title'] = t('Content');
           $block['content'] = _elms_navigation_left_page_block();
-          drupal_add_css(drupal_get_path('module', 'elms_navigation_left') .'/hide_tabs.css');
         }
       break;
       case 3:

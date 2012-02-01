@@ -11,10 +11,10 @@ function elms_terms_menu_default_menu_links() {
     'menu_name' => 'features',
     'link_path' => 'elms_terms',
     'router_path' => 'elms_terms',
-    'link_title' => 'Terms',
+    'link_title' => 'Glossary',
     'options' => array(
       'attributes' => array(
-        'title' => 'List of all Course Terms',
+        'title' => 'Course Glossary',
       ),
     ),
     'module' => 'system',
@@ -44,8 +44,8 @@ function elms_terms_menu_default_menu_links() {
   );
   // Translatables
   // Included for use with string extractors like potx.
+  t('Glossary');
   t('My Terms');
-  t('Terms');
 
 
   return $menu_links;

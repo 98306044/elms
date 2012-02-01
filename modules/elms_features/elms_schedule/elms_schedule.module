@@ -18,6 +18,22 @@
 include_once('elms_schedule.features.inc');
 
 /**
+ * Implementation of hook_define_highlight_relationship_alter
+ */
+function elms_schedule_define_highlight_relationship_alter(&$relationships) {
+  if (spaces_access_feature('view', 'elms_schedule')) {
+		$relationships['enhance_content']['highlight_types']['elms_event'] = array(
+			'id' => 'events',
+			'ref_field' => 'field_event_content_ref',
+			'text_field' => 'title',
+			'icon' => drupal_get_path('module', 'elms_schedule') .'/images/event.png',
+			'display_text' => t('Add an Event'),
+		);
+	}
+}
+
+
+/**
  * Implementation of hook_menu().
  */
 function elms_schedule_menu() {
@@ -520,7 +536,7 @@ function _elms_schedule_build_schedule($group, &$context) {
       $node2->field_event_name[0]['value'] = $context['sandbox']['level2'][$j]['title'];
       //only link up the first set of nodes
       if ($context['sandbox']['current_record'] == 0) {
-        $node2->field_content_ref = array(0 => array('nid' => $context['sandbox']['level2'][$j]['nid']));
+        $node2->field_event_content_ref = array(0 => array('nid' => $context['sandbox']['level2'][$j]['nid']));
       }
     }
     else {
@@ -598,7 +614,7 @@ function _elms_schedule_build_schedule($group, &$context) {
       if ($group->field_forming_week_structure[0]['value'] == 'prototype') {
         $node3->field_event_name[0]['value'] = $context['sandbox']['level3'][$k]['title'];
       if ($context['sandbox']['current_record'] == 0) {
-        $node3->field_content_ref = array(0 => array('nid' => $context['sandbox']['level3'][$k]['nid']));
+        $node3->field_event_content_ref = array(0 => array('nid' => $context['sandbox']['level3'][$k]['nid']));
       }
       }
       else {

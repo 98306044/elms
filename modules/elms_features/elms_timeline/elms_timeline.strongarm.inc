@@ -12,20 +12,19 @@ function elms_timeline_strongarm() {
   $strongarm->name = 'content_extra_weights_timeline_item';
   $strongarm->value = array(
     'title' => '12',
-    'body_field' => '19',
-    'revision_information' => '24',
-    'author' => '23',
-    'options' => '25',
-    'menu' => '15',
-    'book' => '21',
-    'path' => '26',
-    'og_nodeapi' => '16',
-    'print' => '27',
-    'workflow' => '22',
-    'locations' => '18',
-    'spaces_preset' => '28',
-    'purl' => '17',
-    'themes' => '20',
+    'body_field' => '20',
+    'revision_information' => '25',
+    'author' => '24',
+    'options' => '26',
+    'menu' => '17',
+    'book' => '22',
+    'path' => '27',
+    'og_nodeapi' => '18',
+    'print' => '28',
+    'workflow' => '23',
+    'spaces_preset' => '29',
+    'purl' => '19',
+    'themes' => '21',
   );
   $export['content_extra_weights_timeline_item'] = $strongarm;
 

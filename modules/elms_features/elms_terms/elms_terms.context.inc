@@ -13,9 +13,12 @@ function elms_terms_context_default_contexts() {
   $context->description = 'Right hand menu integration with Terms';
   $context->tag = 'ELMS Terms';
   $context->conditions = array(
-    'sitewide' => array(
+    'context_og_condition_group_type' => array(
       'values' => array(
-        1 => 1,
+        'site' => 'site',
+      ),
+      'options' => array(
+        'node_form' => 0,
       ),
     ),
   );

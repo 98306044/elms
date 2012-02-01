@@ -67,9 +67,9 @@ function elms_schedule_content_default_fields() {
     ),
   );
 
-  // Exported field: field_content_ref
-  $fields['elms_event-field_content_ref'] = array(
-    'field_name' => 'field_content_ref',
+  // Exported field: field_event_content_ref
+  $fields['elms_event-field_event_content_ref'] = array(
+    'field_name' => 'field_event_content_ref',
     'type_name' => 'elms_event',
     'display_settings' => array(
       'weight' => '14',
@@ -131,7 +131,7 @@ function elms_schedule_content_default_fields() {
       'default_value' => array(
         '0' => array(
           'nid' => NULL,
-          '_error_element' => 'default_value_widget][field_content_ref][0][nid][nid',
+          '_error_element' => 'default_value_widget][field_event_content_ref][0][nid][nid',
         ),
       ),
       'default_value_php' => NULL,

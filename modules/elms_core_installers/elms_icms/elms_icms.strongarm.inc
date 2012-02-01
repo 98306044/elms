@@ -199,13 +199,6 @@ function elms_icms_strongarm() {
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'jquery_colorpicker_ie6_page';
-  $strongarm->value = 0;
-  $export['jquery_colorpicker_ie6_page'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'pathauto_modulelist';
   $strongarm->value = array(
     0 => 'node',
@@ -407,6 +400,13 @@ function elms_icms_strongarm() {
     'shadowOffsetY' => 4,
   );
   $export['beautytips_defaults'] = $strongarm;
+
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'jquery_colorpicker_ie6_page';
+  $strongarm->value = 0;
+  $export['jquery_colorpicker_ie6_page'] = $strongarm;
 
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -4267,6 +4267,34 @@ news',
           'title' => 'title',
         ),
       ),
+      14 => array(
+        'selector' => '#nrhi_container a',
+        'options' => array(
+          'fade' => 0,
+          'gravity' => 'autoNS',
+          'trigger' => 'hover',
+          'delayIn' => '0',
+          'delayOut' => '0',
+          'opacity' => '1',
+          'offset' => '0',
+          'html' => 0,
+          'title' => 'title',
+        ),
+      ),
+      15 => array(
+        'selector' => '#nrhi_container a',
+        'options' => array(
+          'fade' => 0,
+          'gravity' => 'autoNS',
+          'trigger' => 'focus',
+          'delayIn' => '0',
+          'delayOut' => '0',
+          'opacity' => '1',
+          'offset' => '0',
+          'html' => 0,
+          'title' => 'title',
+        ),
+      ),
     ),
   );
   $export['tipsy'] = $strongarm;
@@ -4615,7 +4643,7 @@ news',
       'weight' => '-3',
       'has_required' => FALSE,
       'title' => 'Poll settings',
-      'collapsed' => 0,
+      'collapsed' => 1,
       'hidden' => 0,
     ),
     'book' => array(
@@ -4648,6 +4676,13 @@ news',
       'title' => 'Printer, e-mail and PDF versions',
       'collapsed' => 1,
       'hidden' => 1,
+    ),
+    'field_poll_text_ref' => array(
+      'region' => 'main',
+      'weight' => '-1',
+      'has_required' => FALSE,
+      'title' => 'Text Referenced',
+      'hidden' => 0,
     ),
   );
   $export['nodeformscols_field_placements_poll_default'] = $strongarm;
@@ -4886,7 +4921,7 @@ news',
     ),
     'body_field' => array(
       'region' => 'main',
-      'weight' => '3',
+      'weight' => '2',
       'has_required' => FALSE,
       'title' => NULL,
       'hidden' => 0,
@@ -4933,7 +4968,7 @@ news',
     ),
     'buttons' => array(
       'region' => 'main',
-      'weight' => '4',
+      'weight' => '5',
       'has_required' => FALSE,
       'title' => NULL,
       'hidden' => 0,
@@ -4948,7 +4983,7 @@ news',
     ),
     'field_timeline_content_ref' => array(
       'region' => 'main',
-      'weight' => '2',
+      'weight' => '3',
       'has_required' => FALSE,
       'title' => 'Content Reference',
       'hidden' => 0,
@@ -4974,6 +5009,13 @@ news',
       'title' => 'Printer, e-mail and PDF versions',
       'collapsed' => 1,
       'hidden' => 1,
+    ),
+    'field_timeline_text_ref' => array(
+      'region' => 'main',
+      'weight' => '4',
+      'has_required' => FALSE,
+      'title' => 'Text',
+      'hidden' => 0,
     ),
   );
   $export['nodeformscols_field_placements_timeline_item_default'] = $strongarm;

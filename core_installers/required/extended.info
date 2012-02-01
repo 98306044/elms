@@ -116,6 +116,7 @@ dependencies[] = "workflow_purl"
 dependencies[] = "accessible_content"
 ; Context
 dependencies[] = "context_var"
+dependencies[] = "context_spaces_features"
 ; Node reference highlighter
 dependencies[] = "nodereference_highlight"
 dependencies[] = "prepopulate"

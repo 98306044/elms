@@ -1,0 +1,7 @@
+; $Id: context_feature
+name = "Context: Features"
+description = "Context condition: Feature is active"
+package = "Context"
+project = "context_feature"
+dependencies[] = "context"
+core = "6.x"

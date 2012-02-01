@@ -44,7 +44,7 @@ foreach ($fields as $id => $field) {
       $nid = $field->content;
       $tmpnid = $field->content;
     break;
-    case 'field_content_ref_nid_1':
+    case 'field_event_content_ref_nid_1':
       $ref_nid = $field->content;
     break;
     case 'field_due_time_value':
