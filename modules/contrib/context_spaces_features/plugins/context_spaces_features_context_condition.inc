@@ -9,7 +9,11 @@ class context_spaces_features_context_condition extends context_condition {
    * Omit condition values. We will provide a custom input form for our conditions.
    */
   function condition_values() {
-    return array();
+    $features = spaces_features();
+		foreach ($features as $key => $feature) {
+			$options[$key] = $feature->info['name'];
+		}
+		return $options;
   }
 
   /**
@@ -18,12 +22,7 @@ class context_spaces_features_context_condition extends context_condition {
   function condition_form($context) {
     $form = parent::condition_form($context);
     $form['#type'] = 'select';
-		$features = spaces_features();
-		foreach ($features as $key => $feature) {
-			$options[$key] = $feature->info['name'];
-		}
-		$form['#options'] = $options;
-		$form['#multiple'] = TRUE;
+				$form['#multiple'] = TRUE;
     $form['#description'] = 'Select the features that you want to check if they verify are active.';
     $form['#default_value'] = $this->fetch_from_context($context, 'values');
     return $form;

@@ -1,7 +1,11 @@
-; $Id: context_feature
-name = "Context: Features"
-description = "Context condition: Feature is active"
+; $Id: context_spaces_features
+name = "Context: Spaces Features"
+description = "Context condition: for the Features active in the current space"
 package = "Context"
-project = "context_feature"
+project = "context_spaces_features"
 dependencies[] = "context"
+dependencies[] = "spaces"
+dependencies[] = "spaces_og"
+dependencies[] = "features"
+
 core = "6.x"

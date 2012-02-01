@@ -19,7 +19,7 @@ function context_spaces_features_context_registry() {
   return array(
     'conditions' => array(
       'context_spaces_features' => array(
-        'title' => t('Features Active'),
+        'title' => t('Active Space Features'),
         'plugin' => 'context_spaces_features_context_condition',
       ),
     ),
