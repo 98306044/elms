@@ -22,7 +22,7 @@ class context_spaces_features_context_condition extends context_condition {
   function condition_form($context) {
     $form = parent::condition_form($context);
     $form['#type'] = 'select';
-				$form['#multiple'] = TRUE;
+		$form['#multiple'] = TRUE;
     $form['#description'] = 'Select the features that you want to check if they verify are active.';
     $form['#default_value'] = $this->fetch_from_context($context, 'values');
     return $form;
@@ -41,8 +41,13 @@ class context_spaces_features_context_condition extends context_condition {
   function execute() {
     foreach (context_enabled_contexts() as $context) {
       if ($vars = $this->fetch_from_context($context, 'values')) {
-        dpm($vars);
 				$all_conditions_met = TRUE;
+				//loop through all selected options
+				foreach ($vars as $key => $name) {
+				  if (!spaces_access_feature('view', $key)) {
+					  $all_conditions_met = FALSE;
+				  }
+				}
         //if all the conditions are met, pass ahead that they are met
         if ($all_conditions_met) {
           $this->condition_met($context);
