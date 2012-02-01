@@ -13,9 +13,9 @@ function elms_reference_links_context_default_contexts() {
   $context->description = 'Right hand menu integration with Reference Links';
   $context->tag = 'ELMS Reference Links';
   $context->conditions = array(
-    'sitewide' => array(
+    'context_spaces_features' => array(
       'values' => array(
-        1 => 1,
+        'elms_reference_links' => 'elms_reference_links',
       ),
     ),
   );

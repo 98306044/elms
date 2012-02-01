@@ -13,9 +13,9 @@ function elms_polls_context_default_contexts() {
   $context->description = 'Right hand menu integration with Polls';
   $context->tag = 'ELMS Poll';
   $context->conditions = array(
-    'sitewide' => array(
+    'context_spaces_features' => array(
       'values' => array(
-        1 => 1,
+        'elms_polls' => 'elms_polls',
       ),
     ),
   );

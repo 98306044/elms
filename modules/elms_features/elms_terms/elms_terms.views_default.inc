@@ -16,17 +16,6 @@ function elms_terms_views_default_views() {
   $view->api_version = '2';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
   $handler = $view->new_display('default', 'Defaults', 'default');
-  $handler->override_option('relationships', array(
-    'field_term_content_ref_nid' => array(
-      'label' => 'Content Reference',
-      'required' => 0,
-      'delta' => -1,
-      'id' => 'field_term_content_ref_nid',
-      'table' => 'node_data_field_term_content_ref',
-      'field' => 'field_term_content_ref_nid',
-      'relationship' => 'none',
-    ),
-  ));
   $handler->override_option('fields', array(
     'title_1' => array(
       'label' => 'Displayed On',
@@ -167,11 +156,6 @@ function elms_terms_views_default_views() {
       ),
       'relationship' => 'none',
     ),
-    'nid' => array(
-      'id' => 'nid',
-      'table' => 'node',
-      'field' => 'nid',
-    ),
   ));
   $handler->override_option('access', array(
     'type' => 'spaces_feature',
@@ -202,7 +186,6 @@ function elms_terms_views_default_views() {
     'hide_empty' => 0,
   ));
   $handler = $view->new_display('block', 'Stream Block', 'block_1');
-  $handler->override_option('relationships', array());
   $handler->override_option('fields', array(
     'title' => array(
       'label' => '',
@@ -377,7 +360,6 @@ function elms_terms_views_default_views() {
   $handler->override_option('block_description', '');
   $handler->override_option('block_caching', -1);
   $handler = $view->new_display('page', 'Listing page', 'page_1');
-  $handler->override_option('relationships', array());
   $handler->override_option('fields', array(
     'title' => array(
       'label' => 'Term',

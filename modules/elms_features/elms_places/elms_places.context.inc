@@ -13,9 +13,9 @@ function elms_places_context_default_contexts() {
   $context->description = 'Right hand menu integration with Places';
   $context->tag = 'ELMS Place';
   $context->conditions = array(
-    'sitewide' => array(
+    'context_spaces_features' => array(
       'values' => array(
-        1 => 1,
+        'elms_places' => 'elms_places',
       ),
     ),
   );

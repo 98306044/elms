@@ -145,6 +145,8 @@ function elms_timeline_content_default_fields() {
     'advanced_view' => '--',
     'advanced_view_args' => '',
     'widget' => array(
+      'autocomplete_match' => 'contains',
+      'size' => '60',
       'node_link' => array(
         'teaser' => 0,
         'full' => 1,
@@ -161,8 +163,6 @@ function elms_timeline_content_default_fields() {
         ),
       ),
       'default_value_php' => NULL,
-      'autocomplete_match' => 'contains',
-      'size' => '60',
       'label' => 'Content Reference',
       'weight' => '15',
       'description' => '',

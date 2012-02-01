@@ -13,9 +13,9 @@ function elms_reaction_context_default_contexts() {
   $context->description = 'Right hand menu integration with Reactions';
   $context->tag = 'ELMS Reaction';
   $context->conditions = array(
-    'sitewide' => array(
+    'context_spaces_features' => array(
       'values' => array(
-        1 => 1,
+        'elms_reaction' => 'elms_reaction',
       ),
     ),
   );
@@ -46,6 +46,11 @@ function elms_reaction_context_default_contexts() {
   $context->description = 'Provide navigation if primary links are in use';
   $context->tag = 'ELMS Reaction';
   $context->conditions = array(
+    'context_spaces_features' => array(
+      'values' => array(
+        'elms_reaction' => 'elms_reaction',
+      ),
+    ),
     'context_var' => array(
       'values' => array(
         'theme_%theme_settings|toggle_primary_links:1' => 'theme_%theme_settings|toggle_primary_links:1',
@@ -67,7 +72,7 @@ function elms_reaction_context_default_contexts() {
           'module' => 'menu',
           'delta' => 'menu-elms-reactions',
           'region' => 'left',
-          'weight' => 0,
+          'weight' => '0',
         ),
       ),
     ),

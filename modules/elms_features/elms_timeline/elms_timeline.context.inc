@@ -13,12 +13,9 @@ function elms_timeline_context_default_contexts() {
   $context->description = 'Right hand menu integration with Timelines';
   $context->tag = 'ELMS Timeline';
   $context->conditions = array(
-    'context_og_condition_group_type' => array(
+    'context_spaces_features' => array(
       'values' => array(
-        'site' => 'site',
-      ),
-      'options' => array(
-        'node_form' => 1,
+        'elms_timeline' => 'elms_timeline',
       ),
     ),
   );

@@ -13,9 +13,9 @@ function elms_content_context_default_contexts() {
   $context->description = 'Course Content blocks that enable navigation';
   $context->tag = 'ELMS Content';
   $context->conditions = array(
-    'sitewide' => array(
+    'context_spaces_features' => array(
       'values' => array(
-        1 => 1,
+        'elms_content' => 'elms_content',
       ),
     ),
   );
