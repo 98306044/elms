@@ -3,7 +3,7 @@
 /**
  * Implementation of hook_strongarm().
  */
-function elms_icms_strongarm() {
+function elms_cle_strongarm() {
   $export = array();
 
   $strongarm = new stdClass;

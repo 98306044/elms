@@ -51,8 +51,6 @@ function elms_icms_install() {
     )
   );
   drupal_write_record('spaces_presets', $ary);
-  //geoip doesn't like strongarm
-  variable_set('geoip_data_file', 'profiles/elms/libraries/geoip/GeoIP.dat');
   //set context values regardless of UI package being installed
   variable_set('context_block_rebuild_needed', TRUE);
   variable_set('context_reaction_block_disable_core', '1');

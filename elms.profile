@@ -249,9 +249,8 @@ function elms_profile_tasks(&$task, $url) {
       array('elms_parent' => array('content', 'fieldgroup', 'node', 'views', 'variable')),
       array('elms_site' => array('content', 'fieldgroup', 'node', 'views', 'variable')),
       //revert potentially enabled features
-      array('elms_content' => array('content', 'flag', 'node')),
+      array('elms_content' => array('content', 'flag', 'node', 'views')),
       array('elms_resources' => array('content', 'menu_links', 'node', 'variable')),
-      array('elms_id_best_practices' => array('views')),
       //revert data passers
       array('elms_content_export' => array('content', 'fieldgroup')),
       array('elms_content_import' => array('content', 'fieldgroup')),
