@@ -16,7 +16,6 @@ dependencies[] = "elms_navigation_right"
 ; ELMS Core Optional
 dependencies[] = "elms_export_html"
 dependencies[] = "elms_resources"
-dependencies[] = "elms_helpdesk"
 
 ; Contrib
 dependencies[] = "strongarm"
@@ -34,7 +33,6 @@ dependencies[] = "masquerade"
 dependencies[] = "advanced_help"
 dependencies[] = "backup_migrate"
 dependencies[] = "customerror"
-dependencies[] = "geoip"
 dependencies[] = "htmlpurifier"
 dependencies[] = "imce"
 dependencies[] = "imce_crop"
