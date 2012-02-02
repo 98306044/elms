@@ -84,18 +84,6 @@ function elms_content_menu() {
   return $items;
 }
 
-/**
- * Implementation of hook_menu_alter().
- */
-function elms_content_menu_alter(&$items) {
-  //make the default front-page out of the box course content
-  $items['spaces-frontpage']['page callback'] = '_elms_content_root';
-  $items['spaces-frontpage']['access callback'] = 'spaces_access_feature';
-  $items['spaces-frontpage']['access arguments'] = array('view', 'elms_content');
-  $items['spaces-frontpage']['file'] = 'elms_content.pages.inc';
-  $items['spaces-frontpage']['file path'] = drupal_get_path('module', 'elms_content');
-}
-
 //helper function for access verification of settings page
 function _elms_content_access_check() {
   //make sure the feature is activated

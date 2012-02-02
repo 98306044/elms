@@ -502,14 +502,17 @@ function elms_helper_link_alter(&$links, $node, $comment = NULL) {
   foreach ($tmp_ref_links as $key => $link) {
       unset($links[$key]);
   }
-  //unset all flags
-  $flag_links = flag_link('node', $node);
-  //if this has flags then render them here
-  if (count($flag_links)) {
-    foreach ($flag_links as $key => $flag) {
-      unset($links[$key]);
+	//check for flags before we assume its there
+	if (module_exists('flag')) {
+    //unset all flags
+    $flag_links = flag_link('node', $node);
+    //if this has flags then render them here
+    if (count($flag_links)) {
+      foreach ($flag_links as $key => $flag) {
+        unset($links[$key]);
+      }
     }
-  }
+	}
 }
 
 /**

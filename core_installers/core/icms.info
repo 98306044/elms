@@ -20,6 +20,7 @@ dependencies[] = "data"
 ; ELMS Core - Features
 dependencies[] = "elms_content"
 dependencies[] = "elms_id_best_practices"
+dependencies[] = "elms_resources"
 dependencies[] = "elms_content_import"
 dependencies[] = "elms_content_export"
 ; ELMS ICMS Core Installer

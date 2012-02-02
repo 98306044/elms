@@ -162,7 +162,7 @@ function elms_parent_fieldgroup_default_groups() {
     ),
     'weight' => '1',
     'fields' => array(
-      '1' => 'field_required_plugins',
+      '0' => 'field_required_plugins',
     ),
   );
 

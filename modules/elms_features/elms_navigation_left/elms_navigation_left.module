@@ -62,8 +62,13 @@ function elms_navigation_left_form_alter(&$form, &$form_state, $form_id) {
  */
 function elms_navigation_left_block($op = 'list', $delta = 0, $edit = array()) {
   if ($op == 'list') {
-    $blocks[1] = array(
-      'info' => t('Course Level Navigation'),
+    $blocks[0] = array(
+      'info' => t('System Level Navigation'),
+      'weight' => 0,
+      'status' => 0,
+    );
+		$blocks[1] = array(
+      'info' => t('Parent Level Navigation'),
       'weight' => 0,
       'status' => 0,
     );
@@ -82,7 +87,11 @@ function elms_navigation_left_block($op = 'list', $delta = 0, $edit = array()) {
   elseif ($op == 'view') {
     $group = og_get_group_context();
     switch ($delta) {
-      case 1:
+      case 0:
+          $block['title'] = t('System');
+          $block['content'] = _elms_navigation_left_system_block();
+      break;
+			case 1:
         if (isset($group->nid)) {
           $block['title'] = t('Site');
           $block['content'] = _elms_navigation_left_parent_block($group);
@@ -103,10 +112,25 @@ function elms_navigation_left_block($op = 'list', $delta = 0, $edit = array()) {
   }
 }
 
+//helper function for system level items
+function _elms_navigation_left_system_block() {
+  $output = '';
+	if (user_access('view system requirements dashboard')) {
+    $output .= theme('menu_item', l(t('System Status'), 'system_stats', array('attributes' => array('title' => t('System Status')))), 0, '', FALSE, 'system');
+  }
+	if (user_access('create parent content')) {
+    $output .= theme('menu_item', l(t('Add Parent'), 'node/add/parent', array('attributes' => array('title' => t('Add Parent')))), 0, '', FALSE, 'elms_parent');
+  }
+	if (user_access('create site content')) {
+    $output .= theme('menu_item', l(t('Add Site'), 'node/add/site', array('attributes' => array('title' => t('Add Site')))), 0, '', FALSE, 'elms_site');
+  }
+	return $output;
+}
+
 //helper function for Help icon addition
 function _elms_navigation_left_help_block() {
   if (user_access('view advanced help popup')) {
-    return theme('menu_item', l(t('ELMS Help'), 'admin/advanced_help/elms_helper', array('query'  => array('popup' => TRUE), 'attributes' => array('onclick' => "var w=window.open(this.href, 'advanced_help_window', 'width=640,height=480,scrollbars,resizable'); w.focus(); return false;", 'title' => 'ELMS Help'))), 0, '', FALSE, 'help');
+    return theme('menu_item', l(t('ELMS Help'), 'admin/advanced_help/elms_helper', array('query'  => array('popup' => TRUE), 'attributes' => array('onclick' => "var w=window.open(this.href, 'advanced_help_window', 'width=640,height=480,scrollbars,resizable'); w.focus(); return false;", 'title' => t('ELMS Help')))), 0, '', FALSE, 'help');
   }
 }
 
@@ -126,26 +150,26 @@ function _elms_navigation_left_page_block() {
   return $output;
 }
 
-//helper function Course level tasks
+//helper function Parent level tasks
 function _elms_navigation_left_parent_block($group) {
   $output = '';
   //make the current workflow state as visible as possible
   if (user_access('administer workflow')) {
-    $output .= theme('menu_item', l(t(workflow_get_state_name($group->_workflow)),  'node/'. $group->nid .'/workflow', array('query' => 'destination='. $_GET['q'], 'attributes' => array('title' => t('Course State: @workflow', array('@workflow' => workflow_get_state_name($group->_workflow)))))), 0, '', FALSE, 'workflow_state workflow_state_'. $group->_workflow);
+    $output .= theme('menu_item', l(t(workflow_get_state_name($group->_workflow)),  'node/'. $group->nid .'/workflow', array('query' => 'destination='. $_GET['q'], 'attributes' => array('title' => t('Site State: @workflow', array('@workflow' => workflow_get_state_name($group->_workflow)))))), 0, '', FALSE, 'workflow_state workflow_state_'. $group->_workflow);
   }
   //if course content active, add the outline designer link
-  if (spaces_access_feature('view', 'elms_content')) {
+  if (module_exists('elms_content') && spaces_access_feature('view', 'elms_content')) {
     if (user_access('administer book outlines')) {
-    $output .= theme('menu_item', l(t('Content Outline'), 'outline_designer/book/'. $group->book_nid, array('attributes' => array('title' => 'Content Outline'))), 0, '', FALSE, 'content_outline');
+    $output .= theme('menu_item', l(t('Content Outline'), 'outline_designer/book/'. $group->book_nid, array('attributes' => array('title' => t('Content Outline')))), 0, '', FALSE, 'content_outline');
     }
   }
-  if (user_access('edit version content')) {
-    $output .= theme('menu_item', l(t('Course Settings'), 'node/'. $group->nid, array('attributes' => array('title' => 'Course Settings'))), 0, '', FALSE, 'system');
+  if (user_access('edit site content')) {
+    $output .= theme('menu_item', l(t('Site Settings'), 'node/'. $group->nid, array('attributes' => array('title' => t('Site Settings')))), 0, '', FALSE, 'system');
   }
   //import content
   if (module_exists('elms_content_import') && user_access('access administration pages')) {
     if (user_access('import elms_node_import feeds')) {
-      $output .= theme('menu_item', l(t('Import Content'), 'import/elms_node_import', array('attributes' => array('title' => 'Import Outline'))), 0, '', FALSE, 'manage_content');
+      $output .= theme('menu_item', l(t('Import Content'), 'import/elms_node_import', array('attributes' => array('title' => t('Import Outline')))), 0, '', FALSE, 'manage_content');
     }
   }
   return $output;

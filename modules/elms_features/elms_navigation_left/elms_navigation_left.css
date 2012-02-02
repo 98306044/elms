@@ -152,10 +152,7 @@ div#admin-toolbar {
 #regions_elms_navigation_left .system {
   background-image:url(images/system.png);
 }
-#regions_elms_navigation_left a[original-title="System Stats"] {
-  background-image:url(images/system.png);
-}
-#regions_elms_navigation_left a[original-title="Create Sandbox"] {
+#regions_elms_navigation_left .elms_site {
   background-image:url(images/sandbox.png);
 }
 #regions_elms_navigation_left .export {
@@ -164,7 +161,7 @@ div#admin-toolbar {
 #regions_elms_navigation_left .new_parent_site {
   background-image:url(images/newversion.png);
 }
-#regions_elms_navigation_left  a[original-title="Add Course"] {
+#regions_elms_navigation_left  .elms_parent {
   background-image:url(images/newcourse.png);    
 }
 #regions_elms_navigation_left  #masquerade-block-1 li a {

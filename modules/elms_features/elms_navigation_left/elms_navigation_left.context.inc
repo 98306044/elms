@@ -152,9 +152,9 @@ function elms_navigation_left_context_default_contexts() {
   $context->reactions = array(
     'block' => array(
       'blocks' => array(
-        'menu-menu-elms-system' => array(
-          'module' => 'menu',
-          'delta' => 'menu-elms-system',
+        'elms_navigation_left-0' => array(
+          'module' => 'elms_navigation_left',
+          'delta' => 0,
           'region' => 'regions_elms_navigation_left',
           'weight' => '3',
         ),

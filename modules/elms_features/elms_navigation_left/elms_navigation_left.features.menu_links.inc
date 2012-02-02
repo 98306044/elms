@@ -11,11 +11,11 @@ function elms_navigation_left_menu_default_menu_links() {
     'menu_name' => 'menu-elms-system',
     'link_path' => 'node/add/parent',
     'router_path' => 'node/add/parent',
-    'link_title' => 'Add Course',
+    'link_title' => 'Add Parent',
     'options' => array(
       'purl' => 'disabled',
       'attributes' => array(
-        'title' => 'Add Course',
+        'title' => 'Add Parent',
       ),
     ),
     'module' => 'menu',
@@ -65,7 +65,7 @@ function elms_navigation_left_menu_default_menu_links() {
   );
   // Translatables
   // Included for use with string extractors like potx.
-  t('Add Course');
+  t('Add Parent');
   t('Create Sandbox');
   t('System Stats');
 

@@ -34,7 +34,7 @@ function elms_site_context_default_contexts() {
           'module' => 'menu',
           'delta' => 'features',
           'region' => 'left',
-          'weight' => '0',
+          'weight' => '10',
         ),
       ),
     ),

@@ -1,4 +1,4 @@
-name = "ELMS ICMS"
+name = "ELMS: ICMS"
 description = "Installs the default settings for an Instructional Content Management System"
 core = "6.x"
 package = "ELMS Core Focus"

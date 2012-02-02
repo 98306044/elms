@@ -199,13 +199,6 @@ function elms_cle_strongarm() {
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'jquery_colorpicker_ie6_page';
-  $strongarm->value = 0;
-  $export['jquery_colorpicker_ie6_page'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'pathauto_modulelist';
   $strongarm->value = array(
     0 => 'node',
@@ -407,6 +400,13 @@ function elms_cle_strongarm() {
     'shadowOffsetY' => 4,
   );
   $export['beautytips_defaults'] = $strongarm;
+
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'jquery_colorpicker_ie6_page';
+  $strongarm->value = 0;
+  $export['jquery_colorpicker_ie6_page'] = $strongarm;
 
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -1692,35 +1692,38 @@ news',
   $strongarm->api_version = 1;
   $strongarm->name = 'locale_custom_strings_en';
   $strongarm->value = array(
-    'A brief description for the group details block and the group directory.' => 'Enter a short course version topic description',
-    'Add New Site' => 'Add New Version',
-    'Books need to have at least one piece of content in them in order to work correctly with the outline designer' => 'Version Outlines need to have at least one piece of content in them before you can work with the outline designer',
-    'Choose a path. May contain only lowercase letters, numbers, dashes and underscores. e.g. "my-value"' => '"Choose a path for your version. May only contain lowercase letters and numbers. e.g. "art010""',
+    'A brief description for the group details block and the group directory.' => 'Enter a short studio topic description',
+    'Add New Site' => 'Add New Studio',
+    'Add Parent' => 'Add Course',
+    'Add Site' => 'Add Studio',
+    'Books need to have at least one piece of content in them in order to work correctly with the outline designer' => 'Studio Outlines need to have at least one piece of content in them before you can work with the outline designer',
+    'Choose a path. May contain only lowercase letters, numbers, dashes and underscores. e.g. "my-value"' => '"Choose a path for your studio. May only contain lowercase letters and numbers. e.g. "art010""',
     'Create Parent' => 'Create Course',
-    'Create Site' => 'Create Version',
-    'Delete all group posts which don\'t also belong to another group.' => 'Delete all content of this version.',
-    'Delete group' => 'Delete Course Version',
+    'Create Sandbox' => 'Create Studio',
+    'Create Site' => 'Create Studio',
+    'Delete all group posts which don\'t also belong to another group.' => 'Delete all content of this studio.',
+    'Delete group' => 'Delete Course Studio',
     'Editorial note' => 'Instructor Highlight',
     'Enroll in a group' => 'Enter code',
-    'Enter a registration key if you want to allow users to enter a key to join this group. Leave this field blank if you do not want to allow users to join this group with a registration key.' => 'Enter a passcode if you want to restrict your course version materials to only the people you give the code to.',
+    'Enter a registration key if you want to allow users to enter a key to join this group. Leave this field blank if you do not want to allow users to join this group with a registration key.' => 'Enter a passcode if you want to restrict your course studio materials to only the people you give the code to.',
     'Enter the username to masquerade as.' => '',
     'Enter your message text here' => 'Type your questions here',
     'Go' => 'Masquerade',
     'Group activity' => 'Course Activity',
-    'Group Name' => 'Version Name',
-    'Group posts' => 'How should version content be handled?',
-    'Group registration key' => 'Version Passcode',
-    'Group space' => 'Version Type',
+    'Group Name' => 'Studio Name',
+    'Group posts' => 'How should studio content be handled?',
+    'Group registration key' => 'Studio Passcode',
+    'Group space' => 'Type of Studio',
     'Group Stats' => 'Status',
-    'Groups' => 'Course Versions',
-    'If you chose <strong>Move all group posts</strong> above, specify a destination group.' => 'If you chose <strong>move all course version content</strong>, specify the destination version.',
+    'Groups' => 'Course Studios',
+    'If you chose <strong>Move all group posts</strong> above, specify a destination group.' => 'If you chose <strong>move all course studio content</strong>, specify the destination studio.',
     'In addition to deleting this group, you choose how to disposition the posts and memberships within it.' => '',
-    'Join' => 'Enter Course Version',
+    'Join' => 'Enter Course Studio',
     'Make your personal annotations about this content here. When marked private only you (and the site administrator) will be able to see them.' => 'Notes on content will only be visible to you and instructional staff.',
-    'Move all group posts and memberships to the group listed below.' => 'Move all version content and students/instructors to the version selected below.',
-    'Move all group posts to the group listed below.' => 'Move all version content to the version selected below.',
+    'Move all group posts and memberships to the group listed below.' => 'Move all studio content and students/instructors to the studio selected below.',
+    'Move all group posts to the group listed below.' => 'Move all studio content to the studio selected below.',
     'My groups' => 'My Courses',
-    'No groups found.' => 'No course versions found.',
+    'No groups found.' => 'No course studios found.',
     'No posts in this group.' => ' ',
     'No public posts in this group.' => '',
     'No public posts in this group. Consider <a href="!url">joining this group</a> in order to view its posts.' => '',
@@ -1730,18 +1733,21 @@ news',
     'Parent Status' => 'Course Status',
     'Parents' => 'Courses',
     'Rearrange child pages' => 'Edit Outline',
+    'Sandbox' => 'Studio',
     'Search group' => 'Search Course',
-    'Selecting a different theme will change the look and feel of the group.' => 'Select a theme for the course version',
-    'Site' => 'Version',
-    'Site Status' => 'Version Status',
-    'Sites' => 'Versions',
+    'Selecting a different theme will change the look and feel of the group.' => 'Select a theme for the course studio',
+    'Site' => 'Studio',
+    'Site State: @workflow' => 'Studio Status: @workflow',
+    'Site Status' => 'Studio Status',
+    'Sites' => 'Studios',
     'Submit' => 'Save',
-    'Target group' => 'Target Version',
+    'Target group' => 'Target Studio',
     'Theme configuration' => 'Theme',
     'This action cannot be undone.' => '<strong>This action cannot be undone.</strong>',
     'Use a registration key to enroll in a group.' => '',
     'You are now a member of !group_name.' => 'You are now enrolled in !group_name.',
     'You are now a member of %group.' => 'You are now enrolled in %group.',
+    'Site Settings' => 'Studio Settings',
   );
   $export['locale_custom_strings_en'] = $strongarm;
 
@@ -2902,13 +2908,6 @@ news',
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'og_content_type_usage_parent';
-  $strongarm->value = 'omitted';
-  $export['og_content_type_usage_parent'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'og_content_type_usage_parent_resource';
   $strongarm->value = 'omitted';
   $export['og_content_type_usage_parent_resource'] = $strongarm;
@@ -3993,22 +3992,22 @@ news',
     'toggle_comment_user_picture' => 0,
     'toggle_primary_links' => 0,
     'toggle_secondary_links' => 0,
-    'toggle_node_info_poll' => 0,
     'toggle_node_info_accessibility_guideline' => 0,
     'toggle_node_info_accessibility_test' => 0,
+    'toggle_node_info_parent' => 0,
+    'toggle_node_info_studio_submission' => 1,
+    'toggle_node_info_site' => 0,
+    'toggle_node_info_content_links' => 0,
+    'toggle_node_info_elms_resource' => 0,
     'toggle_node_info_folder' => 0,
     'toggle_node_info_link' => 0,
     'toggle_node_info_page' => 0,
-    'toggle_node_info_referenced_page' => 0,
-    'toggle_node_info_parent' => 0,
     'toggle_node_info_place' => 0,
+    'toggle_node_info_poll' => 0,
     'toggle_node_info_reaction' => 0,
-    'toggle_node_info_content_links' => 0,
-    'toggle_node_info_elms_resource' => 0,
+    'toggle_node_info_referenced_page' => 0,
     'toggle_node_info_term' => 0,
     'toggle_node_info_timeline_item' => 0,
-    'toggle_node_info_elms_event' => 1,
-    'toggle_node_info_site' => 0,
     'logo_upload' => '',
     'favicon_upload' => '',
   );
@@ -4520,7 +4519,7 @@ news',
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'workflow_purl_3';
-  $strongarm->value = '[field_parent_ref-title]_sandbox_[nid]';
+  $strongarm->value = '[field_parent_ref-title]_inactive_[nid]';
   $export['workflow_purl_3'] = $strongarm;
 
   $strongarm = new stdClass;
@@ -4534,14 +4533,14 @@ news',
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'workflow_purl_6';
-  $strongarm->value = '[field_parent_ref-title]_archive_[field_section_semester-raw][field_section_year-raw][field_campus-raw][field_section_number-raw]';
+  $strongarm->value = '[field_parent_ref-title]_active_[field_section_semester-raw][field_section_year-raw][field_campus-raw][field_section_number-raw]';
   $export['workflow_purl_6'] = $strongarm;
 
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'workflow_purl_7';
-  $strongarm->value = '[field_parent_ref-title]_promo_[nid]';
+  $strongarm->value = '[field_parent_ref-title]_sample_[nid]';
   $export['workflow_purl_7'] = $strongarm;
 
   $strongarm = new stdClass;
@@ -5185,11 +5184,32 @@ news',
   $strongarm->api_version = 1;
   $strongarm->name = 'elms_helper_disallowed_themes';
   $strongarm->value = array(
+    'aed511' => 'aed511',
+    'art020' => 'art020',
+    'art030' => 'art030',
+    'art100' => 'art100',
+    'art297' => 'art297',
+    'elearning_urban' => 'elearning_urban',
+    'gd100' => 'gd100',
+    'inart258' => 'inart258',
+    'journal' => 'journal',
+    'larch065' => 'larch065',
+    'music007' => 'music007',
+    'music009' => 'music009',
+    'theat107' => 'theat107',
+    'theater' => 'theater',
     'cube' => 'cube',
     'bluemarine' => 'bluemarine',
     'pushbutton' => 'pushbutton',
   );
   $export['elms_helper_disallowed_themes'] = $strongarm;
+
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'og_content_type_usage_parent';
+  $strongarm->value = 'omitted';
+  $export['og_content_type_usage_parent'] = $strongarm;
 
   return $export;
 }

@@ -119,6 +119,8 @@ function nodereference_highlight_footer() {
 	if (arg(0) == 'node' && arg(2) == '') {
 	  //get all relationships to know what types to add
 	  $rels = nodereference_highlight_get_relationships();
-	  return _nodereference_highlight_render_items($rels['enhance_content']['highlight_types']);
+		if (!empty($rels)) {
+	    return _nodereference_highlight_render_items($rels['enhance_content']['highlight_types']);
+		}
 	}
 }

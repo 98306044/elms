@@ -576,7 +576,7 @@ function system_form_install_configure_form_alter(&$form, $form_state) {
 	$form['core_installer']['features'] = array(
 	  '#type' => 'checkboxes',
 		'#options' => $features,
-		'#default_value' => array('content'),
+		'#default_value' => array(),
 		'#title' => st('Features'),
 		'#description' => st('Features that you would like to have access to, you can always turn these on after install'),
 	);

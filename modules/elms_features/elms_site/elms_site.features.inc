@@ -42,7 +42,7 @@ function elms_site_imagecache_default_presets() {
 function elms_site_node_info() {
   $items = array(
     'site' => array(
-      'name' => t('Version'),
+      'name' => t('Site'),
       'module' => 'features',
       'description' => t('A site is a microsite contained within a larger ELMS instance'),
       'has_title' => '1',
