@@ -24,20 +24,26 @@ You should have received a copy of the GNU General Public License along
 with this program; if not,  write to the Free Software Foundation,  Inc.,
 51 Franklin Street,  Fifth Floor,  Boston,  MA 02110-1301 USA.
 
-The features of this system are still being ironed out as discussions progress.  Modules and Libraries used as part of this distribution are licensed according to their local LICENSE / README files though the vast majority is GPL and hosted on drupal.org as a result.  If you are interested in joining efforts in development please email elms@psu.edu.
+The features of this system are still being ironed out as discussions progress.
+
+Everything in this profile is Liscensed as GPL with the following exception:
+-- The Simile timeline library is BSD
+
+
+If you are interested in joining efforts in development please email elms@psu.edu.
 
 ------------
 UPGRADE PATH
 ------------
-If you were running Alpha code there is no upgrade path from Alpha to Beta.  Clear out Alpha files and install this release as a fresh install.  Upgrades will be supported between versions of Beta / Release Candidate / Final.
+If you were running Alpha code there is no upgrade path from Alpha to Beta.  Clear out Alpha files and install this release as a fresh install.  Upgrades will be supported between versions of Beta / Release Candidate.
 
 ------------
 INSTALLATION
 ------------
-*Download the ELMS ICMS distribution from http://drupal.psu.edu/fserver
+*Download the ELMS distribution from http://drupal.psu.edu/fserver
 *Unzip and go to the install.php page from a web-browser as you normally would when installing Drupal
 *Select the ELMS radio bubble and run through the typical Drupal installation
-*Select the core focus and optional packages that you'd like to install with ELMS
+*Select the core focus, features and optional packages that you'd like to install with ELMS
 *You are now running ELMS, enjoy making courses!
 
 ------------
@@ -66,6 +72,5 @@ Annoying MYSQL max packet error
 ------------
 Known issues
 ------------
-*There are still some admin UIs that need to be built out and more visual user management
+*There are still some admin UIs that need to be built out and more visual user management.  Feeds can be constructed to import users without much of an issue but that is still down the road in our development.
 *The Studio, Reactions and Schedule Features have not been fully implemented.  The Course Content feature is mostly feature complete at this time.
-* There are settings pages for all features but only the Course Content settings page has been partially implemented.  These should be finished for the next release
