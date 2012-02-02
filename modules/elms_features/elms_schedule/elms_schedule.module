@@ -22,14 +22,14 @@ include_once('elms_schedule.features.inc');
  */
 function elms_schedule_define_highlight_relationship_alter(&$relationships) {
   if (spaces_access_feature('view', 'elms_schedule')) {
-		$relationships['enhance_content']['highlight_types']['elms_event'] = array(
-			'id' => 'events',
-			'ref_field' => 'field_event_content_ref',
-			'text_field' => 'title',
-			'icon' => drupal_get_path('module', 'elms_schedule') .'/images/event.png',
-			'display_text' => t('Add an Event'),
-		);
-	}
+    $relationships['enhance_content']['highlight_types']['elms_event'] = array(
+      'id' => 'events',
+      'ref_field' => 'field_event_content_ref',
+      'text_field' => 'title',
+      'icon' => drupal_get_path('module', 'elms_schedule') .'/images/event.png',
+      'display_text' => t('Add an Event'),
+    );
+  }
 }
 
 

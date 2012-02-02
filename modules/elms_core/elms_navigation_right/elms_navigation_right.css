@@ -26,7 +26,7 @@
   cursor:pointer;
   position:fixed;
   font-size:14px;
-	font-weight:bold;
+  font-weight:bold;
 }
 
 #regions_elms_navigation_right .regions_block_content {
@@ -59,37 +59,37 @@
 }
 /* colors for the blocks on the right */
 #regions_block_views_elms_timeline_list-block_1 .regions_block_title {
-	background-color:#ffe4ad;
+  background-color:#ffe4ad;
 }
 #regions_block_views_elms_timeline_list-block_1 .regions_block_content {
   border-left:solid 10px #ffe4ad;
 }
 #regions_block_views_elms_poll_list-block_1 .regions_block_title {
-	background-color:#addeff;
+  background-color:#addeff;
 }
 #regions_block_views_elms_poll_list-block_1 .regions_block_content {
   border-left:solid 10px #addeff;
 }
 #regions_block_views_elms_reaction_list-block_1 .regions_block_title {
-	background-color:#ffb39e;
+  background-color:#ffb39e;
 }
 #regions_block_views_elms_reaction_list-block_1 .regions_block_content {
   border-left:solid 10px #ffb39e;
 }
 #regions_block_views_elms_place_list-block_1 .regions_block_title {
-	background-color:#ebff99;
+  background-color:#ebff99;
 }
 #regions_block_views_elms_place_list-block_1 .regions_block_content {
   border-left:solid 10px #ebff99;
 }
 #regions_block_views_elms_related_links_list-block_1 .regions_block_title {
-	background-color:#e9bdff;
+  background-color:#e9bdff;
 }
 #regions_block_views_elms_related_links_list-block_1 .regions_block_content {
   border-left:solid 10px #e9bdff;
 }
 #regions_block_views_elms_term_list-block_1 .regions_block_title {
-	background-color:#F6B0B8;
+  background-color:#F6B0B8;
 }
 #regions_block_views_elms_term_list-block_1 .regions_block_content {
   border-left:solid 10px #F6B0B8;

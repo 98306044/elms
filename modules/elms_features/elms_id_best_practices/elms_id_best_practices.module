@@ -38,7 +38,7 @@ function elms_id_best_practices_menu() {
   );
   $items['admin/elms/id_best_practices'] = array(
     'title' => 'ID Best Practices',
-		'description' => 'Default settings related to instructional best practices',
+    'description' => 'Default settings related to instructional best practices',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('elms_id_best_practices_settings'),
     'access arguments' => array('administer site configuration'),

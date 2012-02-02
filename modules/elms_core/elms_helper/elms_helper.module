@@ -92,15 +92,15 @@ function elms_helper_menu() {
   $items = array();
   $items['admin/elms'] = array(
     'title' => 'ELMS',
-		'description' => 'Adjust ELMS system configuration options.',
+    'description' => 'Adjust ELMS system configuration options.',
     'weight' => -20,
-	  'access arguments' => array('administer elms configuration'),
-	  'page callback' => 'elms_helper_settings_overview',
+    'access arguments' => array('administer elms configuration'),
+    'page callback' => 'elms_helper_settings_overview',
     'file' => 'elms_helper.admin.inc',
-	);
+  );
   $items['admin/elms/defaults'] = array(
     'title' => 'System Defaults',
-		'description' => 'Set defaults for themes used and other global logic',
+    'description' => 'Set defaults for themes used and other global logic',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('elms_helper_settings'),
     'access arguments' => array('administer elms configuration'),

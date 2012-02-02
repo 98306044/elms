@@ -8,13 +8,13 @@ include_once('elms_terms.features.inc');
 function elms_terms_define_highlight_relationship_alter(&$relationships) {
   if (spaces_access_feature('view', 'elms_terms')) {
     $relationships['enhance_content']['highlight_types']['term'] = array(
-		  'id' => 'glossary',
-		  'ref_field' => '-auto-detect-',
-		  'text_field' => 'title',
-		  'icon' => drupal_get_path('module', 'elms_terms') .'/images/term.png',
-		  'display_text' => t('Add Term to Glossary'),
-	  );
-	}
+      'id' => 'glossary',
+      'ref_field' => '-auto-detect-',
+      'text_field' => 'title',
+      'icon' => drupal_get_path('module', 'elms_terms') .'/images/term.png',
+      'display_text' => t('Add Term to Glossary'),
+    );
+  }
 }
 
 /**
@@ -28,29 +28,29 @@ function elms_terms_filter($op, $delta = 0, $format = -1, $text = '', $cache_id 
     case 'description':
       return t('Check content for contextual references based on nodes in the same space');
     break;
-		case 'no cache':
-		  return FALSE;
-		break;
+    case 'no cache':
+      return FALSE;
+    break;
     case 'prepare':
-		  if (spaces_access_feature('view', 'elms_terms')) {
-		    $group = og_get_group_context();
-		    //make sure we are in a group though it's almost impossible not to be
-		    if (isset($group->nid)) {
-			    $result = db_query("SELECT n.title FROM {node} AS n JOIN {og_ancestry} AS oga ON oga.nid=n.nid WHERE type='term' AND oga.group_nid=%d", $group->nid);
-			    //add wrappers as we find them
-			    while ($val = db_fetch_array($result)) {
-				    $text = str_replace($val['title'], '[termref]'. $val['title'] .'[/termref]', $text);
-			    }
-		    }
-	    }
+      if (spaces_access_feature('view', 'elms_terms')) {
+        $group = og_get_group_context();
+        //make sure we are in a group though it's almost impossible not to be
+        if (isset($group->nid)) {
+          $result = db_query("SELECT n.title FROM {node} AS n JOIN {og_ancestry} AS oga ON oga.nid=n.nid WHERE type='term' AND oga.group_nid=%d", $group->nid);
+          //add wrappers as we find them
+          while ($val = db_fetch_array($result)) {
+            $text = str_replace($val['title'], '[termref]'. $val['title'] .'[/termref]', $text);
+          }
+        }
+      }
       return $text;
     break;
     case "process":
-		  //nothing needed here because nodereference_highlight will take care of it
+      //nothing needed here because nodereference_highlight will take care of it
       return $text;
     break;
     default:
       return $text;
-		break;
+    break;
   }
 }

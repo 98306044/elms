@@ -18,6 +18,6 @@ function _elms_content_root() {
     }
   }
   //if it didn't find anything go to the course node
-	drupal_goto('node/'. $group->nid);
+  drupal_goto('node/'. $group->nid);
   return 1;
 }

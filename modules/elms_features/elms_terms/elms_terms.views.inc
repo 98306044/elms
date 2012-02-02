@@ -7,16 +7,16 @@ function elms_terms_views_query_alter(&$view, &$query) {
   $group = og_get_group_context();
   if ($view->name == 'elms_term_list' && $view->current_display == 'block_1' && isset($group->nid)) {
     //add wrappers as we find them
-		$node = node_load($view->args[0]);
-		//make sure this node has content, otherwise we're wasting time
-		if ($node->body != '') {
-			$result = db_query("SELECT n.title, n.nid FROM {node} AS n JOIN {og_ancestry} AS oga ON oga.nid=n.nid WHERE type='term' AND oga.group_nid=%d", $group->nid);
+    $node = node_load($view->args[0]);
+    //make sure this node has content, otherwise we're wasting time
+    if ($node->body != '') {
+      $result = db_query("SELECT n.title, n.nid FROM {node} AS n JOIN {og_ancestry} AS oga ON oga.nid=n.nid WHERE type='term' AND oga.group_nid=%d", $group->nid);
       while ($val = db_fetch_array($result)) {
         if (strpos($node->body, $val['title']) !== FALSE) {
-					$nids[] = $val['nid'];
-				}
+          $nids[] = $val['nid'];
+        }
       }
-		}
+    }
     //we didn't find any nodes, make the query return nothing
     if (empty($nids)) {
       $nids = array(0);
