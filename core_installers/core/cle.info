@@ -1,0 +1,8 @@
+name = "CLE: Collaborative Learning Environment"
+description = "Install ELMS with a core focus on collaboration and forming learning communities."
+type = "installer"
+
+; ELMS Core - Features
+dependencies[] = "elms_studio"
+; ELMS ICMS Core Installer
+dependencies[] = "elms_cle"

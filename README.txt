@@ -26,9 +26,9 @@ with this program; if not,  write to the Free Software Foundation,  Inc.,
 
 The features of this system are still being ironed out as discussions progress.
 
-Everything in this profile is Liscensed as GPL with the following exception:
+Everything in this package is licensed as GPL with the following exceptions:
+-- The HTML Purifier library is LGPL
 -- The Simile timeline library is BSD
-
 
 If you are interested in joining efforts in development please email elms@psu.edu.
 

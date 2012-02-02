@@ -1,5 +1,5 @@
 ELMS: Export HTML- Export your ELMS Site to HTML
-Copyright (C) 2011  The Pennsylvania State University
+Copyright (C) 2011-2012  The Pennsylvania State University
 
 Bryan Ollendyke
 bto108@psu.edu

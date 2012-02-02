@@ -2,7 +2,7 @@
 
 include_once('elms_navigation_top.features.inc');
 //ELMS
-//Copyright (C) 2011  The Pennsylvania State University
+//Copyright (C) 2011-2012  The Pennsylvania State University
 //
 //Bryan Ollendyke
 //bto108@psu.edu
@@ -80,7 +80,6 @@ function elms_navigation_top_block($op = 'list', $delta = 0, $edit = array()) {
       //only show menu options for logged in users
       global $user;
       if (!isset($user->uid) || $user->uid == 0 || $user->uid == '') {
-        //account for PSU's custom login system or to use the drupal default
         $block['title'] = l(t('Login'), 'user/login');
         $block['content'] = ' ';
       }

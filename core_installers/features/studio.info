@@ -1,0 +1,4 @@
+name = "ELMS Studio"
+description = "Enable studio submission functionality"
+type = "features"
+dependencies[] = "elms_studio"
