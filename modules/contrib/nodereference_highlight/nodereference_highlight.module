@@ -135,7 +135,7 @@ function nodereference_highlight_footer() {
 		foreach ($rels as $relationship) {
 			//verify that this relationship can be used on this node type
 			$node = node_load(arg(1));
-			if (isset($node->nid) && in_array($node->type, $relationship['type'])) {
+			if (isset($node->nid) && in_array($node->type, $relationship['types'])) {
 	      $output .= _nodereference_highlight_render_items($relationship);
 			}
 		}
