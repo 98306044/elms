@@ -2,10 +2,6 @@
 name = "Spaces OG Clone"
 description = "This module provides a method for cloning all content in a Spaces aware organic group based on certain criteria."
 package = Spaces
-version = "6.x-1.0-beta2"
-core = "6.x"
-project = "spaces_og_clone"
-project status url = "http://drupal.psu.edu/fserver"
 dependencies[] = og
 dependencies[] = spaces
 dependencies[] = spaces_og
