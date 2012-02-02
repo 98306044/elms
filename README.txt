@@ -44,7 +44,7 @@ INSTALLATION
 *Unzip and go to the install.php page from a web-browser as you normally would when installing Drupal
 *Select the ELMS radio bubble and run through the typical Drupal installation
 *Select the core focus, features and optional packages that you'd like to install with ELMS
-*You are now running ELMS, enjoy making courses!
+*You are now running ELMS, enjoy making {what ever your core calls sites}!
 
 ------------
 TROUBLESHOOTING INSTALLATION / SETUP
