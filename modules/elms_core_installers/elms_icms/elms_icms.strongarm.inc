@@ -199,13 +199,6 @@ function elms_icms_strongarm() {
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'jquery_colorpicker_ie6_page';
-  $strongarm->value = 0;
-  $export['jquery_colorpicker_ie6_page'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'pathauto_modulelist';
   $strongarm->value = array(
     0 => 'node',
@@ -407,6 +400,13 @@ function elms_icms_strongarm() {
     'shadowOffsetY' => 4,
   );
   $export['beautytips_defaults'] = $strongarm;
+
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'jquery_colorpicker_ie6_page';
+  $strongarm->value = 0;
+  $export['jquery_colorpicker_ie6_page'] = $strongarm;
 
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -1742,6 +1742,8 @@ news',
     'Use a registration key to enroll in a group.' => '',
     'You are now a member of !group_name.' => 'You are now enrolled in !group_name.',
     'You are now a member of %group.' => 'You are now enrolled in %group.',
+    'Add Parent' => 'Add Course',
+    'Add Site' => 'Create Sandbox',
   );
   $export['locale_custom_strings_en'] = $strongarm;
 
@@ -3993,7 +3995,6 @@ news',
     'toggle_comment_user_picture' => 0,
     'toggle_primary_links' => 0,
     'toggle_secondary_links' => 0,
-    'toggle_node_info_poll' => 0,
     'toggle_node_info_accessibility_guideline' => 0,
     'toggle_node_info_accessibility_test' => 0,
     'toggle_node_info_folder' => 0,
@@ -4001,14 +4002,14 @@ news',
     'toggle_node_info_page' => 0,
     'toggle_node_info_referenced_page' => 0,
     'toggle_node_info_parent' => 0,
-    'toggle_node_info_place' => 0,
-    'toggle_node_info_reaction' => 0,
-    'toggle_node_info_content_links' => 0,
     'toggle_node_info_elms_resource' => 0,
+    'toggle_node_info_site' => 0,
+    'toggle_node_info_content_links' => 0,
+    'toggle_node_info_place' => 0,
+    'toggle_node_info_poll' => 0,
+    'toggle_node_info_reaction' => 0,
     'toggle_node_info_term' => 0,
     'toggle_node_info_timeline_item' => 0,
-    'toggle_node_info_elms_event' => 1,
-    'toggle_node_info_site' => 0,
     'logo_upload' => '',
     'favicon_upload' => '',
   );
