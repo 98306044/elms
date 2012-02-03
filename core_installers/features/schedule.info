@@ -1,4 +1,0 @@
-name = "ELMS Schedule"
-description = "Enable tools for building schedules"
-type = "features"
-dependencies[] = "elms_schedule"
