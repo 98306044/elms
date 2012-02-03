@@ -53,7 +53,7 @@ function elms_helper_init() {
   }
   //fixes glitch in other og projects where it forgets to set theme
   if (arg(0) == 'node') {
-    $node = node_load(arg(1));
+    $node = menu_get_object();
     if (og_is_group_type($node->type)) {
       og_set_theme($node);
       $theme_settings = variable_get('theme_'. $node->og_theme .'_settings', array());

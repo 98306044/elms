@@ -123,7 +123,7 @@ function elms_content_block($op = 'list', $delta = 0, $edit = array()) {
       if (isset($group->nid)) {
         //if this is a node, load it
         if (arg(0) == 'node' && is_numeric(arg(1)) && arg(1) != $group->nid) {
-          $node = node_load(arg(1));
+          $node = menu_get_object();
           if (isset($node->book)) {
             $block = module_invoke('book', 'block', 'view', 0);
           }

@@ -106,7 +106,7 @@ function _elms_navigation_bottom_page_controls() {
   //if we're not in a group we can skip most of theses
   if (isset($group->nid)) {
     if (ctype_digit(arg(1))) {
-      $node = node_load(arg(1));  
+      $node = menu_get_object();  
       //if there is a previous page in this book, and its not the root, link
       if ($prev = book_prev($node->book)) {
         //make sure this isn't pointing to the root

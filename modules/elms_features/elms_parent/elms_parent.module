@@ -91,7 +91,7 @@ function elms_parent_dashboard_requirements($provider) {
     }
   break;
     case 'elms_parent':
-      $node = node_load(arg(1));
+      $node = menu_get_object();
       //add name
       $requirements['name'] = array(
         'title' => t('Name'), 
