@@ -6,10 +6,6 @@ Editable Fields
 -- editablefields.js
 -- modified included js file to work with date popups
 
-Outline Designer
--- Patch to block deleting of non-book items triggered by PURL
--- This will be rolled into the community version of Outline Designer once ICMS is final
-
 Spaces OG
 -- http://drupal.org/node/1101738
 -- spaces/spaces_og/spaces_og.modules
@@ -28,7 +24,7 @@ WYSIWYG Templates
 -- see lines 164 & 171
 
 Context
--- Allow for setting block weights through the UI to avoid conflicts between contexts
+-- Allow for setting block weights through the UI to avoid conflicts between context placement
 -- http://drupal.org/node/455908#comment-4998204
 
 HTML Purifier Library
