@@ -17,3 +17,9 @@ stylesheets[all][] = css/accessibility.css
 scripts[] = js/script.js
 scripts[] = js/jquery.accordion.pack.js
 scripts[] = js/jquery.easing.js
+; Information added by drupal.org packaging script on 2012-02-04
+version = "6.x-1.0-alpha6"
+core = "6.x"
+project = "elms_themes"
+datestamp = "1328320242"
+
