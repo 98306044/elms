@@ -14,18 +14,6 @@ function poll_extras_perm() {
 function poll_extras_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
   if ($node->type == 'poll') {
     switch ($op) {
-      case 'view':
-				//see if the user is allowed to view the poll results
-        if (user_access('view poll results') || (user_access('view finished poll results') && !$node->active)) {
-          //render as usual
-        }
-        else {
-          if (!$node->allowvotes) {
-					  $node->content['body']['#value'] = _poll_extras_load_msg($node->nid);
-					}
-        }
-      break;
-			
 			case 'insert':
 			case 'update':
 			  $msg = check_plain($_POST['poll_view_msg']);
@@ -43,13 +31,41 @@ function _poll_extras_load_msg($nid) {
   else {
     return variable_get('poll_default_message', 'Thank you for taking the poll!');
   }
-}
+}  
 
 /**
  * Implementation of hook_form_alter().
  */
 function poll_extras_form_alter(&$form, &$form_state, $form_id) {
-  if ($form_id == 'poll_node_form') {
+	if ($form_id == 'poll_view_voting') {
+		$node = menu_get_object();
+		//see if the user is allowed to view the poll results
+		if (user_access('view poll results') || (user_access('view finished poll results') && !$node->active)) {
+			//render as usual
+		}
+		else {
+			if (!$node->allowvotes) {
+				//unset everything associated with the form or it will still render
+				$form = array();
+				$form['poll_view_voting']['#value'] = _poll_extras_load_msg($node->nid);
+			}
+		}
+	}
+	//alter the form as it's about to be output
+  if ($form_id == 'poll_cancel_form') {
+    $node = menu_get_object();
+		//see if the user is allowed to view the poll results
+		if (user_access('view poll results') || (user_access('view finished poll results') && !$node->active)) {
+			//render as usual
+		}
+		else {
+			if (!$node->allowvotes) {
+				$form = array();
+				$form['poll_extras_msg'] = _poll_extras_load_msg($node->nid);
+			}
+		}
+	}
+	if ($form_id == 'poll_node_form') {
     //see if this poll has been submitted otherwise provide a default message
     if (isset($form['nid']['#value'])) {
       $default = _poll_extras_load_msg($form['nid']['#value']);

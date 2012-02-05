@@ -5,6 +5,16 @@
  */
 function poll_extras_install() {
 	db_query("ALTER TABLE {poll} ADD COLUMN message text AFTER active");
+	db_query("UPDATE {system} SET weight = 10 WHERE name = 'poll_extras' AND type = 'module'");
+}
+
+/**
+ * Increate the weight of spaces_og_clone.
+ */
+function poll_extras_update_6101() {
+  $ret = array();
+  $ret[] = update_sql("UPDATE {system} SET weight = 10 WHERE name = 'poll_extras' AND type ='module'");
+  return $ret;
 }
 
 /**

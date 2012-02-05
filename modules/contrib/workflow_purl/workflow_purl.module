@@ -140,7 +140,7 @@ function _workflow_purl_get_purl($node) {
  */
 function workflow_purl_exit($destination = NULL) {
   //test for the workflow purl redirect flag
-  if ($GLOBALS['workflow_purl_redirect_required']) {
+  if (isset($GLOBALS['workflow_purl_redirect_required']) && $GLOBALS['workflow_purl_redirect_required']) {
     //flag is only triggered on node form so this should be in the clear to load
     $node = node_load(arg(1));
     //test to ensure this is a node though it should be
