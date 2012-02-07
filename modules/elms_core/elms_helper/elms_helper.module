@@ -484,8 +484,6 @@ function elms_helper_form_alter(&$form, &$form_state, $form_id) {
     $form['field_content_ref']['#attributes']['class'] = 'editview_nid';
     $form['field_task_link']['#attributes']['class'] = 'editview_task_link';
   }
-  //advanced help to better organize these alters
-  _elms_helper_adv_help(&$form, &$form_state, $form_id);
 }
 
 /**
@@ -582,28 +580,4 @@ function elms_helper_dashboard_requirements($provider) {
   break;
   }
   return $requirements;
-}
-
-//organizing function for all advanced help topics
-function _elms_helper_adv_help(&$form, &$form_state, $form_id) {/*
-  //dpm($form_id);
-  switch ($form_id) {
-    case 'book_admin_edit':
-    $form['#prefix'] .= theme('advanced_help_topic', 'elms_helper', 'outline_designer');
-    break;
-    case 'folder_node_form':
-    $form['#prefix'] .= theme('advanced_help_topic', 'elms_helper', 'cm_folder');
-    $form['body_field']['#prefix'] .= theme('advanced_help_topic', 'elms_helper', 'text_editor');
-    break;
-    case 'page_node_form':
-    $form['#prefix'] .= theme('advanced_help_topic', 'elms_helper', 'cm_page');
-    $form['body_field']['#prefix'] .= theme('advanced_help_topic', 'elms_helper', 'text_editor');
-    break;
-    case 'reference_page_node_form':
-    $form['#prefix'] .= theme('advanced_help_topic', 'elms_helper', 'cm_ref');
-    break;
-    case 'link_node_form':
-    $form['#prefix'] .= theme('advanced_help_topic', 'elms_helper', 'cm_link');
-    break;
-  }*/
 }
