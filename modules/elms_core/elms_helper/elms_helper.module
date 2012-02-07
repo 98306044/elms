@@ -585,7 +585,7 @@ function elms_helper_dashboard_requirements($provider) {
 }
 
 //organizing function for all advanced help topics
-function _elms_helper_adv_help(&$form, &$form_state, $form_id) {
+function _elms_helper_adv_help(&$form, &$form_state, $form_id) {/*
   //dpm($form_id);
   switch ($form_id) {
     case 'book_admin_edit':
@@ -605,5 +605,5 @@ function _elms_helper_adv_help(&$form, &$form_state, $form_id) {
     case 'link_node_form':
     $form['#prefix'] .= theme('advanced_help_topic', 'elms_helper', 'cm_link');
     break;
-  }
+  }*/
 }
