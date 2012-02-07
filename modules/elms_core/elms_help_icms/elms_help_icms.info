@@ -1,7 +1,8 @@
 ; $Id$
-name = ELMS Help
-description = Ties in the advanced help icons for the generated help documents.
+name = ELMS Help ICMS
+description = Ties in the advanced help icons for the generated help documents.  This is the ICMS documentation outline.
 dependencies[] = advanced_help
 stylesheets[all][] = elms_help_icms.css
 core = 6.x
 package = ELMS
+version = 6.x-1.0-alpha6

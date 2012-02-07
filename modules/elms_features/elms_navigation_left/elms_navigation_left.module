@@ -130,7 +130,13 @@ function _elms_navigation_left_system_block() {
 //helper function for Help icon addition
 function _elms_navigation_left_help_block() {
   if (user_access('view advanced help popup')) {
-    return theme('menu_item', l(t('ELMS Help'), 'admin/advanced_help/elms_helper', array('query'  => array('popup' => TRUE), 'attributes' => array('onclick' => "var w=window.open(this.href, 'advanced_help_window', 'width=640,height=480,scrollbars,resizable'); w.focus(); return false;", 'title' => t('ELMS Help')))), 0, '', FALSE, 'help');
+		if (module_exists('elms_help_icms')) {
+			$help_file = 'elms_help_icms';
+		}
+		else if(module_exists('elms_help_cle')) {
+			$help_file = 'elms_help_cle';
+		}
+    return theme('menu_item', l(t('ELMS Help'), 'admin/advanced_help/'. $help_file, array('query'  => array('popup' => TRUE), 'attributes' => array('onclick' => "var w=window.open(this.href, 'advanced_help_window', 'width=640,height=480,scrollbars,resizable'); w.focus(); return false;", 'title' => t('ELMS Help')))), 0, '', FALSE, 'help');
   }
 }
 
