@@ -15,12 +15,12 @@ function elms_help_icms_help($path) {
       return theme('advanced_help_topic', 'elms_help_icms', 'Course-Status');
     case 'node/%/theme':
       return theme('advanced_help_topic', 'elms_help_icms', 'Changing-Theme');
+    case 'node/add/site/%':
+      return theme('advanced_help_topic', 'elms_help_icms', 'Adding-Versions');
 		case 'node/add/site':
       return theme('advanced_help_topic', 'elms_help_icms', 'Creating-Sandboxes');
-    case 'node/add/parent':
+		case 'node/add/parent':
       return theme('advanced_help_topic', 'elms_help_icms', 'Creating-Courses');
-		case 'node/add/site':
-      return theme('advanced_help_topic', 'elms_help_icms', 'Creating-Sandboxes');
     case 'outline_designer/%':
       return theme('advanced_help_topic', 'elms_help_icms', 'Outline-Designer');
     case 'system_stats':
@@ -45,6 +45,7 @@ function elms_help_icms_get_from_key($key) {
     'folder_node_form:title' => array('module' => 'elms_help_icms', 'file' => 'Folder'),
     'link_node_form' => array('module' => 'elms_help_icms', 'file' => 'Link'),
     'page_node_form:body_field:body' => array('module' => 'elms_help_icms', 'file' => 'Text-Editor'),
+		'folder_node_form:body_field:body' => array('module' => 'elms_help_icms', 'file' => 'Text-Editor'),
     'page_node_form:title' => array('module' => 'elms_help_icms', 'file' => 'Page'),
     'parent_node_form:field_parent_name:0' => array('module' => 'elms_help_icms', 'file' => 'Creating-Courses'),
     'poll_node_form:title' => array('module' => 'elms_help_icms', 'file' => 'Polls'),
