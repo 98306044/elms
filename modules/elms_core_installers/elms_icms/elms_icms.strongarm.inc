@@ -199,6 +199,13 @@ function elms_icms_strongarm() {
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'jquery_colorpicker_ie6_page';
+  $strongarm->value = 0;
+  $export['jquery_colorpicker_ie6_page'] = $strongarm;
+
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'pathauto_modulelist';
   $strongarm->value = array(
     0 => 'node',
@@ -400,13 +407,6 @@ function elms_icms_strongarm() {
     'shadowOffsetY' => 4,
   );
   $export['beautytips_defaults'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
-  $strongarm->name = 'jquery_colorpicker_ie6_page';
-  $strongarm->value = 0;
-  $export['jquery_colorpicker_ie6_page'] = $strongarm;
 
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -3995,6 +3995,7 @@ news',
     'toggle_comment_user_picture' => 0,
     'toggle_primary_links' => 0,
     'toggle_secondary_links' => 0,
+    'toggle_node_info_poll' => 0,
     'toggle_node_info_accessibility_guideline' => 0,
     'toggle_node_info_accessibility_test' => 0,
     'toggle_node_info_folder' => 0,
@@ -4002,14 +4003,13 @@ news',
     'toggle_node_info_page' => 0,
     'toggle_node_info_referenced_page' => 0,
     'toggle_node_info_parent' => 0,
-    'toggle_node_info_elms_resource' => 0,
-    'toggle_node_info_site' => 0,
-    'toggle_node_info_content_links' => 0,
     'toggle_node_info_place' => 0,
-    'toggle_node_info_poll' => 0,
-    'toggle_node_info_reaction' => 0,
+    'toggle_node_info_content_links' => 0,
+    'toggle_node_info_elms_resource' => 0,
     'toggle_node_info_term' => 0,
     'toggle_node_info_timeline_item' => 0,
+    'toggle_node_info_site' => 0,
+    'toggle_node_info_reaction' => 0,
     'logo_upload' => '',
     'favicon_upload' => '',
   );
@@ -5191,6 +5191,51 @@ news',
     'pushbutton' => 'pushbutton',
   );
   $export['elms_helper_disallowed_themes'] = $strongarm;
+
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'uuid_automatic_for_nodes';
+  $strongarm->value = array(
+    'content_links' => 'content_links',
+    'parent' => 'parent',
+    'elms_resource' => 'elms_resource',
+    'folder' => 'folder',
+    'link' => 'link',
+    'page' => 'page',
+    'place' => 'place',
+    'poll' => 'poll',
+    'referenced_page' => 'referenced_page',
+    'term' => 'term',
+    'timeline_item' => 'timeline_item',
+    'site' => 'site',
+    'accessibility_guideline' => 0,
+    'accessibility_test' => 0,
+  );
+  $export['uuid_automatic_for_nodes'] = $strongarm;
+
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'uuid_automatic_for_users';
+  $strongarm->value = '0';
+  $export['uuid_automatic_for_users'] = $strongarm;
+
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'uuid_automatic_for_taxonomy';
+  $strongarm->value = array(
+    1 => 1,
+  );
+  $export['uuid_automatic_for_taxonomy'] = $strongarm;
+
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'uuid_automatic_for_comments';
+  $strongarm->value = '0';
+  $export['uuid_automatic_for_comments'] = $strongarm;
 
   return $export;
 }
