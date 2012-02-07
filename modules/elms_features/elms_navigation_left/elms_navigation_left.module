@@ -167,10 +167,12 @@ function _elms_navigation_left_parent_block($group) {
     $output .= theme('menu_item', l(t('Site Settings'), 'node/'. $group->nid, array('attributes' => array('title' => t('Site Settings')))), 0, '', FALSE, 'system');
   }
   //import content
-  if (module_exists('elms_content_import') && user_access('access administration pages')) {
-    if (user_access('import elms_node_import feeds')) {
+  if (module_exists('elms_content_import') && user_access('import elms_node_import feeds') && spaces_access_feature('view', 'elms_content')) {
       $output .= theme('menu_item', l(t('Import Content'), 'import/elms_node_import', array('attributes' => array('title' => t('Import Outline')))), 0, '', FALSE, 'manage_content');
-    }
+  }
+	//export content outline
+  if (module_exists('elms_content_export') && user_access('access elms book export') && spaces_access_feature('view', 'elms_content')) {
+      $output .= theme('menu_item', l(t('Export Content'), 'elms_export.xml/'. $group->book_nid, array('attributes' => array('title' => t('Export Outline')))), 0, '', FALSE, 'manage_content');
   }
   return $output;
 }
