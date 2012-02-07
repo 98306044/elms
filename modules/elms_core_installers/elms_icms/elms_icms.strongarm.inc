@@ -199,13 +199,6 @@ function elms_icms_strongarm() {
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'jquery_colorpicker_ie6_page';
-  $strongarm->value = 0;
-  $export['jquery_colorpicker_ie6_page'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'pathauto_modulelist';
   $strongarm->value = array(
     0 => 'node',
@@ -381,6 +374,13 @@ function elms_icms_strongarm() {
   $strongarm->name = 'pathauto_punctuation_hyphen';
   $strongarm->value = '1';
   $export['pathauto_punctuation_hyphen'] = $strongarm;
+
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'jquery_colorpicker_ie6_page';
+  $strongarm->value = 0;
+  $export['jquery_colorpicker_ie6_page'] = $strongarm;
 
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -1692,8 +1692,11 @@ news',
   $strongarm->api_version = 1;
   $strongarm->name = 'locale_custom_strings_en';
   $strongarm->value = array(
+    '# of Sites' => '# of Versions',
     'A brief description for the group details block and the group directory.' => 'Enter a short course version topic description',
     'Add New Site' => 'Add New Version',
+    'Add Parent' => 'Add Course',
+    'Add Site' => 'Create Sandbox',
     'Books need to have at least one piece of content in them in order to work correctly with the outline designer' => 'Version Outlines need to have at least one piece of content in them before you can work with the outline designer',
     'Choose a path. May contain only lowercase letters, numbers, dashes and underscores. e.g. "my-value"' => '"Choose a path for your version. May only contain lowercase letters and numbers. e.g. "art010""',
     'Create Parent' => 'Create Course',
@@ -1733,17 +1736,19 @@ news',
     'Search group' => 'Search Course',
     'Selecting a different theme will change the look and feel of the group.' => 'Select a theme for the course version',
     'Site' => 'Version',
+    'Site Settings' => 'Version Settings',
     'Site Status' => 'Version Status',
     'Sites' => 'Versions',
     'Submit' => 'Save',
     'Target group' => 'Target Version',
     'Theme configuration' => 'Theme',
     'This action cannot be undone.' => '<strong>This action cannot be undone.</strong>',
+    'Total Parents' => 'Total Courses',
+    'Total Sites' => 'Total Versions',
     'Use a registration key to enroll in a group.' => '',
     'You are now a member of !group_name.' => 'You are now enrolled in !group_name.',
     'You are now a member of %group.' => 'You are now enrolled in %group.',
-    'Add Parent' => 'Add Course',
-    'Add Site' => 'Create Sandbox',
+    'Site State: @workflow' => 'Version State: @workflow',
   );
   $export['locale_custom_strings_en'] = $strongarm;
 

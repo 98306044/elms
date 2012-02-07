@@ -1,0 +1,7 @@
+; $Id$
+name = ELMS Help
+description = Ties in the advanced help icons for the generated help documents.
+dependencies[] = advanced_help
+stylesheets[all][] = elms_help.css
+core = 6.x
+package = ELMS

@@ -1084,6 +1084,8 @@ function elms_parent_views_default_views() {
   $handler->override_option('use_pager', '1');
   $handler->override_option('style_plugin', 'fluid_grid');
   $handler = $view->new_display('page', 'View List', 'page_1');
+  $handler->override_option('empty', 'Create a course to get started or watch this video for how you can get started making sites in ELMS!
+<iframe width="640" height="480" name="whatnext" src="http://www.youtube-nocookie.com/embed/pWDqMyolB0k?rel=0" frameborder="0" allowfullscreen></iframe>');
   $handler->override_option('style_options', array(
     'grouping' => '',
     'advanced_layout' => array(

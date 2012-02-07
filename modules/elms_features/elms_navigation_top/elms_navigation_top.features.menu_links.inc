@@ -26,6 +26,26 @@ function elms_navigation_top_menu_default_menu_links() {
     'expanded' => '0',
     'weight' => '-48',
   );
+  // Exported menu link: menu-usermenu:logout
+  $menu_links['menu-usermenu:logout'] = array(
+    'menu_name' => 'menu-usermenu',
+    'link_path' => 'logout',
+    'router_path' => 'logout',
+    'link_title' => 'Logout',
+    'options' => array(
+      'purl' => 'disabled',
+      'attributes' => array(
+        'title' => 'Logout of ELMS',
+        'class' => 'menu-16499',
+      ),
+    ),
+    'module' => 'menu',
+    'hidden' => '0',
+    'external' => '0',
+    'has_children' => '0',
+    'expanded' => '0',
+    'weight' => '-41',
+  );
   // Exported menu link: menu-usermenu:parents/my
   $menu_links['menu-usermenu:parents/my'] = array(
     'menu_name' => 'menu-usermenu',
@@ -45,26 +65,6 @@ function elms_navigation_top_menu_default_menu_links() {
     'has_children' => '0',
     'expanded' => '0',
     'weight' => '-49',
-  );
-  // Exported menu link: menu-usermenu:logout
-  $menu_links['menu-usermenu:logout'] = array(
-    'menu_name' => 'menu-usermenu',
-    'link_path' => 'logout',
-    'router_path' => 'logout',
-    'link_title' => 'Logout',
-    'options' => array(
-      'purl' => 'disabled',
-      'attributes' => array(
-        'title' => 'Logout of ELMS',
-        'class' => 'menu-16499',
-      ),
-    ),
-    'module' => 'menu',
-    'hidden' => '0',
-    'external' => '0',
-    'has_children' => '0',
-    'expanded' => '0',
-    'weight' => '-46',
   );
   // Exported menu link: menu-usermenu:user
   $menu_links['menu-usermenu:user'] = array(

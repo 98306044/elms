@@ -56,7 +56,7 @@ function elms_parent_imagecache_default_presets() {
 function elms_parent_node_info() {
   $items = array(
     'parent' => array(
-      'name' => t('Parent'),
+      'name' => t('Course'),
       'module' => 'features',
       'description' => t('Use this to setup a name space to associate group instances to'),
       'has_title' => '1',
