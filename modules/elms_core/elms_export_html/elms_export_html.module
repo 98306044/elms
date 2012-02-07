@@ -18,16 +18,6 @@ function elms_export_html_perm() {
 }
 
 /**
- * Implementation of hook_help().
- */
-function elms_export_html_help($section) {
-  switch ($section) {
-    case 'admin':
-      return t("ELMS Export HTML lets you export your site to static HTML.");
-  }
-}
-
-/**
  * Implementation of hook_menu().
  */
 function elms_export_html_menu() {
