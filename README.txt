@@ -55,7 +55,7 @@ PHP > 5.2
 PHP 5.2
 -- Zend Optimizer is recommended for installation because of the HTML Purifier library which likes having that active.
 -- Defaults are often set to 32M in php.ini. The ELMS installer will attempt to increase this to 96M in install.php and index.php.
--- PHP 5.3 is recommended as it was the primary version things were developed for but 
+-- PHP 5.3 is recommended as it was the primary version things were developed for but this has been tested on 5.2 and while slower then 5.3, it does work.
 
 Solving Drupal White screen of Death
 -- Try setting the following settings in included .htaccess file:
