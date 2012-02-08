@@ -260,6 +260,7 @@ function elms_profile_tasks(&$task, $url) {
 			//revert optional features if they are enabled
 			array('elms_places' => array('menu_links')),
 			array('elms_polls' => array('menu_links')),
+			array('elms_reference_links' => array('menu_links')),
 			array('elms_terms' => array('menu_links')),
 			array('elms_timeline' => array('menu_links')),
 		  //revert core installer last as they take priority
