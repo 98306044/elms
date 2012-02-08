@@ -618,7 +618,33 @@ function system_form_install_configure_form_alter(&$form, $form_state) {
 		'#title' => st('Optional Add-ons'),
 		'#description' => st('Functionality to extend your instance'),
 	);
+	//alert user to their version of php
+	// PHP_VERSION_ID is available as of PHP 5.2.7, if our 
+// version is lower than that, then emulate it
+if (!defined('PHP_VERSION_ID')) {
+    $version = explode('.', PHP_VERSION);
+
+    define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
+}
+	if (PHP_VERSION_ID < 50207) {
+			define('PHP_MAJOR_VERSION',   $version[0]);
+			define('PHP_MINOR_VERSION',   $version[1]);
+			define('PHP_RELEASE_VERSION', $version[2]);
 	
+			// and so on, ...
+	}
+	//less then 5.2 is not supported
+	if (PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION < 2) {
+		drupal_set_message(st("You are running @phpversion which is unsupported", array('@phpversion. PHP 5.2 or higher is required.' => PHP_MAJOR_VERSION .'.'. PHP_MINOR_VERSION .'.'. PHP_RELEASE_VERSION)),'error');
+	}
+	//5.2 allowed but not recommended
+	if (PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION == 2) {
+		drupal_set_message(st("You are running @phpversion which will install successfully but we recommend that you upgrade to 5.3 or higher", array('@phpversion' => PHP_MAJOR_VERSION .'.'. PHP_MINOR_VERSION .'.'. PHP_RELEASE_VERSION)),'warning');
+	}
+	//5.3 and higher is acceptable still report it just cause its nice to know
+	if (PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION > 2) {
+		drupal_set_message(st("You are running @phpversion", array('@phpversion' => PHP_MAJOR_VERSION .'.'. PHP_MINOR_VERSION .'.'. PHP_RELEASE_VERSION)));
+	}
 	//this is a critical step to ensuring a stable environment installation
 	//max packet is an extremely common error with large platform installations and this needs to be perfect
 	//attempt to calculate max allowed packet
@@ -1240,6 +1266,9 @@ function _elms_filters_query(&$context) {
  * Helper function to install default vocabulary.
  */
 function _elms_vocab_query(&$context) {
+	//create vocab
+	db_query("INSERT INTO {vocabulary} VALUES ('1', 'Unit', 'Unit', '', '1', '0', '0', '0', '0', 'features_unit', '0')");
+  db_query("INSERT INTO {vocabulary_node_types} VALUES ('1', 'parent')");
   //populate terms
   db_query("INSERT INTO {term_data} VALUES ('1', '1', 'Department 1', '', '0'), ('2', '1', 'Department 4', '', '1'), ('3', '1', 'Department 3', '', '2'), ('4', '1', 'Department 4', '', '3')");
   //populate hierarchy
