@@ -292,14 +292,14 @@ function elms_profile_tasks(&$task, $url) {
 	  $batch['operations'][] = array('drupal_flush_all_caches', array());
 	  $batch['operations'][] = array('_elms_system_theme_data', array());
     $batch['operations'][] = array('_elms_installer_configure_system_cleanup', array());
-		//revert all components 1 and a time to help avoid timeout
-		foreach ($revert as $feature) {
-		  $batch['operations'][] = array('_elms_installer_configure_revert', array($feature));
-		}
 		$batch['operations'][] = array('_elms_installer_configure_clear_cache', array());
 		//check to see if we were asked to run cron
 		if (variable_get('install-run_cron', 0)) {
 		  $batch['operations'][] = array('_elms_installer_configure_run_cron', array());
+		}
+		//revert all components 1 and a time to help avoid timeout
+		foreach ($revert as $feature) {
+		  $batch['operations'][] = array('_elms_installer_configure_revert', array($feature));
 		}
     $batch['finished'] = '_elms_installer_configure_finished';
     variable_set('install_task', 'elms-install-configure-batch');
