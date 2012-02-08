@@ -30,3 +30,10 @@ features[views][] = "elms_poll_list"
 features[views_api][] = "api:2"
 kitf = "1.0-draft"
 spaces[types][] = "og"
+
+; Information added by drupal.org packaging script on 2012-02-08
+version = "6.x-1.0-alpha6"
+core = "6.x"
+project = "elms_features"
+datestamp = "1328731842"
+

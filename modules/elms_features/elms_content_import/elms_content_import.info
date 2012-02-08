@@ -10,3 +10,10 @@ name = "ELMS Content Import"
 package = "Features"
 project = "elms_content_import"
 version = "6.x-1.0-alpha6"
+
+; Information added by drupal.org packaging script on 2012-02-08
+version = "6.x-1.0-alpha6"
+core = "6.x"
+project = "elms_features"
+datestamp = "1328731842"
+

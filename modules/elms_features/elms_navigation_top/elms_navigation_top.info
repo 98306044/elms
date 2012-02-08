@@ -16,3 +16,10 @@ features[menu_links][] = "menu-usermenu:bookmarks"
 features[menu_links][] = "menu-usermenu:logout"
 features[menu_links][] = "menu-usermenu:parents/my"
 features[menu_links][] = "menu-usermenu:user"
+
+; Information added by drupal.org packaging script on 2012-02-08
+version = "6.x-1.0-alpha6"
+core = "6.x"
+project = "elms_features"
+datestamp = "1328731842"
+
