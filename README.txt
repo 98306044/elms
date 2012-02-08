@@ -81,3 +81,4 @@ Known issues
 -- There are still some admin UIs that need to be built out and more visual user management.  Feeds can be constructed to import users without much of an issue but that is still down the road in our development.
 -- The Reactions and Schedule Features have not been fully built out.  The Course Content and other feature that can be selected on install are mostly feature complete though will go through some UX work in the future.
 -- Occationally UUIDs and group access duplicate entry errors can arrise, these are few and far between and can largely be ignored as the data is attempting to be double-added by a project.
+-- The user menu (top right corner) has items out of order. To fix this, after install go to admin/build/features and find the components that say they are overridden.  Click the button, then check the box that needs to be reverted for each.  This should be working as part of the default installation but isn't yet :)

@@ -221,6 +221,7 @@ function _elms_navigation_left_render_region($block_html, $block) {
  * Implementation of hook_features_export_alter().
  */
 function elms_navigation_left_features_export_alter(&$export, $module_name) {
+	//these keep exporting for some reason, tell features explicitely that they are NOT to be included
   if ($module_name == 'elms_navigation_left') {
     unset($export['dependencies']['elms_content']);
 		unset($export['dependencies']['poll']);
