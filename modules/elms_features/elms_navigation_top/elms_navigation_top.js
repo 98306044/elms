@@ -18,14 +18,14 @@ $(document).ready(function(){
   Drupal.elms_navigation = Drupal.elms_navigation || { functions: {} };
   //allow for adding messages after page load
   Drupal.elms_navigation.add_message = function (type, message) {
-	try {
-		if (Drupal.settings.elms_helpdesk.icon_map) {
-			var map = Drupal.settings.elms_helpdesk.icon_map;
-		}
-	}
-	catch(e) {
+  try {
+    if (Drupal.settings.elms_helpdesk.icon_map) {
+      var map = Drupal.settings.elms_helpdesk.icon_map;
+    }
+  }
+  catch(e) {
      var map = '';
-	}
+  }
   //make sure this isn't a parent'ed item
   var map_title, map_bar_icon, title_type;
   if (typeof map[type]['parent'] != 'undefined') {
