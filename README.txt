@@ -40,21 +40,26 @@ If you were running Alpha code there is no upgrade path from Alpha to Beta.  Cle
 ------------
 INSTALLATION
 ------------
-*Download the ELMS distribution from http://drupal.psu.edu/fserver
-*Unzip and go to the install.php page from a web-browser as you normally would when installing Drupal
-*Select the ELMS radio bubble and run through the typical Drupal installation
-*Select the core focus, features and optional packages that you'd like to install with ELMS
-*You are now running ELMS, enjoy making {what ever your core calls sites}!
+-- Download the ELMS distribution from http://drupal.psu.edu/fserver
+-- Unzip and go to the install.php page from a web-browser as you normally would when installing Drupal
+-- Select the ELMS radio bubble and run through the typical Drupal installation
+-- Select the core focus, features and optional packages that you'd like to install with ELMS. ELMS: ICMS is the primary focus at this time though the CLE should also install and give you an example of another flavor of ELMS.
+-- You are now running the ELMS platform, enjoy making {what ever your core calls sites}!
 
 ------------
 TROUBLESHOOTING INSTALLATION / SETUP
 ------------
 PHP > 5.2
--- Unsupported because of date module though you can activate the date 5.2 emulation module and it should work.  This has been installed many times on 5.2 and 5.3 respectively.
+-- Unsupported because of date module though you can activate the date 5.2 emulation module and it should work.  This has been installed many times on 5.3 and has been tested a few times on PHP 5.2.
+
+PHP 5.2
+-- Zend Optimizer is recommended for installation because of the HTML Purifier library which likes having that active.
+-- Defaults are often set to 32M in php.ini. The ELMS installer will attempt to increase this to 96M in install.php and index.php.
+-- PHP 5.3 is recommended as it was the primary version things were developed for but 
 
 Solving Drupal White screen of Death
-*Try setting the following settings in included .htaccess file:
-  php_value memory_limit 96M or set memory limit per the instructions in the "installing on 1and1"
+-- Try setting the following settings in included .htaccess file:
+-- php_value memory_limit 96M or set memory limit per the instructions in the "Installing on 1and1"
 
 Installing on 1and1
 -- Try making an access file that allows for clean URLS
@@ -65,12 +70,13 @@ post_max_size = 10M
 upload_max_filesize = 10M
 
 Annoying MYSQL max packet error
-*run the following command in mysql console: "SET GLOBAL max_allowed_packet=10*1024*1024;"
-* This error is caused mostly in localhost installs or shared environments and is caused by all the caching going on.
-* Review this page to help resolve it http://drupal.org/node/321210
+-- The install process will attempt to fix this value for you, if you experience issues that have this message, try the following help documentation.
+-- run the following command in mysql console: "SET GLOBAL max_allowed_packet=10*1024*1024;"
+-- This error is caused mostly in localhost installs or shared environments and is caused by all the caching going on.
+-- Review this page to help resolve it http://drupal.org/node/321210
 
 ------------
 Known issues
 ------------
-*There are still some admin UIs that need to be built out and more visual user management.  Feeds can be constructed to import users without much of an issue but that is still down the road in our development.
-*The Studio, Reactions and Schedule Features have not been fully implemented.  The Course Content feature is mostly feature complete at this time.
+-- There are still some admin UIs that need to be built out and more visual user management.  Feeds can be constructed to import users without much of an issue but that is still down the road in our development.
+-- The Reactions and Schedule Features have not been fully built out.  The Course Content and other feature that can be selected on install are mostly feature complete though will go through some UX work in the future.
