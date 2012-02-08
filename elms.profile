@@ -258,11 +258,11 @@ function elms_profile_tasks(&$task, $url) {
       array('elms_navigation_top' => array('menu_links', 'menu_custom')),
       array('elms_navigation_left' => array('menu_links', 'menu_custom')),
 			//revert optional features if they are enabled
-			array('elms_places' => array('menu_links')),
-			array('elms_polls' => array('menu_links')),
-			array('elms_reference_links' => array('menu_links')),
-			array('elms_terms' => array('menu_links')),
-			array('elms_timeline' => array('menu_links')),
+			array('elms_places' => array('menu_links', 'menu_custom')),
+			array('elms_polls' => array('menu_links', 'menu_custom')),
+			array('elms_reference_links' => array('menu_links', 'menu_custom')),
+			array('elms_terms' => array('menu_links', 'menu_custom')),
+			array('elms_timeline' => array('menu_links', 'menu_custom')),
 		  //revert core installer last as they take priority
 		  array('elms_'. variable_get('install-core-installer', '') => array('variable')),
     );
@@ -293,12 +293,11 @@ function elms_profile_tasks(&$task, $url) {
 	  $batch['operations'][] = array('drupal_flush_all_caches', array());
 	  $batch['operations'][] = array('_elms_system_theme_data', array());
     $batch['operations'][] = array('_elms_installer_configure_system_cleanup', array());
-		$batch['operations'][] = array('_elms_installer_configure_clear_cache', array());
 		//check to see if we were asked to run cron
 		if (variable_get('install-run_cron', 0)) {
 		  $batch['operations'][] = array('_elms_installer_configure_run_cron', array());
 		}
-		//revert all components 1 and a time to help avoid timeout
+		//revert all components 1 at a time to help avoid timeout
 		foreach ($revert as $feature) {
 		  $batch['operations'][] = array('_elms_installer_configure_revert', array($feature));
 		}
@@ -416,18 +415,6 @@ function _elms_installer_configure_revert($feature, &$context) {
 	//revert the passed features so we can keep memory limit low
 	features_revert($feature);
   $context['message'] = st('Reverted %feature feature.', array('%feature' => key($feature)));
-}
-
-/**
- * Configuration. clear caches.
- */
-function _elms_installer_configure_clear_cache(&$context) {
-//clear caches after everything is reverted
-	$core = array('cache', 'cache_block', 'cache_filter', 'cache_page', 'cache_form', 'cache_menu');
-  foreach ($core as $table) {
-    cache_clear_all(NULL, $table);
-  }
-	$context['message'] = st('Clear caches');
 }
 
 /**
