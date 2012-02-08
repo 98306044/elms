@@ -169,7 +169,7 @@ function _elms_navigation_left_parent_block($group) {
     $output .= theme('menu_item', l(t('Content Outline'), 'outline_designer/book/'. $group->book_nid, array('attributes' => array('title' => t('Content Outline')))), 0, '', FALSE, 'content_outline');
     }
   }
-  if (user_access('edit site content')) {
+  if (user_access('edit own site content') || user_access('edit any site content')) {
     $output .= theme('menu_item', l(t('Site Settings'), 'node/'. $group->nid, array('attributes' => array('title' => t('Site Settings')))), 0, '', FALSE, 'system');
   }
   //import content

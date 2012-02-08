@@ -44,3 +44,7 @@ Accessible Content
 Timeline Library
 -- Fixed glitch where it's searching for history file.
 -- See INSTALL.txt in timeline project
+
+Timeline
+-- http://drupal.org/node/1433262
+-- Line 159 changed from file_check_directory to file_exists

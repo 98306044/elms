@@ -623,15 +623,15 @@ if (!defined('PHP_VERSION_ID')) {
 	}
 	//less then 5.2 is not supported
 	if (PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION < 2) {
-		drupal_set_message(st("You are running @phpversion which is unsupported", array('@phpversion. PHP 5.2 or higher is required.' => PHP_MAJOR_VERSION .'.'. PHP_MINOR_VERSION .'.'. PHP_RELEASE_VERSION)),'error');
+		drupal_set_message(st("You are running PHP @phpversion which is unsupported", array('@phpversion. PHP 5.2 or higher is required.' => PHP_MAJOR_VERSION .'.'. PHP_MINOR_VERSION .'.'. PHP_RELEASE_VERSION)),'error');
 	}
 	//5.2 allowed but not recommended
 	if (PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION == 2) {
-		drupal_set_message(st("You are running @phpversion which will install successfully but we recommend that you upgrade to 5.3 or higher", array('@phpversion' => PHP_MAJOR_VERSION .'.'. PHP_MINOR_VERSION .'.'. PHP_RELEASE_VERSION)),'warning');
+		drupal_set_message(st("You are running PHP @phpversion which will install successfully but we recommend that you upgrade to 5.3 or higher", array('@phpversion' => PHP_MAJOR_VERSION .'.'. PHP_MINOR_VERSION .'.'. PHP_RELEASE_VERSION)),'warning');
 	}
 	//5.3 and higher is acceptable still report it just cause its nice to know
 	if (PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION > 2) {
-		drupal_set_message(st("You are running @phpversion", array('@phpversion' => PHP_MAJOR_VERSION .'.'. PHP_MINOR_VERSION .'.'. PHP_RELEASE_VERSION)));
+		drupal_set_message(st("You are running PHP @phpversion which is a supported version", array('@phpversion' => PHP_MAJOR_VERSION .'.'. PHP_MINOR_VERSION .'.'. PHP_RELEASE_VERSION)));
 	}
 	//this is a critical step to ensuring a stable environment installation
 	//max packet is an extremely common error with large platform installations and this needs to be perfect

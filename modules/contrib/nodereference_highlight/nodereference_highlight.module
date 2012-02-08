@@ -15,9 +15,9 @@ function nodereference_highlight_init() {
  * Implementation of hook_perm().
  */
 function nodereference_highlight_perm() {
-  $relationships = nodereference_highlight_get_relationships();
-  // Generate a list of regions and permissions.
-  foreach (array_keys($relationships) as $rel) {
+  $relationships = nodereference_highlight_get_relationships(TRUE);
+  // Generate a list of highlighters and permissions.
+  foreach ($relationships as $rel) {
     $perms[] = 'highlight '. $rel['perm'];
   }
   return $perms;
@@ -53,7 +53,7 @@ function _nodereference_highlight_render_items($relationship) {
 /**
  * Pull together a list of relationships.
  */
-function nodereference_highlight_get_relationships() {
+function nodereference_highlight_get_relationships($display_all = FALSE) {
 	//define all relationships
 	$relationships = module_invoke_all('define_highlight_relationship');
 	//allow other projects to alter relationships
@@ -61,7 +61,7 @@ function nodereference_highlight_get_relationships() {
 	//only return what the user has access to do
 	$send_rels = array();
 	foreach ($relationships as $key => $relationship) {
-		if (user_access('highlight '. $relationship['perm'])) {
+		if (user_access('highlight '. $relationship['perm']) || $display_all) {
 			$send_rels[$key] = $relationship;
 		}
 	}
