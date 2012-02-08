@@ -216,3 +216,13 @@ function _elms_navigation_left_render_region($block_html, $block) {
     return $output;
   }
 }
+
+/**
+ * Implementation of hook_features_export_alter().
+ */
+function elms_navigation_left_features_export_alter(&$export, $module_name) {
+  if ($module_name == 'elms_navigation_left') {
+    unset($export['dependencies']['elms_content']);
+		unset($export['dependencies']['poll']);
+	}
+}
