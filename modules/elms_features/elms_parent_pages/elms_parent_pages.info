@@ -1,0 +1,5 @@
+name = "ELMS Parent Pages"
+description = "Additional funnel pages to split up what a parent-page is"
+package = "ELMS"
+core = "6.x"
+dependencies[] = "elms_parent"
