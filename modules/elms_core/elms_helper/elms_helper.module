@@ -6,6 +6,34 @@
 define('ELMS_VERSION', '6.x-1.0-alpha6');
 
 /**
+ * Implementation of hook_define_highlight_relationship
+ */
+function elms_helper_define_highlight_relationship() {
+  //define the container though content provides no defintions, all are modular
+  $relationships['enhance_content'] = array(
+    'types' => array('page', 'folder'),
+    'name' => t('Enhance Content'),
+    'perm' => 'enhance instructional content',
+    'highlight_types' => array(),
+  );
+	//define the ability to take notes, note features will implement this
+  $relationships['note_taking'] = array(
+    'types' => array('page', 'folder'),
+    'name' => t('Note taking'),
+    'perm' => 'take notes on content',
+    'highlight_types' => array(),
+  );
+	//define the ability to take notes, note features will implement this
+  $relationships['feedback'] = array(
+    'types' => array('studio_submission'),
+    'name' => t('Provide Feedback'),
+    'perm' => 'provide feedback on content',
+    'highlight_types' => array(),
+  );
+  return $relationships;
+}
+
+/**
  * Implementation of hook_perm().
  */
 function elms_helper_perm() {

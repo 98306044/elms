@@ -3,26 +3,6 @@
 include_once('elms_content.features.inc');
 
 /**
- * Implementation of hook_define_highlight_relationship
- */
-function elms_content_define_highlight_relationship() {
-  //define the container though content provides no defintions, all are modular
-  $relationships['enhance_content'] = array(
-    'types' => array('page', 'folder'),
-    'name' => t('Enhance Content'),
-    'perm' => 'enhance instructional content',
-    'highlight_types' => array(),
-  );
-  $relationships['note_taking'] = array(
-    'types' => array('page', 'folder'),
-    'name' => t('Note taking'),
-    'perm' => 'take notes on content',
-    'highlight_types' => array(),
-  );
-  return $relationships;
-}
-
-/**
  * Implementation of hook_nodeapi().
  */
 function elms_content_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
