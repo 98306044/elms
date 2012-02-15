@@ -43,6 +43,16 @@ function elms_parent_pages_menu() {
 		'type' => MENU_LOCAL_TASK,
     'weight' => -7,
   );
+	$items['node/%node/view/sites'] = array(
+	  'title callback' => '_elms_parent_pages_page_title',
+    'title arguments' => array(1, 'Site Management'),
+    'description' => 'Management page for all sites in the parent',
+    'page callback' => '_elms_parent_pages_sites',
+    'access arguments' => array(1, 'sites'),
+		'access callback' => '_elms_parent_pages_access_check',
+		'type' => MENU_LOCAL_TASK,
+    'weight' => -6,
+  );
   return $items;
 }
 
@@ -82,5 +92,12 @@ function _elms_parent_pages_marketing() {
  * Helper page for instructor funnel page for a parent.
  */
 function _elms_parent_pages_instructor() {
+  return '';
+}
+
+/**
+ * Helper page for sites management page for a parent.
+ */
+function _elms_parent_pages_sites() {
   return '';
 }
