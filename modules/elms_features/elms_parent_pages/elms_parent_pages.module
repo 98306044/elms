@@ -68,7 +68,13 @@ function _elms_parent_pages_access_check($node, $page_type) {
  * Helper page for student funnel page for a parent.
  */
 function _elms_parent_pages_student() {
-  return '';
+  return '<ol>
+	<li>Read the help documents</li>
+	<li>Get your welcome letter</li>
+	<li>Get your activation code</li>
+	<li>Do things</li>
+	<li>Check below</li>
+	</ol>';
 }
 
 /**
