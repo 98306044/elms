@@ -185,8 +185,23 @@ function _elms_get_active_site($parent_title) {
           drupal_goto('node/'. $parent_nid);
         }
         else {
-          //more then one address was found, just push to the parent
-					drupal_goto('node/'. $parent_nid);
+          //more then one address was found, check again for group access
+					//this accounts for open sections that are false positives
+					foreach ($site_nids as $site_nid) {
+						//see if the user is in any of these sites or just has access
+						if (isset($user->og_groups[$site_nid])) {
+							$in_groups[] = $site_nid;
+						}
+					}
+					//see if there was a single group that the user was in
+					if (count($in_groups) == 1) {
+						//user is registered to 1 group in this parent, go there!
+						drupal_goto('node/'. $in_groups[0]);
+					}
+					else {
+					  //either there are too many sites the user is in or none, fallback to parent
+						drupal_goto('node/'. $parent_nid);
+					}
         }
       }
       else {
