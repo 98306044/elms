@@ -133,10 +133,18 @@ function elms_helper_menu() {
     'page arguments' => array('elms_helper_settings'),
     'access arguments' => array('administer elms configuration'),
   );
-  $items['active'] = array(
+  $items['active_site'] = array(
     'title' => 'Active Site',
     'description' => 'Attempts to pass someone through to an active area correctly',
     'page callback' => '_elms_get_active_site',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+	$items['active_login'] = array(
+    'title' => 'Active Login',
+    'description' => 'login then redirect to the passed name pair',
+    'page callback' => '_elms_get_active_login',
     'page arguments' => array(1),
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
@@ -157,6 +165,10 @@ function _elms_get_active_site($parent_title) {
   elseif (!empty($parent_title)) {
     //see if this title is a url alias
     $src = db_result(db_query("SELECT src FROM {url_alias} WHERE dst='%s'", check_plain($parent_title)));
+		//if the SRC is invalid then push to the front page
+		if (empty($src)) {
+			drupal_goto('<front>');
+		}
     //strip off the node/ portion if we can
     $parent_nid = str_replace('node/', '', $src);
     //check that this is a number before running other queries
@@ -208,6 +220,32 @@ function _elms_get_active_site($parent_title) {
         drupal_goto('node/'. $parent_nid);
       }
     }
+  }
+  else {
+    //go to the front page if we were unable to find anything
+    drupal_goto('<front>');
+  }
+}
+
+/**
+ * Helper for pushing someone to the active site
+ */
+function _elms_get_active_login($parent_title) {
+  global $user;
+  if (!empty($parent_title)) {
+		//see if this title is a url alias
+    $src = db_result(db_query("SELECT src FROM {url_alias} WHERE dst='%s'", check_plain($parent_title)));
+		//if the SRC is invalid then push to the front page
+		if (empty($src)) {
+			drupal_goto('<front>');
+		}
+    //if the user is logged out, prompt a login that will redirect to the right place
+		if ($user->uid == 0) {
+      drupal_goto('user', array('destination' => $src));
+		}
+		else {
+			drupal_goto($src);
+		}
   }
   else {
     //go to the front page if we were unable to find anything
