@@ -133,7 +133,75 @@ function elms_helper_menu() {
     'page arguments' => array('elms_helper_settings'),
     'access arguments' => array('administer elms configuration'),
   );
+	$items['active'] = array(
+    'title' => 'Active Site',
+    'description' => 'Attempts to pass someone through to an active area correctly',
+    'page callback' => '_elms_get_active_site',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+		'type' => MENU_CALLBACK,
+  );
   return $items;
+}
+
+/**
+ * Helper for pushing someone to the active site
+ */
+function _elms_get_active_site($parent_title) {
+	global $user;
+	//if the parent wasn't set, send to the front page
+  if (!empty($parent_title)) {
+		//see if this title is a url alias
+		$src = db_result(db_query("SELECT src FROM {url_alias} WHERE dst='%s'", check_plain($parent_title)));
+		//strip off the node/ portion if we can
+		$parent_nid = str_replace('node/', '', $src);
+		//check that this is a number before running other queries
+		if (is_numeric($parent_nid)) {
+			//select all sites associated to this parent based on path
+			$result = db_query("SELECT {node}.nid AS nid FROM {node} JOIN {content_type_site} ON {node}.vid = {content_type_site}.vid WHERE {node}.status=1 AND {node}.type in ('site') AND {content_type_site}.field_parent_ref_nid=%d", $parent_nid);
+			$site_nids = array();
+			$count = 0;
+			//loop through and store what the user has access to
+			while ($val = db_fetch_array($result)) {
+				$site_node = node_load($val['nid']);
+				//verify they have access
+				if (node_access('view', $site_node)) {
+				  $site_nids[] = $val['nid'];
+				}
+				$count++;
+			}
+			//if there were any results, process this, otherwise push to page
+			if ($count > 0) {
+			  //user has access to 1 thing, go to it!
+			  if (count($site_nids) == 1) {
+				  drupal_goto('node/'. $site_nids[0]);
+			  }
+			  //user has access to nothing
+			  elseif(count($site_nids) == 0) {
+				  //user has access to nothing and user is logged out, but something exists
+					//push to the login
+					if ($user->uid == 0) {
+						//redirect and try again
+						drupal_goto('user', array('destination' => $_GET['q']));
+				  }
+				  else {
+				    drupal_goto('node/'. $parent_nid);
+					}
+			  }
+			  //more then one address was found, just push to the parent
+			  else {
+				  drupal_goto('node/'. $parent_nid);
+			  }
+			}
+			else {
+				drupal_goto('node/'. $parent_nid);
+			}
+		}
+	}
+	else {
+	  //go to the front page if we were unable to find anything
+	  drupal_goto('<front>');
+	}
 }
 
 /**
