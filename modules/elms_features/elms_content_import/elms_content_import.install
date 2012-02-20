@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Install, update, and uninstall functions for the elms_content_import module.
+ */
 
 /**
  * Implements hook_install().

@@ -1,16 +1,16 @@
 <?php
-//ELMS: Context Variable
-//Development Sponsored by The Pennsylvania State University
-//ELMS is Copyright (C) 2008-2012  The Pennsylvania State University
+// ELMS: Context Variable
+// Development Sponsored by The Pennsylvania State University
+// ELMS is Copyright (C) 2008-2012  The Pennsylvania State University
 
-//Bryan Ollendyke
-//bto108@psu.edu
+// Bryan Ollendyke
+// bto108@psu.edu
 
-//Keith D. Bailey
-//kdb163@psu.edu
+// Keith D. Bailey
+// kdb163@psu.edu
 
-//12 Borland
-//University Park,  PA 16802
+// 12 Borland
+// University Park,  PA 16802
 
 /**
  * Implementation of hook_context_registry().
@@ -19,7 +19,7 @@ function context_var_context_registry() {
   return array(
     'conditions' => array(
       'context_var' => array(
-        'title' => t('Variable Match'),
+        'title' => t('Variable match'),
         'plugin' => 'context_var_context_condition',
       ),
     ),
@@ -55,7 +55,7 @@ function context_var_context_plugins() {
  * Implementation of hook_init().
  */
 function context_var_init() {
-  //get the mapping of conditions and if they should execute
+  // get the mapping of conditions and if they should execute
   $map = context_condition_map();
   if (!empty($map['context_var']) && $plugin = context_get_plugin('condition', 'context_var')) {
     $plugin->execute();

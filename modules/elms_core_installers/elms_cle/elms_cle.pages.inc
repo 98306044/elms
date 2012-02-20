@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Functions specific to the cle install core.
+ */
 
 /**
  * Redirect to the book root for this course

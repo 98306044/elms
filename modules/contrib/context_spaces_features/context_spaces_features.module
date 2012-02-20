@@ -1,5 +1,5 @@
 <?php
-//Context Spaces Features
+// Context Spaces Features
 
 /**
  * Implementation of hook_context_registry().
@@ -8,7 +8,7 @@ function context_spaces_features_context_registry() {
   return array(
     'conditions' => array(
       'context_spaces_features' => array(
-        'title' => t('Active Space Features'),
+        'title' => t('Active space features'),
         'plugin' => 'context_spaces_features_context_condition',
       ),
     ),
@@ -44,7 +44,7 @@ function context_spaces_features_context_plugins() {
  * Implementation of hook_init().
  */
 function context_spaces_features_init() {
-  //get the mapping of conditions and if they should execute
+  // get the mapping of conditions and if they should execute
   $map = context_condition_map();
   if (!empty($map['context_spaces_features']) && $plugin = context_get_plugin('condition', 'context_spaces_features')) {
     $plugin->execute();

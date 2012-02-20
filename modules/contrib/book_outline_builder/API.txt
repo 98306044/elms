@@ -11,11 +11,11 @@ $outline['YOUR_TEMPLATE_MACHINE_NAME'] = array(
        'type' => '',
        'title' => '',
        'content => '', //optional body content
-			 'format' => '', //optional text input format
-			 'duplicate' => TRUE //or number of times to replicate,
-			 'children' => array(
-			   //SAME STRUCTURE AS ABOVE NOW
-			 )
+       'format' => '', //optional text input format
+       'duplicate' => TRUE //or number of times to replicate,
+       'children' => array(
+         //SAME STRUCTURE AS ABOVE NOW
+       )
      ));
 
 --Acceptable values for type is link, page, folder
@@ -33,18 +33,18 @@ function YOURMODULENAME_book_outline_builder_template() {
     array(
       'type' => 'folder',
       'title' => 'Lesson @i',
-			'duplicate' => TRUE,
-			'children' => array(
-			  array(
+      'duplicate' => TRUE,
+      'children' => array(
+        array(
           'type' => 'page',
           'title' => 'Introduction',
         ),
-		    array(
+        array(
           'type' => 'page',
           'title' => 'Content',
         ),
-		  ),
-		),
+      ),
+    ),
   );
   return $outline;
 }
@@ -61,10 +61,10 @@ function YOUMODULENAME_book_outline_builder_template_alter(&$templates) {
  */
 function YOURMODULENAME_book_outline_builder_loop_alter(&$book_item, &$loop, $additional_parms) {
   //this says, if the defined content type is cool and the duplicate variable is set to 3, change the number of times to loop to 6
-	//see elms_content for an example of this in action
-	if ($book_item['type'] == 'cool' && $book_item['duplicate'] === 3) {
-	  $loop = 6;
-	}
+  //see elms_content for an example of this in action
+  if ($book_item['type'] == 'cool' && $book_item['duplicate'] === 3) {
+    $loop = 6;
+  }
 }
 
 /**
@@ -72,6 +72,6 @@ function YOURMODULENAME_book_outline_builder_loop_alter(&$book_item, &$loop, $ad
  */
 function YOURMODULENAME_book_outline_builder_node_alter(&$node, &$book_item, $additional_parms) {
   if ($node->type == 'link') {
-	  $node->field_link[0]['value'] = 'http://www.google.com/';
-	}
+    $node->field_link[0]['value'] = 'http://www.google.com/';
+  }
 }

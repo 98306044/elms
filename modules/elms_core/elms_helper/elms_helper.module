@@ -6,24 +6,24 @@
 define('ELMS_VERSION', '6.x-1.0-alpha6');
 
 /**
- * Implementation of hook_define_highlight_relationship
+ * Implementation of hook_define_highlight_relationship().
  */
 function elms_helper_define_highlight_relationship() {
-  //define the container though content provides no defintions, all are modular
+  // define the container though content provides no defintions, all are modular
   $relationships['enhance_content'] = array(
     'types' => array('page', 'folder'),
     'name' => t('Enhance Content'),
     'perm' => 'enhance instructional content',
     'highlight_types' => array(),
   );
-  //define the ability to take notes, note features will implement this
+  // define the ability to take notes, note features will implement this
   $relationships['note_taking'] = array(
     'types' => array('page', 'folder'),
     'name' => t('Note taking'),
     'perm' => 'take notes on content',
     'highlight_types' => array(),
   );
-  //define the ability to take notes, note features will implement this
+  // define the ability to take notes, note features will implement this
   $relationships['feedback'] = array(
     'types' => array('studio_submission'),
     'name' => t('Provide Feedback'),
@@ -44,7 +44,7 @@ function elms_helper_perm() {
  * Implementation of hook_theme_registry_alter().
  */
 function elms_helper_theme_registry_alter(&$vars) {
-  //hijack the node tpl away from organic groups
+  // hijack the node tpl away from organic groups
   array_splice($vars['node']['theme paths'], 2, 0, drupal_get_path('module', 'elms_helper'));
 }
 
@@ -58,7 +58,7 @@ function elms_helper_init() {
   }
   drupal_add_css(drupal_get_path('module', 'elms_helper') .'/css/elms_helper.css', 'theme');
   drupal_add_css(drupal_get_path('module', 'jquery_ui') .'/jquery.ui/themes/redmond/redmond.css', 'module');
-  //account for possible og theme swap when using the outline designer
+  // account for possible og theme swap when using the outline designer
   if (arg(0) == 'outline_designer') {
     $book_node = node_load(arg(2));
     if (isset($book_node->og_groups)) {
@@ -68,9 +68,9 @@ function elms_helper_init() {
       if (og_is_group_type($group_node->type)) {
         og_set_theme($group_node);
         $theme_settings = variable_get('theme_'. $group_node->og_theme .'_settings', array());
-        //add in custom font setting, a none file exists too
+        // add in custom font setting, a none file exists too
         drupal_add_css(drupal_get_path('module', 'elms_helper') .'/css/'. $theme_settings['font'] .'.css', 'theme');
-        //add in custom css if this course has any
+        // add in custom css if this course has any
         if (isset($theme_settings['extra_css_path']) && $theme_settings['extra_css_path'] != '' && $theme_settings['extra_css_use'] == 1) {
           drupal_add_css($theme_settings['extra_css_path'], 'theme');
         }
@@ -79,15 +79,15 @@ function elms_helper_init() {
       }
     }
   }
-  //fixes glitch in other og projects where it forgets to set theme
+  // fixes glitch in other og projects where it forgets to set theme
   if (arg(0) == 'node') {
     $node = menu_get_object();
     if (og_is_group_type($node->type)) {
       og_set_theme($node);
       $theme_settings = variable_get('theme_'. $node->og_theme .'_settings', array());
-      //add in custom font setting, a none file exists too
+      // add in custom font setting, a none file exists too
       drupal_add_css(drupal_get_path('module', 'elms_helper') .'/css/'. $theme_settings['font'] .'.css', 'theme');
-      //add in custom css if this course has any
+      // add in custom css if this course has any
       if ($theme_settings['extra_css_path'] != '' && $theme_settings['extra_css_use'] == 1) {
         drupal_add_css($theme_settings['extra_css_path'], 'theme');
       }
@@ -96,15 +96,15 @@ function elms_helper_init() {
     }
     else {
       $group = og_get_group_context();
-      //unset breadcrumbs while in a group as elms takes care of pathing
+      // unset breadcrumbs while in a group as elms takes care of pathing
       drupal_set_breadcrumb(array());
       if (isset($group->type)) {
         $theme_settings = variable_get('theme_'. $group->og_theme .'_settings', array());
-        //add in custom font setting, a none file exists too
+        // add in custom font setting, a none file exists too
         if (isset($theme_settings['font'])) {
           drupal_add_css(drupal_get_path('module', 'elms_helper') .'/css/'. $theme_settings['font'] .'.css', 'theme');
         }
-        //add in custom css if this course has any
+        // add in custom css if this course has any
         if (isset($theme_settings['extra_css_path']) && $theme_settings['extra_css_path'] != '' && $theme_settings['extra_css_use'] == 1) {
           drupal_add_css($theme_settings['extra_css_path'], 'theme');
         }
@@ -157,61 +157,61 @@ function elms_helper_menu() {
  */
 function _elms_get_active_site($parent_title) {
   global $user;
-  //this will only work for authenticated users
+  // this will only work for authenticated users
   if ($user->uid == 0 && !empty($parent_title)) {
-    //redirect and try again
+    // redirect and try again
     drupal_goto('user', array('destination' => $_GET['q']));
   }
   elseif (!empty($parent_title)) {
-    //see if this title is a url alias
+    // see if this title is a url alias
     $src = db_result(db_query("SELECT src FROM {url_alias} WHERE dst='%s'", check_plain($parent_title)));
-    //if the SRC is invalid then push to the front page
+    // if the SRC is invalid then push to the front page
     if (empty($src)) {
       drupal_goto('<front>');
     }
-    //strip off the node/ portion if we can
+    // strip off the node/ portion if we can
     $parent_nid = str_replace('node/', '', $src);
-    //check that this is a number before running other queries
+    // check that this is a number before running other queries
     if (is_numeric($parent_nid)) {
-      //select all sites associated to this parent based on path
+      // select all sites associated to this parent based on path
       $result = db_query("SELECT {node}.nid AS nid FROM {node} JOIN {content_type_site} ON {node}.vid = {content_type_site}.vid WHERE {node}.status=1 AND {node}.type in ('site') AND {content_type_site}.field_parent_ref_nid=%d", $parent_nid);
       $site_nids = array();
       $count = 0;
-      //loop through and store what the user has access to
+      // loop through and store what the user has access to
       while ($val = db_fetch_array($result)) {
         $site_node = node_load($val['nid']);
-        //verify they have access
+        // verify they have access
         if (node_access('view', $site_node)) {
           $site_nids[] = $val['nid'];
         }
         $count++;
       }
-      //if there were any results, process this, otherwise push to page
+      // if there were any results, process this, otherwise push to page
       if ($count > 0) {
         if (count($site_nids) == 1) {
-          //user has access to 1 thing, go to it!
+          // user has access to 1 thing, go to it!
           drupal_goto('node/'. $site_nids[0]);
         }
         elseif(count($site_nids) == 0) {
-          //user has access to nothing, push to parent to deal with
+          // user has access to nothing, push to parent to deal with
           drupal_goto('node/'. $parent_nid);
         }
         else {
-          //more then one address was found, check again for group access
-          //this accounts for open sections that are false positives
+          // more then one address was found, check again for group access
+          // this accounts for open sections that are false positives
           foreach ($site_nids as $site_nid) {
-            //see if the user is in any of these sites or just has access
+            // see if the user is in any of these sites or just has access
             if (isset($user->og_groups[$site_nid])) {
               $in_groups[] = $site_nid;
             }
           }
-          //see if there was a single group that the user was in
+          // see if there was a single group that the user was in
           if (count($in_groups) == 1) {
-            //user is registered to 1 group in this parent, go there!
+            // user is registered to 1 group in this parent, go there!
             drupal_goto('node/'. $in_groups[0]);
           }
           else {
-            //either there are too many sites the user is in or none, fallback to parent
+            // either there are too many sites the user is in or none, fallback to parent
             drupal_goto('node/'. $parent_nid);
           }
         }
@@ -222,7 +222,7 @@ function _elms_get_active_site($parent_title) {
     }
   }
   else {
-    //go to the front page if we were unable to find anything
+    // go to the front page if we were unable to find anything
     drupal_goto('<front>');
   }
 }
@@ -233,13 +233,13 @@ function _elms_get_active_site($parent_title) {
 function _elms_get_active_login($parent_title) {
   global $user;
   if (!empty($parent_title)) {
-    //see if this title is a url alias
+    // see if this title is a url alias
     $src = db_result(db_query("SELECT src FROM {url_alias} WHERE dst='%s'", check_plain($parent_title)));
-    //if the SRC is invalid then push to the front page
+    // if the SRC is invalid then push to the front page
     if (empty($src)) {
       drupal_goto('<front>');
     }
-    //if the user is logged out, prompt a login that will redirect to the right place
+    // if the user is logged out, prompt a login that will redirect to the right place
     if ($user->uid == 0) {
       drupal_goto('user', array('destination' => $src));
     }
@@ -248,7 +248,7 @@ function _elms_get_active_login($parent_title) {
     }
   }
   else {
-    //go to the front page if we were unable to find anything
+    // go to the front page if we were unable to find anything
     drupal_goto('<front>');
   }
 }
@@ -259,8 +259,7 @@ function _elms_get_active_login($parent_title) {
 
 function elms_helper_settings() {
   $form = array();
-  //render a select list based on a list of all available resources
-  //$options = list_themes();
+  // render a select list based on a list of all available resources
   $result = db_query("SELECT name, info FROM {system} WHERE type = 'theme' AND status=1");
   while ($theme = db_fetch_array($result)) {
     $info = unserialize($theme['info']);
@@ -290,14 +289,14 @@ function elms_helper_settings() {
  * Implementation of hook_menu_alter().
  */
 function elms_helper_menu_alter(&$items) {
-  //remove some confusing pages from menu items
+  // remove some confusing pages from menu items
   $items['node/%node/outline']['type'] = MENU_CALLBACK;
   $items['node/%/outline_designer']['type'] = MENU_CALLBACK;
   $items['og/activity']['type'] = MENU_CALLBACK;
   
-  //add additional protection to user search functionality
-  //we don't want ANYONE to be able to search for users
-  //except for admins
+  // add additional protection to user search functionality
+  // we don't want ANYONE to be able to search for users
+  // except for admins
   if (isset($items['search/user/%menu_tail'])) {
     $menu_item =& $items['search/user/%menu_tail'];
     $menu_item['access callback'] = 'user_access';
@@ -308,7 +307,7 @@ function elms_helper_menu_alter(&$items) {
     $menu_item['access callback'] = 'user_access';
     $menu_item['access arguments'] = array('administer users');
   }
-  //alter things for the group form standard we want
+  // alter things for the group form standard we want
   $items['node/%node/features']['title'] = t('ID Toolkit');
 }
 
@@ -316,21 +315,21 @@ function elms_helper_menu_alter(&$items) {
  * Implementation of hook_form_alter().
  */
 function elms_helper_form_alter(&$form, &$form_state, $form_id) {
-  //hijack the spaces theme form and make it have ELMS specific stuff
+  // hijack the spaces theme form and make it have ELMS specific stuff
   if ($form_id == '_spaces_theme_theme_form') {
-  //add css logic validation
+  // add css logic validation
   $form['#validate'][] = '_elms_helper_theme_validate';
   $group = og_get_group_context();
-    //get local overrides from the new theme if possible
+    // get local overrides from the new theme if possible
     $settings = variable_get('theme_'. $group->og_theme .'_settings', array());
-    //verify something was returned, otherwise pull from the global defaults
+    // verify something was returned, otherwise pull from the global defaults
     if (count($settings) == 0) {
       $settings = variable_get('theme_settings', array());
     }
-    //unset values that have been deselected
+    // unset values that have been deselected
     $theme_ary = variable_get('elms_helper_disallowed_themes', array('cube'));
     $form_themes = $form['themes'];
-    //remove non-theme defaults
+    // remove non-theme defaults
     unset($form_themes['#type']);
     unset($form_themes['#title']);
     unset($form_themes['#description']);
@@ -344,8 +343,8 @@ function elms_helper_form_alter(&$form, &$form_state, $form_id) {
         unset($form['themes']['theme']['#options'][$key]);
       }
     }
-    //add in css options and chamfer specific code
-    //font selection
+    // add in css options and chamfer specific code
+    // font selection
     $options = array(
       'none' => '- Use CSS Default -',
       'georgia' => 'Georgia, serif',
@@ -364,7 +363,7 @@ function elms_helper_form_alter(&$form, &$form_state, $form_id) {
     );
     $form['font_contatiner'] = array(
       '#type' => 'fieldset',
-      '#title' => t('Font / Style'),
+      '#title' => t('Font / style'),
       '#collapsed' => TRUE,
       '#collapsible' => TRUE,
     );
@@ -385,14 +384,14 @@ function elms_helper_form_alter(&$form, &$form_state, $form_id) {
     $form['font_contatiner']['extra_css_path'] = array(
       '#type' => 'textfield',
       '#size' => '40',
-      '#title' => t("File Path"),
+      '#title' => t("File path"),
       '#required' => FALSE,
       '#default_value' => $settings['extra_css_path'],
     );
     $form['font_contatiner']['extra_css_upload'] = array(
       '#type' => 'file',
       '#size' => '10',
-      '#title' => t("Upload CSS File"),
+      '#title' => t("Upload CSS file"),
       '#description' => 'Upload your own CSS file for use in this site',
       '#required' => FALSE,
     );
@@ -434,12 +433,12 @@ function elms_helper_form_alter(&$form, &$form_state, $form_id) {
         'chamfer_color_footer_text' => 'FFFFFF',
         'chamfer_color_footer_link' => '00CCFF',
       );
-      $form['logo']['#title'] = t('Site Banner');
+      $form['logo']['#title'] = t('Site banner');
       $form['logo']['logo_upload']['#description'] = 'In Chamfer this will take the place of the site-banner (correct dimensions are 950px by 108px). File size must be less then 2M';
       // Create the form widgets using Forms API
       $form['chamfer_color_template'] = array(
         '#type' => 'select',
-        '#title' => t('Chamfer Template'),
+        '#title' => t('Chamfer template'),
         '#description' => t('Use this color template'),
         '#options' => $color_array,
         '#default_value' => $settings['chamfer_color_template'],
@@ -450,23 +449,23 @@ function elms_helper_form_alter(&$form, &$form_state, $form_id) {
       else {
         $fieldtype = 'textfield';
       }
-      //page colors
+      // page colors
       $form['page'] = array(
         '#type' => 'fieldset',
-        '#title' => t('Chamfer Page Settings'),
+        '#title' => t('Chamfer page settings'),
         '#description' => t("Change page related colors"),
         '#collapsed' => TRUE,
         '#collapsible' => TRUE,
       );
       $form['page']['chamfer_bgimage'] = array(
         '#type' => 'checkbox',
-        '#title' => t('Background Image'),
+        '#title' => t('Background image'),
         '#description' => t('Whether or not to show the background image'),
         '#default_value' => $settings['chamfer_bgimage'],
       );
       $form['page']['chamfer_borders'] = array(
         '#type' => 'checkbox',
-        '#title' => t('Include Borders'),
+        '#title' => t('Include borders'),
         '#description' => t('Whether or not there should be a 10px border'),
         '#default_value' => $settings['chamfer_borders'],
       );
@@ -482,28 +481,28 @@ function elms_helper_form_alter(&$form, &$form_state, $form_id) {
         '#type' => $fieldtype,
         '#size' => 6,
         '#maxlength' => 6,
-        '#title' => t('Secondary Background'),
+        '#title' => t('Secondary background'),
         '#description' => t('Color of the Inner background, the border and header / footer'),
         '#default_value' => $settings['chamfer_color_secondary'],
       );
-      //header
+      // header
       $form['header'] = array(
         '#type' => 'fieldset',
-        '#title' => t('Chamfer Header Settings'),
+        '#title' => t('Chamfer header settings'),
         '#description' => t('Change items in the header'),
         '#collapsed' => TRUE,
         '#collapsible' => TRUE,
       );
       $form['header']['chamfer_top_logo'] = array(
         '#type' => 'select',
-        '#title' => t('Show Top Logo'),
+        '#title' => t('Show top logo'),
         '#description' => t('Display the logo at the top left of the interface'),
         '#options' => array(0 => 'No', 1 => 'Logo 1', 2 => 'Logo 2'),
         '#default_value' => $settings['chamfer_top_logo'],
       );
       $form['header']['chamfer_top_link'] = array(
         '#type' => 'textfield',
-        '#title' => t('Top Logo Link'),
+        '#title' => t('Top logo link'),
         '#description' => t('The link the logo should go to when clicked, leave blank for none'),
         '#default_value' => $settings['chamfer_top_link'],
       );
@@ -511,7 +510,7 @@ function elms_helper_form_alter(&$form, &$form_state, $form_id) {
         '#type' => $fieldtype,
         '#size' => 6,
         '#maxlength' => 6,
-        '#title' => t('Site Title'),
+        '#title' => t('Site title'),
         '#description' => t('Color of the site title'),
         '#default_value' => $settings['chamfer_color_header1'],
       );
@@ -519,14 +518,14 @@ function elms_helper_form_alter(&$form, &$form_state, $form_id) {
         '#type' => $fieldtype,
         '#size' => 6,
         '#maxlength' => 6,
-        '#title' => t('Site Slogan'),
+        '#title' => t('Site slogan'),
         '#description' => t('Color of the site slogan'),
         '#default_value' => $settings['chamfer_color_header2'],
       );
-      //content
+      // content
       $form['content'] = array(
         '#type' => 'fieldset',
-        '#title' => t('Chamfer Content Settings'),
+        '#title' => t('Chamfer content settings'),
         '#description' => t("Change content related colors"),
         '#collapsed' => TRUE,
         '#collapsible' => TRUE,
@@ -555,24 +554,24 @@ function elms_helper_form_alter(&$form, &$form_state, $form_id) {
         '#description' => t('Background color of the block regions in the content'),
         '#default_value' => $settings['chamfer_color_blocks'],
       );
-      //footer
+      // footer
       $form['footer'] = array(
         '#type' => 'fieldset',
-        '#title' => t('Chamfer Footer Settings'),
+        '#title' => t('Chamfer footer settings'),
         '#description' => t('Change items in the footer'),
         '#collapsed' => TRUE,
         '#collapsible' => TRUE,
       );
       $form['footer']['chamfer_bottom_logo'] = array(
         '#type' => 'select',
-        '#title' => t('Show Bottom Logo'),
+        '#title' => t('Show bottom logo'),
         '#description' => t('Display the logo at the top left of the interface'),
         '#options' => array(0 => 'No', 1 => 'Logo 1', 2 => 'Logo 2'),
         '#default_value' => $settings['chamfer_bottom_logo'],
       );
       $form['footer']['chamfer_bottom_link'] = array(
         '#type' => 'textfield',
-        '#title' => t('Bottom Logo Link'),
+        '#title' => t('Bottom logo link'),
         '#description' => t('The link the logo should go to when clicked, leave blank for none'),
         '#default_value' => $settings['chamfer_bottom_link'],
       );
@@ -597,10 +596,10 @@ function elms_helper_form_alter(&$form, &$form_state, $form_id) {
   if ($form_id == 'user_profile_form') {
     //remove change theme from view even if they have the permission, gives us granularity so they can set it in the group / site creation
     $form['theme_select']['#access'] = FALSE;
-    //contact form has been removed because the form should only be used for instructor to student and student to instructor, this walls students from contacting each other via the system. also reduces confusion as this isn't something they should want to turn off (need to communicate with instructor and visa versa)
+    // contact form has been removed because the form should only be used for instructor to student and student to instructor, this walls students from contacting each other via the system. also reduces confusion as this isn't something they should want to turn off (need to communicate with instructor and visa versa)
     $form['contact']['#access'] = FALSE;
   }
-  //form modifications for js to work
+  // form modifications for js to work
   if (strpos($form_id, 'editview_node_form_') === 0) {
     $form['title']['#attributes']['class'] = 'editview_title';
     $form['field_due_date']['#attributes']['class'] = 'editview_date';
@@ -610,7 +609,7 @@ function elms_helper_form_alter(&$form, &$form_state, $form_id) {
 }
 
 function _elms_helper_theme_validate() {
-  //custom css
+  // custom css
   if (isset($form_state['storage']['css'])) {
     $dir = file_create_path(file_directory_path() .'/spaces_theme_custom_css');
     $is_writable = file_check_directory($dir, 1);
@@ -630,21 +629,21 @@ function _elms_helper_theme_validate() {
  * Implementation of hook_link_alter().
  */
 function elms_helper_link_alter(&$links, $node, $comment = NULL) {
-  //remove add book as it's confusing with outline designer in place
+  // remove add book as it's confusing with outline designer in place
   if (isset($links['book_add_child'])) {
     unset($links['book_add_child']);
   }
-  //get a list of anything associated to this and remove it
-  //we do this because the left side region pulls all links over there
+  // get a list of anything associated to this and remove it
+  // we do this because the left side region pulls all links over there
   $tmp_ref_links = nodereference_url_build_all_links($node, 0);
   foreach ($tmp_ref_links as $key => $link) {
       unset($links[$key]);
   }
-  //check for flags before we assume its there
+  // check for flags before we assume its there
   if (module_exists('flag')) {
-    //unset all flags
+    // unset all flags
     $flag_links = flag_link('node', $node);
-    //if this has flags then render them here
+    // if this has flags then render them here
     if (count($flag_links)) {
       foreach ($flag_links as $key => $flag) {
         unset($links[$key]);
@@ -681,21 +680,21 @@ function elms_helper_content_extra_fields($type_name) {
 function elms_helper_dashboard_requirements($provider) {
   switch ($provider) {
     case 'system':
-    //count active accounts
+    // count active accounts
       $user_accounts_count = db_result(db_query("SELECT COUNT(uid) FROM {users} WHERE status=1"));
       $requirements['user_accounts_count'] = array(
         'title' => t('Count of User Accounts'), 
         'value' => $user_accounts_count,
         'severity' => REQUIREMENT_INFO,
       );
-    //count students / instructors / TAs
+    // count students / instructors / TAs
     $count_students = db_result(db_query("SELECT COUNT(u.uid) FROM {users} AS u JOIN {users_roles} AS ur ON u.uid=ur.uid JOIN {role} AS r ON ur.rid=r.rid WHERE r.name='student' AND status=1"));
     $requirements['active_student_accounts'] = array(
           'title' => t('Student Count'), 
           'value' => $count_students,
           'severity' => REQUIREMENT_INFO,
         );
-    //list all admins
+    // list all admins
     $accounts_list = array(
       'administrator' => '',
     'instructional designer' => '',
@@ -709,7 +708,7 @@ function elms_helper_dashboard_requirements($provider) {
         $accounts_list[$val['rolename']] .= $val['uname'] .' ';
     $counts[$val['rolename']]++;
     }
-    //loop through and render all this info
+    // loop through and render all this info
     foreach ($accounts_list as $rolename => $unames) {
         $requirements['active_'. str_replace(' ', '', $rolename) .'_accounts'] = array(
           'title' => t('@account Accounts', array('@account' => ucwords($rolename))), 

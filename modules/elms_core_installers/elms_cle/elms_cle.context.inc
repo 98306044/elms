@@ -10,8 +10,8 @@ function elms_cle_context_default_contexts() {
   $context->disabled = FALSE; /* Edit this to true to make a default context disabled initially */
   $context->api_version = 3;
   $context->name = 'elms_cle_nav';
-  $context->description = 'Collaborative Learning Environment core navigation';
-  $context->tag = 'ELMS CLE Nav';
+  $context->description = 'Collaborative learning environment core navigation';
+  $context->tag = 'ELMS CLE nav';
   $context->conditions = array(
     'context_og_condition_group_type' => array(
       'values' => array(
@@ -38,8 +38,8 @@ function elms_cle_context_default_contexts() {
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('Collaborative Learning Environment core navigation');
-  t('ELMS CLE Nav');
+  t('Collaborative learning environment core navigation');
+  t('ELMS CLE nav');
   $export['elms_cle_nav'] = $context;
 
   return $export;

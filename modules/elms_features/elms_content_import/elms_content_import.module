@@ -6,7 +6,7 @@ include_once('elms_content_import.features.inc');
  * Implementation of hook_nodeapi().
  */
 function elms_content_import_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
-  //fallback in case a uuid was never assigned which can happen via outline designer and this module
+  // fallback in case a uuid was never assigned which can happen via outline designer and this module
   if ($op == 'update' && isset($node->revision_uuid) && $node->revision_uuid == '') {
     $node->revision_uuid = uuid_uuid();
   }
@@ -16,19 +16,19 @@ function elms_content_import_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
  * Implementation of hook_feeds_after_import().
  */
 function elms_content_import_feeds_after_import($importer, $source) {
-  //need to clear the UUIDs of all imported nodes from the 
-  //get a list of nodes that were just imported
+  // need to clear the UUIDs of all imported nodes from the
+  // get a list of nodes that were just imported
   $result = db_query("SELECT nid FROM {feeds_node_item} WHERE id='elms_node_import'");
   while ($val = db_fetch_array($result)) {
     $ary[] = $val['nid'];
   }
-  //clear all nodes that came across
+  // clear all nodes that came across
   db_query("DELETE FROM {uuid_node} WHERE nid IN(". db_placeholders($ary) .")", $ary);
-  //clean up revisions if they exist
+  // clean up revisions if they exist
   db_query("DELETE FROM {uuid_node_revisions} WHERE nid IN(". db_placeholders($ary) .")", $ary);
-  //clean up original import table
+  // clean up original import table
   db_query("DELETE FROM {feeds_node_item} WHERE id='elms_node_import'");
-  //seed all nodes by saving them all again
+  // seed all nodes by saving them all again
   foreach ($ary as $nid) {
     $node = node_load($nid);
     $node->uuid = uuid_uuid();

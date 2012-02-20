@@ -6,7 +6,7 @@ include_once('elms_cle.features.inc');
  * Implementation of hook_menu_alter().
  */
 function elms_cle_menu_alter(&$items) {
-  //make the default front-page out of the box course content
+  // make the default front-page out of the box course content
   $items['spaces-frontpage']['page callback'] = '_elms_cle_home';
   $items['spaces-frontpage']['access callback'] = 'spaces_access_feature';
   $items['spaces-frontpage']['access arguments'] = array('view', 'elms_studio');
