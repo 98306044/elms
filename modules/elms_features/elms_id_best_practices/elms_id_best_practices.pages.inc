@@ -48,7 +48,7 @@ function elms_id_best_practices_settings() {
     '#cols' => '60',
     '#input_format' => '2',
     '#type' => 'textarea',
-    '#title' => t('Help Page'),
+    '#title' => t('Help page'),
   );
   // render a select list based on a list of all available resources
   $result = db_query(db_rewrite_sql("SELECT nid,title FROM {node} WHERE type='elms_resource'"));
@@ -61,7 +61,7 @@ function elms_id_best_practices_settings() {
     '#description' => t('Select the resources you would like to display from the list of available ones'),
     '#type' => 'select',
     '#multiple' => TRUE,
-    '#title' => t('Resource List'),
+    '#title' => t('Resource list'),
     '#options' => $options,
   );
   // needs to be added for WYSIWYG to work correctly
