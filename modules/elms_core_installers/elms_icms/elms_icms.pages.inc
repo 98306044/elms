@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @file
+ * ICMS page functions
+ *
+ * Establish the frontpage for an icms based system
+ */
 /**
  * Redirect to the book root for this course
  */

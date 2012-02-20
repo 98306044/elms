@@ -37,7 +37,7 @@ function elms_id_best_practices_menu() {
     'file' => 'elms_id_best_practices.pages.inc',
   );
   $items['admin/elms/id_best_practices'] = array(
-    'title' => 'ID Best Practices',
+    'title' => 'ID best practices',
     'description' => 'Default settings related to instructional best practices',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('elms_id_best_practices_settings'),
@@ -46,17 +46,17 @@ function elms_id_best_practices_menu() {
   );
   return $items;
 }
-//helper function for access verification
+// helper function for access verification
 function _elms_id_best_practices_access_check() {
-  //make sure the feature is activated
+  // make sure the feature is activated
   if (spaces_access_feature('view', 'elms_id_best_practices')) {
     return user_access('manage features');
   }
   return 0;
 }
-//helper function for access verification
+// helper function for access verification
 function _elms_id_best_practices_access_check_admin() {
-  //make sure the feature is activated
+  // make sure the feature is activated
   if (spaces_access_feature('view', 'elms_id_best_practices')) {
     return user_access('spaces_access_admin');
   }
@@ -68,7 +68,7 @@ function _elms_id_best_practices_access_check_admin() {
  */
 function _elms_id_best_practices_get_template($tid) {
   $body = '';
-  //try and match the template to one in the database
+  // try and match the template to one in the database
   if (module_exists('wysiwyg_template')) {
     $body = db_result(db_query("SELECT body FROM {wysiwyg_templates} WHERE tid=%d", $tid));
   }
@@ -80,7 +80,7 @@ function _elms_id_best_practices_get_template($tid) {
  */
 function elms_id_best_practices_book_outline_builder_template() {
   $outline['unit_outline'] = array(
-    'title' => 'Unit / Topical Outline',
+    'title' => 'Unit / topical outline',
       array(
         'type' => 'page',
         'title' => 'Introduction',
@@ -97,26 +97,26 @@ function elms_id_best_practices_book_outline_builder_template() {
           array(
             'type' => 'folder',
             'title' => 'Lesson @i',
-            'content' => _elms_id_best_practices_get_template(rand(13,15)),
+            'content' => _elms_id_best_practices_get_template(rand(13, 15)),
             'format' => 2,
             'duplicate' => 3,
             'children' => array(
               array(
                 'type' => 'page',
                 'title' => 'Introduction',
-                'content' => _elms_id_best_practices_get_template(rand(13,15)),
+                'content' => _elms_id_best_practices_get_template(rand(13, 15)),
                 'format' => 2,
               ),
               array(
                 'type' => 'page',
-                'title' => 'Content Page',
-                'content' => _elms_id_best_practices_get_template(rand(13,15)),
+                'title' => 'Content page',
+                'content' => _elms_id_best_practices_get_template(rand(13, 15)),
                 'format' => 2,
               ),
               array(
                 'type' => 'page',
                 'title' => 'Summary',
-               'content' => _elms_id_best_practices_get_template(rand(13,15)),
+               'content' => _elms_id_best_practices_get_template(rand(13, 15)),
                'format' => 2,
               ),
             ),
@@ -125,7 +125,7 @@ function elms_id_best_practices_book_outline_builder_template() {
       ),
   );
   $outline['lesson_outline'] = array(
-    'title' => 'Lesson Outline',
+    'title' => 'Lesson outline',
       array(
         'type' => 'folder',
         'title' => 'Lesson @i',
@@ -136,31 +136,31 @@ function elms_id_best_practices_book_outline_builder_template() {
             array(
               'type' => 'page',
               'title' => 'Introduction',
-              'content' => _elms_id_best_practices_get_template(rand(13,15)),
+              'content' => _elms_id_best_practices_get_template(rand(13, 15)),
               'format' => 2,
             ),
             array(
               'type' => 'page',
               'title' => 'Page 1',
-              'content' => _elms_id_best_practices_get_template(rand(13,15)),
+              'content' => _elms_id_best_practices_get_template(rand(13, 15)),
               'format' => 2,
             ),
             array(
               'type' => 'page',
               'title' => 'Page 2',
-              'content' => _elms_id_best_practices_get_template(rand(13,15)),
+              'content' => _elms_id_best_practices_get_template(rand(13, 15)),
               'format' => 2,
             ),
             array(
               'type' => 'page',
               'title' => 'Page 3',
-              'content' => _elms_id_best_practices_get_template(rand(13,15)),
+              'content' => _elms_id_best_practices_get_template(rand(13, 15)),
               'format' => 2,
             ),
             array(
              'type' => 'page',
              'title' => 'Summary',
-             'content' => _elms_id_best_practices_get_template(rand(13,15)),
+             'content' => _elms_id_best_practices_get_template(rand(13, 15)),
              'format' => 2,
             ),
           ),

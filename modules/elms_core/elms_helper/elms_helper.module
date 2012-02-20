@@ -120,21 +120,21 @@ function elms_helper_menu() {
   $items = array();
   $items['admin/elms'] = array(
     'title' => 'ELMS',
-    'description' => 'Adjust ELMS system configuration options.',
+    'description' => 'Adjust elms system configuration options.',
     'weight' => -20,
     'access arguments' => array('administer elms configuration'),
     'page callback' => 'elms_helper_settings_overview',
     'file' => 'elms_helper.admin.inc',
   );
   $items['admin/elms/defaults'] = array(
-    'title' => 'System Defaults',
+    'title' => 'System defaults',
     'description' => 'Set defaults for themes used and other global logic',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('elms_helper_settings'),
     'access arguments' => array('administer elms configuration'),
   );
   $items['active_site'] = array(
-    'title' => 'Active Site',
+    'title' => 'Active site',
     'description' => 'Attempts to pass someone through to an active area correctly',
     'page callback' => '_elms_get_active_site',
     'page arguments' => array(1),
@@ -142,7 +142,7 @@ function elms_helper_menu() {
     'type' => MENU_CALLBACK,
   );
   $items['active_login'] = array(
-    'title' => 'Active Login',
+    'title' => 'Active login',
     'description' => 'login then redirect to the passed name pair',
     'page callback' => '_elms_get_active_login',
     'page arguments' => array(1),
@@ -174,7 +174,7 @@ function _elms_get_active_site($parent_title) {
     // check that this is a number before running other queries
     if (is_numeric($parent_nid)) {
       // select all sites associated to this parent based on path
-      $result = db_query("SELECT {node}.nid AS nid FROM {node} JOIN {content_type_site} ON {node}.vid = {content_type_site}.vid WHERE {node}.status=1 AND {node}.type in ('site') AND {content_type_site}.field_parent_ref_nid=%d", $parent_nid);
+      $result = db_query(db_rewrite_sql("SELECT {node}.nid AS nid FROM {node} JOIN {content_type_site} ON {node}.vid = {content_type_site}.vid WHERE {node}.status=1 AND {node}.type in ('site') AND {content_type_site}.field_parent_ref_nid=%d"), $parent_nid);
       $site_nids = array();
       $count = 0;
       // loop through and store what the user has access to
@@ -192,7 +192,7 @@ function _elms_get_active_site($parent_title) {
           // user has access to 1 thing, go to it!
           drupal_goto('node/'. $site_nids[0]);
         }
-        elseif(count($site_nids) == 0) {
+        elseif (count($site_nids) == 0) {
           // user has access to nothing, push to parent to deal with
           drupal_goto('node/'. $parent_nid);
         }
@@ -270,7 +270,7 @@ function elms_helper_settings() {
     '#description' => t('The default theme for newly created sites'),
     '#type' => 'select',
     '#multiple' => FALSE,
-    '#title' => t('Default Theme'),
+    '#title' => t('Default theme'),
     '#options' => $options,
   );
   $form['elms_helper_disallowed_themes'] = array(
@@ -278,7 +278,7 @@ function elms_helper_settings() {
     '#description' => t("These are themes that should not be allowed to be used in sites. Typical usage for this would be hiding the default system or admin themes so that versions don't look the same as the system creating them."),
     '#type' => 'select',
     '#multiple' => TRUE,
-    '#title' => t('Disallowed Themes'),
+    '#title' => t('Disallowed themes'),
     '#options' => $options,
   );
   return system_settings_form($form);
@@ -293,7 +293,6 @@ function elms_helper_menu_alter(&$items) {
   $items['node/%node/outline']['type'] = MENU_CALLBACK;
   $items['node/%/outline_designer']['type'] = MENU_CALLBACK;
   $items['og/activity']['type'] = MENU_CALLBACK;
-  
   // add additional protection to user search functionality
   // we don't want ANYONE to be able to search for users
   // except for admins
@@ -337,7 +336,7 @@ function elms_helper_form_alter(&$form, &$form_state, $form_id) {
     unset($form_themes['#theme']);
     unset($form_themes['#weight']);
     unset($form_themes['theme']);
-    foreach($form_themes as $key => $theme) {
+    foreach ($form_themes as $key => $theme) {
       if (in_array($theme['description']['#title'], $theme_ary)) {
         unset($form['themes'][$key]);
         unset($form['themes']['theme']['#options'][$key]);
@@ -415,9 +414,9 @@ function elms_helper_form_alter(&$form, &$form_state, $form_id) {
       $defaults = array(
         'chamfer_borders' => 1,
         'chamfer_bgimage' => 0,
-        'chamfer_top_logo' => 1, //0,1 or 2 for off, clear or solid
+        'chamfer_top_logo' => 1, // 0,1 or 2 for off, clear or solid
         'chamfer_top_link' => '',
-        'chamfer_bottom_logo' => 1, //0,1 or 2 for off, clear or solid
+        'chamfer_bottom_logo' => 1, // 0,1 or 2 for off, clear or solid
         'chamfer_bottom_link' => '',
         'chamfer_color_template' => 'default',
         'chamfer_color_primary' => '000000',
@@ -594,7 +593,7 @@ function elms_helper_form_alter(&$form, &$form_state, $form_id) {
     }
   }
   if ($form_id == 'user_profile_form') {
-    //remove change theme from view even if they have the permission, gives us granularity so they can set it in the group / site creation
+    // remove change theme from view even if they have the permission, gives us granularity so they can set it in the group / site creation
     $form['theme_select']['#access'] = FALSE;
     // contact form has been removed because the form should only be used for instructor to student and student to instructor, this walls students from contacting each other via the system. also reduces confusion as this isn't something they should want to turn off (need to communicate with instructor and visa versa)
     $form['contact']['#access'] = FALSE;
@@ -683,14 +682,14 @@ function elms_helper_dashboard_requirements($provider) {
     // count active accounts
       $user_accounts_count = db_result(db_query("SELECT COUNT(uid) FROM {users} WHERE status=1"));
       $requirements['user_accounts_count'] = array(
-        'title' => t('Count of User Accounts'), 
+        'title' => t('Count of user accounts'),
         'value' => $user_accounts_count,
         'severity' => REQUIREMENT_INFO,
       );
     // count students / instructors / TAs
     $count_students = db_result(db_query("SELECT COUNT(u.uid) FROM {users} AS u JOIN {users_roles} AS ur ON u.uid=ur.uid JOIN {role} AS r ON ur.rid=r.rid WHERE r.name='student' AND status=1"));
     $requirements['active_student_accounts'] = array(
-          'title' => t('Student Count'), 
+          'title' => t('Student count'),
           'value' => $count_students,
           'severity' => REQUIREMENT_INFO,
         );
@@ -711,7 +710,7 @@ function elms_helper_dashboard_requirements($provider) {
     // loop through and render all this info
     foreach ($accounts_list as $rolename => $unames) {
         $requirements['active_'. str_replace(' ', '', $rolename) .'_accounts'] = array(
-          'title' => t('@account Accounts', array('@account' => ucwords($rolename))), 
+          'title' => t('@account Accounts', array('@account' => ucwords($rolename))),
           'value' => $counts[$rolename] .' ('. $unames .')',
           'severity' => REQUIREMENT_INFO,
         );

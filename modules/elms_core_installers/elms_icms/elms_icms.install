@@ -1,11 +1,16 @@
 <?php
-  /**
+/**
+ * @file
+ * Install, update, and uninstall functions for the elms_icms install core.
+ */
+
+/**
  * Implementation of hook_install().
  */
 function elms_icms_install() {
-  // alter the feature menu to say Course Resources
+  // alter the feature menu to say course resources
   db_query("UPDATE {menu_custom} SET title='Course Resources' WHERE menu_name='features'");
-  // install the default settings for OER and Closed courses
+  // install the default settings for oer and closed courses
   $ary = array(
     'name' => 'og_private',
     'title' => 'Closed Enrolement Section',

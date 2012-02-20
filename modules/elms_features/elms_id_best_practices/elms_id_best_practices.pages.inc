@@ -1,10 +1,16 @@
 <?php
+/**
+ * @file
+ * ID best practice pages
+ *
+ * place holders for pages created by this module
+ */
 
 /**
  * Display Syllabus Page
  */
 function _elms_id_best_practices_page_syllabus() {
-  //get the group
+  // get the group
   $group = og_get_group_context();
   return variable_get('elms_id_bp_syllabus', '');
 }
@@ -13,7 +19,7 @@ function _elms_id_best_practices_page_syllabus() {
  * Display Help Page
  */
 function _elms_id_best_practices_page_help() {
-  //get the group
+  // get the group
   $group = og_get_group_context();
   return variable_get('elms_id_bp_help', '');
 }
@@ -24,7 +30,7 @@ function _elms_id_best_practices_page_help() {
  */
 
 function elms_id_best_practices_settings() {
-  //create directory just in-case of first load
+  // create directory just in-case of first load
   $dir = file_create_path(file_directory_path() .'/syllabi');
   file_check_directory($dir,  1);
   $form = array();
@@ -44,8 +50,8 @@ function elms_id_best_practices_settings() {
     '#type' => 'textarea',
     '#title' => t('Help Page'),
   );
-  //render a select list based on a list of all available resources
-  $result = db_query("SELECT nid,title FROM {node} WHERE type='elms_resource'");
+  // render a select list based on a list of all available resources
+  $result = db_query(db_rewrite_sql("SELECT nid,title FROM {node} WHERE type='elms_resource'"));
   $options = array();
   while ($val = db_fetch_array($result)) {
     $options[$val['nid']] = $val['title'];
@@ -58,17 +64,17 @@ function elms_id_best_practices_settings() {
     '#title' => t('Resource List'),
     '#options' => $options,
   );
-  //needs to be added for WYSIWYG to work correctly
- // $form['format'] = filter_form('2');
-  //needs to be added so that we can successfully submit files
+  // needs to be added for WYSIWYG to work correctly
+  // $form['format'] = filter_form('2');
+  // needs to be added so that we can successfully submit files
   $form['#attributes'] = array('enctype' => "multipart/form-data");
   return system_settings_form($form);
 }
 
-//validate the form values
+// validate the form values
 function elms_id_best_practices_settings_validate($form, &$form_state) {
     $form_state['storage']['elms_id_bp_syllabus'] = '';
-    //create the theme logo area and validate its size
+    // create the theme logo area and validate its size
     $dir = file_create_path(file_directory_path() .'/syllabi');
     $is_writable = file_check_directory($dir, 1);
     if ($is_writable) {
