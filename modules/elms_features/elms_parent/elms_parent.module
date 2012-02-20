@@ -8,9 +8,9 @@ include_once('elms_parent.features.inc');
  */
 function elms_parent_sb_associated_node_alter(&$options) {
   $result = db_query("SELECT nid, title FROM {node} WHERE type='%s'", ELMS_ROOT_TYPE);
-	while ($val = db_fetch_array($result)) {
-		$options[$val['nid']] = $val['title'];
-	}
+  while ($val = db_fetch_array($result)) {
+    $options[$val['nid']] = $val['title'];
+  }
 }
 
 /**

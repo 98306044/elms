@@ -141,7 +141,7 @@ function elms_helper_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
-	$items['active_login'] = array(
+  $items['active_login'] = array(
     'title' => 'Active Login',
     'description' => 'login then redirect to the passed name pair',
     'page callback' => '_elms_get_active_login',
@@ -165,10 +165,10 @@ function _elms_get_active_site($parent_title) {
   elseif (!empty($parent_title)) {
     //see if this title is a url alias
     $src = db_result(db_query("SELECT src FROM {url_alias} WHERE dst='%s'", check_plain($parent_title)));
-		//if the SRC is invalid then push to the front page
-		if (empty($src)) {
-			drupal_goto('<front>');
-		}
+    //if the SRC is invalid then push to the front page
+    if (empty($src)) {
+      drupal_goto('<front>');
+    }
     //strip off the node/ portion if we can
     $parent_nid = str_replace('node/', '', $src);
     //check that this is a number before running other queries
@@ -198,22 +198,22 @@ function _elms_get_active_site($parent_title) {
         }
         else {
           //more then one address was found, check again for group access
-					//this accounts for open sections that are false positives
-					foreach ($site_nids as $site_nid) {
-						//see if the user is in any of these sites or just has access
-						if (isset($user->og_groups[$site_nid])) {
-							$in_groups[] = $site_nid;
-						}
-					}
-					//see if there was a single group that the user was in
-					if (count($in_groups) == 1) {
-						//user is registered to 1 group in this parent, go there!
-						drupal_goto('node/'. $in_groups[0]);
-					}
-					else {
-					  //either there are too many sites the user is in or none, fallback to parent
-						drupal_goto('node/'. $parent_nid);
-					}
+          //this accounts for open sections that are false positives
+          foreach ($site_nids as $site_nid) {
+            //see if the user is in any of these sites or just has access
+            if (isset($user->og_groups[$site_nid])) {
+              $in_groups[] = $site_nid;
+            }
+          }
+          //see if there was a single group that the user was in
+          if (count($in_groups) == 1) {
+            //user is registered to 1 group in this parent, go there!
+            drupal_goto('node/'. $in_groups[0]);
+          }
+          else {
+            //either there are too many sites the user is in or none, fallback to parent
+            drupal_goto('node/'. $parent_nid);
+          }
         }
       }
       else {
@@ -233,19 +233,19 @@ function _elms_get_active_site($parent_title) {
 function _elms_get_active_login($parent_title) {
   global $user;
   if (!empty($parent_title)) {
-		//see if this title is a url alias
+    //see if this title is a url alias
     $src = db_result(db_query("SELECT src FROM {url_alias} WHERE dst='%s'", check_plain($parent_title)));
-		//if the SRC is invalid then push to the front page
-		if (empty($src)) {
-			drupal_goto('<front>');
-		}
+    //if the SRC is invalid then push to the front page
+    if (empty($src)) {
+      drupal_goto('<front>');
+    }
     //if the user is logged out, prompt a login that will redirect to the right place
-		if ($user->uid == 0) {
+    if ($user->uid == 0) {
       drupal_goto('user', array('destination' => $src));
-		}
-		else {
-			drupal_goto($src);
-		}
+    }
+    else {
+      drupal_goto($src);
+    }
   }
   else {
     //go to the front page if we were unable to find anything
@@ -318,8 +318,8 @@ function elms_helper_menu_alter(&$items) {
 function elms_helper_form_alter(&$form, &$form_state, $form_id) {
   //hijack the spaces theme form and make it have ELMS specific stuff
   if ($form_id == '_spaces_theme_theme_form') {
-	//add css logic validation
-	$form['#validate'][] = '_elms_helper_theme_validate';
+  //add css logic validation
+  $form['#validate'][] = '_elms_helper_theme_validate';
   $group = og_get_group_context();
     //get local overrides from the new theme if possible
     $settings = variable_get('theme_'. $group->og_theme .'_settings', array());
@@ -610,20 +610,20 @@ function elms_helper_form_alter(&$form, &$form_state, $form_id) {
 }
 
 function _elms_helper_theme_validate() {
-	//custom css
-	if (isset($form_state['storage']['css'])) {
-	  $dir = file_create_path(file_directory_path() .'/spaces_theme_custom_css');
-	  $is_writable = file_check_directory($dir, 1);
-	  if ($is_writable) {
-		  $validators = array(
-			  'file_validate_size' => array(2 * 1024),
-			  'file_validate_extensions' => array('css'),
-		  );
-		  if ($file = file_save_upload('extra_css_upload', $validators, $dir, FILE_EXISTS_RENAME)) {
-			  $form_state['storage']['css'] = str_replace(' ', '%20', $file->filepath);
-		  }
-	  }
-	}
+  //custom css
+  if (isset($form_state['storage']['css'])) {
+    $dir = file_create_path(file_directory_path() .'/spaces_theme_custom_css');
+    $is_writable = file_check_directory($dir, 1);
+    if ($is_writable) {
+      $validators = array(
+        'file_validate_size' => array(2 * 1024),
+        'file_validate_extensions' => array('css'),
+      );
+      if ($file = file_save_upload('extra_css_upload', $validators, $dir, FILE_EXISTS_RENAME)) {
+        $form_state['storage']['css'] = str_replace(' ', '%20', $file->filepath);
+      }
+    }
+  }
 }
 
 /**

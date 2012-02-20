@@ -19,28 +19,28 @@ function elms_parent_pages_menu() {
     'description' => 'Funnel page to get students started with a parent',
     'page callback' => '_elms_parent_pages_student',
     'access arguments' => array(1, 'student'),
-		'access callback' => '_elms_parent_pages_access_check',
-		'type' => MENU_LOCAL_TASK,
+    'access callback' => '_elms_parent_pages_access_check',
+    'type' => MENU_LOCAL_TASK,
     'weight' => -9,
   );
-	$items['node/%node/view/instructor'] = array(
+  $items['node/%node/view/instructor'] = array(
     'title callback' => '_elms_parent_pages_page_title',
     'title arguments' => array(1, 'Instructor'),
     'description' => 'Funnel page to get instructors started with a parent',
     'page callback' => '_elms_parent_pages_instructor',
     'access arguments' => array(1, 'instructor'),
-		'access callback' => '_elms_parent_pages_access_check',
-		'type' => MENU_LOCAL_TASK,
+    'access callback' => '_elms_parent_pages_access_check',
+    'type' => MENU_LOCAL_TASK,
     'weight' => -8,
   );
-	$items['node/%node/view/marketing'] = array(
-	  'title callback' => '_elms_parent_pages_page_title',
+  $items['node/%node/view/marketing'] = array(
+    'title callback' => '_elms_parent_pages_page_title',
     'title arguments' => array(1, 'Marketing'),
     'description' => 'Marketing page for the parent',
     'page callback' => '_elms_parent_pages_marketing',
     'access arguments' => array(1, 'marketing'),
-		'access callback' => '_elms_parent_pages_access_check',
-		'type' => MENU_LOCAL_TASK,
+    'access callback' => '_elms_parent_pages_access_check',
+    'type' => MENU_LOCAL_TASK,
     'weight' => -7,
   );
   return $items;
@@ -60,8 +60,8 @@ function _elms_parent_pages_access_check($node, $page_type) {
   //check that user can access node, type matches and user can access this page
   if (node_access('view', $node) && $node->type == ELMS_ROOT_TYPE && user_access('view parent '. $page_type .' page')) {
     return 1;
-	}
-	return 0;
+  }
+  return 0;
 }
 
 /**
@@ -69,12 +69,12 @@ function _elms_parent_pages_access_check($node, $page_type) {
  */
 function _elms_parent_pages_student() {
   return '<ol>
-	<li>Read the help documents</li>
-	<li>Get your welcome letter</li>
-	<li>Get your activation code</li>
-	<li>Do things</li>
-	<li>Check below</li>
-	</ol>';
+  <li>Read the help documents</li>
+  <li>Get your welcome letter</li>
+  <li>Get your activation code</li>
+  <li>Do things</li>
+  <li>Check below</li>
+  </ol>';
 }
 
 /**
