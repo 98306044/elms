@@ -318,6 +318,8 @@ function elms_helper_menu_alter(&$items) {
 function elms_helper_form_alter(&$form, &$form_state, $form_id) {
   //hijack the spaces theme form and make it have ELMS specific stuff
   if ($form_id == '_spaces_theme_theme_form') {
+	//add css logic validation
+	$form['#validate'][] = '_elms_helper_theme_validate';
   $group = og_get_group_context();
     //get local overrides from the new theme if possible
     $settings = variable_get('theme_'. $group->og_theme .'_settings', array());
@@ -432,32 +434,8 @@ function elms_helper_form_alter(&$form, &$form_state, $form_id) {
         'chamfer_color_footer_text' => 'FFFFFF',
         'chamfer_color_footer_link' => '00CCFF',
       );
-      $form['logo'] = array(
-        '#type' => 'fieldset',
-        '#title' => t('Site Banner'),
-        '#collapsed' => TRUE,
-        '#collapsible' => TRUE,
-      );
-      $form['logo']['default_logo'] = array(
-        '#type' => 'select',
-        '#title' => t('Use..'),
-        '#options' => array(1 => 'Default Banner', 0 => 'Upload / Path Below'),
-        '#default_value' => $settings['default_logo'],
-      );
-      $form['logo']['logo_path'] = array(
-        '#type' => 'textfield',
-        '#size' => '40',
-        '#title' => t("File Path"),
-        '#required' => FALSE,
-        '#default_value' => $settings['logo_path'],
-      );
-      $form['logo']['logo_upload'] = array(
-        '#type' => 'file',
-        '#size' => '10',
-        '#title' => t("Upload"),
-        '#description' => 'In Chamfer this will take the place of the site-banner (correct dimensions are 950px by 108px). File size must be less then 2M',
-        '#required' => FALSE,
-      );
+      $form['logo']['#title'] = t('Site Banner');
+      $form['logo']['logo_upload']['#description'] = 'In Chamfer this will take the place of the site-banner (correct dimensions are 950px by 108px). File size must be less then 2M';
       // Create the form widgets using Forms API
       $form['chamfer_color_template'] = array(
         '#type' => 'select',
@@ -629,6 +607,23 @@ function elms_helper_form_alter(&$form, &$form_state, $form_id) {
     $form['field_content_ref']['#attributes']['class'] = 'editview_nid';
     $form['field_task_link']['#attributes']['class'] = 'editview_task_link';
   }
+}
+
+function _elms_helper_theme_validate() {
+	//custom css
+	if (isset($form_state['storage']['css'])) {
+	  $dir = file_create_path(file_directory_path() .'/spaces_theme_custom_css');
+	  $is_writable = file_check_directory($dir, 1);
+	  if ($is_writable) {
+		  $validators = array(
+			  'file_validate_size' => array(2 * 1024),
+			  'file_validate_extensions' => array('css'),
+		  );
+		  if ($file = file_save_upload('extra_css_upload', $validators, $dir, FILE_EXISTS_RENAME)) {
+			  $form_state['storage']['css'] = str_replace(' ', '%20', $file->filepath);
+		  }
+	  }
+	}
 }
 
 /**
