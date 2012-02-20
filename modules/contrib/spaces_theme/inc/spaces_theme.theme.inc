@@ -34,12 +34,12 @@ function _spaces_theme_theme_form($form_state, $feature = NULL) {
   '#collapsed' => TRUE,
   '#collapsible' => TRUE,
   );
-  $form['logo']['default_logo'] = array(
-  '#type' => 'select',
-  '#title' => t('Use..'),
-  '#options' => array(1 => 'Default Logo', 0 => 'Upload / File Path'),
-  '#default_value' => $settings['default_logo'],
-  );
+	$form['logo']['default_logo'] = array(
+		'#type' => 'checkbox',
+		'#title' => t('Use the default logo'),
+		'#default_value' => $settings['default_logo'],
+		'#description' => t('Check here if you want the theme to use the logo supplied with it.')
+	);
   $form['logo']['logo_path'] = array(
   '#type' => 'textfield',
   '#size' => '40',
@@ -51,36 +51,49 @@ function _spaces_theme_theme_form($form_state, $feature = NULL) {
   '#type' => 'file',
   '#size' => '10',
   '#title' => t("Upload"),
-  '#description' => 'The logo typically is in the top left corner of the theme',
+  '#description' => t('The logo typically is in the top left corner of the theme'),
   '#required' => FALSE,
   );
   //favorite's icon
-  $form['icon'] = array(
+  $form['favicon'] = array(
   '#type' => 'fieldset',
   '#title' => t('Shortcut Icon'),
   '#collapsed' => TRUE,
   '#collapsible' => TRUE,
   );
-  $form['icon']['default_favicon'] = array(
-  '#type' => 'select',
-  '#title' => t('Use..'),
-  '#options' => array(1 => 'Default Icon', 0 => 'Upload / File Path'),
-  '#default_value' => $settings['default_favicon'],
-  );
-  $form['icon']['favicon_path'] = array(
+  $form['favicon']['default_favicon'] = array(
+		'#type' => 'checkbox',
+		'#title' => t('Use the default shortcut icon.'),
+		'#default_value' => $settings['default_favicon'],
+		'#description' => t('Check here if you want the theme to use the default shortcut icon.')
+	);
+  $form['favicon']['favicon_path'] = array(
   '#type' => 'textfield',
   '#size' => '40',
   '#title' => t("File Path"),
   '#required' => FALSE,
   '#default_value' => $settings['favicon_path'],
   );
-  $form['icon']['favicon_upload'] = array(
+  $form['favicon']['favicon_upload'] = array(
   '#type' => 'file',
   '#size' => '10',
   '#title' => t("Upload"),
   '#description' => 'The icon you see in the left corner of the link bar.  This is usually a 16x16 icon and file size must be less then 1M',
   '#required' => FALSE,
   );
+	$node_types = node_get_types('names');
+	if ($node_types) {
+		$form['node_info'] = array(
+			'#type' => 'fieldset',
+			'#title' => t('Display post information on'),
+			'#description' => t('Enable or disable the <em>submitted by Username on date</em> text when displaying posts of the following type.'),
+			'#collapsed' => TRUE,
+			'#collapsible' => TRUE,
+		);
+		foreach ($node_types as $type => $name) {
+			$form['node_info']["toggle_node_info_$type"] = array('#type' => 'checkbox', '#title' => check_plain($name), '#default_value' => $settings["toggle_node_info_$type"]);
+		}
+	}
   //additional theme settings
   $form['theme_settings'] = array(
   '#type' => 'fieldset',
@@ -163,20 +176,6 @@ function _spaces_theme_theme_form_validate($form, &$form_state) {
         $form_state['storage']['favicon'] = str_replace(' ', '%20', $file->filepath);
       }
     }
-    //custom css
-		if (isset($form_state['storage']['css'])) {
-    $dir = file_create_path(file_directory_path() .'/spaces_theme_custom_css');
-    $is_writable = file_check_directory($dir, 1);
-    if ($is_writable) {
-      $validators = array(
-        'file_validate_size' => array(2 * 1024),
-        'file_validate_extensions' => array('css'),
-      );
-      if ($file = file_save_upload('extra_css_upload', $validators, $dir, FILE_EXISTS_RENAME)) {
-        $form_state['storage']['css'] = str_replace(' ', '%20', $file->filepath);
-      }
-    }
-	  }
 }
 
 //theme settings submit
@@ -248,7 +247,7 @@ function _spaces_theme_validate_image_resolution(&$file, $dimensions) {
   $errors = array();
   // Check first that the file is an image.
   if ($info = image_get_info($file->filepath)) {
-    // Check if the icon matches the given dimensions.
+    // Check if the favicon matches the given dimensions.
     list($width, $height) = explode('x', $dimensions);
     if ($info['width'] != $width || $info['height'] != $height) {
       // Try to resize the image to fit the dimensions if it doesn't.
