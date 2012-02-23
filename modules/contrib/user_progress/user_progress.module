@@ -1,0 +1,414 @@
+<?php
+
+/**
+ * Implementation of hook_perm().
+ */
+function user_progress_perm() {
+  $types = _user_progress_list_types();
+  // Generate a list of regions and permissions.
+	if (!empty($types)) {
+    foreach (array_keys($types) as $type) {
+      $perms[] = 'set '. $type .' progress record';
+    }
+	}
+	$perms[] = 'get user progress record';
+	$perms[] = 'set user progress record';
+  return $perms;
+}
+
+/**
+ * Helper function to build list of types.
+ */
+function _user_progress_list_types() {
+	$result = db_query("SELECT * FROM {user_progress_types}");
+	while ($val = db_fetch_array($result)) {
+    $types[$val['upt_name']] = $val;
+  }
+	return $types;
+}
+
+/**
+ * Implementation of hook_menu().
+ */
+function user_progress_menu() {
+	// a call to rebuild the menu cache means we should rebuild the type definitions
+	_user_progress_rebuild_types();
+  $items = array();
+  $items['user_progress/get'] = array(
+      'access arguments' => array('get user progress record'),
+      'page callback'  => '_user_progress_get',
+      'page arguments' => array(2),
+      'type'  => MENU_CALLBACK,
+  );
+  $items['user_progress/set'] = array(
+      'access arguments' => array('set user progress record'),
+      'page callback'  => '_user_progress_set',
+      'page arguments' => array(2),
+      'type'  => MENU_CALLBACK,
+  );
+  $items['admin/settings/user_progress'] = array(
+      'title' => 'User Progress',
+      'description' => 'User Progress global settings',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('_user_progress_settings'),
+      'type' => MENU_NORMAL_ITEM,
+      'access arguments' => array('administer site configuration')
+  );
+  return $items;
+}
+
+/**
+ * Implementation of hook_settings().
+ */
+function _user_progress_settings($form_state) {
+  // get all types
+	$types = _user_progress_list_types();
+  $table = '<table><caption>Defined Types</caption><tr><th>'. t('ID') .'</th><th>'. t('Name') .'</th><th>'. t('Value Handler') .'</th><th>'. t('Data Handler') .'</th></tr>';
+	// render type list as a table
+  foreach ($types as $type) {
+    $table .= '<tr><td>'. $type['upt_name'] .'</td><td>'. $type['name'] .'</td><td>'. $type['value_handler'] .'</td><td>'. $type['data_handler'] .'</td></tr>';
+		$type_options[$type['upt_name']] = $type['name'];
+  }
+  $table .= '</table>';
+  $form['table'] = array(
+    '#value' => $table,
+		'#description' => t('You can find more out about how to define new types of user progress in the API.txt file included with the module.'),
+  );
+	// get a listing of all items in the registry
+	$result = db_query("SELECT * FROM {user_progress_registry}");
+  $table = '<table><caption>Activity Registry</caption><tr><th>'. t('ID') .'</th><th>'. t('Title') .'</th><th>'. t('Type') .'</th><th>'. t('Group') .'</th></tr>';
+  while ($val = db_fetch_array($result)) {
+		if (empty($val['nid'])) {
+      $gname = 'none';
+    }
+    else {
+      $group = node_load($val['nid']);
+      $gname = l($group->title, 'node/'. $group->nid);
+    }
+    $table .= '<tr><td>'. $val['upregid'] .'</td><td>'. $val['title'] .'</td><td>'. $val['upt_name'] .'</td><td>'. $gname .'</td></tr>';
+  }
+  $table .= '</table>';
+  $form['table2'] = array(
+    '#value' => $table,
+  );
+  $form['add'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Add activity to registry'),
+    '#collapsed' => FALSE,
+    '#collapsible' => TRUE,
+  );
+	$options[0] = t('none');
+	// if og is enabled, populate the list of available groups to this user
+  if (module_exists('og')) {
+		$result = db_query(db_rewrite_sql("SELECT title, n.nid FROM {node} AS n JOIN {og} AS g ON g.nid=n.nid"));
+		while ($val = db_fetch_array($result)) {
+			$options[$val['nid']] = $val['title'];
+		}
+	}
+	// allow for associating to a group
+  $form['add']['nid'] = array(
+    '#type' => 'select',
+    '#title' => t('Group'),
+    '#options' => $options,
+    '#description' => t('Group associated to this instance of the UP type'),
+  );
+  $form['add']['title'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Title'),
+    '#description' => t('Human readable title of the type instance'),
+  );
+	$form['add']['upt_name'] = array(
+    '#type' => 'select',
+    '#title' => t('Type'),
+    '#options' => $type_options,
+		'#required' => TRUE,
+    '#description' => t('Select a type for this activity'),
+  );
+  $form['submit'] = array('#type' => 'submit', '#value' => t('Add Activity'));
+  return $form;
+}
+
+/**
+ * Implementation of hook_settings_submit().
+ */
+function _user_progress_settings_submit($form, &$form_state) {
+	// add the key pair into the database, this is mostly just for admins
+  $nid = $form_state['values']['nid'];
+  $title = check_plain($form_state['values']['title']);
+  $type = check_plain($form_state['values']['upt_name']);
+  db_query("INSERT INTO {user_progress_registry} (title, upt_name, nid) VALUES('%s', '%s', %d)", $title, $type, $nid);
+}
+
+/**
+ * Implementation of user_progress API to get values from drupal.
+ */
+function _user_progress_get($action) {
+  // see what action has been requested
+  $valid = TRUE;
+  global $user;
+  // verify there is a user logged in
+  if ($user->uid != 0) {
+    switch ($action) {
+    case 'guid':
+      // generate the GUID so we can communicate safely
+      $output = drupal_get_token();
+    break;
+    case 'maxvalue':
+      // if this is valid, return the high value
+      if (_user_progress_verify('guid') && _user_progress_verify('upregid')) {
+        $upregid = $_GET['upregid'];
+        $uid = $user->uid;
+        // select the count of records based on the current user and assignment
+        $output = _user_progress_get_maxvalue($upregid, $uid);
+      }
+      else {
+        $output = 0;
+      }
+    break;
+    case 'numtries':
+      //if this is valid, get a count of everything
+      if (_user_progress_verify('guid') && _user_progress_verify('upregid')) {
+        $upregid = $_GET['upregid'];
+        $uid = $user->uid;
+        //select the count of records based on the current user and assignment
+        $output = _user_progress_get_numtries($upregid, $uid);
+      }
+      else {
+        $output = 0;
+      }
+    break;
+    case 'value':
+      // if this is valid, get a count of everything
+      if (_user_progress_verify('guid') && _user_progress_verify('uprid')) {
+        $uprid = $_GET['uprid'];
+        $uid = $user->uid;
+        // select the unique value pairing to current user for security
+        $output = _user_progress_get_value($uprid, $uid);
+      }
+      else {
+        $output = 0;
+      }
+    break;
+    case 'data':
+      // if this is valid, get a count of everything
+      if (_user_progress_verify('guid') && _user_progress_verify('uprid')) {
+        $uprid = $_GET['uprid'];
+        $uid = $user->uid;
+        // select the unique value pairing to current user for security
+        $val = db_fetch_array(db_query("SELECT data, upregid FROM {user_progress_records} WHERE uprid=%d AND uid=%d", $uprid, $uid));
+				_user_progress_convert_value($val['data'], $val['upregid'], 'data_handler', TRUE);
+        $output = $val['data'];
+      }
+      else {
+        $output = 0;
+      }
+    break;
+    }
+  }
+  else {
+    $output = 0;
+  }
+  print $output;
+  exit;
+}
+
+/**
+ * Implementation of user_progress API to set values in drupal.
+ */
+function _user_progress_set($action) {
+  $valid = TRUE;
+  global $user;
+  //verify user is logged in
+  if ($user->uid != 0) {
+    //see what action is incoming
+    switch ($action) {
+    case 'value':
+      //if we passed validation, set the values in the database
+      if (_user_progress_verify('guid') && _user_progress_verify('upregid') && _user_progress_verify('value')) {
+        //activity id
+        $upregid = $_GET['upregid'];
+        //user id
+        $uid = $user->uid;
+        //value that was sent
+        $value = $_GET['value'];
+				//see if there's any nid set, otherwise null
+       /* if (_user_progress_verify('nid')) {
+          $nid = $_GET['nid'];
+        }
+        else {*/
+        $nid = NULL;
+        //}
+        //see if there's any additional data set, otherwise a null array
+        if (_user_progress_verify('data')) {
+          $data = $_GET['data'];
+        }
+        else {
+          $data = array();
+        }
+				// look up how to handle data storage
+				_user_progress_convert_value($data, $upregid, 'data_handler');
+        // create the record
+        $output = _user_progress_set_record($upregid, $uid, $nid, $value, $data);
+      }
+      else {
+        $output = 0;
+      }
+    break;
+    default:
+      // invalid request, return 0
+      $output = 0;
+    break;
+    }
+  }
+  else {
+    $output = 0;
+  }
+  print $output;
+  exit;
+}
+
+/**
+ *
+ */
+function _user_progress_convert_value(&$data, $upregid, $field = 'value_handler', $reverse = FALSE) {
+  $type_data = _user_progress_list_types();
+  $upt_name = db_result(db_query("SELECT upt_name FROM {user_progress_registry} WHERE upregid=%d", $upregid));
+  switch ($type_data[$upt_name][$field]) {
+    case 'int':
+		case 'string':
+		  // don't do anything for ints and strings
+		  $data = $data;
+		break;
+		case 'blob':
+		  // serialize so we can store in the database
+			if ($reverse) {
+				$data = unserialize($data);
+			}
+			else {
+        $data = serialize($data);
+			}
+		break;
+		case 'time':
+		  // make sure its in timestamp format and convert if not
+			if (!is_numeric($data)) {
+				$data = strtotime($data);
+			}
+		break;
+  }
+}
+
+/**
+ * Helper function for verifying values are valid
+ */
+function _user_progress_verify($type, $val = NULL) {
+  $valid = TRUE;
+  //if we weren't passed a val use GET
+  if (empty($val)) {
+    //verify value is set
+    if (!isset($_GET[$type])) {
+      $valid = FALSE;
+    }
+    else {
+      $val = $_GET[$type];
+    }
+  }
+  // validate the type
+  if ($type == 'guid') {
+    // verify the token
+    if (!drupal_valid_token($val)) {
+      $valid = FALSE;
+    }
+  }
+  elseif ($type == 'data') {
+    // ignore data, we don't validate beyond set
+  }
+  else {
+    // make sure this is a number
+    if (!is_numeric($val)) {
+      $valid = FALSE;
+    }
+  }
+  // if it wasn't valid, record it
+  if (!$valid) {
+    watchdog('up_debug', '@value not valid', array('@value' => $type));
+  }
+  return $valid;
+}
+
+/**
+ * Helper function to insert into records
+ */
+function _user_progress_set_record($upregid, $uid, $nid, $value, $data) {
+  db_query("INSERT INTO {user_progress_records} (upregid, uid, nid, value, data, created) VALUES(%d, %d, %d, %d, '%s', %d)", $upregid, $uid, $nid, $value, $data, time());
+  return db_last_insert_id('user_progress_records', 'uprid');
+}
+
+/**
+ * Helper function to get max value for an activity of a user
+ */
+function _user_progress_get_maxvalue($upregid, $uid) {
+  return db_result(db_query("SELECT MAX(value) FROM {user_progress_records} WHERE upregid=%d AND uid=%d", $upregid, $uid));
+}
+
+/**
+ * Helper function to get a value for an activity of a user
+ */
+function _user_progress_get_value($uprid, $uid) {
+  return db_result(db_query("SELECT value FROM {user_progress_records} WHERE uprid=%d AND uid=%d", $uprid, $uid));
+}
+
+/**
+ * Helper function to get the number of attempts on an action
+ */
+function _user_progress_get_numtries($upregid, $uid) {
+  $val = db_result(db_query("SELECT COUNT(value) as valcount FROM {user_progress_records} WHERE upregid=%d AND uid=%d", $upregid, $uid));
+	return $val['valcount'];
+}
+
+/**
+ * Helper function to get a list of available activities from the registry
+ */
+function _user_progress_get_registry_ids($upt_name, $nid = NULL) {
+  $result = db_query("SELECT upregid, title FROM {user_progress_registry} WHERE upt_name='%s' AND nid=%d", $upt_name, $nid);
+	// loop through and return an array of possible values
+	// most time user will only request 1 value but don't want to assume that
+	while ($val = db_fetch_array($result)) {
+    $ary[] = array(
+		  'upregid' => $val['upregid'],
+		  'title' => $val['title'],
+		);
+	}
+	if (isset($ary)) {
+		return $ary;
+	}
+}
+
+/**
+ * Implementation of hook_views_api().
+ */
+function user_progress_views_api() {
+  return array(
+    'api' => '2',
+  );
+}
+
+/**
+ * Helper function to seed types table
+ */
+function _user_progress_rebuild_types() {
+	// rebuild the user_progress_types table definitions
+	$types = module_invoke_all('user_progress_define_type');
+	drupal_alter('user_progress_define_type', $types);
+	// update each record
+	foreach ($types as $key => $type) {
+		$exists = db_result(db_query("SELECT COUNT(upt_name) FROM {user_progress_types} WHERE upt_name='%s'", $key));
+		// does not exist, we need to insert it manually
+		if ($exists == 0) {
+			db_query("INSERT INTO {user_progress_types} (upt_name, name, value_handler, data_handler) VALUES ('%s', '%s', '%s', '%s')", $key, $type['name'], $type['value_handler'], $type['data_handler']);
+		}
+		else {
+      db_query("UPDATE {user_progress_types} SET name='%s', value_handler='%s', data_handler='%s' WHERE upt_name='%s'", $type['name'], $type['value_handler'], $type['data_handler'], $key);
+		}
+	}
+	return $types;
+}

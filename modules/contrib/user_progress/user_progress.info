@@ -1,0 +1,6 @@
+; $Id: user_progress
+name = "User Progress"
+description = "Generalized analytics framework for tracking actions within drupal as well as allowing applications to securly add to the data bank"
+core = "6.x"
+package = "User Progress"
+project = "user_progress"

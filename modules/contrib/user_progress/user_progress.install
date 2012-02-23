@@ -1,0 +1,152 @@
+<?php
+/**
+ * @file
+ * Install, update, and uninstall functions for the user_progress module.
+ */
+
+/**
+ * Implementation of hook_install().
+ */
+function user_progress_install() {
+  // Create tables.
+  drupal_install_schema('user_progress');
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function user_progress_uninstall() {
+  // Remove tables.
+  drupal_uninstall_schema('user_progress');
+}
+
+/**
+ * Implementation of hook_schema(). 
+ */
+function user_progress_schema() {
+	// create the records table for storage of all user progress actions
+  $schema['user_progress_records'] = array(
+    'description' => 'All records recorded from any number of applications',
+    'fields' => array(
+      'uprid'    => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Unique identifier for a user_progress record.',
+        ),
+      'upregid'     => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The registry id for this record.',
+        ),
+      'uid'     => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The user id associated to this action.',
+        ),
+			'nid'     => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The nid associated to this action.',
+        ),
+      'value'     => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The point value for this record.',
+        ),
+      'data'  => array(
+        'type' => 'text',
+        'not null' => FALSE,
+        'size' => 'big',
+        'description' => 'A serialized array of name value pairs that are related to this record. This can be anything to allow for future expansion of the api.',
+        ),
+			'created' => array(
+        'description' => 'The Unix timestamp when the record was created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+				),
+      ),
+    'indexes' => array(
+      'uid' => array('uid'),
+			'nid' => array('nid'),
+      ),
+    'primary key' => array('uprid'),
+  ); 
+  // define the registry that will implement types
+  $schema['user_progress_registry'] = array(
+    'description' => 'Registry of instances of all types of progress',
+    'fields' => array(
+      'upregid'    => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Unique identifier for a user_progress registry item.',
+        ),
+      'title'  => array(
+        'type' => 'varchar',
+        'length' => 256,
+				'not null' => TRUE,
+        'description' => 'Human readable title for this type instance',
+        ),
+			'upt_name'  => array(
+        'type' => 'varchar',
+        'length' => 32,
+				'not null' => TRUE,
+        'description' => 'Machine readable name of this type',
+        ),
+			'nid'     => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => 0,
+        'description' => 'The group nid associated to this item.',
+        ),
+      ),
+		'indexes' => array(
+			'upt_name' => array('upt_name'),
+			'nid' => array('nid'),
+    ),
+    'primary key' => array('upregid'),
+  );
+// define the types of progress
+  $schema['user_progress_types'] = array(
+    'description' => 'All types of progress that can be analyzed',
+    'fields' => array(
+			'upt_name'  => array(
+        'type' => 'varchar',
+        'length' => 32,
+				'not null' => TRUE,
+        'description' => 'Machine readable name of this type',
+        ),
+      'name'  => array(
+        'type' => 'varchar',
+        'length' => 256,
+				'not null' => TRUE,
+        'description' => 'Human readable name of this type',
+        ),
+      'value_handler'  => array(
+        'type' => 'varchar',
+        'length' => 64,
+				'not null' => TRUE,
+        'description' => 'How to handle the value in the record table',
+        ),
+			'data_handler'  => array(
+        'type' => 'varchar',
+        'length' => 64,
+				'not null' => FALSE,
+        'description' => 'How to handle the data object in the record table',
+        ),
+      ),
+    'primary key' => array('upt_name'),
+  );
+  return $schema;
+}

@@ -1,0 +1,38 @@
+<?php
+
+/**
+ * Implements hook_user_progress_define_type().
+ */
+function user_progress_og_content_user_progress_define_type() {
+  return array(
+    'up_content' => array(
+      'name' => t('Content'),
+      'value_handler' => 'bool',
+      'data_handler' => 'time',
+    ),
+  );
+}
+
+/**
+ * Implements hook_init().
+ */
+function user_progress_og_content_init() {
+  global $user;
+  $group = og_get_group_context();
+  //have to be in a group currently AND have access AND be on a node
+  if (isset($group->nid) && user_access('set up_content progress record') && $node = menu_get_object()) {
+    // calculate what the registry id is, simple as there should be only 1
+    $regids = _user_progress_get_registry_ids('up_content', $group->nid);
+    // double verify, we should only have 1 otherwise something is wrong
+    if (count($regids) == 1) {
+      // structure the request
+      $upregid = $regids[0]['upregid'];
+      $nid = $node->nid;
+      $uid = $user->uid;
+      $value = 1;
+      $data = NULL;
+      // this is setting that the user has gone to this page at this time
+      _user_progress_set_record($upregid, $uid, $nid, $value, $data);
+    }
+  }
+}

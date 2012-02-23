@@ -1,0 +1,8 @@
+; $Id: user_progress_og_content
+name = "User Progress: OG content"
+description = "Track content views by users within groups, lighter weight then drupal core method"
+core = "6.x"
+package = "User Progress"
+project = "user_progress"
+dependencies[] "user_progress"
+dependencies[] "og"
