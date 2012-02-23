@@ -310,6 +310,22 @@ function user_progress_views_data() {
       'handler' => 'views_handler_argument_string',
     ),
   );
+	
+	// Example timestamp field.
+  $data['user_progress_records']['created'] = array(
+    'title' => t('Timestamp'),
+    'help' => t('Record timestamp'),
+    'field' => array(
+      'handler' => 'views_handler_field_date',
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort_date',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_date',
+    ),
+  );
 
   return $data;
 }
