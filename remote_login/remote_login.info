@@ -1,3 +1,0 @@
-name = Remote Login
-description = Additional user login validation to validate against remote server
-core = 6.x
