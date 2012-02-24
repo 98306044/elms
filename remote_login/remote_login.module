@@ -1,0 +1,458 @@
+<?php
+
+module_load_include('ca.inc', 'remote_login');
+
+/**
+ * Implmentation of hook_menu
+ */
+function remote_login_menu() {
+    $items['connect'] = array(
+        'title' => 'connect',
+        'page callback' => 'remote_login_connect',
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+    );
+    return $items;
+}
+
+function remote_login_connect() {
+    global $user;
+    if ($user->uid) {
+        $result = remote_login_ats_authenticate();
+
+        // Perform redirect to training site
+        $url = variable_get('ats_entry', 'http://autismtrainingsolutions.com/learning/student_dash.php');
+        $admin = variable_get('ats_entry_admin', 'http://autismtrainingsolutions.com/admin/management_dash.php');
+
+        if (!empty($admin)) {
+            foreach ($user->roles as $role) {
+                if (strpos($role, 'Supervisor') > -1) {
+                    $url = $admin;
+                }
+            }
+        }
+
+        //debug branch
+
+
+        if (variable_get('ats_group_debug', false)) {
+            return $result . l('Proceed to training site', $url);
+        } else {
+            $link = $result ? $url : variable_get('ats_entry_failed', '');
+            drupal_goto($link);
+        }
+    } else {
+        drupal_goto('user', 'destination=connect');
+    }
+}
+
+/**
+ * Implementation of hook_form_alter().
+ */
+function remote_login_form_alter(&$form, &$form_state, $form_id) {
+    switch ($form_id) {
+        case 'user_login_block':
+        case 'user_login':
+            // User module's default validators:
+            // array('user_login_name_validate', 'user_login_authenticate_validate', 'user_login_final_validate');
+            // user_login_authenticate_validate is the one we want to replace with our own
+            // custom validation
+            $form['#validate'] = is_array($form['#validate']) ? $form['#validate'] : array();
+            if (!empty($form['#validate'])) {
+                foreach ($form['#validate'] as $key => $val) {
+                    if ($val == 'user_login_authenticate_validate') {
+                        $form['#validate'][$key] = 'remote_login_login_authenticate_validate';
+                    }
+                }
+            } else {
+                $form['#validate'][$key] = 'remote_login_login_authenticate_validate';
+            }
+            break;
+        case 'user_pass':
+            $form['#validate'][0] = 'remote_login_user_pass_validate';
+            break;
+    }
+}
+
+/**
+ * User login validation
+ * This overrides function user_login_authenticate_validate()
+ * 
+ * @return
+ *  A $user object, if successful.
+ */
+function remote_login_login_authenticate_validate($form, &$form_state) {
+    /**
+     * Multistep user validation, skip normal drupal login validation
+     *
+     * - Validate drupal user
+     * -- If valid, let user authenticate
+     * -- If invalid:
+     *
+     * - Validate against remote ats database
+     * -- If valid, create/merge user in drupal to match remote account (username, password)
+     * -- If invalid, set normal invalid login error
+     * 
+     */
+    // If this succeeds, global user object will have logged in user
+    user_authenticate($form_state['values']);
+    global $user;
+    if (!$user->uid) {
+        // User not found in drupal
+        $name = $form_state['values']['name'];
+        $pass = $form_state['values']['pass'];
+        db_set_active('remote');
+        // Usernames and passwords are md5 hashed in remote db
+        // Also allow for logging in with email address?
+        $row = db_fetch_array(db_query(
+                        "SELECT * FROM users WHERE username = '%s' AND userpass = '%s' ", md5($name), md5($pass)
+                ));
+        db_set_active('default');
+        if ($row) {
+            // Valid user
+            // Make sure certain fields are copied over
+            // from remote database to keep in synch
+            // in case this registers new user
+            $new_user = user_save(null, array(
+                'name' => $name,
+                'pass' => $pass,
+                'mail' => $row['useremail'],
+                'init' => $row['useremail'],
+                'status' => '1',
+                'profile_fname' => $row['userfname'],
+                'profile_lname' => $row['userlname'],
+                'profile_position' => $row['userpos'],
+                'profile_phone' => $row['usertel'],
+                'profile_lms_id' => $row['userid'],
+                'ats_inserted' => true, // flag to prevent user redirect 
+                    ), 'details');
+            if ($new_user) {
+                user_external_login_register($name, 'ats');
+                // now add roles. 3 for "new employee - student', 17 for supervisor.
+                $expires = strtotime($row['usersubend']);
+                if ($expires > time()) {
+                    uc_roles_grant($new_user, 3, $expires, true, true);
+                    if ($row['userlevel'] > 1) {
+                        // add supervisor role
+                        uc_roles_grant($new_user, 17, null, true, true);
+                    }
+                }
+            } else {
+                watchdog('ats', 'ATS user found in LMS, but cannot save in Drupal. Already exists? username: @name mail: @email', array('@name' => $name, '@email' => $row['useremail']), WATCHDOG_ERROR);
+                drupal_set_message('We found several instances of your user account, but the passwords are out of sync. Please <a href="/user/password">reset your password</a> and try again!');
+            }
+        }
+    }
+}
+
+/**
+ * Override password reset form to also check for a user account in ATS
+ *
+ * function basically copied from user_pass_validate, with ATS specific
+ * section added.
+ */
+function remote_login_user_pass_validate($form, &$form_state) {
+    $name = trim($form_state['values']['name']);
+
+
+    // Try to load by email.
+    $account = user_load(array('mail' => $name, 'status' => 1));
+    if (!$account) {
+        // No success, try to load by name.
+        $account = user_load(array('name' => $name, 'status' => 1));
+    }
+    if (!$account) {
+        // account is not in Drupal. Try ATS...
+        db_set_active('remote');
+        $row = db_fetch_array(db_query(
+                        "SELECT * FROM users WHERE username = '%s' OR useremail = '%s' ", md5($name), $name
+                ));
+        db_set_active('default');
+        if ($row) {
+            // there is a user or password with this name in the legacy system,
+            // but not in Drupal. Create the user.
+            $new_user = user_save(null, array(
+                'name' => $name,
+                'pass' => $pass,
+                'mail' => $row['useremail'],
+                'init' => $row['useremail'],
+                'status' => '1',
+                'profile_fname' => $row['userfname'],
+                'profile_lname' => $row['userlname'],
+                'profile_position' => $row['userpos'],
+                'profile_phone' => $row['usertel'],
+                'profile_lms_id' => $row['userid'],
+                'ats_inserted' => true,
+                    ), 'details');
+            watchdog('ats', 'Created user from ATS.', array(), WATCHDOG_INFO);
+            // now add roles. 3 for "new employee - student', 17 for supervisor.
+            $expires = strtotime($row['usersubend']);
+            if ($expires > time()) {
+                uc_roles_grant($new_user, 3, $expires, true, true);
+                if ($row['userlevel'] > 1) {
+                    // add supervisor role
+                    uc_roles_grant($new_user, 17, null, true, true);
+                }
+            }
+        }
+    }
+    // now that there should be a matching user, go ahead and send a Drupal pw update.
+    user_pass_validate($form, $form_state);
+}
+
+/**
+ * Implements hook_user().
+ */
+function remote_login_user($op, &$edit, &$account, $category = null) {
+    switch ($op) {
+        case 'update':
+            // On change password, need to update remote password.
+            // Use email address to match up account.
+            if (!empty($edit['pass'])) {
+                module_load_include('inc', 'remote_login');
+                remote_login_user_synch_password($account, $edit['pass']);
+            }
+            break;
+    }
+}
+
+/*
+ * 
+ * mail functions for notifcation
+ * 
+ */
+
+function remote_login_mail($key, &$message, $params) {
+    switch ($key) {
+    case 'error':      
+          $message['subject'] = t('ATS Notifications: Error in communicating with the LMS System');
+          $message['body'] = $params['body'];
+      break;    
+  }
+}
+
+
+
+/**
+ * Create a session in the legacy ATS system, and set the cookie for the user.
+ */
+function remote_login_ats_authenticate() {
+    global $user;
+    static $norecurse;
+    if (empty($user->name_hash)) {
+        $user->name_hash = md5($user->name);
+    }
+
+    $out = false;
+    if ($user->uid > 0) {
+
+        // lms login url
+        //sending username md5 hashed, for some reason
+        $post = drupal_query_string_encode(array('user' => $user->name_hash, 'pw' => $user->pass));
+
+
+
+        if ($url = variable_get('ats_group_login_url', false)) {
+         
+            $response = drupal_http_request($url, array('Content-Type' => 'application/x-www-form-urlencoded'), 'POST', $post);
+
+            if (!isset($response->code)) {
+            
+                // response was empty, that's bad.
+                 watchdog('remote_login', 'A reponse code was not received when making an authentication request to the LMS.   User attempting call was ID ' . $user->uid, WATCHDOG_ERROR);
+                $emailTo = 'jason.flenniken@gmail.com';
+                $params = array(
+                  'body' => 'An attempt to login to the LMS was made, but there was no response from the HTTP request.  
+                   \n   
+                   The user ID attempting this was ' . $user->uid . '
+                   \n
+                   User email:  ' . $user->mail . '
+                   \n
+                   URL Called: ' . $url . '
+                   \n',
+                );
+                drupal_mail('remote_login', 'error', $emailTo, language_default(), $params);
+                
+                drupal_set_message('There is a temporary problem in accessing the learning area.  An administrator has been notified.  Please try again later.');
+                drupal_goto('user');
+
+            } else { // $response has data, check to make sure its kosher
+                
+                if (stristr($response->code, '200')) {
+                    
+                    //response was good
+                    /*
+                    $emailTo = 'jason.flenniken@gmail.com';
+                    $params = array(
+                      'body' => 'A succesful http request was sent to the LMS.  
+                       \n   
+                       The user ID attempting this was ' . $user->uid . '
+                       \n
+                       User email:  ' . $user->mail . '
+                       \n
+                       URL Called: ' . $url . '
+                       \n
+                       Full Response text: ' . print_r($reponse, TRUE),
+                    );
+                    drupal_mail('remote_login', 'error', $emailTo, language_default(), $params);
+                    */
+                
+
+                } else {
+                    watchdog('remote_login', 'A reponse code of 200 (OK) was not received when making an authentication request to the LMS.   The full response is below. ' . print_r($response, TRUE), WATCHDOG_ERROR);
+                    // end response check
+                    //send email with response
+                    $emailTo = 'jason.flenniken@gmail.com';
+                    $params = array(
+                      'body' => 'A call was made to the LMS, however an OK response was not received.  Full details are below.  
+                       \n   
+                       The user ID attempting this was ' . $user->uid . '
+                       \n
+                       User email:  ' . $user->mail . '
+                       \n
+                       URL Called: ' . $url . '
+                       \n
+                       Full Response text: ' . print_r($reponse, TRUE),
+                    );
+                    //drupal_mail('remote_login', 'error', $emailTo, language_default(), $params);
+                    
+                    drupal_set_message('There is a temporary problem in accessing the learning area.  An administrator has been notified.  Please try again later.');
+                     drupal_goto('user');
+                }
+                
+            }
+
+            
+            //TODO check response->data for session variables, error out and notify if they don't exsist.      
+            //check for meta tag with Content="Autheniticated"
+            // terrible way to do this
+
+            if (stristr($response->data, 'content="authenticated')) {
+
+                // test for expiration
+                // check for session sub = true done by query in login proc file
+
+                if (stristr($response->data, '[sub] => true')) {
+
+                    $cookiestring = $response->headers['Set-Cookie'];
+                    // parse out cookie name and value
+                    //set cookie based on returning session info/cookie
+                    $cookiename = strtok($cookiestring, '=');
+                    $cookievalue = strtok(';');
+
+
+                    setcookie($cookiename, $cookievalue, 0, '/', variable_get('ats_cookie_domain', ''));
+                    $out = true;
+                    watchdog('ats', 'Successful login to LMS for !mail', array('!mail' => $user->mail), WATCHDOG_INFO);
+                } else {
+
+                    // Subscription expired?
+                    if ($norecurse) {
+
+
+                        // this is defined but empty.  Will never get here.  This is wack
+
+                        watchdog('remote_login', 'Renewal of account @name failed.', array('@name' => $user->name), WATCHDOG_ERROR);
+                    } else {
+
+                        // we will always go here.  screwy.
+                        // basically we hit this if we do not get an account subscription being true
+
+                        $norecurse = true;
+
+                        watchdog('remote_login', 'Account ' . $user->name . ' expired, attempting to renew from Drupal');
+
+                        // this is unnecesary.  could have just used $loaded_user = $user.  $user will always be valid and be the current
+                        // logged on user.
+
+                        $loaded_user = user_load($user->uid);
+
+
+                        module_load_include('inc', 'remote_login');
+
+                        // investigate this
+                        remote_login_update_remote_expiration($loaded_user);
+                        return remote_login_ats_authenticate();
+                    }
+                }
+//      switch ($response->code){ // should use http code for this, but remote site doesn't support it
+//        case '200':
+                // set our session cookie
+            } else {
+                
+                //first, lets check for an access denied, this should be rare, but if its there, just kick them out.
+                if (stristr($response->data, 'content="access denied')) {
+                    
+                    drupal_set_message('Access to the LMS is denied from this host');
+                    drupal_goto('user');
+                    
+                }
+            
+
+                // we get here if we dont get see the meta authenticated html tag.
+                // this is screwy in that some fundamental checking should be done first, as there could be many reasons why we dont get that 
+                // response
+                // look for a matching email, try posting the hashed value...
+                // checking the remote db for a matching email address
+
+                db_set_active('remote');
+                $lmsuser = db_fetch_object(db_query("SELECT * FROM users WHERE useremail LIKE '%s'", $user->mail));
+
+                db_set_active('default');
+                
+                $lmstries = 0;
+
+                // if we get a result and the password over there (md5) equals ours
+                if ($lmsuser && $lmsuser->userpass == $user->pass) {
+
+                    //this is an awful loop.  If we get here, we are going to barf after 10 attempts, and tell the world.
+                    
+                    if ($lmstries > 10) {
+                        
+                          watchdog('ats', 'More than 10 tries for user id ' . $user->uid . ', email ' . $user->mail . ', have been attempted to log them into the LMS.  Aborting.');
+                          
+                          $emailTo = 'jason.flenniken@gmail.com';
+                          $params = array(
+                              'body' => 'More than 10 tries to authenticate with the LMS have been attempted for a signel user.  Full details are below.  
+                               \n   
+                               The user ID attempting this was ' . $user->uid . '
+                               \n
+                               User email:  ' . $user->mail . '
+                               \n
+                               URL Called: ' . $url . '
+                               \n
+                               Full Response text: ' . print_r($reponse, TRUE),
+                          );
+                          drupal_mail('remote_login', 'error', $emailTo, language_default(), $params);                          
+                          
+                          drupal_set_message('There is a temporary problem in accessing the learning area.  An administrator has been notified.  Please try again later.');
+                          drupal_goto('user');
+                          
+                          
+                          
+                    }
+                    
+                    watchdog('ats', 'Found remote user via email. Attempting to log in.');
+
+                    //re hashing the username based on our return md5 username from over there, then reauthenticate
+                    
+                    $user->name_hash = $lmsuser->username;
+                    
+                    $lmstries++;
+                       
+                    return remote_login_ats_authenticate();
+                    
+                } elseif ($lmsuser) {
+                    watchdog('ats', 'Found remote user !uid by email @email, but passwords do not match. ', array('!uid' => $user->uid, '@email' => $user->mail), WATCHDOG_WARNING);
+                } else {
+                    watchdog('ats', 'No remote user found for @email.', array('@email' => $user->mail), WATCHDOG_WARNING);
+                }
+            } // end meta content authenticated check logics
+
+            $debug = 'Posted: ' . $post . ' to: ' . $url . '<br/>Response: <pre>' . check_plain(print_r($response, 1)) . '</pre>';
+            //dpm($debug);
+        }
+        //  dpm($response);
+    }
+    return variable_get('ats_group_debug', false) ? $debug : $out;
+}
