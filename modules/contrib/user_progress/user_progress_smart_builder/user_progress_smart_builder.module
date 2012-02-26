@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * Implements hook_user_progress_define_type().
+ */
+function user_progress_smart_builder_user_progress_define_type() {
+  return array(
+    'sb_jeopardy' => array(
+      'name' => t('Jeopardy'),
+      'value_handler' => 'int',
+      'data_handler' => 'int',
+    ),
+    'sb_selfcheck' => array(
+      'name' => t('Self check'),
+      'value_handler' => 'int',
+      'data_handler' => 'int',
+    ),
+  );
+}

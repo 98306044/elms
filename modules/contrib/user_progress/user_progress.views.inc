@@ -32,10 +32,10 @@ function user_progress_views_data() {
     // Index this array by the table name to which this table refers.
     // 'left_field' is the primary key in the referenced table.
     // 'field' is the foreign key in this table.
-		'user_progress_registry' => array(
-		  'left_field' => 'upt_name',
-			'field' => 'upt_name',
-		),
+    'user_progress_registry' => array(
+      'left_field' => 'upt_name',
+      'field' => 'upt_name',
+    ),
   );
 
   // Next, describe each of the individual fields in this table to Views. For
@@ -56,7 +56,7 @@ function user_progress_views_data() {
       'label' => t('User progress activity registry'),
     ),
   );
-	// Example plain text field.
+  // Example plain text field.
   $data['user_progress_types']['name'] = array(
     'title' => t('Name'),
     'help' => t('Name of this type'),
@@ -101,10 +101,10 @@ function user_progress_views_data() {
       'left_field' => 'nid',
       'field' => 'nid',
     ),
-		'user_progress_types' => array(
-		  'left_field' => 'upt_name',
-			'field' => 'upt_name',
-		),
+    'user_progress_types' => array(
+      'left_field' => 'upt_name',
+      'field' => 'upt_name',
+    ),
   );
 
   // Next, describe each of the individual fields in this table to Views. For
@@ -145,8 +145,8 @@ function user_progress_views_data() {
       'handler' => 'views_handler_argument_string',
     ),
   );
-	
-	// Example plain text field.
+  
+  // Example plain text field.
   $data['user_progress_registry']['upt_name'] = array(
     'title' => t('Machine type name'),
     'help' => t('Machine name for registry type'),
@@ -180,8 +180,8 @@ function user_progress_views_data() {
       'handler' => 'views_handler_sort',
     ),
   );
-	
-	// Make user progress records table visible to views
+  
+  // Make user progress records table visible to views
 
   // The 'group' index will be used as a prefix in the UI for any of this
   // table's fields, sort criteria, etc. so it's easy to tell where they came
@@ -209,14 +209,14 @@ function user_progress_views_data() {
       'left_field' => 'uid',
       'field' => 'uid',
     ),
-		'node' => array(
-		  'left_field' => 'nid',
-			'field' => 'nid',
-		),
-		'user_progress_registry' => array(
-		  'left_field' => 'upregid',
-			'field' => 'upregid',
-		),
+    'node' => array(
+      'left_field' => 'nid',
+      'field' => 'nid',
+    ),
+    'user_progress_registry' => array(
+      'left_field' => 'upregid',
+      'field' => 'upregid',
+    ),
   );
 
   // Next, describe each of the individual fields in this table to Views. For
@@ -239,8 +239,8 @@ function user_progress_views_data() {
       'handler' => 'views_handler_sort',
     ),
   );
-	
-	// registry id
+  
+  // registry id
   $data['user_progress_records']['upregid'] = array(
     'title' => t('registry id'),
     'help' => t('Related User progress registry'),
@@ -251,8 +251,8 @@ function user_progress_views_data() {
       'label' => t('Activity type in registry'),
     ),
   );
-	
-	// User ID field.
+  
+  // User ID field.
   $data['user_progress_records']['uid'] = array(
     'title' => t('User progress record'),
     'help' => t('Relate a User progress record'),
@@ -264,7 +264,7 @@ function user_progress_views_data() {
     ),
   );
 
-	// User ID field.
+  // User ID field.
   $data['user_progress_records']['nid'] = array(
     'title' => t('Node of record'),
     'help' => t('Node id that was involved with this record'),
@@ -276,7 +276,7 @@ function user_progress_views_data() {
     ),
   );
 
-	// Example numeric text field.
+  // Example numeric text field.
   $data['user_progress_records']['value'] = array(
     'title' => t('Value'),
     'help' => t('Points reported for a up registry record'),
@@ -291,8 +291,8 @@ function user_progress_views_data() {
       'handler' => 'views_handler_sort',
     ),
   );
-	
-	// Example plain text field.
+  
+  // Example plain text field.
   $data['user_progress_records']['data'] = array(
     'title' => t('Data'),
     'help' => t('Additional array of values'),
@@ -310,8 +310,8 @@ function user_progress_views_data() {
       'handler' => 'views_handler_argument_string',
     ),
   );
-	
-	// Example timestamp field.
+  
+  // Example timestamp field.
   $data['user_progress_records']['created'] = array(
     'title' => t('Timestamp'),
     'help' => t('Record timestamp'),

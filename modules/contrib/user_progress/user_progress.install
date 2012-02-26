@@ -24,7 +24,7 @@ function user_progress_uninstall() {
  * Implementation of hook_schema(). 
  */
 function user_progress_schema() {
-	// create the records table for storage of all user progress actions
+  // create the records table for storage of all user progress actions
   $schema['user_progress_records'] = array(
     'description' => 'All records recorded from any number of applications',
     'fields' => array(
@@ -48,7 +48,7 @@ function user_progress_schema() {
         'default' => 0,
         'description' => 'The user id associated to this action.',
         ),
-			'nid'     => array(
+      'nid'     => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
@@ -56,28 +56,27 @@ function user_progress_schema() {
         'description' => 'The nid associated to this action.',
         ),
       'value'     => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'The point value for this record.',
+        'type' => 'text',
+        'not null' => FALSE,
+        'size' => 'big',
+        'description' => 'Primary value to store, typically this is a point value for this record.',
         ),
       'data'  => array(
         'type' => 'text',
         'not null' => FALSE,
         'size' => 'big',
-        'description' => 'A serialized array of name value pairs that are related to this record. This can be anything to allow for future expansion of the api.',
+        'description' => 'Additional data point associated to this record',
         ),
-			'created' => array(
+      'created' => array(
         'description' => 'The Unix timestamp when the record was created.',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-				),
+        ),
       ),
     'indexes' => array(
       'uid' => array('uid'),
-			'nid' => array('nid'),
+      'nid' => array('nid'),
       ),
     'primary key' => array('uprid'),
   ); 
@@ -94,16 +93,16 @@ function user_progress_schema() {
       'title'  => array(
         'type' => 'varchar',
         'length' => 256,
-				'not null' => TRUE,
+        'not null' => TRUE,
         'description' => 'Human readable title for this type instance',
         ),
-			'upt_name'  => array(
+      'upt_name'  => array(
         'type' => 'varchar',
         'length' => 32,
-				'not null' => TRUE,
+        'not null' => TRUE,
         'description' => 'Machine readable name of this type',
         ),
-			'nid'     => array(
+      'nid'     => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => FALSE,
@@ -111,9 +110,9 @@ function user_progress_schema() {
         'description' => 'The group nid associated to this item.',
         ),
       ),
-		'indexes' => array(
-			'upt_name' => array('upt_name'),
-			'nid' => array('nid'),
+    'indexes' => array(
+      'upt_name' => array('upt_name'),
+      'nid' => array('nid'),
     ),
     'primary key' => array('upregid'),
   );
@@ -121,28 +120,28 @@ function user_progress_schema() {
   $schema['user_progress_types'] = array(
     'description' => 'All types of progress that can be analyzed',
     'fields' => array(
-			'upt_name'  => array(
+      'upt_name'  => array(
         'type' => 'varchar',
         'length' => 32,
-				'not null' => TRUE,
+        'not null' => TRUE,
         'description' => 'Machine readable name of this type',
         ),
       'name'  => array(
         'type' => 'varchar',
         'length' => 256,
-				'not null' => TRUE,
+        'not null' => TRUE,
         'description' => 'Human readable name of this type',
         ),
       'value_handler'  => array(
         'type' => 'varchar',
         'length' => 64,
-				'not null' => TRUE,
+        'not null' => TRUE,
         'description' => 'How to handle the value in the record table',
         ),
-			'data_handler'  => array(
+      'data_handler'  => array(
         'type' => 'varchar',
         'length' => 64,
-				'not null' => FALSE,
+        'not null' => FALSE,
         'description' => 'How to handle the data object in the record table',
         ),
       ),
