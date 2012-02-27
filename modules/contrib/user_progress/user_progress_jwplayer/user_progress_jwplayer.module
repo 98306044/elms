@@ -13,7 +13,10 @@ function user_progress_jwplayer_init() {
     // double verify, we should only have 1 otherwise something is wrong
     if (count($regids) == 1) {
 			// establish user progress js api with our registry id
-			$vars = array('upregid' => $regids[0]['upregid']);
+			$vars = array(
+			  'upregid' => $regids[0]['upregid'],
+			  'pressed_play' => false,
+			);
       _user_progress_js_setup($vars);
 	    // add jwplayer handlers to implement
 	    drupal_add_js(drupal_get_path('module', 'user_progress_jwplayer') .'/user_progress_jwplayer.js', 'header');
