@@ -5,18 +5,29 @@
  */
 function user_progress_jwplayer_init() {
 	global $user;
-  // have to be in a group currently AND jwplayer be told to track
-  if (user_access('set up_jwplayer progress record') && $node = menu_get_object()) {
-    // calculate what the registry id is
-		_user_progress_jwplayer_enable_player();
+	$node = menu_get_object();
+	// have to be in a group currently AND jwplayer be told to track
+  if (user_access('set up_jwplayer progress record') && isset($node->nid)) {
+		if (module_exists('og')) {
+			$group = og_get_group_context();
+      // have to be in a group currently AND jwplayer be told to track
+      if (isset($group->nid)) {
+        // calculate what the registry id is
+		    _user_progress_jwplayer_enable_player($group->nid);
+      }
+		}
+		else {
+      // calculate what the registry id is
+		  _user_progress_jwplayer_enable_player();
+		}
   }
 }
 
 /**
  * Helper function the implement the jwplayer js code
  */
-function _user_progress_jwplayer_enable_player() {
-	$regids = _user_progress_get_registry_ids('up_jwplayer');
+function _user_progress_jwplayer_enable_player($nid = NULL) {
+	$regids = _user_progress_get_registry_ids('up_jwplayer', $nid);
     // verify that we got a record, should only be one though
     if (count($regids) > 0) {
 			// establish user progress js api with our registry id

@@ -1,5 +1,5 @@
 ; $Id: user_progress_smart_builder
-name = "Smart Builder Integration"
+name = "User Progress Smart Builder"
 description = "Integrates smart builder with user progress api"
 core = "6.x"
 package = "User Progress"

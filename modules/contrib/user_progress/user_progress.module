@@ -464,7 +464,7 @@ function user_progress_user_progress_define_types() {
 		'up_jwplayer' => array(
       'name' => t('JWPlayer Media'),
       'value_handler' => 'int',
-      'data_handler' => 'int',
+      'data_handler' => 'string',
     ),
   );
 }

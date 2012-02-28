@@ -1,5 +1,5 @@
 ; $Id: user_progress_content
-name = "User Progress: Content"
+name = "User Progress Content"
 description = "Track content views by users within the site, lighter weight then drupal core method"
 core = "6.x"
 package = "User Progress"
