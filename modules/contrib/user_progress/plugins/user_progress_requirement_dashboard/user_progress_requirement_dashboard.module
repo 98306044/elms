@@ -40,14 +40,17 @@ function user_progress_requirement_dashboard_dashboard_requirements($provider) {
 			$output = '';
 			// build an array of available activities for this group
 			foreach ($types as $key => $type) {
-			  $ary = array_merge($ary, _user_progress_get_registry_ids($key, $group->nid));
+				$tmp = _user_progress_get_registry_ids($key, $group->nid);
+				if (is_array($tmp)) {
+			    $ary = array_merge($ary, $tmp);
+				}
 			}
 			// convert that to output
 			foreach ($ary as $activity) {
 				$output .= $activity['title'] .', ';
 			}
 			// render a list of the activities
-      $requirements['name'] = array(
+      $requirements['up_activites'] = array(
         'title' => t('User Progress Activities'), 
         'value' => $output,
         'severity' => REQUIREMENT_INFO,
@@ -61,7 +64,7 @@ function user_progress_requirement_dashboard_dashboard_requirements($provider) {
 			foreach ($types as $type) {
 				$output .= $type['name'] .', ';
 			}
-		  $requirements['name'] = array(
+		  $requirements['up_activites'] = array(
         'title' => t('User Progress Activities'), 
         'value' => $output,
         'severity' => REQUIREMENT_INFO,

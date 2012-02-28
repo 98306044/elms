@@ -50,13 +50,33 @@ function user_progress_content_dashboard_requirements($provider) {
         'value' => $count,
         'severity' => REQUIREMENT_INFO,
       );
+			$count = 0;
+			$result = db_query("SELECT COUNT(uid) as recorduidcount FROM {user_progress_records} as tuprec JOIN {user_progress_registry} as tupreg ON tuprec.upregid=tupreg.upregid WHERE upt_name='%s' AND tuprec.nid=%d GROUP BY uid", 'up_content', $node->nid);
+			while ($val = db_fetch_array($result)) {
+				$count++;
+			}
+		  $requirements['up_content_unique_page_count'] = array(
+        'title' => t('Unique Page Visits'), 
+        'value' => $count,
+        'severity' => REQUIREMENT_INFO,
+      );
 		break;
     case 'og':
       $group = og_get_group_context();
-			// count all the data we have of type content
+			// count all the data associated to this node
 			$count = db_result(db_query("SELECT COUNT(uprid) as recordidcount FROM {user_progress_records} as tuprec JOIN {user_progress_registry} as tupreg ON tuprec.upregid=tupreg.upregid WHERE upt_name='%s' AND tupreg.nid=%d", 'up_content', $group->nid));
-		  $requirements['up_content_og_count'] = array(
-        'title' => t('Group Content Record Count'), 
+		  $requirements['up_content_page_count'] = array(
+        'title' => t('Page Views'), 
+        'value' => $count,
+        'severity' => REQUIREMENT_INFO,
+      );
+			$count = 0;
+			$result = db_query("SELECT COUNT(uid) as recorduidcount FROM {user_progress_records} as tuprec JOIN {user_progress_registry} as tupreg ON tuprec.upregid=tupreg.upregid WHERE upt_name='%s' AND tupreg.nid=%d GROUP BY uid", 'up_content', $group->nid);
+			while ($val = db_fetch_array($result)) {
+				$count++;
+			}
+		  $requirements['up_content_unique_page_count'] = array(
+        'title' => t('Unique Page Visits'), 
         'value' => $count,
         'severity' => REQUIREMENT_INFO,
       );
@@ -64,8 +84,18 @@ function user_progress_content_dashboard_requirements($provider) {
 		case 'system':
 		  // count all the data we have of type content
 			$count = db_result(db_query("SELECT COUNT(uprid) as recordidcount FROM {user_progress_records} as tuprec JOIN {user_progress_registry} as tupreg ON tuprec.upregid=tupreg.upregid WHERE upt_name='%s'", 'up_content'));
-		  $requirements['up_content_count'] = array(
-        'title' => t('Content Record Count'), 
+		  $requirements['up_content_page_count'] = array(
+        'title' => t('Page Views'), 
+        'value' => $count,
+        'severity' => REQUIREMENT_INFO,
+      );
+			$count = 0;
+			$result = db_query("SELECT COUNT(uid) as recorduidcount FROM {user_progress_records} as tuprec JOIN {user_progress_registry} as tupreg ON tuprec.upregid=tupreg.upregid WHERE upt_name='%s' GROUP BY uid", 'up_content');
+			while ($val = db_fetch_array($result)) {
+				$count++;
+			}
+		  $requirements['up_content_unique_page_count'] = array(
+        'title' => t('Unique Page Visits'), 
         'value' => $count,
         'severity' => REQUIREMENT_INFO,
       );

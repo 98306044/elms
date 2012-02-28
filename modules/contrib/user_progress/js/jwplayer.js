@@ -4,7 +4,7 @@ $(document).ready(function() {
 	jwplayer().onPlay(function() {
 		// only track the first time play is pressed
     if (!Drupal.settings.user_progress.pressed_play) {
-      var params = 'value=1&data=video started&upregid='+ Drupal.settings.user_progress.upregid;
+      var params = 'value=1&data=start&upregid='+ Drupal.settings.user_progress.upregid;
       Drupal.user_progress.ajax_call('set', 'value', params);
 			// set true so that this can't happen again for this transaction
 		  Drupal.settings.user_progress.pressed_play = true;
@@ -12,20 +12,26 @@ $(document).ready(function() {
   });
 	// flag that the user finished watching the video
 	jwplayer().onComplete(function() {
-    var params = 'value=100&data=video finished&upregid='+ Drupal.settings.user_progress.upregid;
+    var params = 'value=100&data=complete&upregid='+ Drupal.settings.user_progress.upregid;
     Drupal.user_progress.ajax_call('set', 'value', params);
   });
 	// Determine if the user jumped ahead of back in the video
 	jwplayer().onSeek(function(event) {
-		var pos = event.offset - event.position;
+		// round new and old positions to be whole numbers
+		var offset = Math.round(event.offset);
+		var position = Math.round(event.position);
+		// calculate direction of the seek
+		var pos = offset - position;
 		var direction = '';
+		// skip ahead
 		if (pos > 0) {
-			direction = 'skip to '+ event.offset;
+			direction = 'seek from '+ position +' to '+ offset;
 		}
+		// go back
     else {
-			direction = 'back to '+ event.offset;
+			direction = 'back to '+ offset +' from '+ position;
 		}
-		var params = 'value='+ event.position +'&data='+ direction +'&upregid='+ Drupal.settings.user_progress.upregid;
+		var params = 'value='+ offset +'&data='+ direction +'&upregid='+ Drupal.settings.user_progress.upregid;
     Drupal.user_progress.ajax_call('set', 'value', params);
   });
 	// monitor and report the entire process
