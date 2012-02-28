@@ -1,0 +1,32 @@
+<?php
+
+/**
+ * Implements hook_init().
+ */
+function user_progress_jwplayer_og_init() {
+	global $user;
+	$group = og_get_group_context();
+  // have to be in a group currently AND jwplayer be told to track
+  if (isset($group->nid) && user_access('set up_jwplayer progress record') && $node = menu_get_object()) {
+    // calculate what the registry id is
+		_user_progress_jwplayer_og_enable_player($group->nid);
+  }
+}
+
+/**
+ * Helper function the implement the jwplayer js code
+ */
+function _user_progress_jwplayer_og_enable_player($nid) {
+	$regids = _user_progress_get_registry_ids('up_jwplayer', $nid);
+    // verify that we got a record, should only be one though
+    if (count($regids) > 0) {
+			// establish user progress js api with our registry id
+			$vars = array(
+			  'upregid' => $regids[0]['upregid'],
+			  'pressed_play' => false,
+			);
+      _user_progress_js_setup($vars);
+	    // add jwplayer handlers to implement
+	    drupal_add_js(drupal_get_path('module', 'user_progress') .'/js/jwplayer.js', 'header');
+		}
+}

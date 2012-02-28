@@ -1,9 +1,10 @@
 <?php
 
 /**
- * Implements hook_user_progress_define_type().
+ * Implements hook_user_progress_define_types().
  */
-function user_progress_smart_builder_user_progress_define_type() {
+function user_progress_smart_builder_user_progress_define_types() {
+	// this returns some example types for smart builder
   return array(
     'sb_jeopardy' => array(
       'name' => t('Jeopardy'),

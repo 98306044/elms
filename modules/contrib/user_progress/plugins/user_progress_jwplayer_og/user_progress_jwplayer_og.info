@@ -1,0 +1,8 @@
+; $Id: user_progress_jwplayer_og
+name = "JWPlayer OG Integration"
+description = "Integrates jwplayer js api with user progress api and ajax wrapper for organic groups"
+core = "6.x"
+package = "User Progress"
+project = "user_progress_jwplayer_og"
+dependencies[] = user_progress
+dependencies[] = og

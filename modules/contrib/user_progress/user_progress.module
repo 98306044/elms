@@ -42,7 +42,7 @@ function _user_progress_js_setup($ary = array()) {
 	$js_variables = array_merge($js_vars, $ary);
   drupal_add_js(array('user_progress' => $js_variables), "setting");
 	// add up js api
-	drupal_add_js(drupal_get_path('module', 'user_progress') .'/user_progress.js', 'header');
+	drupal_add_js(drupal_get_path('module', 'user_progress') .'/js/user_progress.js', 'header');
 }
 
 /**
@@ -393,7 +393,13 @@ function _user_progress_get_numtries($upregid, $uid) {
  * Helper function to get a list of available activities from the registry
  */
 function _user_progress_get_registry_ids($upt_name, $nid = NULL) {
-  $result = db_query("SELECT upregid, title FROM {user_progress_registry} WHERE upt_name='%s' AND nid=%d", $upt_name, $nid);
+  // test for nid being null as the query changes
+	if (is_null($nid)) {
+    $result = db_query("SELECT upregid, title FROM {user_progress_registry} WHERE upt_name='%s'", $upt_name);
+	}
+	else {
+    $result = db_query("SELECT upregid, title FROM {user_progress_registry} WHERE upt_name='%s' AND nid=%d", $upt_name, $nid);
+	}
   // loop through and return an array of possible values
   // most time user will only request 1 value but don't want to assume that
   while ($val = db_fetch_array($result)) {
@@ -419,8 +425,8 @@ function _user_progress_get_registry_upt_name($upregid) {
  */
 function _user_progress_rebuild_types() {
   // this is more efficient then invoking with every call
-  $types = module_invoke_all('user_progress_define_type');
-  drupal_alter('user_progress_define_type', $types);
+  $types = module_invoke_all('user_progress_define_types');
+  drupal_alter('user_progress_define_typess', $types);
   // act on each type record we found
   foreach ($types as $key => $type) {
     $exists = db_result(db_query("SELECT COUNT(upt_name) FROM {user_progress_types} WHERE upt_name='%s'", $key));
@@ -442,5 +448,23 @@ function _user_progress_rebuild_types() {
 function user_progress_views_api() {
   return array(
     'api' => '2',
+  );
+}
+
+/**
+ * Implements hook_user_progress_define_types().
+ */
+function user_progress_user_progress_define_types() {
+  return array(
+    'up_content' => array(
+      'name' => t('Content'),
+      'value_handler' => 'bool',
+      'data_handler' => 'time',
+    ),
+		'up_jwplayer' => array(
+      'name' => t('JWPlayer Media'),
+      'value_handler' => 'int',
+      'data_handler' => 'int',
+    ),
   );
 }
