@@ -5,4 +5,3 @@ dependencies[] = advanced_help
 stylesheets[all][] = elms_help_icms.css
 core = 6.x
 package = ELMS
-version = 6.x-1.0-alpha6

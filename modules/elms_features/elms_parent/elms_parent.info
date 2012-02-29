@@ -2,7 +2,6 @@ name = "ELMS Parent"
 description = "All functionality for establishing the parent listings and pages"
 core = "6.x"
 package = "ELMS"
-version = "6.x-1.0-alpha6"
 project = "elms_parent"
 dependencies[] = "context"
 dependencies[] = "features"
@@ -51,10 +50,3 @@ features[views][] = "parent_lists"
 features[views][] = "parent_promo"
 features[views][] = "parents"
 features[views_api][] = "api:2"
-
-; Information added by drupal.org packaging script on 2012-02-08
-version = "6.x-1.0-alpha6"
-core = "6.x"
-project = "elms_features"
-datestamp = "1328731842"
-

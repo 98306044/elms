@@ -2,7 +2,6 @@ name = "ELMS Schedule"
 description = "Provide a Schedule for course planning"
 core = "6.x"
 package = "Features"
-version = "6.x-1.0-alpha6"
 project = "elms_schedule"
 dependencies[] = "colorpicker_cck"
 dependencies[] = "date"
@@ -51,10 +50,3 @@ features[views][] = "elms_schedule"
 features[views_api][] = "api:2"
 kitf = "1.0-draft"
 spaces[types][] = "og"
-
-; Information added by drupal.org packaging script on 2012-02-08
-version = "6.x-1.0-alpha6"
-core = "6.x"
-project = "elms_features"
-datestamp = "1328731842"
-
