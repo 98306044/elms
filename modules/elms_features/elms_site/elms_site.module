@@ -103,10 +103,9 @@ function elms_site_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
         $space->controllers->variable->set('spaces_preset_og', 'og_private');
         $node->og_private = 1;
       }
-      // set webaccess state for strict per course settings
-      if (module_exists('webaccess')) {
-        $space->controllers->variable->set('webaccess_secure_site', $node->og_private);
-      }
+			// allow for modules to hook in and provide additional space logic here
+			// this is because create_root function, if run, will exit insert logic
+			drupal_alter('elms_site_access_routine', $space, $node);
       // build course root since all parents come with content by default
       // check for the default argument coming from the course creation form making a version
       if (module_exists('elms_content') && !isset($node->default_version) && !isset($node->spaces_og_clone)) {
