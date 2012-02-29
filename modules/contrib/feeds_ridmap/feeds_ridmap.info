@@ -4,10 +4,3 @@ description = This module provides targets for Feeds module user import so that 
 package = Feeds
 dependencies[] = feeds
 project = "feeds_ridmap"
-
-; Information added by drupal.org packaging script on 2012-01-29
-version = "6.x-1.0-beta3"
-core = "6.x"
-project = "feeds_ridmap"
-datestamp = "1327812341"
-

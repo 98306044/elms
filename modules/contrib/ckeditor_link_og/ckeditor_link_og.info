@@ -4,10 +4,3 @@ description = "This module limits the results of the CKEditor Link project to ju
 package = User interface
 dependencies[] = ckeditor_link
 project = "ckeditor_link_og"
-
-; Information added by drupal.org packaging script on 2012-01-29
-version = "6.x-1.0-beta3"
-core = "6.x"
-project = "ckeditor_link_og"
-datestamp = "1327811739"
-

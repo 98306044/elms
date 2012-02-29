@@ -3,10 +3,4 @@ name = "Requirement Dashboard System"
 description = "Implementation of the Requirement Dashboard API for a system wide dashboard"
 package = "Requirement Dashboard"
 dependencies[] = "requirement_dashboard"
-
-; Information added by drupal.org packaging script on 2012-01-29
-version = "6.x-1.0-beta1"
 core = "6.x"
-project = "requirement_dashboard"
-datestamp = "1327813546"
-

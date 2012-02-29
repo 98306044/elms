@@ -4,10 +4,3 @@ dependencies[] = "nodereference"
 dependencies[] = "prepopulate"
 package = "CCK"
 core = "6.x"
-
-; Information added by drupal.org packaging script on 2012-02-08
-version = "6.x-1.0-alpha2"
-core = "6.x"
-project = "nodereference_highlight"
-datestamp = "1328732747"
-

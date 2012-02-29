@@ -93,6 +93,18 @@ function spaces_og_clone_form_alter(&$form, &$form_state, $form_id) {
     // Change form submit to clone and add submit handler. 
     if (!empty($form['buttons']['submit'])) {
       $form['buttons']['submit']['#value'] = t('Clone');
+      // need to remove spaces_og_form_group_submit
+      // in the event that purl was set it will kill the next loop
+      // see http://drupal.org/node/1423000 for background information
+      foreach ($form['buttons']['submit']['#submit'] as $key => $val) {
+        // remove spaces_og_form_group_submit without disrupting other modules
+        if ($val == 'spaces_og_form_group_submit') {
+          unset($form['buttons']['submit']['#submit'][$key]);
+        }
+      }
+      // return the #submit array to its original state
+      $form['buttons']['submit']['#submit'] = array_values($form['buttons']['submit']['#submit']);
+      // append our new submit handler last
       $form['buttons']['submit']['#submit'][] = 'spaces_og_clone_clone_form_submit';
     }
     else {

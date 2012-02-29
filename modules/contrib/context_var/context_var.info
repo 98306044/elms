@@ -4,10 +4,3 @@ description = "Context condition: Show when site variables equal a defined value
 package = "Context"
 project = "context_var"
 dependencies[] = "context"
-
-; Information added by drupal.org packaging script on 2012-01-29
-version = "6.x-1.0-beta3"
-core = "6.x"
-project = "context_var"
-datestamp = "1327813838"
-
