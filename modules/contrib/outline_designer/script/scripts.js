@@ -1,14 +1,14 @@
 /************************************************************************************************************
 //ELMS: Outline Designer - Usability improvements for speedy outline creation
-//Copyright (C) 2008-2010  The Pennsylvania State University
+// Copyright (C) 2008-2010  The Pennsylvania State University
 //
-//Bryan Ollendyke
-//bto108@psu.edu
+// Bryan Ollendyke
+// bto108@psu.edu
 //
-//Keith D. Bailey
-//kdb163@psu.edu
+// Keith D. Bailey
+// kdb163@psu.edu
 //
-//12 Borland
+// 12 Borland
 //University Park, PA 16802
 
 ************************************************************************************************************/  

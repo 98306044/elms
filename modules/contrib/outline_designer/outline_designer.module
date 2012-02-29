@@ -1,16 +1,16 @@
 <?php
 // $Id: outline_designer.module
 //ELMS: Outline Designer - Usability improvements for speedy outline creation in Drupal 6.x
-//Copyright (C) 2008-2012  The Pennsylvania State University
+// Copyright (C) 2008-2012  The Pennsylvania State University
 //
-//Bryan Ollendyke
-//bto108@psu.edu
+// Bryan Ollendyke
+// bto108@psu.edu
 //
-//Keith D. Bailey
-//kdb163@psu.edu
+// Keith D. Bailey
+// kdb163@psu.edu
 //
-//12 Borland
-//University Park,  PA 16802
+// 12 Borland
+// University Park,  PA 16802
 
 /**
  * @file

@@ -3,7 +3,7 @@
  * @file
  * UX improvements for the ELMS experience that we want
  */
-define('ELMS_VERSION', '6.x-1.0-alpha6');
+define('ELMS_VERSION', '6.x-1.0-alpha7');
 
 /**
  * Implementation of hook_define_highlight_relationship().
