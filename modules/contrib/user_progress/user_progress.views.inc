@@ -1,10 +1,14 @@
 <?php
 /**
+ * @file
+ * Provide views integration with the three user progress tables
+ */
+/**
  * Describe table structure to Views.
  *
- * This hook should be placed in MODULENAME.views.inc and it will be auto-loaded.
- * This must either be in the same directory as the .module file or in a subdirectory
- * named 'includes'.
+ * This hook should be placed in MODULENAME.views.inc and it will 
+ * be auto-loaded. This must either be in the same directory as the 
+ * .module file or in a subdirectory named 'includes'.
  *
  * The full documentation for this hook is in the advanced help.
  * @link http://views-help.doc.logrus.com/help/views/api-tables @endlink

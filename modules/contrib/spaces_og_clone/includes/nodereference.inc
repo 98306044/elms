@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Enable the repairing of node references within cloned nodes
+ */
 
 /**
  * Implements hook_sspaces_og_clone_node_cleanup().

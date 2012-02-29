@@ -1,10 +1,14 @@
 <?php
+/**
+ * @file
+ * Enable cloning selection based on feature
+ */
 
 /**
  * Implements hook_spaces_og_clone_clone_settings().
  */
 function features_spaces_og_clone_clone_settings($original_group) {
-  //user roles
+  // user roles
   $settings = array();
 
   // Prepare the feature selection element via finding all valid features.
@@ -51,7 +55,7 @@ function features_spaces_og_clone_node_query(&$query, $new_group, $old_group, $s
       }
     }
     $content_types = array_unique($content_types);
-    //build the query if we found anything
+    // build the query if we found anything
     if ($content_types) {
       $query['where']['feature_content_types'] = " n.type IN (" . db_placeholders($content_types, 'text') . ") ";
       $query['args']['feature_content_types'] = $content_types;

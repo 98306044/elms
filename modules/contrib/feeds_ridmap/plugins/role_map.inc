@@ -21,9 +21,9 @@ $plugin = array(
  */
 function role_map_form($importer, $element_key, $settings) {
   $form = array();
-  //get all roles except anon
+  // get all roles except anon
   $roles = user_roles(TRUE);
-  //build out a form that allows the user to map values to internal roles listing
+  // build out a form that allows the user to map values to internal roles listing
   foreach ($roles as $rid => $role) {
     $form['role_map_'. $rid] = array(
       '#type' => 'textfield',
@@ -38,10 +38,10 @@ function role_map_form($importer, $element_key, $settings) {
  * Helper function to process the value conversion
  */
 function role_map_callback($result, $item_key, $element_key, &$field, $settings) {
-  //get all roles except anon
+  // get all roles except anon
   $roles = user_roles(TRUE);
   foreach ($roles as $rid => $role) {
-    //if value matches setting entered, switch it to role ID
+    // if value matches setting entered, switch it to role ID
     if ($field == $settings['role_map_'. $rid]) {
       $field = $rid;
     }

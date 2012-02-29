@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Calls for all the pages associated to spaces_og_clone
+ */
 
 /**
  * Page callback for generic path that determines what form to call.
@@ -7,7 +11,7 @@ function spaces_og_clone_clone_page($nid = NULL) {
   if ($nid) {
     return spaces_og_clone_clone_node_form(node_load($nid));
   }
-  // TODO add in a jump menu
+  // @todo add in a jump menu
   else {
     $output = t('There is no groups that you are currently able to clone.');
     $create_types = array();

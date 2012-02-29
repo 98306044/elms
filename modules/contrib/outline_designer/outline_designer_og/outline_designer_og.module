@@ -1,5 +1,4 @@
 <?php
-// $Id: outline_designer_og.module
 /**
  * Implementation of hook_form_alter().
  */
@@ -14,7 +13,7 @@ function outline_designer_og_form_alter(&$form, $form_state, $form_id) {
  */
 function outline_designer_og_menu() {
   $items['node/%node/outline_designer'] = array(
-    'title' => t('Edit books'),
+    'title' => 'Edit books',
     'page callback' => 'outline_designer_og_books',
     'page arguments' => array(1),
     'access callback' => '_outline_designer_og_books_access',
@@ -23,7 +22,7 @@ function outline_designer_og_menu() {
     'type' => MENU_LOCAL_TASK,
   );
   $items['outline_designer/book/%node'] = array(
-    'title' => t('Re-order book pages and change titles'),
+    'title' => 'Re-order book pages and change titles',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('book_admin_edit', 2),
     'access callback' => '_outline_designer_og_book_access',
@@ -50,9 +49,9 @@ function outline_designer_og_menu() {
  */
 function _outline_designer_og_ajax_access() {
   global $user;
-  //check for permissions that superceed groups
+  // check for permissions that superceed groups
   if ($user->uid == 1 || user_access('administer book outlines') || (user_access('outline own pages') && user_access('add content to books'))) {
-	return 1;
+    return 1;
   }
   $result = db_result(db_query("SELECT uid
                                   FROM {og_uid}

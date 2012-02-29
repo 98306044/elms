@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Enable the repair of links within cloned node body
+ */
 
 /**
  * Implements hook_spaces_og_clone_node_cleanup().

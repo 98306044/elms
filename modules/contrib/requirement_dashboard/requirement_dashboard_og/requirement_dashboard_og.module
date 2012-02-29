@@ -1,7 +1,7 @@
 <?php
-//ELMS: Requirement Dashboard OG
-//Development Sponsored by The Pennsylvania State University
-//ELMS is Copyright (C) 2008-2012  The Pennsylvania State University
+// ELMS: Requirement Dashboard OG
+// Development Sponsored by The Pennsylvania State University
+// ELMS is Copyright (C) 2008-2012  The Pennsylvania State University
 //
 // Bryan Ollendyke
 // bto108@psu.edu
@@ -14,7 +14,7 @@
 
 /**
  * @file
- * Add requirement dashboards to Organic Groups and add some common requirements info
+ * Add requirement dashboards to og and implement common requirements
  */
 
 /**
@@ -22,7 +22,7 @@
  */
 function requirement_dashboard_og_requirement_dashboard_provider() {
   $dashboards['og'] = array(
-    'title' => t('Group Stats'),
+    'title' => t('Group stats'),
     'path' => 'node/%node/og_stats',
   );
   return $dashboards;
@@ -36,7 +36,7 @@ function requirement_dashboard_og_dashboard_requirements($provider) {
     case 'og':
       $group = og_get_group_context();
       $requirements['name'] = array(
-        'title' => t('Group Name'), 
+        'title' => t('Group name'), 
         'value' => $group->title,
         'severity' => REQUIREMENT_INFO,
       );
@@ -45,7 +45,7 @@ function requirement_dashboard_og_dashboard_requirements($provider) {
         'value' => $group->og_description,
         'severity' => REQUIREMENT_INFO,
       );
-      //if theme is set then list the theme used
+      // if theme is set then list the theme used
       if (isset($group->og_theme)) {
         $requirements['theme'] = array(
           'title' => t('Theme'), 
@@ -69,7 +69,7 @@ function requirement_dashboard_og_menu_alter(&$items) {
 }
 
 /**
- * Access callback: API just defines a basic criteria for access to this page, this allows us to make sure this is a group before rendering the status page
+ * Callback to only implement on group types
  */
 function requirement_dashboard_og_status_access($node) {
   return og_is_group_type($node->type) ? user_access('view og requirements dashboard') : FALSE;

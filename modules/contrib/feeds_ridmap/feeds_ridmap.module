@@ -1,7 +1,7 @@
 <?php
-//ELMS: Feeds RID Map
-//Development Sponsored by The Pennsylvania State University
-//ELMS is Copyright (C) 2008-2012  The Pennsylvania State University
+// ELMS: Feeds RID Map
+// Development Sponsored by The Pennsylvania State University
+// ELMS is Copyright (C) 2008-2012  The Pennsylvania State University
 //
 // Bryan Ollendyke
 // bto108@psu.edu
@@ -17,17 +17,17 @@
  */
 
 /**
- * adds user target for role
+ * Adds user target for role
  */
 
 function feeds_ridmap_feeds_user_processor_targets_alter(&$targets) {
-  //add in the role ID map for associating to roles
+  // add in the role ID map for associating to roles
   $targets['roles'] = array(
     'name' => t('Role ID'),
     'description' => t('Set the user role system wide'),
     'callback' => 'feeds_ridmap_feeds_set_roles_target',
   );
-  //add in an organic groups map if it exists
+  // add in an organic groups map if it exists
   if (module_exists('og')) {
     $targets['og_roles'] = array(
       'name' => t('OG Role ID'),
@@ -41,9 +41,9 @@ function feeds_ridmap_feeds_user_processor_targets_alter(&$targets) {
  * Set the user role target after import.
  */
 function feeds_ridmap_feeds_set_roles_target($account, $target, $value) {
-  //get roles
+  // get roles
   $roles = user_roles(TRUE);
-  //map role to what came across and assign role array correctly
+  // map role to what came across and assign role array correctly
   $account->roles = array_filter(array($value => $roles[$value]));
   return $account;
 }
@@ -53,14 +53,14 @@ function feeds_ridmap_feeds_set_roles_target($account, $target, $value) {
  * Set the user within the context of the current group.
  */
 function feeds_ridmap_feeds_set_og_roles_target($account, $target, $value) {
-  //get the active group context and map from there
+  // get the active group context and map from there
   $group = og_get_group_context();
-  //get the user id because it isn't set in the account object
+  // get the user id because it isn't set in the account object
   $uid = db_result(db_query("SELECT uid FROM {users} WHERE name='%s'", $account->name));
   if ($uid != 0 && $uid != '') {
-    //add the user to the group
+    // add the user to the group
     og_save_subscription($group->nid, $uid, array('is_active' => 1));
-    //add the contextual user role
+    // add the contextual user role
     og_user_roles_role_add($group->nid, $uid, $value);
   }
   return $account;
@@ -69,7 +69,6 @@ function feeds_ridmap_feeds_set_og_roles_target($account, $target, $value) {
 
 /**
  * Implements hook_ctools_plugin_directory().
- * estabilishes where to look for feeds tamper plugin
  */
 function feeds_ridmap_ctools_plugin_directory($module, $plugin) {
   if ($module == 'feeds_tamper') {

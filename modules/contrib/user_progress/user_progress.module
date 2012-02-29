@@ -30,19 +30,19 @@ function _user_progress_list_types() {
  * Helper function to include javascript logic for ajax calls.
  */
 function _user_progress_js_setup($ary = array()) {
-	// establish environment variables
-	$node = menu_get_object();
-	$js_vars = array(
+  // establish environment variables
+  $node = menu_get_object();
+  $js_vars = array(
     'last_call' => 0,
     'guid' => drupal_get_token(),
     'ajax_path' => base_path() .'user_progress',
-		'nid' => $node->nid,
+    'nid' => $node->nid,
   );
-	// merge potential external values with required locals
-	$js_variables = array_merge($js_vars, $ary);
+  // merge potential external values with required locals
+  $js_variables = array_merge($js_vars, $ary);
   drupal_add_js(array('user_progress' => $js_variables), "setting");
-	// add up js api
-	drupal_add_js(drupal_get_path('module', 'user_progress') .'/js/user_progress.js', 'header');
+  // add up js api
+  drupal_add_js(drupal_get_path('module', 'user_progress') .'/js/user_progress.js', 'header');
 }
 
 /**
@@ -81,7 +81,7 @@ function user_progress_menu() {
 function _user_progress_settings($form_state) {
   // get all types
   $types = _user_progress_list_types();
-  $table = '<table><caption>Defined Types</caption><tr><th>'. t('ID') .'</th><th>'. t('Name') .'</th><th>'. t('Value Handler') .'</th><th>'. t('Data Handler') .'</th></tr>';
+  $table = '<table><caption>'. t('Defined types') .'</caption><tr><th>'. t('ID') .'</th><th>'. t('Name') .'</th><th>'. t('Value handler') .'</th><th>'. t('Data handler') .'</th></tr>';
   // render type list as a table
   foreach ($types as $type) {
     $table .= '<tr><td>'. $type['upt_name'] .'</td><td>'. $type['name'] .'</td><td>'. $type['value_handler'] .'</td><td>'. $type['data_handler'] .'</td></tr>';
@@ -94,7 +94,7 @@ function _user_progress_settings($form_state) {
   );
   // get a listing of all items in the registry
   $result = db_query("SELECT * FROM {user_progress_registry}");
-  $table = '<table><caption>Activity Registry</caption><tr><th>'. t('ID') .'</th><th>'. t('Title') .'</th><th>'. t('Type') .'</th><th>'. t('Group') .'</th></tr>';
+  $table = '<table><caption>'. t('Activity registry') .'</caption><tr><th>'. t('ID') .'</th><th>'. t('Title') .'</th><th>'. t('Type') .'</th><th>'. t('Group') .'</th></tr>';
   while ($val = db_fetch_array($result)) {
     if (empty($val['nid'])) {
       $gname = 'none';
@@ -184,11 +184,11 @@ function _user_progress_get($action) {
       }
     break;
     case 'numtries':
-      //if this is valid, get a count of everything
+      // if this is valid, get a count of everything
       if (_user_progress_verify('guid') && _user_progress_verify('upregid')) {
         $upregid = $_GET['upregid'];
         $uid = $user->uid;
-        //select the count of records based on the current user and assignment
+        // select the count of records based on the current user and assignment
         $output = _user_progress_get_numtries($upregid, $uid);
       }
       else {
@@ -320,9 +320,9 @@ function _user_progress_convert_value(&$data, $upregid, $field = 'value_handler'
  */
 function _user_progress_verify($type, $val = NULL, $report = TRUE) {
   $valid = TRUE;
-  //if we weren't passed a val use GET
+  // if we weren't passed a val use GET
   if (empty($val)) {
-    //verify value is set
+    // verify value is set
     if (!isset($_GET[$type])) {
       $valid = FALSE;
     }
@@ -340,12 +340,12 @@ function _user_progress_verify($type, $val = NULL, $report = TRUE) {
   elseif ($type == 'data') {
     // ignore data, we don't validate beyond set
   }
-	elseif ($type == 'upregid') {
+  elseif ($type == 'upregid') {
     // make sure this is numeric and they have permission to act
-		if (!is_numeric($val) || !user_access('set '. _user_progress_get_registry_upt_name($val) .' progress record')) {
+    if (!is_numeric($val) || !user_access('set '. _user_progress_get_registry_upt_name($val) .' progress record')) {
       $valid = FALSE;
-		}
-	}
+    }
+  }
   else {
     // make sure this is a number
     if (!is_numeric($val)) {
@@ -394,12 +394,12 @@ function _user_progress_get_numtries($upregid, $uid) {
  */
 function _user_progress_get_registry_ids($upt_name, $nid = NULL) {
   // test for nid being null as the query changes
-	if (is_null($nid)) {
+  if (is_null($nid)) {
     $result = db_query("SELECT upregid, title FROM {user_progress_registry} WHERE upt_name='%s'", $upt_name);
-	}
-	else {
+  }
+  else {
     $result = db_query("SELECT upregid, title FROM {user_progress_registry} WHERE upt_name='%s' AND nid=%d", $upt_name, $nid);
-	}
+  }
   // loop through and return an array of possible values
   // most time user will only request 1 value but don't want to assume that
   while ($val = db_fetch_array($result)) {
@@ -436,7 +436,7 @@ function _user_progress_rebuild_types() {
     }
     else {
       // update existing records just to make sure db mirrors code
-			db_query("UPDATE {user_progress_types} SET name='%s', value_handler='%s', data_handler='%s' WHERE upt_name='%s'", $type['name'], $type['value_handler'], $type['data_handler'], $key);
+      db_query("UPDATE {user_progress_types} SET name='%s', value_handler='%s', data_handler='%s' WHERE upt_name='%s'", $type['name'], $type['value_handler'], $type['data_handler'], $key);
     }
   }
   return $types;
@@ -461,7 +461,7 @@ function user_progress_user_progress_define_types() {
       'value_handler' => 'bool',
       'data_handler' => 'time',
     ),
-		'up_jwplayer' => array(
+    'up_jwplayer' => array(
       'name' => t('JWPlayer Media'),
       'value_handler' => 'int',
       'data_handler' => 'string',

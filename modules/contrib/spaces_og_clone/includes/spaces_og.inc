@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Enable the cloning of spaces / og specific settings
+ */
 
 /**
  * Implementaton of hook_spaces_og_clone_cloned().

@@ -1,14 +1,14 @@
 <?php
-//ELMS: Profiler Builder
-//Development Sponsored by The Pennsylvania State University
-//ELMS is Copyright (C) 2008-2011  The Pennsylvania State University
-//
+// ELMS: Profiler Builder
+// Development Sponsored by The Pennsylvania State University
+// ELMS is Copyright (C) 2008-2011  The Pennsylvania State University
+// 
 // Bryan Ollendyke
 // bto108@psu.edu
-//
+// 
 // Keith D. Bailey
 // kdb163@psu.edu
-//
+// 
 // 12 Borland
 // University Park,  PA 16802
 /**
@@ -37,9 +37,9 @@ function profiler_builder_menu() {
  */
 function _profiler_builder_settings() {
   $form = array();
-  //call helper function to populate the three fields
+  // call helper function to populate the three fields
   _profiler_builder_info_file($info, $vars, $drush);
-  //info file
+  // info file
   $form['info_file'] = array(
     '#weight' => '0',
     '#description' => t('This is what the .info file would look like if you were to make a distribution off of this site as it exists currently.'),
@@ -62,7 +62,7 @@ function _profiler_builder_settings() {
     '#title' => t('Variables'),
     '#value' => $vars,
   );
-  //drush make
+  // drush make
   $form['drush_file'] = array(
     '#weight' => '0',
     '#description' => t('This is what the .make file would look like if you were to make a distribution off of this site as it exists currently.'),
@@ -81,22 +81,22 @@ function _profiler_builder_settings() {
   return $form;
 }
 
-//helper function to build out the file pieces
+// helper function to build out the file pieces
 function _profiler_builder_info_file(&$info, &$vars, &$drush) {
-  //build the array we need
+  // build the array we need
   $result = db_query("SELECT * FROM {system} WHERE status=1 AND type='module'");
   while ($val = db_fetch_array($result)) {
     $system[$val['name']] = unserialize($val['info']);
   }
-  //convert data
+  // convert data
   foreach ($system as $module => $info) {
-    //account for the other package in module listing
+    // account for the other package in module listing
     if (!isset($info['package'])) {
       $info['package'] = 'Other';
     }
     $data[$info['package']][$module] = $info['version'];
   }
-  //info file of required modules
+  // info file of required modules
   $info = '';
   foreach ($data as $package => $projects) {
     $info .= '; '. $package ."\n";
@@ -104,13 +104,13 @@ function _profiler_builder_info_file(&$info, &$vars, &$drush) {
       $info .= 'dependencies[] = "'. $project .'"'."\n";
     }
   }
-  //variables
+  // variables
   $vars = "; Variables\n\n";
-  //array of values we know to ignore automatically
+  // array of values we know to ignore automatically
   $ignore_list = _profiler_builder_ignore_list();
   $result = db_query("SELECT name FROM {variable} WHERE name NOT IN (". db_placeholders($ignore_list, 'text') .")", $ignore_list);
-  //really annoying function but we need to go into SUPER deeply nested values so that they can be fed into profiler correctly
-  //TODO: Probably a better way of doing this but this will work for now
+  // really annoying function but we need to go into SUPER deeply nested values so that they can be fed into profiler correctly
+  // @todo: Probably a better way of doing this but this will work for now
   while ($value = db_fetch_array($result)) {
     $val = variable_get($value['name'], '');
     if ($val != '') {
@@ -145,7 +145,7 @@ function _profiler_builder_info_file(&$info, &$vars, &$drush) {
       }
     }
   }
-  //drush
+  // drush
   $drush = '';
   foreach ($data as $package => $projects) {
     foreach ($projects as $project => $version) {
@@ -155,7 +155,7 @@ function _profiler_builder_info_file(&$info, &$vars, &$drush) {
   return 1;
 }
 
-//helper function to gather ignored values
+// helper function to gather ignored values
 function _profiler_builder_ignore_list() {
   return array(
     'features_codecache',
@@ -164,7 +164,7 @@ function _profiler_builder_ignore_list() {
     'cache_content_flush_cache_block',
     'cache_content_flush_cache_page',
     'cache_flush_cache_update',
-    //TODO: abstract into a hook as these are psu specific
+    // @todo: abstract into a hook as these are psu specific
     'webaccess_cookie',
     'webaccess_domain',
     'webaccess_init_enable',

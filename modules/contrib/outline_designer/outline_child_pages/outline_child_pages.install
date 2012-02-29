@@ -1,5 +1,4 @@
 <?php
-// $Id: outline_child_pages.install
 /**
  * @file
  * Install, update and uninstall functions for the outline_child_pages module.

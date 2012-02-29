@@ -1,10 +1,13 @@
 <?php
+/**
+ * @file
+ * Enable the cloning of nodes based on user roles in the group
+ */
 
 /**
  * Implements hook_spaces_og_clone_clone_settings().
  */
 function user_spaces_og_clone_clone_settings($original_group) {
-
   $settings = array();
   $user_roles = user_roles();
   $settings['user_roles'] = array(
@@ -43,7 +46,7 @@ function user_spaces_og_clone_node_query(&$query, $new_group, $old_group, $setti
       $query['join']['user_roles'] = "LEFT JOIN {users_roles} as ur ON ur.uid = n.uid ";
       $query['args']['rids'] = array_keys($user_roles);
 
-      $query['where']['rids'] = " (ur.rid IN (". db_placeholders($user_roles). ") ";
+      $query['where']['rids'] = " (ur.rid IN (". db_placeholders($user_roles) .") ";
       // Consider user 1 as having all roles.
       $query['where']['rids'] .= "OR n.uid = 1 ";
       // If anonymous allowed, then uid of 0 is allowed.

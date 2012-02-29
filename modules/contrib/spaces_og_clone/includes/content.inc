@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Enable the cleanup of node content post clone
+ */
 
 /**
  * Implements hook_spaces_og_clone_node_cleanup().

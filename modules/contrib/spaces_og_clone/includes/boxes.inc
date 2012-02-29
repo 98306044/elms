@@ -1,7 +1,11 @@
 <?php
+/**
+ * @file
+ * Enable the cloning of boxes and integration of boxes module
+ */
 
 /**
- * Implements hook_spaces_spaces_og_clone_spaces_overrides_alter() on behalf of boxes.
+ * Implements hook_spaces_spaces_og_clone_spaces_overrides_alter().
  */
 function boxes_spaces_og_clone_spaces_overrides_alter(&$overrides, $controller, $new_space, $old_space) {
   // Create a new box for each.

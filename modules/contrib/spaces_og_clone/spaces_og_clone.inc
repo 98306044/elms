@@ -7,7 +7,6 @@
 
 /**
  * Clone a group (or finish up after a clone).
- *
  */
 function spaces_og_clone_clone($new_group, $old_group, $settings, $batch = FALSE) {
   global $user;
@@ -39,7 +38,7 @@ function spaces_og_clone_clone($new_group, $old_group, $settings, $batch = FALSE
     $function($new_group, $old_group, $settings);
   }
 
-  //now copy all the content since we have a group we can copy into
+  // now copy all the content since we have a group we can copy into
 
   // If features were selected, grab the corresponding node types.
   $query = array(
@@ -89,7 +88,7 @@ function spaces_og_clone_clone($new_group, $old_group, $settings, $batch = FALSE
     }
     else {
       $batch = array(
-        'title' => t('Cloning Content'),
+        'title' => t('Cloning content'),
         'progress_message' => t('Completed clone @current of @total.'),
         'operations' => array(
           array('_spaces_og_clone_node_clone_nodes_batch', array($nids, $new_group, $settings)),
@@ -145,19 +144,19 @@ function _spaces_og_clone_node_clean(&$node) {
   unset($node->revision_uid);
   unset($node->og_groups_both);
 
-  //reset UUID
+  // reset UUID
   if (module_exists('uuid')) {
     unset($node->uuid);
     unset($node->revision_uuid);
   }
 
-  //reset workflow if it exists
+  // reset workflow if it exists
   if (module_exists('workflow')) {
     unset($group->workflow);
     unset($group->_workflow);
   }
 
-  //account for statistics if its enabled
+  // account for statistics if its enabled
   if (module_exists('og_statistics')) {
     unset($group->og_statistics);
   }
@@ -291,30 +290,30 @@ function _spaces_og_clone_first_pass($nids, &$sandbox) {
     // Pass in old node for reference.
     $node->spaces_og_clone_original = $old_node;
 
-    //set some common values to null so this will create a new node
+    // set some common values to null so this will create a new node
     $node->log = "Original node nid: " . $node->nid;
     _spaces_og_clone_node_clean($node);
     $node->og_groups = array($sandbox['group']->nid => $sandbox['group']->nid);
-    //change the user id to the one that the form dictates
+    // change the user id to the one that the form dictates
     $node->uid = $sandbox['settings']['uid'];
-    //change the author name to match
+    // change the author name to match
     $node->name = $sandbox['settings']['name'];
-    //account for books
+    // account for books
     if (isset($node->book['mlid'])) {
       // Clear the book and set new information.
       $node->book = array();
 
       // Need to maintain positioning at its level
       $node->book['weight'] = $old_node->book['weight'];
-      //needed so it doesn't fall into menu hell
+      // needed so it doesn't fall into menu hell
       $node->book['module'] = 'book';
       $node->book['bid'] = $old_node->book['plid'] == 0 || !isset($sandbox['book_map'][$old_node->book['bid']]) ? 'new' : $sandbox['book_map'][$old_node->book['bid']];
-      //see if there's a match on a parent
+      // see if there's a match on a parent
       $node->book['plid'] = isset($sandbox['mlid_map'][$old_node->book['plid']]) ?$sandbox['mlid_map'][$old_node->book['plid']] : NULL;
 
       node_save($node);
 
-      //map old mlid and nid to new one
+      // map old mlid and nid to new one
       $sandbox['mlid_map'][$old_node->book['mlid']] = $node->book['mlid'];
       $sandbox['book_map'][$old_node->book['bid']] = $node->book['bid'];
     }

@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Enable clones of book and menu items to be joined correctly
+ */
 
 /**
  * Implements hook_spaces_og_clone_node_query().

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2011  The Pennsylvania State University
+// Copyright (C) 2011-2012  The Pennsylvania State University
 //
 // Bryan Ollendyke
 // bto108@psu.edu
@@ -15,7 +15,7 @@
  */
 
 /**
- * adds user target for role
+ * Adds user target for role
  */
 
 function feeds_node_helper_feeds_node_processor_targets_alter(&$targets, $content_type) {
@@ -61,7 +61,7 @@ function feeds_node_helper_feeds_set_type_target($node, $target, $value) {
  * Set the book weight.
  */
 function feeds_node_helper_feeds_set_weight_target($node, $target, $value) {
-  //set the weight based on what it was previously
+  // set the weight based on what it was previously
   $node->book['weight'] = $value;
   return $node;
 }
@@ -70,19 +70,18 @@ function feeds_node_helper_feeds_set_weight_target($node, $target, $value) {
  * Set the book parent, this assumes a UUID look up.
  */
 function feeds_node_helper_feeds_set_uuid_book_parent_target($node, $target, $value) {
-  //load the parent from the UUID, it should have been created prior to creation
+  // load the parent from the UUID, it should have been created prior to creation
   $parentnode = node_get_by_uuid($value);
   if (!$parentnode) {
     return $node;
   }
-  //associate the parent correctly now that we've loaded the node
+  // associate the parent correctly now that we've loaded the node
   $node->book['plid'] = $parentnode->book['mlid'];
   return $node;
 }
 
 /**
  * Implements hook_ctools_plugin_directory().
- * estabilishes where to look for feeds tamper plugin
  */
 function feeds_node_helper_ctools_plugin_directory($module, $plugin) {
   if ($module == 'feeds_tamper') {
