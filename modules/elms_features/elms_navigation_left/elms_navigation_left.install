@@ -8,6 +8,6 @@
  * Implementation of hook_install().
  */
 function elms_navigation_left_install() {
-  //change the weight so that alters fire after others
+  // change the weight so that alters fire after others
   db_query("UPDATE {system} SET weight = 2 WHERE name = 'elms_navigation_left'");
 }
