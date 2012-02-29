@@ -50,13 +50,6 @@ function elms_site_form_alter(&$form, &$form_state, $form_id) {
     if (arg(0) == 'spaces_og_clone') {
       // set a random value initially to work with workflow_purl
       $form['purl']['value']['#default_value'] = '_tmp_'. rand(1, 1000);
-      // account for space_og submit and kill it
-      foreach ($form['buttons']['submit']['#submit'] as $key => $val) {
-        if ($val == 'spaces_og_form_group_submit') {
-          unset($form['buttons']['submit']['#submit'][$key]);
-        }
-      }
-      $form['buttons']['submit']['#submit'] = array_values($form['buttons']['submit']['#submit']);
     }
   }
 }
