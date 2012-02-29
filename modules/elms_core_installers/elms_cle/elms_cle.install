@@ -42,7 +42,7 @@ function elms_cle_install() {
   variable_set('private_download_directory', 'private');
   variable_set('private_download_header', 'Content-Transfer-Encoding: binary
 Cache-Control: max-age=60, must-revalidate');
-  variable_set('private_download_htaccess','<IfModule mod_rewrite.c>
+  variable_set('private_download_htaccess', '<IfModule mod_rewrite.c>
   RewriteEngine on
   RewriteBase /system/files/private
   RewriteRule ^(.*)$ $1 [L,R=301]

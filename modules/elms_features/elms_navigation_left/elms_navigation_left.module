@@ -47,7 +47,7 @@ function elms_navigation_left_init() {
  */
 function elms_navigation_left_form_alter(&$form, &$form_state, $form_id) {
   //make the masquerade block display differently in the left hand menu to fit one line
-  
+
   if ($form_id == 'masquerade_block_1' && isset($form['masquerade_user_field'])) {
     //remove message
     unset($form['masquerade_desc']);
@@ -97,7 +97,7 @@ function elms_navigation_left_block($op = 'list', $delta = 0, $edit = array()) {
           $block['content'] = _elms_navigation_left_parent_block($group);
         }
       break;
-      case 2:        
+      case 2:
         if (isset($group->nid) && arg(1) != $group->nid) {
           $block['title'] = t('Content');
           $block['content'] = _elms_navigation_left_page_block();
@@ -133,7 +133,7 @@ function _elms_navigation_left_help_block() {
     if (module_exists('elms_help_icms')) {
       $help_file = 'elms_help_icms';
     }
-    else if(module_exists('elms_help_cle')) {
+    elseif (module_exists('elms_help_cle')) {
       $help_file = 'elms_help_cle';
     }
     return theme('menu_item', l(t('ELMS Help'), 'admin/advanced_help/'. $help_file, array('query'  => array('popup' => TRUE), 'attributes' => array('onclick' => "var w=window.open(this.href, 'advanced_help_window', 'width=640,height=480,scrollbars,resizable'); w.focus(); return false;", 'title' => t('ELMS Help')))), 0, '', FALSE, 'help');

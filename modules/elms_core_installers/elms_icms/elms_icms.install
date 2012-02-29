@@ -35,7 +35,7 @@ function elms_icms_install() {
   );
   drupal_write_record('spaces_presets', $ary);
   $ary = array(
-    'name' => 'og_public', 
+    'name' => 'og_public',
     'title' => 'OER Section',
     'description' => 'All content will be available to the public',
     'space_type' => 'og',
@@ -67,7 +67,7 @@ function elms_icms_install() {
   variable_set('private_download_directory', 'private');
   variable_set('private_download_header', 'Content-Transfer-Encoding: binary
 Cache-Control: max-age=60, must-revalidate');
-  variable_set('private_download_htaccess','<IfModule mod_rewrite.c>
+  variable_set('private_download_htaccess', '<IfModule mod_rewrite.c>
   RewriteEngine on
   RewriteBase /system/files/private
   RewriteRule ^(.*)$ $1 [L,R=301]

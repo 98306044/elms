@@ -1,11 +1,7 @@
 <?php
-// $Id: node-og-group-post.tpl.php,v 1.3 2008/11/09 17:17:54 weitzman Exp $
-
 /**
- * @file node-og-group-post.tpl.php
- * 
- * Og has added a brief section at bottom for printing links to affiliated groups.
- * This template is used by default for non group nodes.
+ * @file node-og-group-post.tpl.php This template is used for non group nodes
+ *
  *
  * Theme implementation to display a node.
  *

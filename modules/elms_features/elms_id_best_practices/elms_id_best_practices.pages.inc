@@ -51,14 +51,14 @@ function elms_id_best_practices_settings() {
     '#title' => t('Help page'),
   );
   // render a select list based on a list of all available resources
-  $result = db_query(db_rewrite_sql("SELECT nid,title FROM {node} WHERE type='elms_resource'"));
+  $result = db_query(db_rewrite_sql("SELECT nid,title FROM {node} as n WHERE n.type='elms_resource'"));
   $options = array();
   while ($val = db_fetch_array($result)) {
     $options[$val['nid']] = $val['title'];
   }
   $form['elms_id_bp_resources'] = array(
     '#default_value' => variable_get('elms_id_bp_resources', array()),
-    '#description' => t('Select the resources you would like to display from the list of available ones'),
+    '#description' => t('Select the resources you would like to use from the available list'),
     '#type' => 'select',
     '#multiple' => TRUE,
     '#title' => t('Resource list'),

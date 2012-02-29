@@ -36,7 +36,7 @@ function elms_terms_filter($op, $delta = 0, $format = -1, $text = '', $cache_id 
         $group = og_get_group_context();
         //make sure we are in a group though it's almost impossible not to be
         if (isset($group->nid)) {
-          $result = db_query("SELECT n.title FROM {node} AS n JOIN {og_ancestry} AS oga ON oga.nid=n.nid WHERE type='term' AND oga.group_nid=%d", $group->nid);
+          $result = db_query(db_rewrite_sql("SELECT n.title FROM {node} AS n JOIN {og_ancestry} AS oga ON oga.nid=n.nid WHERE type='term' AND oga.group_nid=%d"), $group->nid);
           //add wrappers as we find them
           while ($val = db_fetch_array($result)) {
             $text = str_replace($val['title'], '[termref]'. $val['title'] .'[/termref]', $text);

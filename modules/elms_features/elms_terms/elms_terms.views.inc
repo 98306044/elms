@@ -10,7 +10,7 @@ function elms_terms_views_query_alter(&$view, &$query) {
     $node = node_load($view->args[0]);
     //make sure this node has content, otherwise we're wasting time
     if ($node->body != '') {
-      $result = db_query("SELECT n.title, n.nid FROM {node} AS n JOIN {og_ancestry} AS oga ON oga.nid=n.nid WHERE type='term' AND oga.group_nid=%d", $group->nid);
+      $result = db_query(db_rewrite_sql("SELECT n.title, n.nid FROM {node} AS n JOIN {og_ancestry} AS oga ON oga.nid=n.nid WHERE type='term' AND oga.group_nid=%d"), $group->nid);
       while ($val = db_fetch_array($result)) {
         if (strpos($node->body, $val['title']) !== FALSE) {
           $nids[] = $val['nid'];

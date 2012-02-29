@@ -99,14 +99,13 @@ function chamfer_menu_item_link($link) {
 *   string The rendered id and class attributes.
 */
 function chamfer_body_attributes($is_front = false, $layout = 'none') {
-
   if ($is_front) {
     $body_id = $body_class = 'homepage';
   }
   else {
     // Remove base path and any query string.
     global $base_path;
-    list(,$path) = explode($base_path, $_SERVER['REQUEST_URI'], 2);
+    list(,$path) = explode($base_path, request_uri(), 2);
     list($path,) = explode('?', $path, 2);
     $path = rtrim($path, '/');
     // Construct the id name from the path, replacing slashes with dashes.

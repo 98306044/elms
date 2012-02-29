@@ -1,12 +1,6 @@
 <?php
-// $Id: node-og-group.tpl.php,v 1.3 2008/10/29 20:04:41 dww Exp $
-
 /**
- * @file node-og-grouo.tpl.php
- * 
- * Og has not modified this at all. It is same as node.tpl.php.
- * This template is used by default for group nodes.
- *
+ * @file node-og-group.tpl.php This template is used by default group nodes
  * Theme implementation to display a node.
  *
  * Available variables:
