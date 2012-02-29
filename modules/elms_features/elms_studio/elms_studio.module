@@ -19,7 +19,7 @@ function elms_studio_menu() {
   return $items;
 }
 
-//helper function for access verification
+// helper function for access verification
 function _elms_studio_access_check() {
   if (module_exists('spaces')) {
     return user_access('spaces_access_admin');

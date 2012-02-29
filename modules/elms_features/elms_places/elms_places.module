@@ -8,10 +8,10 @@ include_once('elms_places.features.inc');
 function elms_places_init() {
   if (variable_get('googlemap_api_key', '') == '') {
     if (arg(2) == 'gmap') {
-      drupal_set_message(t('<a href="@click">Click here to get an API code</a>, then enter it in the field below.',array('@click' => url('http://code.google.com/apis/maps/signup.html'))), 'warning', FALSE);
+      drupal_set_message(t('<a href="@click">Click here to get an API code</a>, then enter it in the field below.', array('@click' => url('http://code.google.com/apis/maps/signup.html'))), 'warning', FALSE);
     }
     else {
-      drupal_set_message(t('Please enter a Google Maps API key in order to use ELMS Places. <a href="@click">Click to resolve API Key message</a>.',array('@click' => url('admin/settings/gmap'))), 'warning', FALSE);
+      drupal_set_message(t('Please enter a Google Maps API key in order to use ELMS Places. <a href="@click">Click to resolve API Key message</a>.', array('@click' => url('admin/settings/gmap'))), 'warning', FALSE);
     }
   }
 }

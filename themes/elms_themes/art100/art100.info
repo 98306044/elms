@@ -1,22 +1,13 @@
-name = Art 100
-description = Theme for Art 100
-core = 6.x
-version = 6.x-1.0
-engine = phptemplate
-
-regions[left] = Left Blocks
-regions[right] = Right Content
-regions[superfish] = Superfish Menu
-regions[footer] = Footer
-regions[header] = header
-
-stylesheets[all][] = css/style.css
-stylesheets[all][] = css/accessibility.css
-
-scripts[] = js/site-info.js
-; Information added by drupal.org packaging script on 2012-02-04
-version = "6.x-1.0-alpha6"
+name = "Art 100"
+description = "Theme for Art 100"
 core = "6.x"
-project = "elms_themes"
-datestamp = "1328320242"
+engine = "phptemplate"
 
+regions[left] = "Left blocks"
+regions[right] = "Right content"
+regions[superfish] = "Superfish menu"
+regions[footer] = "Footer"
+regions[header] = "Header"
+
+stylesheets[all][] = "css/style.css"
+stylesheets[all][] = "css/accessibility.css"

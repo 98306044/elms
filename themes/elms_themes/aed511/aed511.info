@@ -1,15 +1,7 @@
-; $Id: aed511.info,v 1.4 2008/10/28 05:50:58 btopro Exp $
-name = AED 511
-description = Art Education 511 Theme
-version = 6.x-1.0
-core = 6.x
-engine = phptemplate
-
-stylesheets[all][] = css/style.css
-stylesheets[all][] = css/accessibility.css
-; Information added by drupal.org packaging script on 2012-02-04
-version = "6.x-1.0-alpha6"
+name = "AED 511"
+description = "Art Education 511 Theme"
 core = "6.x"
-project = "elms_themes"
-datestamp = "1328320242"
+engine = "phptemplate"
 
+stylesheets[all][] = "css/style.css"
+stylesheets[all][] = "css/accessibility.css"

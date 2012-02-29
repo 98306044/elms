@@ -8,9 +8,9 @@
  * Implementation of hook_init().
  */
 function elms_styles_init() {
-  //include the style guide and treat it as theme layer
+  // include the style guide and treat it as theme layer
   drupal_add_css(drupal_get_path('module', 'elms_styles') .'/elms_styles.css', 'theme');
-  //include the collapse.js so it gets loaded on every page as core doesn't do this
+  // include the collapse.js so it gets loaded on every page as core doesn't do this
   drupal_add_js('misc/collapse.js');
 }
 
@@ -18,15 +18,15 @@ function elms_styles_init() {
  * Implementation of hook_wysiwyg_editor_settings_alter().
  */
 function elms_styles_wysiwyg_editor_settings_alter(&$settings, $context) {
-  //check for ckeditor as that's the college default
-  if($context['profile']->editor == 'ckeditor') {
-    $settings['undoStackSize'] = 40; //increase the undo history
+  // check for ckeditor as that's the college default
+  if ($context['profile']->editor == 'ckeditor') {
+    $settings['undoStackSize'] = 40; // increase the undo history
     $settings['fillEmptyBlocks'] = FALSE;
-    $settings['stylesSet'] = _elms_styles_styles(); //apply our styles
+    $settings['stylesSet'] = _elms_styles_styles(); // apply our styles
   }
 }
 
-//helper function for defining our default styles
+// helper function for defining our default styles
 function _elms_styles_styles() {
   $styles = array(
       array(

@@ -57,7 +57,7 @@ function _elms_parent_pages_page_title($node, $page_type) {
  * Helper page for student funnel page for a parent.
  */
 function _elms_parent_pages_access_check($node, $page_type) {
-  //check that user can access node, type matches and user can access this page
+  // check that user can access node, type matches and user can access this page
   if (node_access('view', $node) && $node->type == ELMS_ROOT_TYPE && user_access('view parent '. $page_type .' page')) {
     return 1;
   }

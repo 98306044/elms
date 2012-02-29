@@ -1,25 +1,17 @@
-; $Id: art020.info,v 1.0 2009/12/07 05:50:58 btopro Exp $
-name = Art 20
-description = Theme for Art 020
-version = 6.x-1.0
-core = 6.x
-engine = phptemplate
-
-regions[left] = Left sidebar
-regions[right] = Right sidebar
-regions[content] = Content
-regions[header] = Header
-regions[footer] = Footer
-
-stylesheets[all][] = css/style.css
-stylesheets[all][] = css/accessibility.css
-
-scripts[] = js/script.js
-scripts[] = js/jquery.accordion.pack.js
-scripts[] = js/jquery.easing.js
-; Information added by drupal.org packaging script on 2012-02-04
-version = "6.x-1.0-alpha6"
+name = "Art 20"
+description = "Theme for Art 020"
 core = "6.x"
-project = "elms_themes"
-datestamp = "1328320242"
+engine = "phptemplate"
 
+regions[left] = "Left sidebar"
+regions[right] = "Right sidebar"
+regions[content] = "Content"
+regions[header] = "Header"
+regions[footer] = "Footer"
+
+stylesheets[all][] = "css/style.css"
+stylesheets[all][] = "css/accessibility.css"
+
+scripts[] = "js/script.js"
+scripts[] = "js/jquery.accordion.pack.js"
+scripts[] = "js/jquery.easing.js"

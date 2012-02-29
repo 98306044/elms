@@ -1,23 +1,16 @@
-name = eLearning Urban
-description = Urban Theme for eLearning
-core = 6.x
-engine = phptemplate
-
-regions[header] = Main Navigation
-regions[content_top] = Sub Navigation
-regions[left] = Extra Blocks
-regions[content] = Content
-regions[right] = Image Gallery
-
-stylesheets[all][] = css/style.css
-stylesheets[all][] = css/accessibility.css
-stylesheets[all][] = css/theme_override.css
-
-scripts[] = js/gallery_region.js
-
-; Information added by drupal.org packaging script on 2012-02-04
-version = "6.x-1.0-alpha6"
+name = "eLearning urban"
+description = "Urban theme for elearning"
 core = "6.x"
-project = "elms_themes"
-datestamp = "1328320242"
+engine = "phptemplate"
 
+regions[header] = "Main navigation"
+regions[content_top] = "Sub navigation"
+regions[left] = "Extra blocks"
+regions[content] = "Content"
+regions[right] = "Image gallery"
+
+stylesheets[all][] = "css/style.css"
+stylesheets[all][] = "css/accessibility.css"
+stylesheets[all][] = "css/theme_override.css"
+
+scripts[] = "js/gallery_region.js"

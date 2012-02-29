@@ -23,7 +23,7 @@ include_once('elms_navigation_left.features.inc');
  */
 function elms_navigation_left_define_regions() {
   $region['regions_elms_navigation_left'] = array(
-    'title' => 'ELMS Nav Left',
+    'title' => 'ELMS navigation left',
     'js' => drupal_get_path('module', 'elms_navigation_left') .'/elms_navigation_left.js',
     'css' => drupal_get_path('module', 'elms_navigation_left') .'/elms_navigation_left.css',
     'render_callback' => '_elms_navigation_left_render_region',
@@ -47,13 +47,12 @@ function elms_navigation_left_init() {
  */
 function elms_navigation_left_form_alter(&$form, &$form_state, $form_id) {
   // make the masquerade block display differently in the left hand menu to fit one line
-
   if ($form_id == 'masquerade_block_1' && isset($form['masquerade_user_field'])) {
     // remove message
     unset($form['masquerade_desc']);
     // help it fit in the left collapse
     $form['masquerade_user_field']['#size'] = 8;
-  $form['#prefix'] .='<li class="leaf click_handler"><a name="masquerade" title="Open to Masquerade"></a></li>';
+    $form['#prefix'] .= '<li class="leaf click_handler"><a name="masquerade" title="Open to Masquerade"></a></li>';
   }
 }
 
