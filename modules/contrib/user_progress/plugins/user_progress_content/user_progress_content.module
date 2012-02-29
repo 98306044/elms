@@ -9,8 +9,8 @@ function user_progress_content_init() {
   $node = menu_get_object();
   // have to be in a group currently AND have access AND be on a node
   if (user_access('set up_content progress record') && isset($node->nid) && arg(2) == NULL) {
-    // special check for organic groups
-    if (module_exists('og')) {
+    // more efficient way of verifying that og is enabled
+    if (function_exists('og_get_group_context')) {
       $group = og_get_group_context();
       // have to be in a group currently AND have access AND be on a node
       if (isset($group->nid)) {

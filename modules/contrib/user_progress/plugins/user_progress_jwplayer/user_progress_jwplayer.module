@@ -8,7 +8,8 @@ function user_progress_jwplayer_init() {
   $node = menu_get_object();
   // have to be in a group currently AND jwplayer be told to track
   if (user_access('set up_jwplayer progress record') && isset($node->nid)) {
-    if (module_exists('og')) {
+    // more efficient way of verifying that og is enabled
+    if (function_exists('og_get_group_context')) {
       $group = og_get_group_context();
       // have to be in a group currently AND jwplayer be told to track
       if (isset($group->nid)) {
