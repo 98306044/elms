@@ -44,12 +44,12 @@ function _elms_icms_student_page() {
  * Helper page for marketing funnel page for a parent.
  */
 function _elms_icms_marketing_page() {
-  return '';
+  return 'This is the marketing page';
 }
 
 /**
  * Helper page for instructor funnel page for a parent.
  */
 function _elms_icms_instructor_page() {
-  return '';
+  return 'This content is for instructors';
 }

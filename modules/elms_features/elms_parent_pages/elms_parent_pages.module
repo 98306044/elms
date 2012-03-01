@@ -26,8 +26,34 @@ function elms_parent_pages_init() {
 		if (isset($node->nid) && $node->type == ELMS_ROOT_TYPE) {
 		  // build a list of all parent pages
 		  $parent_pages = _elms_parent_pages_list_pages();
-		  // see if this array key exists
-		  dpm($parent_pages);
+		  // see if they have access to any of these pages
+			$view_pages = array();
+		  foreach ($parent_pages as $key => $page) {
+        if (user_access('view '. ELMS_ROOT_TYPE .' '. $key .' page')) {
+					$view_pages[] = $key;
+				}
+			}
+			// see how many pages they can view
+			switch (count($view_pages)) {
+				case 0:
+				  // something potentially went wrong in permission config, do nothing
+				break;
+				case 1:
+				  // they only have access to 1 page, push them to it
+					drupal_goto('node/'. $node->nid .'/view/'. $view_pages[0]);
+				break;
+				default:
+				  // they have access to multiple pages, push them to the default
+					$defaultpage = variable_get('elms_parent_pages_default', '');
+					// if a default was set we push there as priority, assuming access
+					if (in_array($defaultpage, $view_pages)) {
+						drupal_goto('node/'. $node->nid .'/view/'. $defaultpage);
+					}
+					else {
+						// default failed yet can access multiple pages, push to first one
+						drupal_goto('node/'. $node->nid .'/view/'. $view_pages[0]);
+					}
+			}
 		}
 	}
 }
@@ -73,6 +99,15 @@ function elms_parent_pages_menu() {
 			$items['node/%node/view/'. $key]['file path'] = $page['file path'];
 		}
   }
+	// admin settings
+	$items['admin/elms/parent_pages'] = array(
+		'title' => 'Parent Pages',
+		'description' => 'System wide parent pages settings',
+		'page callback' => 'drupal_get_form',
+    'page arguments' => array('_elms_parent_pages_settings'),
+		'access arguments' => array('administer elms configuration'),
+		'file' => 'elms_parent_pages.admin.inc',
+	);
   return $items;
 }
 
