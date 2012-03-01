@@ -12,7 +12,7 @@
 
   <div id='branding' class='clear-block'>
     <div class='breadcrumb clear-block'><?php print $breadcrumb ?></div>
-    <?php //if ($user_links) print theme('links', $user_links) ?>
+    <?php if ($user_links) print theme('links', $user_links) ?>
   </div>
 
   <div id='page-title' class='clear-block'>

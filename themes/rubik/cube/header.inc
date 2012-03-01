@@ -25,7 +25,7 @@
       </h1>
     </div>
     <div id='branding'><div class='limiter clear-block'>
-      <?php //if ($user_links) print theme('links', $user_links) ?>
+      <?php if ($user_links) print theme('links', $user_links) ?>
       <div class='breadcrumb clear-block'><?php print $breadcrumb ?></div>
     </div></div>
   </div>
