@@ -3,7 +3,7 @@
  * @file
  * ICMS page functions
  *
- * Establish the frontpage for an icms based system
+ * Establish the pages for an icms based system
  */
 /**
  * Redirect to the book root for this course
@@ -25,4 +25,31 @@ function _elms_icms_root() {
   // if it didn't find anything go to the course node
   drupal_goto('node/'. $group->nid);
   return 1;
+}
+
+/**
+ * Helper page for student funnel page for a parent.
+ */
+function _elms_icms_student_page() {
+  return '<ol>
+  <li>Read the help documents</li>
+  <li>Get your welcome letter</li>
+  <li>Get your activation code</li>
+  <li>Do things</li>
+  <li>Check below</li>
+  </ol>';
+}
+
+/**
+ * Helper page for marketing funnel page for a parent.
+ */
+function _elms_icms_marketing_page() {
+  return '';
+}
+
+/**
+ * Helper page for instructor funnel page for a parent.
+ */
+function _elms_icms_instructor_page() {
+  return '';
 }

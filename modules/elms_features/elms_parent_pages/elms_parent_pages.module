@@ -1,10 +1,47 @@
 <?php
 
 /**
+ * Helper function to build out available pages to parent object().
+ */
+function _elms_parent_pages_list_pages() {
+	// hook in all providers of parent pages
+	$list = module_invoke_all('elms_add_parent_pages');
+	drupal_alter('elms_add_parent_pages', $list);
+	// make sure we returned data
+	if (is_array($list) && count($list) > 0) {
+    return $list;
+	}
+	return FALSE;
+}
+
+/**
+ * Implementation of hook_init().
+ */
+function elms_parent_pages_init() {
+  // if we are on a node we can start checking for it
+	if (arg(0) == 'node' && arg(2) == '') {
+		// load node from menu object cache
+		$node = menu_get_object();
+		// has an id and check for type parent
+		if (isset($node->nid) && $node->type == ELMS_ROOT_TYPE) {
+		  // build a list of all parent pages
+		  $parent_pages = _elms_parent_pages_list_pages();
+		  // see if this array key exists
+		  dpm($parent_pages);
+		}
+	}
+}
+
+/**
  * Implementation of hook_perm().
  */
 function elms_parent_pages_perm() {
-  return array('view parent student page', 'view parent marketing page', 'view parent instructor page');
+  $pages = _elms_parent_pages_list_pages();
+  // generate a list of parent pages and the permissions for them
+  foreach ($pages as $key => $page) {
+    $perms[] = 'view '. ELMS_ROOT_TYPE .' '. $key .' page';
+  }
+  return $perms;
 }
 
 
@@ -13,36 +50,29 @@ function elms_parent_pages_perm() {
  */
 function elms_parent_pages_menu() {
   $items = array();
-  $items['node/%node/view/student'] = array(
-    'title callback' => '_elms_parent_pages_page_title',
-    'title arguments' => array(1, 'Student'),
-    'description' => 'Funnel page to get students started with a parent',
-    'page callback' => '_elms_parent_pages_student',
-    'access arguments' => array(1, 'student'),
-    'access callback' => '_elms_parent_pages_access_check',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => -9,
-  );
-  $items['node/%node/view/instructor'] = array(
-    'title callback' => '_elms_parent_pages_page_title',
-    'title arguments' => array(1, 'Instructor'),
-    'description' => 'Funnel page to get instructors started with a parent',
-    'page callback' => '_elms_parent_pages_instructor',
-    'access arguments' => array(1, 'instructor'),
-    'access callback' => '_elms_parent_pages_access_check',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => -8,
-  );
-  $items['node/%node/view/marketing'] = array(
-    'title callback' => '_elms_parent_pages_page_title',
-    'title arguments' => array(1, 'Marketing'),
-    'description' => 'Marketing page for the parent',
-    'page callback' => '_elms_parent_pages_marketing',
-    'access arguments' => array(1, 'marketing'),
-    'access callback' => '_elms_parent_pages_access_check',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => -7,
-  );
+	$pages = _elms_parent_pages_list_pages();
+  // loop through and build the menu based on providers we've found
+  foreach ($pages as $key => $page) {
+    $items['node/%node/view/'. $key] = array(
+      'title' => 'Parent Page',
+      'title callback' => '_elms_parent_pages_page_title',
+      'title arguments' => array(1, $page['title']),
+      'description' => $page['description'],
+      'page callback' => $page['callback'],
+      'access arguments' => array(1, $key),
+			'access callback' => '_elms_parent_pages_access_check',
+      'type' => MENU_LOCAL_TASK,
+    );
+		// weight is not required in API
+		if (isset($page['weight'])) {
+			$items['node/%node/view/'. $key]['weight'] = $page['weight'];
+		}
+		// file is not required in API
+		if (isset($page['file']) && isset($page['file path'])) {
+			$items['node/%node/view/'. $key]['file'] = $page['file'];
+			$items['node/%node/view/'. $key]['file path'] = $page['file path'];
+		}
+  }
   return $items;
 }
 
@@ -54,46 +84,12 @@ function _elms_parent_pages_page_title($node, $page_type) {
 }
 
 /**
- * Helper page for student funnel page for a parent.
+ * Access verification for a page type
  */
 function _elms_parent_pages_access_check($node, $page_type) {
   // check that user can access node, type matches and user can access this page
-  if (node_access('view', $node) && $node->type == ELMS_ROOT_TYPE && user_access('view parent '. $page_type .' page')) {
+  if ($node->type == ELMS_ROOT_TYPE && user_access('view '. ELMS_ROOT_TYPE .' '. $page_type .' page') && node_access('view', $node)) {
     return 1;
   }
   return 0;
-}
-
-/**
- * Helper page for student funnel page for a parent.
- */
-function _elms_parent_pages_student() {
-  return '<ol>
-  <li>Read the help documents</li>
-  <li>Get your welcome letter</li>
-  <li>Get your activation code</li>
-  <li>Do things</li>
-  <li>Check below</li>
-  </ol>';
-}
-
-/**
- * Helper page for marketing funnel page for a parent.
- */
-function _elms_parent_pages_marketing() {
-  return '';
-}
-
-/**
- * Helper page for instructor funnel page for a parent.
- */
-function _elms_parent_pages_instructor() {
-  return '';
-}
-
-/**
- * Helper page for sites management page for a parent.
- */
-function _elms_parent_pages_sites() {
-  return '';
 }
