@@ -1,0 +1,7 @@
+name = "User progress analytics pack"
+description = "Helps track user actions like page and video views if jwplayer is installed"
+type = "add-on"
+; User Progress
+dependencies[] = "user_progress"
+dependencies[] = "user_progress_content"
+dependencies[] = "user_progress_requirement_dashboard"
