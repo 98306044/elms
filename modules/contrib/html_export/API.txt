@@ -1,0 +1,8 @@
+hook_html_export_export_paths
+return an array of paths that you want to export
+
+hook_html_export_export_paths_alter
+alter the paths created by other projects
+
+hook_html_export_data_alter
+alter the data of a page before it is saved to html

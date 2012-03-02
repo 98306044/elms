@@ -1,0 +1,96 @@
+<?php 
+
+define('HTML_EXPORT_PROCESS_LIMIT', 15);
+
+// ELMS: HTML Export - Export drupal paths to HTML
+// Copyright (C) 2008-2012  The Pennsylvania State University
+//
+// Bryan Ollendyke
+// bto108@psu.edu
+//
+// Keith D. Bailey
+// kdb163@psu.edu
+//
+// 12 Borland
+// University Park, PA 16802
+
+/**
+ * Implementation of hook_help().
+ */
+function html_export_help($section) {
+  switch ($section) {
+    case 'admin':
+      return t("HTML Export lets you export drupal paths to static HTML.");
+  }
+}
+
+/**
+ * Implementation of hook_perms().
+ */
+function html_export_perms() {
+  return array('use html export');
+}
+
+/**
+ * Implementation of hook_menu().
+ */
+function html_export_menu() {
+  $items = array();
+  $items['html_export'] = array(
+    'title' => 'HTML Export',
+    'description' => 'Export paths to HTML files',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('_html_export_job_page'),
+    'access arguments' => array('use html export'),
+    'file' => 'html_export.pages.inc',
+  );
+  $items['admin/settings/html_export'] = array(
+    'title' => 'HTML Export',
+    'description' => 'Configure how HTML is exported',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('_html_export_settings'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'html_export.admin.inc',
+  );
+  return $items;
+}
+
+/**
+ * Implementation of hook_html_export_export_paths().
+ * @todo: replace this with form driven defaults
+ */
+function html_export_html_export_export_paths() {
+  $paths = array();
+  $result = db_query(db_rewrite_sql("SELECT nid FROM {node} as n"));
+  while ($val = db_fetch_array($result)) {
+    $paths[] = 'node/'. $val['nid'];
+  }
+  return $paths;
+}
+
+/**
+ * Implementation of hook_html_export_data_alter().
+ */
+function html_export_html_export_data_alter(&$data, $paths, $active_path_count) {
+  // remove base_path so that everything is relative to root
+	// @todo: add intelligent preg replace logic
+	$sub = '';
+	// we need to retrace paths to account for nesting
+	$tmp = explode('/', $paths[$active_path_count]);
+	foreach ($tmp as $dir) {
+		$sub .= '../';
+	}
+	// can't do this if its just a backslash
+	if (base_path() != '/') {
+	  $data = str_replace(base_path(), $sub, $data);
+	}
+	// process all paths we were given to append .html
+	foreach ($paths as $path) {
+		// rewrite aliases to non-aliases
+		$alias = drupal_get_path_alias($path);
+		if ($alias != $path) {
+      $data = str_replace($alias, $path .'/index.html', $data);
+		}
+		$data = str_replace($path, $path .'/index.html', $data);
+	}
+}

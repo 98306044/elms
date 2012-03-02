@@ -1,0 +1,4 @@
+name = "HTML Export"
+description = "This allows you to export drupal paths to a HTML package."
+core = "6.x"
+project = "html_export"
