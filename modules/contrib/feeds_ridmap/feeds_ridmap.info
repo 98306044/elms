@@ -4,3 +4,4 @@ description = This module provides targets for Feeds module user import so that 
 package = Feeds
 dependencies[] = feeds
 project = "feeds_ridmap"
+core = "6.x"

@@ -3,3 +3,4 @@ description = Usability improvements to the core-optional Book module that allow
 dependencies[] = book
 package = Outline Designer
 project = "outline_designer"
+core = "6.x"

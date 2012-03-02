@@ -4,3 +4,4 @@ description = "Context condition: Show when site variables equal a defined value
 package = "Context"
 project = "context_var"
 dependencies[] = "context"
+core = "6.x"
