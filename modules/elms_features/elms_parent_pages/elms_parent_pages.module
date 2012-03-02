@@ -19,7 +19,7 @@ function _elms_parent_pages_list_pages() {
  */
 function elms_parent_pages_init() {
   // if we are on a node we can start checking for it
-	if (arg(0) == 'node' && arg(2) == '') {
+	if (arg(0) == 'node' && (arg(2) == '' || (arg(2) == 'view' && arg(3) == ''))) {
 		// load node from menu object cache
 		$node = menu_get_object();
 		// has an id and check for type parent
