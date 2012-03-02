@@ -399,7 +399,8 @@ function _elms_installer_configure_system_cleanup(&$context) {
   // disable system themes by default
   db_query("UPDATE {system} SET status = 0 WHERE type = 'theme' and name ='%s'", 'tao');
   db_query("UPDATE {system} SET status = 0 WHERE type = 'theme' and name ='%s'", 'rubik');
-  variable_set('theme_default', 'cube');
+	// enable elms specific version of cube
+  variable_set('theme_default', 'elms_cube');
   // In Aegir install processes, we need to init strongarm manually as a
   // separate page load isn't available to do this for us.
   if (function_exists('strongarm_init')) {
