@@ -1,6 +1,6 @@
-<?php 
+<?php
 
-define('HTML_EXPORT_PROCESS_LIMIT', 20);
+define('HTML_EXPORT_PROCESS_LIMIT', 10);
 
 // ELMS: HTML Export - Export drupal paths to HTML
 // Copyright (C) 2008-2012  The Pennsylvania State University
@@ -37,7 +37,7 @@ function html_export_perms() {
 function html_export_menu() {
   $items = array();
   $items['html_export'] = array(
-    'title' => 'HTML Export',
+    'title' => 'HTML export',
     'description' => 'Export paths to HTML files',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('_html_export_job_page'),
@@ -45,7 +45,7 @@ function html_export_menu() {
     'file' => 'html_export.pages.inc',
   );
   $items['admin/settings/html_export'] = array(
-    'title' => 'HTML Export',
+    'title' => 'HTML export',
     'description' => 'Configure how HTML is exported',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('_html_export_settings'),
@@ -59,38 +59,38 @@ function html_export_menu() {
  * Implementation of hook_html_export_add_path_provider().
  */
 function html_export_html_export_add_path_provider() {
-	$items = array(
-		'core_all_nodes' => array(
-			'title' => 'All nodes you have access to',
-			'callback' => '_html_export_all_nodes',
-		),
-		'core_all_paths' => array(
-			'title' => 'All menu paths in the system',
-			'callback' => '_html_export_all_menu_links',
-		),
-	);
-	// if views is active then add in those paths
-	if (module_exists('views')) {
-		$items['views_all_paths'] = array(
-		  'title' => 'Select all paths related to views',
-			'callback' => '_html_export_all_views_paths',
-		);
-	}
-	return $items;
+  $items = array(
+    'core_all_nodes' => array(
+      'title' => 'All nodes you have access to',
+      'callback' => '_html_export_all_nodes',
+    ),
+    'core_all_paths' => array(
+      'title' => 'All menu paths in the system',
+      'callback' => '_html_export_all_menu_links',
+    ),
+  );
+  // if views is active then add in those paths
+  if (module_exists('views')) {
+    $items['views_all_paths'] = array(
+      'title' => 'Select all paths related to views',
+      'callback' => '_html_export_all_views_paths',
+    );
+  }
+  return $items;
 }
 
 /**
  * Callback for all_views_paths provider.
  */
 function _html_export_all_views_paths() {
-	$paths = array();
-	// select the pages for all registered views
+  $paths = array();
+  // select the pages for all registered views
   $result = db_query("SELECT path FROM {menu_router} WHERE page_callback='%s'", 'views_page');
   while ($val = db_fetch_array($result)) {
     // ensure that % isn't taking context into account w/ the path
-		if (strpos($val['path'], '%') === FALSE) {
-		  $paths[] = $val['path'];
-		}
+    if (strpos($val['path'], '%') === FALSE) {
+      $paths[] = $val['path'];
+    }
   }
   return $paths;
 }
@@ -99,13 +99,13 @@ function _html_export_all_views_paths() {
  * Callback for core_all_paths provider.
  */
 function _html_export_all_menu_links() {
-	$paths = array();
+  $paths = array();
   $result = db_query("SELECT link_path FROM {menu_links}");
   while ($val = db_fetch_array($result)) {
     // ensure that % isn't taking context into account w/ the path
-		if (strpos($val['link_path'], '%') === FALSE) {
-		  $paths[] = $val['link_path'];
-		}
+    if (strpos($val['link_path'], '%') === FALSE) {
+      $paths[] = $val['link_path'];
+    }
   }
   return $paths;
 }
@@ -114,9 +114,9 @@ function _html_export_all_menu_links() {
  * Callback for og_active_paths provider.
  */
 function _html_export_active_og_nodes() {
-	$paths = array();
-	$group = og_get_group_context();
-	// grab all nodes the user has access to
+  $paths = array();
+  $group = og_get_group_context();
+  // grab all nodes the user has access to
   $result = db_query(db_rewrite_sql("SELECT n.nid FROM {node} AS n JOIN {og_ancestry} AS oga ON n.nid=oga.nid WHERE oga.group_nid=%d"), $group->nid);
   while ($val = db_fetch_array($result)) {
     $paths[] = 'node/'. $val['nid'];
@@ -128,8 +128,8 @@ function _html_export_active_og_nodes() {
  * Callback for core_all_nodes provider.
  */
 function _html_export_all_nodes() {
-	$paths = array();
-	// grab all nodes the user has access to
+  $paths = array();
+  // grab all nodes the user has access to
   $result = db_query(db_rewrite_sql("SELECT nid FROM {node} as n"));
   while ($val = db_fetch_array($result)) {
     $paths[] = 'node/'. $val['nid'];
@@ -142,58 +142,58 @@ function _html_export_all_nodes() {
  */
 function html_export_html_export_data_alter(&$data, $paths, $active_path_count, $dom_remove) {
   // advanced dom removal routine
-	// Create a DOM object
-	$html_obj = new simple_html_dom();
-	// Load HTML from a string
-	$html_obj->load($data);
-	// remove the selectors
-	foreach ($dom_remove as $find) {
-		// find the selectors in the document
-		$objs = $html_obj->find($find);
-		// account for ability to find multiple objects
-		foreach ($objs as $obj) {
-	    $obj->outertext = '';
-		}
-	}
-	// remove base_path so that everything is relative to root
-	$sub = '';
-	// we need to retrace paths to account for nesting
-	$tmp = explode('/', $paths[$active_path_count]);
-	foreach ($tmp as $dir) {
-		$sub .= '../';
-	}
-	$resources = array('link', 'img', 'script', 'a', 'object');
-	// repair paths for these resources
-	foreach ($resources as $find) {
-		// find the selectors in the document
-		$objs = $html_obj->find($find);
-		// account for ability to find multiple objects
-		foreach ($objs as $obj) {
-	    if (isset($obj->href)) {
-				//only replace first occurance as this will be base path
-				$pos = strpos($obj->href, base_path());
-				if ($pos !== false) {
-				  $obj->href = substr_replace($obj->href, $sub, $pos, strlen(base_path()));
-				}
-			}
-			if (isset($obj->src)) {
-				//only replace first occurance as this will be base path
-				$pos = strpos($obj->src, base_path());
-				if ($pos !== false) {
-				  $obj->src = substr_replace($obj->src, $sub, $pos, strlen(base_path()));
-				}
-			}
-		}
-	}
-	// write all these changes back into the data string
-	$data = $html_obj->save();
-	// process all paths we were given to append .html
-	foreach ($paths as $path) {
-		// rewrite aliases to non-aliases
-		$alias = drupal_get_path_alias($path);
-		if ($alias != $path) {
+  // Create a DOM object
+  $html_obj = new simple_html_dom();
+  // Load HTML from a string
+  $html_obj->load($data);
+  // remove the selectors
+  foreach ($dom_remove as $find) {
+    // find the selectors in the document
+    $objs = $html_obj->find($find);
+    // account for ability to find multiple objects
+    foreach ($objs as $obj) {
+      $obj->outertext = '';
+    }
+  }
+  // remove base_path so that everything is relative to root
+  $sub = '';
+  // we need to retrace paths to account for nesting
+  $tmp = explode('/', $paths[$active_path_count]);
+  foreach ($tmp as $dir) {
+    $sub .= '../';
+  }
+  $resources = array('link', 'img', 'script', 'a', 'object');
+  // repair paths for these resources
+  foreach ($resources as $find) {
+    // find the selectors in the document
+    $objs = $html_obj->find($find);
+    // account for ability to find multiple objects
+    foreach ($objs as $obj) {
+      if (isset($obj->href)) {
+        // only replace first occurance as this will be base path
+        $pos = strpos($obj->href, base_path());
+        if ($pos !== FALSE) {
+          $obj->href = substr_replace($obj->href, $sub, $pos, drupal_strlen(base_path()));
+        }
+      }
+      if (isset($obj->src)) {
+        // only replace first occurance as this will be base path
+        $pos = strpos($obj->src, base_path());
+        if ($pos !== FALSE) {
+          $obj->src = substr_replace($obj->src, $sub, $pos, drupal_strlen(base_path()));
+        }
+      }
+    }
+  }
+  // write all these changes back into the data string
+  $data = $html_obj->save();
+  // process all paths we were given to append .html
+  foreach ($paths as $path) {
+    // rewrite aliases to non-aliases
+    $alias = drupal_get_path_alias($path);
+    if ($alias != $path) {
       $data = str_replace($alias, $path .'/index.html', $data);
-		}
-		$data = str_replace($path, $path .'/index.html', $data);
-	}
+    }
+    $data = str_replace($path, $path .'/index.html', $data);
+  }
 }
