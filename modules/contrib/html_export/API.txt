@@ -6,3 +6,5 @@ alter the paths created by other projects
 
 hook_html_export_data_alter
 alter the data of a page before it is saved to html
+
+There is also a global variable set when HTML publishing starts called $GLOBALS['html_export_active'] that can be used as other developers wish to know this batch is running.
