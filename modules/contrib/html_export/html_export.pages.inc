@@ -5,9 +5,24 @@
  */
 function _html_export_job_page() {
   $form = array();
+	$path_provders = module_invoke_all('html_export_add_path_provider');
+  // allow projects to alter list, critical for groups
+  drupal_alter('html_export_add_path_provider', $path_provders);
+	// convert providers to options array
+	foreach ($path_provders as $key => $provider) {
+		$options[$key] = t($provider['title']);
+	}
+	// build the form
+	$form['path_selector'] = array(
+	  '#type' => 'select',
+		'#multiple' => TRUE,
+		'#title' => t('Path selectors'),
+		'#options' => $options,
+		'#required' => TRUE,
+	);
   $form['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Render to HTML'),
+    '#value' => t('Render to html'),
   );
   return $form;
 }
@@ -17,9 +32,18 @@ function _html_export_job_page() {
  */
 function _html_export_job_page_submit($form, &$form_state) {
   // invoke the hooks that will provide us with a list of paths
-  $paths = module_invoke_all('html_export_export_paths');
+  $path_provders = module_invoke_all('html_export_add_path_provider');
   // allow projects to alter list, critical for groups
-  drupal_alter('html_export_export_paths', $paths);
+  drupal_alter('html_export_add_path_provider', $path_provders);
+	// @todo: select the specific provider selected in the pervious form and run its callback
+	// need to document the API too
+	$paths = array();
+	$selectors = $form_state['values']['path_selector'];
+	foreach ($selectors as $selector) {
+		$tmp = call_user_func_array($path_provders[$selector]['callback'], array());
+		$paths = array_merge($paths, $tmp);
+	}
+	return 1;
   // create a folders
   $dir = file_create_path(file_directory_path() . '/html_export');
   file_check_directory($dir, 1);
@@ -34,10 +58,10 @@ function _html_export_job_page_submit($form, &$form_state) {
     'operations' => array(
       array('html_export_render_pages', array($paths, $export_path)),
       array('_html_export_copy_files', array($base .'sites', $export_path . '/sites')),
-    array('_html_export_copy_files', array($base .'modules', $export_path . '/modules')),
-    array('_html_export_copy_files', array($base .'themes', $export_path . '/themes')),
-    array('_html_export_copy_files', array($base .'misc', $export_path . '/misc')),
-		array('_html_export_copy_files', array($base .'profiles', $export_path . '/profiles')),
+      array('_html_export_copy_files', array($base .'modules', $export_path . '/modules')),
+      array('_html_export_copy_files', array($base .'themes', $export_path . '/themes')),
+      array('_html_export_copy_files', array($base .'misc', $export_path . '/misc')),
+		  array('_html_export_copy_files', array($base .'profiles', $export_path . '/profiles')),
       ),
     'finished' => 'html_export_finished',
     'title' => t('Processing HTML Export'),

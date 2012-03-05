@@ -1,6 +1,6 @@
 <?php 
 
-define('HTML_EXPORT_PROCESS_LIMIT', 15);
+define('HTML_EXPORT_PROCESS_LIMIT', 20);
 
 // ELMS: HTML Export - Export drupal paths to HTML
 // Copyright (C) 2008-2012  The Pennsylvania State University
@@ -56,11 +56,66 @@ function html_export_menu() {
 }
 
 /**
- * Implementation of hook_html_export_export_paths().
- * @todo: replace this with form driven defaults
+ * Implementation of hook_html_export_add_path_provider().
  */
-function html_export_html_export_export_paths() {
-  $paths = array();
+function html_export_html_export_add_path_provider() {
+  $items = array(
+	  'core_all_nodes' => array(
+		  'title' => 'All nodes you have access to',
+			'callback' => '_html_export_all_nodes',
+		),
+		'core_all_paths' => array(
+		  'title' => 'All menu paths in the system',
+			'callback' => '_html_export_all_menu_links',
+		),
+	);
+	// if views is active then add in those paths
+	if (module_exists('views')) {
+		$items['views_all_paths'] = array(
+		  'title' => 'Select all paths related to views',
+			'callback' => '_html_export_all_views_paths',
+		);
+	}
+	return $items;
+}
+
+/**
+ * Callback for all_views_paths provider.
+ */
+function _html_export_all_views_paths() {
+	$paths = array();
+	// select the pages for all registered views
+  $result = db_query("SELECT path FROM {menu_router} WHERE page_callback='%s'", 'views_page');
+  while ($val = db_fetch_array($result)) {
+    // ensure that % isn't taking context into account w/ the path
+		if (strpos($val['path'], '%') === FALSE) {
+		  $paths[] = $val['path'];
+		}
+  }
+  return $paths;
+}
+
+/**
+ * Callback for core_all_paths provider.
+ */
+function _html_export_all_menu_links() {
+	$paths = array();
+  $result = db_query("SELECT link_path FROM {menu_links}");
+  while ($val = db_fetch_array($result)) {
+    // ensure that % isn't taking context into account w/ the path
+		if (strpos($val['link_path'], '%') === FALSE) {
+		  $paths[] = $val['link_path'];
+		}
+  }
+  return $paths;
+}
+
+/**
+ * Callback for core_all_nodes provider.
+ */
+function _html_export_all_nodes() {
+	$paths = array();
+	// grab all nodes the user has access to
   $result = db_query(db_rewrite_sql("SELECT nid FROM {node} as n"));
   while ($val = db_fetch_array($result)) {
     $paths[] = 'node/'. $val['nid'];
@@ -81,6 +136,7 @@ function html_export_html_export_data_alter(&$data, $paths, $active_path_count) 
 		$sub .= '../';
 	}
 	// can't do this if its just a backslash
+	// @todo: figure out how to account for base_path of /
 	if (base_path() != '/') {
 	  $data = str_replace(base_path(), $sub, $data);
 	}
