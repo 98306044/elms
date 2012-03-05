@@ -1,10 +1,28 @@
-hook_html_export_export_paths
-return an array of paths that you want to export
+/**
+ * Implementation of hook_html_export_add_path_provider().
+ */
+function hook_html_export_add_path_provider() {
+  $items = array();
+  $items['machine_name'] = array(
+    'title' => 'Display name in select', // required
+    'callback' => 'callback_function', // required
+    'arg' => $variable, // optional argument to pass function
+  );
+  return $items;
+}
 
-hook_html_export_export_paths_alter
-alter the paths created by other projects
+/**
+ * Implementation of hook_html_export_add_path_provider_alter().
+ */
+function hook_html_export_add_path_provider_alter($providers) {
+  // providers is a list of all path selection definitions
+}
 
-hook_html_export_data_alter
-alter the data of a page before it is saved to html
+/**
+ * Implementation of hook_html_export_data_alter().
+ */
+function hook_html_export_data_alter(&$data, $paths, $active_path_count, $dom_remove) {
+  // data is the html of the page to work with
+}
 
 There is also a global variable set when HTML publishing starts called $GLOBALS['html_export_active'] that can be used as other developers wish to know this batch is running.

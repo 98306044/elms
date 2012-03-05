@@ -38,7 +38,7 @@ function html_export_og_html_export_add_path_provider_alter($providers) {
     unset($providers['core_all_paths']);
     // alter type exports to account for og
     foreach (node_get_types() as $key => $type) {
-      $items['core_node_types_'. $key]['callback'] = '_html_export_node_type_og';
+      $providers['core_node_types_'. $key]['callback'] = '_html_export_node_type_og';
     }
   }
 }
