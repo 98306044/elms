@@ -155,20 +155,38 @@ function html_export_html_export_data_alter(&$data, $paths, $active_path_count, 
 	    $obj->outertext = '';
 		}
 	}
-	$data = $html_obj->save();
 	// remove base_path so that everything is relative to root
-	// @todo: add intelligent preg replace logic
 	$sub = '';
 	// we need to retrace paths to account for nesting
 	$tmp = explode('/', $paths[$active_path_count]);
 	foreach ($tmp as $dir) {
 		$sub .= '../';
 	}
-	// can't do this if its just a backslash
-	// @todo: figure out how to account for base_path of /
-	if (base_path() != '/') {
-	  $data = str_replace(base_path(), $sub, $data);
+	$resources = array('link', 'img', 'script', 'a', 'object');
+	// repair paths for these resources
+	foreach ($resources as $find) {
+		// find the selectors in the document
+		$objs = $html_obj->find($find);
+		// account for ability to find multiple objects
+		foreach ($objs as $obj) {
+	    if (isset($obj->href)) {
+				//only replace first occurance as this will be base path
+				$pos = strpos($obj->href, base_path());
+				if ($pos !== false) {
+				  $obj->href = substr_replace($obj->href, $sub, $pos, strlen(base_path()));
+				}
+			}
+			if (isset($obj->src)) {
+				//only replace first occurance as this will be base path
+				$pos = strpos($obj->src, base_path());
+				if ($pos !== false) {
+				  $obj->src = substr_replace($obj->src, $sub, $pos, strlen(base_path()));
+				}
+			}
+		}
 	}
+	// write all these changes back into the data string
+	$data = $html_obj->save();
 	// process all paths we were given to append .html
 	foreach ($paths as $path) {
 		// rewrite aliases to non-aliases

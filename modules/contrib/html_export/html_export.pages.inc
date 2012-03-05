@@ -41,8 +41,7 @@ function _html_export_job_page_submit($form, &$form_state) {
   $path_provders = module_invoke_all('html_export_add_path_provider');
   // allow projects to alter list
   drupal_alter('html_export_add_path_provider', $path_provders);
-	// @todo: select the specific provider selected in the pervious form and run its callback
-	// need to document the API too
+	// use the selector from the previous form as to what paths to gather
 	$paths = array();
 	$selectors = $form_state['values']['path_selector'];
 	foreach ($selectors as $selector) {
@@ -102,7 +101,7 @@ function html_export_render_pages($paths, $export_path, $dom_remove, &$context) 
     // issue all calls
     $return = menu_execute_active_handler($paths[$active_path_count]);
 		// @todo: need to activate a menu or collapse/expand is inaccurate
-		// menu_tree_all_data();
+		//menu_tree_all_data();
     // render as a page
     $data = theme('page', $return);
 		// allow projects to process page data
