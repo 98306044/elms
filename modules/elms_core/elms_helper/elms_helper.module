@@ -53,9 +53,6 @@ function elms_helper_theme_registry_alter(&$vars) {
  */
 function elms_helper_init() {
   global $user;
-  if (arg(2) == 'html_export' || arg(2) == 'check_links') {
-    drupal_set_message(t('This is still in active development / future planned functionality.'), 'warning');
-  }
   drupal_add_css(drupal_get_path('module', 'elms_helper') .'/css/elms_helper.css', 'theme');
   drupal_add_css(drupal_get_path('module', 'jquery_ui') .'/jquery.ui/themes/redmond/redmond.css', 'module');
   // account for possible og theme swap when using the outline designer
