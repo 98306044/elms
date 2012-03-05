@@ -152,9 +152,10 @@ function html_export_html_export_data_alter(&$data, $paths, $active_path_count, 
 		$objs = $html_obj->find($find);
 		// account for ability to find multiple objects
 		foreach ($objs as $obj) {
-	    $data = str_replace($obj->outertext, '', $data);
+	    $obj->outertext = '';
 		}
 	}
+	$data = $html_obj->save();
 	// remove base_path so that everything is relative to root
 	// @todo: add intelligent preg replace logic
 	$sub = '';

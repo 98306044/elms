@@ -20,11 +20,11 @@ function _html_export_job_page() {
 		'#options' => $options,
 		'#required' => TRUE,
 	);
-	$form['dom_remove'] = array(
+	$form['html_export_dom_remove'] = array(
 	  '#type' => 'textfield',
 		'#title' => t('Advanced dom removal'),
 		'#description' => t("Supply a css style selector to target the removal of. This is especially useful for removing things like the admin toolbar, tabs, or other elements you don't want to have exported. Split selectors with a comma."),
-		'#default_value' => 'div[id=admin-toolbar]',
+		'#default_value' => variable_get('html_export_dom_remove', ''),
 	);
   $form['submit'] = array(
     '#type' => 'submit',
@@ -50,7 +50,7 @@ function _html_export_job_page_submit($form, &$form_state) {
 		$paths = array_merge($paths, $tmp);
 	}
 	// bring along advanced dom removal on publish, accounting for multiple
-	$dom_remove = explode(',', $form_state['values']['dom_remove']);
+	$dom_remove = explode(',', $form_state['values']['html_export_dom_remove']);
 	
   // create a folders
   $dir = file_create_path(file_directory_path() . '/html_export');
@@ -101,6 +101,8 @@ function html_export_render_pages($paths, $export_path, $dom_remove, &$context) 
     $tmpmsg = drupal_get_messages();
     // issue all calls
     $return = menu_execute_active_handler($paths[$active_path_count]);
+		// @todo: need to activate a menu or collapse/expand is inaccurate
+		// menu_tree_all_data();
     // render as a page
     $data = theme('page', $return);
 		// allow projects to process page data
@@ -173,7 +175,7 @@ function _html_export_copy_files($source, $dest, &$context) {
 function html_export_finished($success, $results, $operations) {
   if ($success) {
     // Here we do something meaningful with the results.
-    $message = (count($results)-1) .' html pages created. '. l(t('Click to access the export'), $results[0], array('absolute' => TRUE));
+    $message = (count($results)-1) .' html pages created. <a href="'. url($results[0], array('absolute' => TRUE, 'purl' => array('disabled' => TRUE))) .'">Click to access export</a>';
   }
   else {
     // An error occurred.
