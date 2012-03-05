@@ -20,6 +20,12 @@ function _html_export_job_page() {
 		'#options' => $options,
 		'#required' => TRUE,
 	);
+	$form['dom_remove'] = array(
+	  '#type' => 'textfield',
+		'#title' => t('Advanced dom removal'),
+		'#description' => t("Supply a css style selector to target the removal of. This is especially useful for removing things like the admin toolbar, tabs, or other elements you don't want to have exported. Split selectors with a comma."),
+		'#default_value' => 'div[id=admin-toolbar]',
+	);
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Render to html'),
@@ -43,6 +49,9 @@ function _html_export_job_page_submit($form, &$form_state) {
 		$tmp = call_user_func_array($path_provders[$selector]['callback'], array());
 		$paths = array_merge($paths, $tmp);
 	}
+	// bring along advanced dom removal on publish, accounting for multiple
+	$dom_remove = explode(',', $form_state['values']['dom_remove']);
+	
   // create a folders
   $dir = file_create_path(file_directory_path() . '/html_export');
   file_check_directory($dir, 1);
@@ -50,17 +59,17 @@ function _html_export_job_page_submit($form, &$form_state) {
   $export_path = $dir .'/export'. time();
   file_check_directory(file_create_path($export_path), 1);
   // process the records in the batch
-  $base = str_replace('index.php','',$_SERVER['PATH_TRANSLATED']);
+  $base = str_replace('index.php', '', $_SERVER['PATH_TRANSLATED']);
 	// render pages and deep copy directories
 	// @todo: more intelligent selection
   $batch = array(
     'operations' => array(
-      array('html_export_render_pages', array($paths, $export_path)),
       array('_html_export_copy_files', array($base .'sites', $export_path . '/sites')),
       array('_html_export_copy_files', array($base .'modules', $export_path . '/modules')),
       array('_html_export_copy_files', array($base .'themes', $export_path . '/themes')),
       array('_html_export_copy_files', array($base .'misc', $export_path . '/misc')),
 		  array('_html_export_copy_files', array($base .'profiles', $export_path . '/profiles')),
+			array('html_export_render_pages', array($paths, $export_path, $dom_remove)),
       ),
     'finished' => 'html_export_finished',
     'title' => t('Processing HTML Export'),
@@ -76,11 +85,13 @@ function _html_export_job_page_submit($form, &$form_state) {
 /**
  * Batch Operation Callback
  */
-function html_export_render_pages($paths, $export_path, &$context) {
+function html_export_render_pages($paths, $export_path, $dom_remove, &$context) {
+	$GLOBALS['html_export_active'] = TRUE;
   if (!isset($context['sandbox']['progress'])) {
     $context['sandbox']['progress'] = 0;
     $context['sandbox']['current_path'] = 0;
     $context['sandbox']['max'] = count($paths);
+		$context['results'][] = $export_path;
   }
   // process limit amount of records
 	$count = 0;
@@ -88,14 +99,12 @@ function html_export_render_pages($paths, $export_path, &$context) {
   while ($count<HTML_EXPORT_PROCESS_LIMIT && $active_path_count < $context['sandbox']['max']) {
     // squelch any and all messages at this time
     $tmpmsg = drupal_get_messages();
-    // make drupal think this page is active
-    menu_set_active_item($paths[$active_path_count]);
     // issue all calls
-    $return = menu_execute_active_handler();
+    $return = menu_execute_active_handler($paths[$active_path_count]);
     // render as a page
     $data = theme('page', $return);
 		// allow projects to process page data
-    drupal_alter('html_export_data', $data, $paths, $active_path_count);
+    drupal_alter('html_export_data', $data, $paths, $active_path_count, $dom_remove);
     // prepare to save file by creating folders for path
     $tmp = split('/', $paths[$active_path_count]);
     $folder_path = '';
@@ -164,8 +173,7 @@ function _html_export_copy_files($source, $dest, &$context) {
 function html_export_finished($success, $results, $operations) {
   if ($success) {
     // Here we do something meaningful with the results.
-    $message = count($results) .' html pages created.';
-    //$message .= theme('item_list', $results);
+    $message = (count($results)-1) .' html pages created. '. l(t('Click to access the export'), $results[0], array('absolute' => TRUE));
   }
   else {
     // An error occurred.
@@ -173,5 +181,6 @@ function html_export_finished($success, $results, $operations) {
     $error_operation = reset($operations);
     $message = t('An error occurred while processing %error_operation with arguments: @arguments', array('%error_operation' => $error_operation[0], '@arguments' => print_r($error_operation[1], TRUE)));
   }
+	$GLOBALS['html_export_active'] = FALSE;
   drupal_set_message($message);
 }

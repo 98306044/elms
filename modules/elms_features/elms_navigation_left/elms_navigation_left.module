@@ -205,6 +205,10 @@ function elms_navigation_left_regions_region_alter(&$region, $region_name) {
 function _elms_navigation_left_render_region($block_html, $block) {
   // build a unique key for this block for theming
   static $count = 0;
+	// take into account short-cut method for ignoring in html export
+	if ($GLOBALS['html_export_active']) {
+		return '';
+	}
   $count++;
   $key = $block->module .'_'. $block->delta;
   $output .= '<div class="regions_block regions_'. $count .'" id="regions_block_'. $key .'"><div class="regions_block_title">';

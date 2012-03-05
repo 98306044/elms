@@ -140,8 +140,22 @@ function _html_export_all_nodes() {
 /**
  * Implementation of hook_html_export_data_alter().
  */
-function html_export_html_export_data_alter(&$data, $paths, $active_path_count, $group = NULL) {
-  // remove base_path so that everything is relative to root
+function html_export_html_export_data_alter(&$data, $paths, $active_path_count, $dom_remove) {
+  // advanced dom removal routine
+	// Create a DOM object
+	$html_obj = new simple_html_dom();
+	// Load HTML from a string
+	$html_obj->load($data);
+	// remove the selectors
+	foreach ($dom_remove as $find) {
+		// find the selectors in the document
+		$objs = $html_obj->find($find);
+		// account for ability to find multiple objects
+		foreach ($objs as $obj) {
+	    $data = str_replace($obj->outertext, '', $data);
+		}
+	}
+	// remove base_path so that everything is relative to root
 	// @todo: add intelligent preg replace logic
 	$sub = '';
 	// we need to retrace paths to account for nesting
@@ -153,10 +167,6 @@ function html_export_html_export_data_alter(&$data, $paths, $active_path_count, 
 	// @todo: figure out how to account for base_path of /
 	if (base_path() != '/') {
 	  $data = str_replace(base_path(), $sub, $data);
-	}
-	// if an organic group is present, check for purl
-	if (isset($group->purl)) {
-	  $data = str_replace('/'. $group->purl .'/', '/', $data);
 	}
 	// process all paths we were given to append .html
 	foreach ($paths as $path) {
