@@ -49,7 +49,13 @@ function _html_export_job_page_submit($form, &$form_state) {
   $paths = array();
   $selectors = $form_state['values']['path_selector'];
   foreach ($selectors as $selector) {
-    $tmp = call_user_func_array($path_provders[$selector]['callback'], array($path_provders[$selector]['arg']));
+    // only submit arg if its set to avoid notices
+    if (isset($path_provders[$selector]['arg'])) {
+      $tmp = call_user_func_array($path_provders[$selector]['callback'], array($path_provders[$selector]['arg']));
+    }
+    else {
+      $tmp = call_user_func_array($path_provders[$selector]['callback'], array());
+    }
     $paths = array_merge($paths, $tmp);
   }
   // bring along advanced dom removal on publish, accounting for multiple

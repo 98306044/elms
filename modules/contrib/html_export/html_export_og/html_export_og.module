@@ -36,6 +36,10 @@ function html_export_og_html_export_add_path_provider_alter($providers) {
   if (isset($group->nid)) {
     unset($providers['core_all_nodes']);
     unset($providers['core_all_paths']);
+    // alter type exports to account for og
+    foreach (node_get_types() as $key => $type) {
+      $items['core_node_types_'. $key]['callback'] = '_html_export_node_type_og';
+    }
   }
 }
 
@@ -62,4 +66,18 @@ function html_export_og_html_export_data_alter(&$data, $paths, $active_path_coun
   if (isset($group->purl)) {
     $data = str_replace('/'. $group->purl .'/', '/', $data);
   }
+}
+
+/**
+ * Callback for og version of type provider.
+ */
+function _html_export_node_type_og($type) {
+  $paths = array();
+  $group = og_get_group_context();
+  // grab all nodes the user has access to for this type
+  $result = db_query(db_rewrite_sql("SELECT nid FROM {node} as n JOIN {og_ancestry} AS oga ON n.nid=oga.nid WHERE oga.group_nid=%d AND type='%s'"), $group->nid, $type);
+  while ($val = db_fetch_array($result)) {
+    $paths[] = 'node/'. $val['nid'];
+  }
+  return $paths;
 }

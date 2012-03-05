@@ -132,7 +132,7 @@ function _html_export_all_nodes() {
 }
 
 /**
- * Callback for core_all_nodes provider.
+ * Callback for core_node_type provider.
  */
 function _html_export_node_type($type) {
   $paths = array();
