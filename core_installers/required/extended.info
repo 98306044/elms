@@ -13,8 +13,6 @@ dependencies[] = "elms_navigation_top"
 dependencies[] = "elms_navigation_left"
 dependencies[] = "elms_navigation_bottom"
 dependencies[] = "elms_navigation_right"
-; ELMS Core Optional
-dependencies[] = "elms_export_html"
 
 ; Contrib
 dependencies[] = "strongarm"
