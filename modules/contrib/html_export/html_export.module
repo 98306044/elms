@@ -59,13 +59,13 @@ function html_export_menu() {
  * Implementation of hook_html_export_add_path_provider().
  */
 function html_export_html_export_add_path_provider() {
-  $items = array(
-	  'core_all_nodes' => array(
-		  'title' => 'All nodes you have access to',
+	$items = array(
+		'core_all_nodes' => array(
+			'title' => 'All nodes you have access to',
 			'callback' => '_html_export_all_nodes',
 		),
 		'core_all_paths' => array(
-		  'title' => 'All menu paths in the system',
+			'title' => 'All menu paths in the system',
 			'callback' => '_html_export_all_menu_links',
 		),
 	);
@@ -111,6 +111,20 @@ function _html_export_all_menu_links() {
 }
 
 /**
+ * Callback for og_active_paths provider.
+ */
+function _html_export_active_og_nodes() {
+	$paths = array();
+	$group = og_get_group_context();
+	// grab all nodes the user has access to
+  $result = db_query(db_rewrite_sql("SELECT n.nid FROM {node} AS n JOIN {og_ancestry} AS oga ON n.nid=oga.nid WHERE oga.group_nid=%d"), $group->nid);
+  while ($val = db_fetch_array($result)) {
+    $paths[] = 'node/'. $val['nid'];
+  }
+  return $paths;
+}
+
+/**
  * Callback for core_all_nodes provider.
  */
 function _html_export_all_nodes() {
@@ -126,7 +140,7 @@ function _html_export_all_nodes() {
 /**
  * Implementation of hook_html_export_data_alter().
  */
-function html_export_html_export_data_alter(&$data, $paths, $active_path_count) {
+function html_export_html_export_data_alter(&$data, $paths, $active_path_count, $group = NULL) {
   // remove base_path so that everything is relative to root
 	// @todo: add intelligent preg replace logic
 	$sub = '';
@@ -139,6 +153,10 @@ function html_export_html_export_data_alter(&$data, $paths, $active_path_count) 
 	// @todo: figure out how to account for base_path of /
 	if (base_path() != '/') {
 	  $data = str_replace(base_path(), $sub, $data);
+	}
+	// if an organic group is present, check for purl
+	if (isset($group->purl)) {
+	  $data = str_replace('/'. $group->purl .'/', '/', $data);
 	}
 	// process all paths we were given to append .html
 	foreach ($paths as $path) {

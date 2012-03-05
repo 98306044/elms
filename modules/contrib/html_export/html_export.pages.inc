@@ -6,7 +6,7 @@
 function _html_export_job_page() {
   $form = array();
 	$path_provders = module_invoke_all('html_export_add_path_provider');
-  // allow projects to alter list, critical for groups
+  // allow projects to alter list
   drupal_alter('html_export_add_path_provider', $path_provders);
 	// convert providers to options array
 	foreach ($path_provders as $key => $provider) {
@@ -33,7 +33,7 @@ function _html_export_job_page() {
 function _html_export_job_page_submit($form, &$form_state) {
   // invoke the hooks that will provide us with a list of paths
   $path_provders = module_invoke_all('html_export_add_path_provider');
-  // allow projects to alter list, critical for groups
+  // allow projects to alter list
   drupal_alter('html_export_add_path_provider', $path_provders);
 	// @todo: select the specific provider selected in the pervious form and run its callback
 	// need to document the API too
@@ -43,7 +43,6 @@ function _html_export_job_page_submit($form, &$form_state) {
 		$tmp = call_user_func_array($path_provders[$selector]['callback'], array());
 		$paths = array_merge($paths, $tmp);
 	}
-	return 1;
   // create a folders
   $dir = file_create_path(file_directory_path() . '/html_export');
   file_check_directory($dir, 1);
@@ -112,13 +111,14 @@ function html_export_render_pages($paths, $export_path, &$context) {
       fwrite($file, $data);
       fclose($file);
     }
-
     // Update our progress information.
     $context['sandbox']['progress']++;
     $context['sandbox']['current_path'] = $active_path_count;
     $context['message'] = t('Now processing %path', array('%path' => drupal_get_path_alias($paths[$active_path_count])));
 		$count++;
     $active_path_count++;
+		// Store some result for post-processing in the finished callback.
+    $context['results'][] = drupal_get_path_alias($paths[$active_path_count]);
   }
 
   // Inform the batch engine that we are not finished,
@@ -164,8 +164,8 @@ function _html_export_copy_files($source, $dest, &$context) {
 function html_export_finished($success, $results, $operations) {
   if ($success) {
     // Here we do something meaningful with the results.
-    $message = count($results) .' processed.';
-    $message .= theme('item_list', $results);
+    $message = count($results) .' html pages created.';
+    //$message .= theme('item_list', $results);
   }
   else {
     // An error occurred.

@@ -1,0 +1,66 @@
+<?php 
+
+// ELMS: HTML Export OG
+// Copyright (C) 2008-2012  The Pennsylvania State University
+//
+// Bryan Ollendyke
+// bto108@psu.edu
+//
+// Keith D. Bailey
+// kdb163@psu.edu
+//
+// 12 Borland
+// University Park, PA 16802
+
+/**
+ * Implementation of hook_html_export_add_path_provider().
+ */
+function html_export_og_html_export_add_path_provider() {
+	$items = array();
+	$group = og_get_group_context();
+	// only add to the list of available if its og
+	if (isset($group->nid)) {
+	  $items['og_active_paths'] = array(
+		  'title' => 'Select all nodes in this group',
+		  'callback' => '_html_export_og_active_og_nodes',
+	  );
+	}
+	return $items;
+}
+
+/**
+ * Implementation of hook_html_export_add_path_provider_alter().
+ */
+function html_export_og_html_export_add_path_provider_alter($providers) {
+	$group = og_get_group_context();
+	// if we are in a group prune core options that dont make sense
+	if (isset($group->nid)) {
+	  unset($providers['core_all_nodes']);
+		unset($providers['core_all_paths']);
+	}
+}
+
+/**
+ * Callback for og_active_paths provider.
+ */
+function _html_export_og_active_og_nodes() {
+	$paths = array();
+	$group = og_get_group_context();
+	// grab all nodes the user has access to
+  $result = db_query(db_rewrite_sql("SELECT n.nid FROM {node} AS n JOIN {og_ancestry} AS oga ON n.nid=oga.nid WHERE oga.group_nid=%d"), $group->nid);
+  while ($val = db_fetch_array($result)) {
+    $paths[] = 'node/'. $val['nid'];
+  }
+  return $paths;
+}
+
+/**
+ * Implementation of hook_html_export_data_alter().
+ */
+function html_export_og_html_export_data_alter(&$data, $paths, $active_path_count) {
+	$group = og_get_group_context();
+	// check for purl
+	if (isset($group->purl)) {
+	  $data = str_replace('/'. $group->purl .'/', '/', $data);
+	}
+}
