@@ -69,6 +69,14 @@ function html_export_html_export_add_path_provider() {
       'callback' => '_html_export_all_menu_links',
     ),
   );
+  // create an option for each type
+  foreach (node_get_types() as $key => $type) {
+    $items['core_node_types_'. $key] = array(
+      'title' => 'All nodes of type '. $type->name,
+      'callback' => '_html_export_node_type',
+      'arg' => $key,
+    );
+  }
   // if views is active then add in those paths
   if (module_exists('views')) {
     $items['views_all_paths'] = array(
@@ -111,13 +119,12 @@ function _html_export_all_menu_links() {
 }
 
 /**
- * Callback for og_active_paths provider.
+ * Callback for core_all_nodes provider.
  */
-function _html_export_active_og_nodes() {
+function _html_export_all_nodes() {
   $paths = array();
-  $group = og_get_group_context();
   // grab all nodes the user has access to
-  $result = db_query(db_rewrite_sql("SELECT n.nid FROM {node} AS n JOIN {og_ancestry} AS oga ON n.nid=oga.nid WHERE oga.group_nid=%d"), $group->nid);
+  $result = db_query(db_rewrite_sql("SELECT nid FROM {node} as n"));
   while ($val = db_fetch_array($result)) {
     $paths[] = 'node/'. $val['nid'];
   }
@@ -127,10 +134,10 @@ function _html_export_active_og_nodes() {
 /**
  * Callback for core_all_nodes provider.
  */
-function _html_export_all_nodes() {
+function _html_export_node_type($type) {
   $paths = array();
-  // grab all nodes the user has access to
-  $result = db_query(db_rewrite_sql("SELECT nid FROM {node} as n"));
+  // grab all nodes the user has access to for this type
+  $result = db_query(db_rewrite_sql("SELECT nid FROM {node} as n WHERE type='%s'"), $type);
   while ($val = db_fetch_array($result)) {
     $paths[] = 'node/'. $val['nid'];
   }
