@@ -60,11 +60,18 @@ function _html_export_job_page_submit($form, &$form_state) {
   }
   // bring along advanced dom removal on publish, accounting for multiple
   $dom_remove = explode(',', $form_state['values']['html_export_dom_remove']);
-  // create a folders
+  html_export_process_job($paths, 'export'. time(), $dom_remove);
+}
+
+/**
+ * Initialize batch job
+ */
+function html_export_process_job($paths, $export_folder, $dom_remove = NULL) {
+	// create a folders
   $dir = file_create_path(file_directory_path() . '/html_export');
   file_check_directory($dir, 1);
   // make the directory path for this export (just timestamp)
-  $export_path = $dir .'/export'. time();
+  $export_path = $dir .'/'. $export_folder;
   file_check_directory(file_create_path($export_path), 1);
   // process the records in the batch
   $base = str_replace('index.php', '', $_SERVER['PATH_TRANSLATED']);
@@ -89,6 +96,7 @@ function _html_export_job_page_submit($form, &$form_state) {
   batch_set($batch);
   batch_process('html_export');
 }
+
 
 /**
  * Batch Operation Callback

@@ -61,44 +61,49 @@ function html_export_menu() {
 function html_export_html_export_add_path_provider() {
   $items = array(
     'core_all_nodes' => array(
-      'title' => 'All nodes you have access to',
+      'title' => 'Core: All nodes',
       'callback' => '_html_export_all_nodes',
     ),
     'core_all_paths' => array(
-      'title' => 'All menu paths in the system',
+      'title' => 'Core: all menu paths',
       'callback' => '_html_export_all_menu_links',
     ),
   );
   // create an option for each type
-  foreach (node_get_types() as $key => $type) {
-    $items['core_node_types_'. $key] = array(
-      'title' => 'All nodes of type '. $type->name,
+	$avail_types = variable_get('html_export_available_types', array());
+  foreach ($avail_types as $key => $type) {
+    $items['types_'. $key] = array(
+      'title' => 'Node type: '. $key,
       'callback' => '_html_export_node_type',
       'arg' => $key,
     );
   }
   // if views is active then add in those paths
   if (module_exists('views')) {
-    $items['views_all_paths'] = array(
-      'title' => 'Select all paths related to views',
-      'callback' => '_html_export_all_views_paths',
-    );
+		$avail_views = variable_get('html_export_available_views', array());
+		foreach ($avail_views as $view) {
+			$items['views_'. $view] = array(
+				'title' => 'Views: '. $view,
+				'callback' => '_html_export_handle_view',
+				'arg' => $view,
+			);
+		}
   }
   return $items;
 }
 
+
 /**
- * Callback for all_views_paths provider.
+ * Callback for core_all_paths provider.
  */
-function _html_export_all_views_paths() {
+function _html_export_handle_view($view_name) {
   $paths = array();
-  // select the pages for all registered views
-  $result = db_query("SELECT path FROM {menu_router} WHERE page_callback='%s'", 'views_page');
-  while ($val = db_fetch_array($result)) {
-    // ensure that % isn't taking context into account w/ the path
-    if (strpos($val['path'], '%') === FALSE) {
-      $paths[] = $val['path'];
-    }
+	$results = views_get_view_result($view_name);
+	// list of nodes from a view
+  foreach ($results as $row) {
+		if (isset($row->nid)) {
+      $paths[] = 'node/'. $row->nid;
+		}
   }
   return $paths;
 }
