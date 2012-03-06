@@ -79,11 +79,11 @@ function html_export_process_job($paths, $export_folder, $dom_remove = NULL) {
   // @todo: more intelligent selection
   $batch = array(
     'operations' => array(
-      array('_html_export_copy_files', array($base .'sites', $export_path . '/sites')),
-      array('_html_export_copy_files', array($base .'modules', $export_path . '/modules')),
-      array('_html_export_copy_files', array($base .'themes', $export_path . '/themes')),
-      array('_html_export_copy_files', array($base .'misc', $export_path . '/misc')),
-      array('_html_export_copy_files', array($base .'profiles', $export_path . '/profiles')),
+      //array('_html_export_copy_files', array($base .'sites', $export_path . '/sites')),
+      //array('_html_export_copy_files', array($base .'modules', $export_path . '/modules')),
+      //array('_html_export_copy_files', array($base .'themes', $export_path . '/themes')),
+      //array('_html_export_copy_files', array($base .'misc', $export_path . '/misc')),
+      //array('_html_export_copy_files', array($base .'profiles', $export_path . '/profiles')),
       array('html_export_render_pages', array($paths, $export_path, $dom_remove)),
       ),
     'finished' => 'html_export_finished',
@@ -121,6 +121,8 @@ function html_export_render_pages($paths, $export_path, $dom_remove, &$context) 
     // menu_tree_all_data();
     // render as a page
     $data = theme('page', $return);
+    // locate all the resources used to make this page and copy them
+    _html_export_copy_resources($data, $export_path);
     // allow projects to process page data
     drupal_alter('html_export_data', $data, $paths, $active_path_count, $dom_remove);
     // prepare to save file by creating folders for path
@@ -158,6 +160,69 @@ function html_export_render_pages($paths, $export_path, $dom_remove, &$context) 
 /**
  * Helper function to deep copy all resource files
  */
+function _html_export_copy_resources($data, $export_path) {
+  // Create a DOM object
+  $html_obj = new simple_html_dom();
+  $copy_list = array();
+  // Load HTML from a string
+  $html_obj->load($data);
+  $resources = array('link', 'img', 'script', 'a', 'object');
+  // repair paths for these resources
+  foreach ($resources as $find) {
+    // find the selectors in the document
+    $objs = $html_obj->find($find);
+    // account for ability to find multiple objects
+    foreach ($objs as $obj) {
+      // account for internal href resources
+      if (isset($obj->href) && strpos($obj->href, 'http://') === FALSE && strpos($obj->href, 'https://') === FALSE) {
+          $copy_list[] = str_replace('?r', '', $obj->href);
+      }
+      // account for internal src resources
+      if (isset($obj->src) && strpos($obj->src, 'http://') === FALSE && strpos($obj->src, 'https://') === FALSE) {
+        $copy_list[] = str_replace('?r', '', $obj->src);
+      }
+    }
+  }
+  // assets to copy
+  // $base = str_replace('index.php', '', $_SERVER['PATH_TRANSLATED']);
+  foreach ($copy_list as $file) {
+    // only replace first occurance as this will be base path
+    $pos = strpos($file, base_path());
+    if ($pos !== FALSE) {
+      $file = substr_replace($file, '', $pos, drupal_strlen(base_path()));
+    }
+    _html_export_copy_file($file, $export_path);
+  }
+}
+
+/**
+ * Helper function to deep copy all resource files
+ */
+function _html_export_copy_file($source, $export_path) {
+  // Simple copy for a file
+  if (is_file($source)) {
+    // split to build the folder structure
+    $tmp = explode('/', $source);
+    array_pop($tmp);
+    $folder_path = '';
+    $deepcopy = implode('/', $tmp);
+    // build path leading up to the current one
+    foreach ($tmp as $folder) {
+      $folder_path .= '/'. $folder;
+      $tmppath = file_create_path($export_path . $folder_path);
+      // ensure we can write there
+      file_check_directory($tmppath, 1);
+    }
+    // deep copy in each directory we have a file in to grab images
+    $context = '';
+    _html_export_copy_files($deepcopy, $export_path . $folder_path, $context);
+    return copy($source, $export_path .'/'. $source);
+  }
+}
+
+/**
+ * Helper function to deep copy all resource files
+ */
 function _html_export_copy_files($source, $dest, &$context) {
   // Simple copy for a file
   if (is_file($source)) {
@@ -172,7 +237,7 @@ function _html_export_copy_files($source, $dest, &$context) {
   while (false !== $entry = $dir->read()) {
     // if this is the files folder then skip the pointers, the html_export directory (server == dead), and .htaccess files
     // if not then Skip pointers to folders, .DS_Store, *.php, and .htaccess
-    if ($entry == '.' || $entry == '..' || $entry == 'README.txt' || $entry == 'LICENSE.txt' || $entry == '.DS_Store' || $entry == '.htaccess' || $entry == 'Thumbs.db' || strpos($entry, '.engine') != 0 || strpos($entry, '.php') != 0 || strpos($entry, '.inc') != 0 || strpos($entry, '.include') != 0 || strpos($entry, '.info') != 0 || strpos($entry, '.install') != 0 || strpos($entry, '.module') != 0) {
+    if ($entry == '.' || $entry == '..' || $entry == '.DS_Store' || $entry == '.htaccess' || $entry == '.project' || $entry == 'Thumbs.db' || $entry == '_notes' || strpos($entry, '.engine') != 0 || strpos($entry, '.php') != 0 || strpos($entry, '.inc') != 0 || strpos($entry, '.include') != 0 || strpos($entry, '.info') != 0 || strpos($entry, '.txt') != 0 || strpos($entry, '.ini') != 0 || strpos($entry, '.po') != 0 || strpos($entry, '.install') != 0 || strpos($entry, '.module') != 0) {
       continue;
     }
     // Deep copy directories, ignore the html_export ones

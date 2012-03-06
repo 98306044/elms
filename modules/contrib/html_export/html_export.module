@@ -181,14 +181,16 @@ function html_export_html_export_data_alter(&$data, $paths, $active_path_count, 
     $objs = $html_obj->find($find);
     // account for ability to find multiple objects
     foreach ($objs as $obj) {
-      if (isset($obj->href)) {
+      // account for internal href resources
+      if (isset($obj->href) && strpos($obj->href, 'http://') === FALSE && strpos($obj->href, 'https://') === FALSE) {
         // only replace first occurance as this will be base path
         $pos = strpos($obj->href, base_path());
         if ($pos !== FALSE) {
           $obj->href = substr_replace($obj->href, $sub, $pos, drupal_strlen(base_path()));
         }
       }
-      if (isset($obj->src)) {
+      // account for internal src resources
+      if (isset($obj->src) && strpos($obj->src, 'http://') === FALSE && strpos($obj->src, 'https://') === FALSE) {
         // only replace first occurance as this will be base path
         $pos = strpos($obj->src, base_path());
         if ($pos !== FALSE) {
