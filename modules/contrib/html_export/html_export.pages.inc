@@ -229,8 +229,7 @@ function _html_export_copy_files($source, $dest, &$context) {
   // Loop through the folder
   $dir = dir($source);
   while (false !== $entry = $dir->read()) {
-    // if this is the files folder then skip the pointers, the html_export directory (server == dead), and .htaccess files
-    // if not then Skip pointers to folders, .DS_Store, *.php, and .htaccess
+    // skip over all the files types that make no sense in an export
     if ($entry == '.' || $entry == '..' || $entry == '.DS_Store' || $entry == '.htaccess' || $entry == '.project' || $entry == 'Thumbs.db' || $entry == '_notes' || strpos($entry, '.engine') != 0 || strpos($entry, '.php') != 0 || strpos($entry, '.inc') != 0 || strpos($entry, '.include') != 0 || strpos($entry, '.info') != 0 || strpos($entry, '.txt') != 0 || strpos($entry, '.ini') != 0 || strpos($entry, '.po') != 0 || strpos($entry, '.install') != 0 || strpos($entry, '.module') != 0) {
       continue;
     }
