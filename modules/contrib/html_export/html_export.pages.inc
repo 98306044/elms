@@ -73,12 +73,11 @@ function html_export_process_job($paths, $export_folder, $dom_remove = NULL) {
   // make the directory path for this export (just timestamp)
   $export_path = $dir .'/'. $export_folder;
   file_check_directory(file_create_path($export_path), 1);
-  // process the records in the batch
-  $base = str_replace('index.php', '', $_SERVER['PATH_TRANSLATED']);
   // render pages and deep copy directories
   $batch = array(
     'operations' => array(
       array('html_export_render_pages', array($paths, $export_path, $dom_remove)),
+      array('html_export_copy_all_resources', array($export_path)),
       ),
     'finished' => 'html_export_finished',
     'title' => t('Processing html export'),
@@ -91,17 +90,18 @@ function html_export_process_job($paths, $export_folder, $dom_remove = NULL) {
   batch_process('html_export');
 }
 
-
 /**
- * Batch Operation Callback
+ * Batch Operation Callback to render all pages
  */
 function html_export_render_pages($paths, $export_path, $dom_remove, &$context) {
   $GLOBALS['html_export_active'] = TRUE;
+  // first run
   if (!isset($context['sandbox']['progress'])) {
     $context['sandbox']['progress'] = 0;
     $context['sandbox']['current_path'] = 0;
     $context['sandbox']['max'] = count($paths);
     $context['results'][] = $export_path;
+    $context['results']['copy_list'] = array();
   }
   // process limit amount of records
   $count = 0;
@@ -116,7 +116,7 @@ function html_export_render_pages($paths, $export_path, $dom_remove, &$context) 
     // render as a page
     $data = theme('page', $return);
     // locate all the resources used to make this page and copy them
-    _html_export_copy_resources($data, $export_path);
+    $context['results']['copy_list'] = array_merge(_html_export_copy_resources($data, $export_path), $context['results']['copy_list']);
     // allow projects to process page data
     drupal_alter('html_export_data', $data, $paths, $active_path_count, $dom_remove);
     // prepare to save file by creating folders for path
@@ -152,6 +152,17 @@ function html_export_render_pages($paths, $export_path, $dom_remove, &$context) 
 }
 
 /**
+ * Batch Operation Callback to copy all resources
+ */
+function html_export_copy_all_resources($export_path, &$context) {
+  $copy_list = $context['results']['copy_list'];
+  foreach ($copy_list as $file) {
+    _html_export_copy_file($file, $export_path);
+  }
+  $tmpmsg = drupal_get_messages();
+}
+
+/**
  * Helper function to deep copy all resource files
  */
 function _html_export_copy_resources($data, $export_path) {
@@ -177,16 +188,15 @@ function _html_export_copy_resources($data, $export_path) {
       }
     }
   }
-  // assets to copy
-  // $base = str_replace('index.php', '', $_SERVER['PATH_TRANSLATED']);
-  foreach ($copy_list as $file) {
+  // assets to copy, need to filter out base path
+  foreach ($copy_list as $key => $file) {
     // only replace first occurance as this will be base path
     $pos = strpos($file, base_path());
     if ($pos !== FALSE) {
-      $file = substr_replace($file, '', $pos, drupal_strlen(base_path()));
+      $copy_list[$key] = substr_replace($file, '', $pos, drupal_strlen(base_path()));
     }
-    _html_export_copy_file($file, $export_path);
   }
+  return $copy_list;
 }
 
 /**
@@ -249,7 +259,7 @@ function _html_export_deep_file_copy($source, $dest, &$context) {
 function html_export_finished($success, $results, $operations) {
   if ($success) {
     // Here we do something meaningful with the results.
-    $message = t('%count html pages created. <a href="@url">Click to access export</a>', array('%count' => (count($results)-1), '@url' => url($results[0], array('absolute' => TRUE, 'purl' => array('disabled' => TRUE)))));
+    $message = t('%count html pages created. <a href="@url">Click to access export</a>', array('%count' => (count($results)-2), '@url' => url($results[0], array('absolute' => TRUE, 'purl' => array('disabled' => TRUE)))));
   }
   else {
     // An error occurred.
