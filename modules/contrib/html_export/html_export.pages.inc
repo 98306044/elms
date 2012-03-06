@@ -207,9 +207,9 @@ function _html_export_copy_file($source, $export_path) {
       // ensure we can write there
       file_check_directory($tmppath, 1);
     }
-    // deep copy in each directory we have a file in to grab images
     $context = '';
-    _html_export_copy_files($deepcopy, $export_path . $folder_path, $context);
+    // deep copy in each directory assembled previously
+    _html_export_deep_file_copy($deepcopy, $export_path . $folder_path, $context);
     return copy($source, $export_path .'/'. $source);
   }
 }
@@ -217,7 +217,7 @@ function _html_export_copy_file($source, $export_path) {
 /**
  * Helper function to deep copy all resource files
  */
-function _html_export_copy_files($source, $dest, &$context) {
+function _html_export_deep_file_copy($source, $dest, &$context) {
   // Simple copy for a file
   if (is_file($source)) {
     return copy($source, $dest);
@@ -235,7 +235,7 @@ function _html_export_copy_files($source, $dest, &$context) {
     }
     // Deep copy directories, ignore the html_export ones
     if ($dest !== "$source/$entry" && strpos($source, 'html_export') == 0 ) {
-      _html_export_copy_files("$source/$entry", "$dest/$entry", $context);
+      _html_export_deep_file_copy("$source/$entry", "$dest/$entry", $context);
     }
   }
   // Clean up
