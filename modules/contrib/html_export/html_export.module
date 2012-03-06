@@ -70,7 +70,7 @@ function html_export_html_export_add_path_provider() {
     ),
   );
   // create an option for each type
-	$avail_types = variable_get('html_export_available_types', array());
+  $avail_types = variable_get('html_export_available_types', array());
   foreach ($avail_types as $key => $type) {
     $items['types_'. $key] = array(
       'title' => 'Node type: '. $key,
@@ -80,14 +80,14 @@ function html_export_html_export_add_path_provider() {
   }
   // if views is active then add in those paths
   if (module_exists('views')) {
-		$avail_views = variable_get('html_export_available_views', array());
-		foreach ($avail_views as $view) {
-			$items['views_'. $view] = array(
-				'title' => 'Views: '. $view,
-				'callback' => '_html_export_handle_view',
-				'arg' => $view,
-			);
-		}
+    $avail_views = variable_get('html_export_available_views', array());
+    foreach ($avail_views as $view) {
+      $items['views_'. $view] = array(
+        'title' => 'Views: '. $view,
+        'callback' => '_html_export_handle_view',
+        'arg' => $view,
+      );
+    }
   }
   return $items;
 }
@@ -98,12 +98,12 @@ function html_export_html_export_add_path_provider() {
  */
 function _html_export_handle_view($view_name) {
   $paths = array();
-	$results = views_get_view_result($view_name);
-	// list of nodes from a view
+  $results = views_get_view_result($view_name);
+  // list of nodes from a view
   foreach ($results as $row) {
-		if (isset($row->nid)) {
+    if (isset($row->nid)) {
       $paths[] = 'node/'. $row->nid;
-		}
+    }
   }
   return $paths;
 }

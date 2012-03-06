@@ -67,7 +67,7 @@ function _html_export_job_page_submit($form, &$form_state) {
  * Initialize batch job
  */
 function html_export_process_job($paths, $export_folder, $dom_remove = NULL) {
-	// create a folders
+  // create a folders
   $dir = file_create_path(file_directory_path() . '/html_export');
   file_check_directory($dir, 1);
   // make the directory path for this export (just timestamp)
