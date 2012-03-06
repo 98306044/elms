@@ -76,14 +76,8 @@ function html_export_process_job($paths, $export_folder, $dom_remove = NULL) {
   // process the records in the batch
   $base = str_replace('index.php', '', $_SERVER['PATH_TRANSLATED']);
   // render pages and deep copy directories
-  // @todo: more intelligent selection
   $batch = array(
     'operations' => array(
-      //array('_html_export_copy_files', array($base .'sites', $export_path . '/sites')),
-      //array('_html_export_copy_files', array($base .'modules', $export_path . '/modules')),
-      //array('_html_export_copy_files', array($base .'themes', $export_path . '/themes')),
-      //array('_html_export_copy_files', array($base .'misc', $export_path . '/misc')),
-      //array('_html_export_copy_files', array($base .'profiles', $export_path . '/profiles')),
       array('html_export_render_pages', array($paths, $export_path, $dom_remove)),
       ),
     'finished' => 'html_export_finished',
