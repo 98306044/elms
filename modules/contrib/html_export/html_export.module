@@ -1,6 +1,7 @@
 <?php
 
 define('HTML_EXPORT_PROCESS_LIMIT', 10);
+define('HTML_EXPORT_FILE_PROCESS_LIMIT', 5);
 
 // ELMS: HTML Export - Export drupal paths to HTML
 // Copyright (C) 2008-2012  The Pennsylvania State University
