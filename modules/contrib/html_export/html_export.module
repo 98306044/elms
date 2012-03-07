@@ -1,7 +1,7 @@
 <?php
 
-define('HTML_EXPORT_PROCESS_LIMIT', 10);
-define('HTML_EXPORT_FILE_PROCESS_LIMIT', 5);
+define('HTML_EXPORT_PROCESS_LIMIT', 5);
+define('HTML_EXPORT_FILE_PROCESS_LIMIT', 2);
 
 // ELMS: HTML Export - Export drupal paths to HTML
 // Copyright (C) 2008-2012  The Pennsylvania State University
@@ -103,7 +103,7 @@ function _html_export_handle_view($view_name) {
   // list of nodes from a view
   foreach ($results as $row) {
     if (isset($row->nid)) {
-      $paths[] = 'node/'. $row->nid;
+      $paths['node/'. $row->nid] = 'node/'. $row->nid;
     }
   }
   return $paths;
@@ -118,7 +118,7 @@ function _html_export_all_menu_links() {
   while ($val = db_fetch_array($result)) {
     // ensure that % isn't taking context into account w/ the path
     if (strpos($val['link_path'], '%') === FALSE) {
-      $paths[] = $val['link_path'];
+      $paths[$val['link_path']] = $val['link_path'];
     }
   }
   return $paths;
@@ -132,7 +132,7 @@ function _html_export_all_nodes() {
   // grab all nodes the user has access to
   $result = db_query(db_rewrite_sql("SELECT nid FROM {node} as n"));
   while ($val = db_fetch_array($result)) {
-    $paths[] = 'node/'. $val['nid'];
+    $paths['node/'. $val['nid']] = 'node/'. $val['nid'];
   }
   return $paths;
 }
@@ -145,7 +145,7 @@ function _html_export_node_type($type) {
   // grab all nodes the user has access to for this type
   $result = db_query(db_rewrite_sql("SELECT nid FROM {node} as n WHERE type='%s'"), $type);
   while ($val = db_fetch_array($result)) {
-    $paths[] = 'node/'. $val['nid'];
+    $paths['node/'. $val['nid']] = 'node/'. $val['nid'];
   }
   return $paths;
 }

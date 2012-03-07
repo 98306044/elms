@@ -21,7 +21,7 @@ function _html_export_job_page() {
     '#type' => 'select',
     '#multiple' => TRUE,
     '#title' => t('Path selectors'),
-		'#description' => t('Select paths to combine in formulating a list of paths in which to use for export.'),
+    '#description' => t('Select paths to combine in formulating a list of paths in which to use for export.'),
     '#options' => $options,
     '#required' => TRUE,
   );
@@ -31,25 +31,24 @@ function _html_export_job_page() {
     '#description' => t("Supply a css style selector to target the removal of. This is especially useful for removing things like the admin toolbar, tabs, or other elements you don't want to have exported. Split selectors with a comma."),
     '#default_value' => variable_get('html_export_dom_remove', ''),
   );
-	// enable ability to export as if you are another user
-	if (module_exists('masquerade')) {
-		if (masquerade_access('autocomplete')) {
+  // enable ability to export as if you are another user
+  if (module_exists('masquerade')) {
+    if (masquerade_access('autocomplete')) {
       $markup_value .= t('Enter the username to masquerade as.');
       $form['masquerade_user_field'] = array(
         '#type' => 'textfield',
-				'#title' => t('Masquerade for export'),
-				'#description' => t('Select a user account to masquerade as during this export. This allows you to render to file as if you were a different user.'),
+        '#title' => t('Masquerade for export'),
+        '#description' => t('Select a user account to masquerade as during this export. This allows you to render to file as if you were a different user.'),
         '#size' => '18',
         '#default_value' => '',
         '#autocomplete_path' => 'masquerade/autocomplete',
         '#required' => FALSE,
       );
-		}
-	}
-	
+    }
+  }
   $form['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Render to html'),
+    '#value' => t('Render as html'),
   );
   return $form;
 }
@@ -64,7 +63,7 @@ function _html_export_job_page_submit($form, &$form_state) {
   drupal_alter('html_export_add_path_provider', $path_provders);
   // use the selector from the previous form as to what paths to gather
   $paths = array();
-	$uid = NULL;
+  $uid = NULL;
   $selectors = $form_state['values']['path_selector'];
   foreach ($selectors as $selector) {
     // only submit arg if its set to avoid notices
@@ -75,17 +74,19 @@ function _html_export_job_page_submit($form, &$form_state) {
       $tmp = call_user_func_array($path_provders[$selector]['callback'], array());
     }
     $paths = array_merge($paths, $tmp);
+    // make sure all paths are numeric as spec won't be
+    sort($paths);
   }
   // bring along advanced dom removal on publish, accounting for multiple
   $dom_remove = explode(',', $form_state['values']['html_export_dom_remove']);
-	// see if masquerade was enabled and used
-	if (!empty($form_state['values']['masquerade_user_field'])) {
-		// convert name we were passed to uid
-		$masq_user = user_load(array('name' => $form_state['values']['masquerade_user_field']));
-		if (isset($masq_user->uid)) {
-		  $uid = $masq_user->uid;
-		}
-	}
+  // see if masquerade was enabled and used
+  if (!empty($form_state['values']['masquerade_user_field'])) {
+    // convert name we were passed to uid
+    $masq_user = user_load(array('name' => $form_state['values']['masquerade_user_field']));
+    if (isset($masq_user->uid)) {
+      $uid = $masq_user->uid;
+    }
+  }
   html_export_process_job($paths, 'export'. time(), $dom_remove, $uid);
 }
 
@@ -93,10 +94,10 @@ function _html_export_job_page_submit($form, &$form_state) {
  * Initialize batch job
  */
 function html_export_process_job($paths, $export_folder, $dom_remove = NULL, $uid = NULL) {
-	$GLOBALS['html_export_active'] = TRUE;
-	if ($uid != NULL) {
-		masquerade_switch_user($uid);
-	}
+  $GLOBALS['html_export_active'] = TRUE;
+  if ($uid != NULL) {
+    masquerade_switch_user($uid);
+  }
   // create a folders
   $dir = file_create_path(file_directory_path() . '/html_export');
   file_check_directory($dir, 1);
@@ -108,7 +109,7 @@ function html_export_process_job($paths, $export_folder, $dom_remove = NULL, $ui
     'operations' => array(
       array('html_export_render_pages', array($paths, $export_path, $dom_remove)),
       array('html_export_copy_all_resources', array($export_path)),
-			array('html_export_cleanup', array($export_path, $uid)),
+      array('html_export_cleanup', array($export_path, $uid)),
       ),
     'finished' => 'html_export_finished',
     'title' => t('Processing html export'),
@@ -139,7 +140,7 @@ function html_export_render_pages($paths, $export_path, $dom_remove, &$context) 
   while ($count<HTML_EXPORT_PROCESS_LIMIT && $active_path_count < $context['sandbox']['max']) {
     // Store some result for post-processing in the finished callback.
     $context['results']['paths'][] = drupal_get_path_alias($paths[$active_path_count]);
-		// squelch any and all messages at this time
+    // squelch any and all messages at this time
     $tmpmsg = drupal_get_messages();
     // issue all calls
     $return = menu_execute_active_handler($paths[$active_path_count]);
@@ -185,11 +186,11 @@ function html_export_render_pages($paths, $export_path, $dom_remove, &$context) 
  * Batch Operation Callback to copy all resources
  */
 function html_export_copy_all_resources($export_path, &$context) {
-	// first run
+  // first run
   if (!isset($context['sandbox']['progress'])) {
     $context['sandbox']['progress'] = 0;
     $context['sandbox']['active_copy_id'] = 0;
-		$context['results']['files'] = array();
+    $context['results']['files'] = array();
     $context['sandbox']['max'] = count($context['results']['copy_list']);
   }
   // process limit amount of records
@@ -197,33 +198,32 @@ function html_export_copy_all_resources($export_path, &$context) {
   $active_copy_id = $context['sandbox']['active_copy_id'];
   while ($count<HTML_EXPORT_FILE_PROCESS_LIMIT && $active_copy_id < $context['sandbox']['max']) {
     _html_export_copy_file($context['results']['copy_list'][$active_copy_id], $export_path, $context);
-		// Update our progress information.
-		$active_copy_id++;
+    // Update our progress information.
+    $context['message'] = t('Now copying %file', array('%file' => $context['results']['copy_list'][$active_copy_id]));
+    $active_copy_id++;
+    $count++;
     $context['sandbox']['progress']++;
     $context['sandbox']['active_copy_id'] = $active_copy_id;
-    $context['message'] = t('Now copying %file', array('%file' => $context['results']['copy_list'][$active_copy_id]));
-    $count++;
-	}
+  }
   $tmpmsg = drupal_get_messages();
-	// Inform the batch engine that we are not finished,
+  // Inform the batch engine that we are not finished,
   // and provide an estimation of the completion level we reached.
   if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
     $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
   }
-	dpm($context);
 }
 
 /**
  * Batch Operation Callback to clean up before finished
  */
 function html_export_cleanup($export_path, $uid, &$context) {
-	// unmasquerade if we are done
-	if ($uid != NULL) {
+  // unmasquerade if we are done
+  if ($uid != NULL) {
     masquerade_switch_back();
-	}
-	$message = l(t('Click to access export'), $export_path, array('absolute' => TRUE, 'purl' => array('disabled' => TRUE)));
-	drupal_set_message($message);
-	$GLOBALS['html_export_active'] = FALSE;
+  }
+  $message = l(t('Click to access export'), $export_path, array('absolute' => TRUE, 'purl' => array('disabled' => TRUE)));
+  drupal_set_message(filter_xss($message));
+  $GLOBALS['html_export_active'] = FALSE;
 }
 
 /**
@@ -244,14 +244,17 @@ function _html_export_copy_resources($data, $export_path, &$context) {
     foreach ($objs as $obj) {
       // account for internal href resources
       if (isset($obj->href) && strpos($obj->href, 'http://') === FALSE && strpos($obj->href, 'https://') === FALSE && strpos($obj->href, '.') !== FALSE && !in_array($obj->href, $copy_list)) {
-          $copy_list[] = str_replace('?r', '', $obj->href);
+          $href = str_replace('?r', '', $obj->href);
+          $copy_list[$href] = $href;
       }
       // account for internal src resources
       if (isset($obj->src) && strpos($obj->src, 'http://') === FALSE && strpos($obj->src, 'https://') === FALSE && strpos($obj->src, '.') !== FALSE && !in_array($obj->href, $copy_list)) {
-        $copy_list[] = str_replace('?r', '', $obj->src);
+        $src = str_replace('?r', '', $obj->src);
+        $copy_list[$src ] = $src;
       }
     }
   }
+  sort($copy_list);
   // assets to copy, need to filter out base path
   foreach ($copy_list as $key => $file) {
     // only replace first occurance as this will be base path
@@ -282,10 +285,10 @@ function _html_export_copy_file($source, $export_path, &$context) {
       file_check_directory($tmppath, 1);
     }
     // deep copy in each directory assembled previously ignoring files and devel
-		if (strpos($deepcopy, file_directory_path()) === FALSE && strpos($deepcopy, drupal_get_path('module', 'devel')) === FALSE) {
+    if (strpos($deepcopy, file_directory_path()) === FALSE && strpos($deepcopy, drupal_get_path('module', 'devel')) === FALSE) {
       _html_export_deep_file_copy($deepcopy, $export_path . $folder_path, $context);
-		}
-		$context['results']['files'][] = $source;
+    }
+    $context['results']['files'][$source] = $source;
     return copy($source, $export_path .'/'. $source);
   }
 }
@@ -296,7 +299,7 @@ function _html_export_copy_file($source, $export_path, &$context) {
 function _html_export_deep_file_copy($source, $dest, &$context) {
   // Simple copy for a file
   if (is_file($source)) {
-		$context['results']['files'][] = $source;
+    $context['results']['files'][$source] = $source;
     return copy($source, $dest);
   }
   // Make destination directory
