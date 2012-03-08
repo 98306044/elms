@@ -279,41 +279,26 @@ function user_progress_views_data() {
       'label' => t('Node progress happened on'),
     ),
   );
-
-  // Example numeric text field.
-  $data['user_progress_records']['value'] = array(
-    'title' => t('Value'),
-    'help' => t('Points reported for a up registry record'),
-    'field' => array(
-      'handler' => 'views_handler_field_numeric',
-      'click sortable' => TRUE,
-     ),
-    'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
-    ),
-    'sort' => array(
-      'handler' => 'views_handler_sort',
-    ),
-  );
-  
   // Example plain text field.
-  $data['user_progress_records']['data'] = array(
-    'title' => t('Data'),
-    'help' => t('Additional array of values'),
-    'field' => array(
-      'handler' => 'views_handler_field',
-      'click sortable' => FALSE,
-    ),
-    'sort' => array(
-      'handler' => 'views_handler_sort',
-    ),
-    'filter' => array(
-      'handler' => 'views_handler_filter_string',
-    ),
-    'argument' => array(
-      'handler' => 'views_handler_argument_string',
-    ),
-  );
+  for ($i=1; $i<USER_PROGRESS_MAX_DATA_POINTS+1; $i++) {
+    $data['user_progress_records']['data'. $i] = array(
+      'title' => t('Data point @i', array('@i' => $i)),
+      'help' => t('Data is subject to schema definition'),
+      'field' => array(
+        'handler' => 'views_handler_field',
+        'click sortable' => FALSE,
+      ),
+      'sort' => array(
+        'handler' => 'views_handler_sort',
+      ),
+      'filter' => array(
+        'handler' => 'views_handler_filter_string',
+      ),
+      'argument' => array(
+        'handler' => 'views_handler_argument_string',
+      ),
+    );
+  }
   
   // Example timestamp field.
   $data['user_progress_records']['created'] = array(

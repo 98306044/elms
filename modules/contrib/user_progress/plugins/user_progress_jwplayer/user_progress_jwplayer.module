@@ -54,28 +54,28 @@ function user_progress_jwplayer_dashboard_requirements($provider) {
       );
       // count the number of times a video is started
       $node = menu_get_object();
-      $count = db_result(db_query("SELECT COUNT(uprid) as recordidcount FROM {user_progress_records} as tuprec JOIN {user_progress_registry} as tupreg ON tuprec.upregid=tupreg.upregid WHERE upt_name='%s' AND tuprec.nid=%d AND data='%s'", 'up_jwplayer', $node->nid, 'start'));
+      $count = db_result(db_query("SELECT COUNT(uprid) as recordidcount FROM {user_progress_records} as tuprec JOIN {user_progress_registry} as tupreg ON tuprec.upregid=tupreg.upregid WHERE upt_name='%s' AND tuprec.nid=%d AND data2='%s'", 'up_jwplayer', $node->nid, 'start'));
       $requirements['up_jwplayer_video_start'] = array(
         'title' => t('Video started'), 
         'value' => $count,
         'severity' => REQUIREMENT_INFO,
       );
       // count the number of times a video is successfully completed
-      $count = db_result(db_query("SELECT COUNT(uprid) as recordidcount FROM {user_progress_records} as tuprec JOIN {user_progress_registry} as tupreg ON tuprec.upregid=tupreg.upregid WHERE upt_name='%s' AND tuprec.nid=%d AND data='%s'", 'up_jwplayer', $node->nid, 'complete'));
+      $count = db_result(db_query("SELECT COUNT(uprid) as recordidcount FROM {user_progress_records} as tuprec JOIN {user_progress_registry} as tupreg ON tuprec.upregid=tupreg.upregid WHERE upt_name='%s' AND tuprec.nid=%d AND data2='%s'", 'up_jwplayer', $node->nid, 'complete'));
       $requirements['up_jwplayer_video_finished'] = array(
         'title' => t('Video finished'), 
         'value' => $count,
         'severity' => REQUIREMENT_INFO,
       );
       // skipped ahead in content
-      $count = db_result(db_query("SELECT COUNT(uprid) as recordidcount FROM {user_progress_records} as tuprec JOIN {user_progress_registry} as tupreg ON tuprec.upregid=tupreg.upregid WHERE upt_name='%s' AND tuprec.nid=%d AND data LIKE '%s%'", 'up_jwplayer', $node->nid, 'seek'));
+      $count = db_result(db_query("SELECT COUNT(uprid) as recordidcount FROM {user_progress_records} as tuprec JOIN {user_progress_registry} as tupreg ON tuprec.upregid=tupreg.upregid WHERE upt_name='%s' AND tuprec.nid=%d AND data2 LIKE '%s%'", 'up_jwplayer', $node->nid, 'seek'));
       $requirements['up_jwplayer_skip_ahead'] = array(
         'title' => t('Skipped forward in video'), 
         'value' => $count,
         'severity' => REQUIREMENT_INFO,
       );
       // reviewed content
-      $count = db_result(db_query("SELECT COUNT(uprid) as recordidcount FROM {user_progress_records} as tuprec JOIN {user_progress_registry} as tupreg ON tuprec.upregid=tupreg.upregid WHERE upt_name='%s' AND tuprec.nid=%d AND data LIKE '%s%'", 'up_jwplayer', $node->nid, 'back'));
+      $count = db_result(db_query("SELECT COUNT(uprid) as recordidcount FROM {user_progress_records} as tuprec JOIN {user_progress_registry} as tupreg ON tuprec.upregid=tupreg.upregid WHERE upt_name='%s' AND tuprec.nid=%d AND data2 LIKE '%s%'", 'up_jwplayer', $node->nid, 'back'));
       $requirements['up_jwplayer_jump_back'] = array(
         'title' => t('Skipped back in video'), 
         'value' => $count,
@@ -90,28 +90,28 @@ function user_progress_jwplayer_dashboard_requirements($provider) {
       );
       // count the number of times a video is started
       $node = menu_get_object();
-      $count = db_result(db_query("SELECT COUNT(uprid) as recordidcount FROM {user_progress_records} as tuprec JOIN {user_progress_registry} as tupreg ON tuprec.upregid=tupreg.upregid WHERE upt_name='%s' AND tupreg.nid=%d AND data='%s'", 'up_jwplayer', $group->nid, 'start'));
+      $count = db_result(db_query("SELECT COUNT(uprid) as recordidcount FROM {user_progress_records} as tuprec JOIN {user_progress_registry} as tupreg ON tuprec.upregid=tupreg.upregid WHERE upt_name='%s' AND tupreg.nid=%d AND data2='%s'", 'up_jwplayer', $group->nid, 'start'));
       $requirements['up_jwplayer_video_start'] = array(
         'title' => t('Video started'), 
         'value' => $count,
         'severity' => REQUIREMENT_INFO,
       );
       // count the number of times a video is successfully completed
-      $count = db_result(db_query("SELECT COUNT(uprid) as recordidcount FROM {user_progress_records} as tuprec JOIN {user_progress_registry} as tupreg ON tuprec.upregid=tupreg.upregid WHERE upt_name='%s' AND tupreg.nid=%d AND data='%s'", 'up_jwplayer', $group->nid, 'complete'));
+      $count = db_result(db_query("SELECT COUNT(uprid) as recordidcount FROM {user_progress_records} as tuprec JOIN {user_progress_registry} as tupreg ON tuprec.upregid=tupreg.upregid WHERE upt_name='%s' AND tupreg.nid=%d AND data2='%s'", 'up_jwplayer', $group->nid, 'complete'));
       $requirements['up_jwplayer_video_finished'] = array(
         'title' => t('Video finished'), 
         'value' => $count,
         'severity' => REQUIREMENT_INFO,
       );
       // skipped ahead in content
-      $count = db_result(db_query("SELECT COUNT(uprid) as recordidcount FROM {user_progress_records} as tuprec JOIN {user_progress_registry} as tupreg ON tuprec.upregid=tupreg.upregid WHERE upt_name='%s' AND tupreg.nid=%d AND data LIKE '%s%'", 'up_jwplayer', $group->nid, 'seek'));
+      $count = db_result(db_query("SELECT COUNT(uprid) as recordidcount FROM {user_progress_records} as tuprec JOIN {user_progress_registry} as tupreg ON tuprec.upregid=tupreg.upregid WHERE upt_name='%s' AND tupreg.nid=%d AND data2 LIKE '%s%'", 'up_jwplayer', $group->nid, 'seek'));
       $requirements['up_jwplayer_skip_ahead'] = array(
         'title' => t('Skipped forward in video'), 
         'value' => $count,
         'severity' => REQUIREMENT_INFO,
       );
       // reviewed content
-      $count = db_result(db_query("SELECT COUNT(uprid) as recordidcount FROM {user_progress_records} as tuprec JOIN {user_progress_registry} as tupreg ON tuprec.upregid=tupreg.upregid WHERE upt_name='%s' AND tupreg.nid=%d AND data LIKE '%s%'", 'up_jwplayer', $group->nid, 'back'));
+      $count = db_result(db_query("SELECT COUNT(uprid) as recordidcount FROM {user_progress_records} as tuprec JOIN {user_progress_registry} as tupreg ON tuprec.upregid=tupreg.upregid WHERE upt_name='%s' AND tupreg.nid=%d AND data2 LIKE '%s%'", 'up_jwplayer', $group->nid, 'back'));
       $requirements['up_jwplayer_jump_back'] = array(
         'title' => t('Skipped back in video'), 
         'value' => $count,
@@ -125,28 +125,28 @@ function user_progress_jwplayer_dashboard_requirements($provider) {
       );
       // count the number of times a video is started
       $node = menu_get_object();
-      $count = db_result(db_query("SELECT COUNT(uprid) as recordidcount FROM {user_progress_records} as tuprec JOIN {user_progress_registry} as tupreg ON tuprec.upregid=tupreg.upregid WHERE upt_name='%s' AND data='%s'", 'up_jwplayer', 'start'));
+      $count = db_result(db_query("SELECT COUNT(uprid) as recordidcount FROM {user_progress_records} as tuprec JOIN {user_progress_registry} as tupreg ON tuprec.upregid=tupreg.upregid WHERE upt_name='%s' AND data2='%s'", 'up_jwplayer', 'start'));
       $requirements['up_jwplayer_video_start'] = array(
         'title' => t('Video started'), 
         'value' => $count,
         'severity' => REQUIREMENT_INFO,
       );
       // count the number of times a video is successfully completed
-      $count = db_result(db_query("SELECT COUNT(uprid) as recordidcount FROM {user_progress_records} as tuprec JOIN {user_progress_registry} as tupreg ON tuprec.upregid=tupreg.upregid WHERE upt_name='%s' AND data='%s'", 'up_jwplayer', 'complete'));
+      $count = db_result(db_query("SELECT COUNT(uprid) as recordidcount FROM {user_progress_records} as tuprec JOIN {user_progress_registry} as tupreg ON tuprec.upregid=tupreg.upregid WHERE upt_name='%s' AND data2='%s'", 'up_jwplayer', 'complete'));
       $requirements['up_jwplayer_video_finished'] = array(
         'title' => t('Video finished'), 
         'value' => $count,
         'severity' => REQUIREMENT_INFO,
       );
       // skipped ahead in content
-      $count = db_result(db_query("SELECT COUNT(uprid) as recordidcount FROM {user_progress_records} as tuprec JOIN {user_progress_registry} as tupreg ON tuprec.upregid=tupreg.upregid WHERE upt_name='%s' AND data LIKE '%s%'", 'up_jwplayer', 'seek'));
+      $count = db_result(db_query("SELECT COUNT(uprid) as recordidcount FROM {user_progress_records} as tuprec JOIN {user_progress_registry} as tupreg ON tuprec.upregid=tupreg.upregid WHERE upt_name='%s' AND data2 LIKE '%s%'", 'up_jwplayer', 'seek'));
       $requirements['up_jwplayer_skip_ahead'] = array(
         'title' => t('Skipped forward in video'), 
         'value' => $count,
         'severity' => REQUIREMENT_INFO,
       );
       // reviewed content
-      $count = db_result(db_query("SELECT COUNT(uprid) as recordidcount FROM {user_progress_records} as tuprec JOIN {user_progress_registry} as tupreg ON tuprec.upregid=tupreg.upregid WHERE upt_name='%s' AND data LIKE '%s%'", 'up_jwplayer', 'back'));
+      $count = db_result(db_query("SELECT COUNT(uprid) as recordidcount FROM {user_progress_records} as tuprec JOIN {user_progress_registry} as tupreg ON tuprec.upregid=tupreg.upregid WHERE upt_name='%s' AND data2 LIKE '%s%'", 'up_jwplayer', 'back'));
       $requirements['up_jwplayer_jump_back'] = array(
         'title' => t('Skipped back in video'), 
         'value' => $count,
@@ -155,4 +155,18 @@ function user_progress_jwplayer_dashboard_requirements($provider) {
     break;
   }
   return $requirements;
+}
+
+/**
+ * Implements hook_user_progress_define_types().
+ */
+function user_progress_jwplayer_user_progress_define_types() {
+  return array(
+    'up_jwplayer' => array(
+      'name' => t('JWPlayer Media'),
+      'data1_handler' => 'int',
+      'data2_handler' => 'string',
+      'data3_handler' => 'int',
+    ),
+  );
 }

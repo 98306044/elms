@@ -1,5 +1,5 @@
 <?php
-
+define('USER_PROGRESS_MAX_DATA_POINTS', 16);
 /**
  * Implementation of hook_perm().
  */
@@ -81,10 +81,11 @@ function user_progress_menu() {
 function _user_progress_settings($form_state) {
   // get all types
   $types = _user_progress_list_types();
-  $table = '<table><caption>'. t('Defined types') .'</caption><tr><th>'. t('ID') .'</th><th>'. t('Name') .'</th><th>'. t('Value handler') .'</th><th>'. t('Data handler') .'</th></tr>';
+  if (count($types) > 0) {
+  $table = '<table><caption>'. t('Defined types') .'</caption><tr><th>'. t('ID') .'</th><th>'. t('Name') .'</th></tr>';
   // render type list as a table
   foreach ($types as $type) {
-    $table .= '<tr><td>'. $type['upt_name'] .'</td><td>'. $type['name'] .'</td><td>'. $type['value_handler'] .'</td><td>'. $type['data_handler'] .'</td></tr>';
+    $table .= '<tr><td>'. $type['upt_name'] .'</td><td>'. $type['name'] .'</td></tr>';
     $type_options[$type['upt_name']] = $type['name'];
   }
   $table .= '</table>';
@@ -144,6 +145,10 @@ function _user_progress_settings($form_state) {
   );
   $form['submit'] = array('#type' => 'submit', '#value' => t('Add Activity'));
   return $form;
+  }
+  else {
+    drupal_set_message(t('There are no user progress providers, please install some!'), 'error');
+  }
 }
 
 /**
@@ -173,11 +178,12 @@ function _user_progress_get($action) {
     break;
     case 'maxvalue':
       // if this is valid, return the high value
-      if (_user_progress_verify('guid') && _user_progress_verify('upregid')) {
+      if (_user_progress_verify('guid') && _user_progress_verify('upregid') && _user_progress_verify('data_point')) {
+        $data_point = $_GET['data_point'];
         $upregid = $_GET['upregid'];
         $uid = $user->uid;
         // select the count of records based on the current user and assignment
-        $output = _user_progress_get_maxvalue($upregid, $uid);
+        $output = _user_progress_get_maxvalue($data_point, $upregid, $uid);
       }
       else {
         $output = 0;
@@ -195,27 +201,16 @@ function _user_progress_get($action) {
         $output = 0;
       }
     break;
-    case 'value':
-      // if this is valid, get a count of everything
-      if (_user_progress_verify('guid') && _user_progress_verify('uprid')) {
-        $uprid = $_GET['uprid'];
-        $uid = $user->uid;
-        // select the unique value pairing to current user for security
-        $output = _user_progress_get_value($uprid, $uid);
-      }
-      else {
-        $output = 0;
-      }
-    break;
     case 'data':
       // if this is valid, get a count of everything
-      if (_user_progress_verify('guid') && _user_progress_verify('uprid')) {
+      if (_user_progress_verify('guid') && _user_progress_verify('uprid') && _user_progress_verify('data_point')) {
         $uprid = $_GET['uprid'];
+        $data_point = $_GET['data_point'];
         $uid = $user->uid;
         // select the unique value pairing to current user for security
-        $val = db_fetch_array(db_query("SELECT data, upregid FROM {user_progress_records} WHERE uprid=%d AND uid=%d", $uprid, $uid));
-        _user_progress_convert_value($val['data'], $val['upregid'], 'data_handler', TRUE);
-        $output = $val['data'];
+        $val = db_fetch_array(db_query("SELECT data%d, upregid  FROM {user_progress_records} WHERE uprid=%d AND uid=%d", $data_point, $uprid, $uid));
+        _user_progress_convert_value($val['data'. $data_point], $val['upregid'], 'data'. $data_point .'_handler', TRUE);
+        $output = $val['data'. $data_point];
       }
       else {
         $output = 0;
@@ -242,13 +237,12 @@ function _user_progress_set($action) {
     switch ($action) {
     case 'value':
       // if we passed validation, set the values in the database
-      if (_user_progress_verify('guid') && _user_progress_verify('upregid') && _user_progress_verify('value')) {
+      // requirement is that 1 data point was passed to us
+      if (_user_progress_verify('guid') && _user_progress_verify('upregid') && _user_progress_verify('data1')) {
         // activity id
         $upregid = $_GET['upregid'];
         // user id
         $uid = $user->uid;
-        // value that was sent
-        $value = $_GET['value'];
         // see if there's any nid set, otherwise null
         if (_user_progress_verify('nid', $_GET['nid'], FALSE)) {
           $nid = $_GET['nid'];
@@ -256,17 +250,16 @@ function _user_progress_set($action) {
         else {
           $nid = NULL;
         }
-        // see if there's any additional data set, otherwise a null array
-        if (_user_progress_verify('data')) {
-          $data = $_GET['data'];
+        // verify each potential data point, only 1 is required above
+        for ($i=1; $i<USER_PROGRESS_MAX_DATA_POINTS+1; $i++) {
+          if (isset($_GET['data'. $i])) {
+            $data['data'. $i] = $_GET['data'. $i];
+            // look up how to handle data storage
+            _user_progress_convert_value($data, $upregid, 'data'. $i .'_handler');
+          }
         }
-        else {
-          $data = array();
-        }
-        // look up how to handle data storage
-        _user_progress_convert_value($data, $upregid, 'data_handler');
         // create the record
-        $output = _user_progress_set_record($upregid, $uid, $nid, $value, $data);
+        $output = _user_progress_set_record($upregid, $uid, $nid, $data);
       }
       else {
         $output = 0;
@@ -288,14 +281,23 @@ function _user_progress_set($action) {
 /**
  * Helper function to utilize type defined data handler
  */
-function _user_progress_convert_value(&$data, $upregid, $field = 'value_handler', $reverse = FALSE) {
-  $type_data = _user_progress_list_types();
+function _user_progress_convert_value(&$data, $upregid, $field = 'default_handler', $reverse = FALSE) {
+  // need to invoke as more data is here then we store in the database cache
+  $type_data = module_invoke_all('user_progress_define_types');
+  drupal_alter('user_progress_define_typess', $type_data);
   $upt_name = db_result(db_query("SELECT upt_name FROM {user_progress_registry} WHERE upregid=%d", $upregid));
+  if (!isset($type_data[$upt_name][$field])) {
+    $field = 'default_handler';
+    // no handler defined, no processing
+    if (!isset($type_data[$upt_name][$field])) {
+      return FALSE;
+    }
+  }
+  // special handlers based on types where applicable
   switch ($type_data[$upt_name][$field]) {
     case 'int':
     case 'string':
       // don't do anything for ints and strings
-      $data = $data;
     break;
     case 'blob':
       // serialize so we can store in the database
@@ -337,7 +339,7 @@ function _user_progress_verify($type, $val = NULL, $report = TRUE) {
       $valid = FALSE;
     }
   }
-  elseif ($type == 'data') {
+  elseif (strpos($type, 'data') === TRUE) {
     // ignore data, we don't validate beyond set
   }
   elseif ($type == 'upregid') {
@@ -362,16 +364,18 @@ function _user_progress_verify($type, $val = NULL, $report = TRUE) {
 /**
  * Helper function to insert into records
  */
-function _user_progress_set_record($upregid, $uid, $nid, $value, $data) {
-  db_query("INSERT INTO {user_progress_records} (upregid, uid, nid, value, data, created) VALUES(%d, %d, %d, %d, '%s', %d)", $upregid, $uid, $nid, $value, $data, time());
+function _user_progress_set_record($upregid, $uid, $nid, $data) {
+  $data_points = implode(', ', array_keys($data));
+  $values = array_merge(array($data_points, $upregid, $uid, $nid, time()), $data);
+  db_query("INSERT INTO {user_progress_records} (upregid, uid, nid, created,%s) VALUES(%d, %d, %d, %d,". db_placeholders($data, 'text') .")", $values);
   return db_last_insert_id('user_progress_records', 'uprid');
 }
 
 /**
  * Helper function to get max value for an activity of a user
  */
-function _user_progress_get_maxvalue($upregid, $uid) {
-  return db_result(db_query("SELECT MAX(value) FROM {user_progress_records} WHERE upregid=%d AND uid=%d", $upregid, $uid));
+function _user_progress_get_maxvalue($data_point, $upregid, $uid) {
+  return db_result(db_query("SELECT MAX(data%d) FROM {user_progress_records} WHERE upregid=%d AND uid=%d", $data_point, $upregid, $uid));
 }
 
 /**
@@ -385,8 +389,8 @@ function _user_progress_get_value($uprid, $uid) {
  * Helper function to get the number of attempts on an action
  */
 function _user_progress_get_numtries($upregid, $uid) {
-  $val = db_result(db_query("SELECT COUNT(value) as valcount FROM {user_progress_records} WHERE upregid=%d AND uid=%d", $upregid, $uid));
-  return $val['valcount'];
+  $val = db_result(db_query("SELECT COUNT(data1) as datacount FROM {user_progress_records} WHERE upregid=%d AND uid=%d", $upregid, $uid));
+  return $val['datacount'];
 }
 
 /**
@@ -432,11 +436,11 @@ function _user_progress_rebuild_types() {
     $exists = db_result(db_query("SELECT COUNT(upt_name) FROM {user_progress_types} WHERE upt_name='%s'", $key));
     // does not exist, insert as this is new or first install
     if ($exists == 0) {
-      db_query("INSERT INTO {user_progress_types} (upt_name, name, value_handler, data_handler) VALUES ('%s', '%s', '%s', '%s')", $key, $type['name'], $type['value_handler'], $type['data_handler']);
+      db_query("INSERT INTO {user_progress_types} (upt_name, name) VALUES ('%s', '%s')", $key, $type['name']);
     }
     else {
       // update existing records just to make sure db mirrors code
-      db_query("UPDATE {user_progress_types} SET name='%s', value_handler='%s', data_handler='%s' WHERE upt_name='%s'", $type['name'], $type['value_handler'], $type['data_handler'], $key);
+      db_query("UPDATE {user_progress_types} SET name='%s' WHERE upt_name='%s'", $type['name'], $key);
     }
   }
   return $types;
@@ -455,16 +459,5 @@ function user_progress_views_api() {
  * Implements hook_user_progress_define_types().
  */
 function user_progress_user_progress_define_types() {
-  return array(
-    'up_content' => array(
-      'name' => t('Content'),
-      'value_handler' => 'bool',
-      'data_handler' => 'time',
-    ),
-    'up_jwplayer' => array(
-      'name' => t('JWPlayer Media'),
-      'value_handler' => 'int',
-      'data_handler' => 'string',
-    ),
-  );
+  return array();
 }

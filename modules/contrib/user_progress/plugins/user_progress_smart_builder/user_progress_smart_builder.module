@@ -8,13 +8,11 @@ function user_progress_smart_builder_user_progress_define_types() {
   return array(
     'sb_jeopardy' => array(
       'name' => t('Jeopardy'),
-      'value_handler' => 'int',
-      'data_handler' => 'int',
+      'default_handler' => 'int',
     ),
     'sb_selfcheck' => array(
       'name' => t('Self check'),
-      'value_handler' => 'int',
-      'data_handler' => 'int',
+      'default_handler' => 'int',
     ),
   );
 }

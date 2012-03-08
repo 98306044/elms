@@ -29,10 +29,9 @@ function user_progress_content_init() {
     $upregid = $regids[0]['upregid'];
     $nid = $node->nid;
     $uid = $user->uid;
-    $value = 1;
-    $data = NULL;
+    $data['data1'] = 1;
     // this is setting that the user has gone to this page at this time
-    _user_progress_set_record($upregid, $uid, $nid, $value, $data);
+    _user_progress_set_record($upregid, $uid, $nid, $data);
   }
 }
 
@@ -102,4 +101,17 @@ function user_progress_content_dashboard_requirements($provider) {
     break;
   }
   return $requirements;
+}
+
+/**
+ * Implements hook_user_progress_define_types().
+ */
+function user_progress_content_user_progress_define_types() {
+  return array(
+    'up_content' => array(
+      'name' => t('Content'),
+      'data1_handler' => 'bool',
+      'data2_handler' => 'time',
+    ),
+  );
 }
