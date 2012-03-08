@@ -139,7 +139,7 @@ function html_export_render_pages($paths, $export_path, $dom_remove, &$context) 
   $active_path_count = $context['sandbox']['current_path'];
   while ($count<HTML_EXPORT_PROCESS_LIMIT && $active_path_count < $context['sandbox']['max']) {
     // Store some result for post-processing in the finished callback.
-    $context['results']['paths'][] = drupal_get_path_alias($paths[$active_path_count]);
+    $context['results']['paths'][] = $paths[$active_path_count];
     // squelch any and all messages at this time
     $tmpmsg = drupal_get_messages();
     // issue all calls
@@ -221,7 +221,13 @@ function html_export_cleanup($export_path, $uid, &$context) {
   if ($uid != NULL) {
     masquerade_switch_back();
   }
-  $message = l(t('Click to access export'), $export_path, array('absolute' => TRUE, 'purl' => array('disabled' => TRUE)));
+	// compress it all up if we can
+	if (html_export_compress_directory($export_path, $context)) {
+	  $message = l(t('Click to download export'), $export_path .'.gz', array('absolute' => TRUE, 'purl' => array('disabled' => TRUE)));
+	}
+  else {
+		$message = l(t('Click to locate export'), $export_path, array('absolute' => TRUE, 'purl' => array('disabled' => TRUE)));
+	}
   drupal_set_message(filter_xss($message));
   $GLOBALS['html_export_active'] = FALSE;
 }
