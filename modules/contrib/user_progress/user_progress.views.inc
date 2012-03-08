@@ -6,8 +6,8 @@
 /**
  * Describe table structure to Views.
  *
- * This hook should be placed in MODULENAME.views.inc and it will 
- * be auto-loaded. This must either be in the same directory as the 
+ * This hook should be placed in MODULENAME.views.inc and it will
+ * be auto-loaded. This must either be in the same directory as the
  * .module file or in a subdirectory named 'includes'.
  *
  * The full documentation for this hook is in the advanced help.
@@ -149,7 +149,7 @@ function user_progress_views_data() {
       'handler' => 'views_handler_argument_string',
     ),
   );
-  
+
   // Example plain text field.
   $data['user_progress_registry']['upt_name'] = array(
     'title' => t('Machine type name'),
@@ -176,7 +176,7 @@ function user_progress_views_data() {
     'field' => array(
       'handler' => 'views_handler_field_numeric',
       'click sortable' => TRUE,
-     ),
+    ),
     'filter' => array(
       'handler' => 'views_handler_filter_numeric',
     ),
@@ -184,7 +184,7 @@ function user_progress_views_data() {
       'handler' => 'views_handler_sort',
     ),
   );
-  
+
   // Make user progress records table visible to views
 
   // The 'group' index will be used as a prefix in the UI for any of this
@@ -235,7 +235,7 @@ function user_progress_views_data() {
     'field' => array(
       'handler' => 'views_handler_field_numeric',
       'click sortable' => TRUE,
-     ),
+    ),
     'filter' => array(
       'handler' => 'views_handler_filter_numeric',
     ),
@@ -243,7 +243,7 @@ function user_progress_views_data() {
       'handler' => 'views_handler_sort',
     ),
   );
-  
+
   // registry id
   $data['user_progress_records']['upregid'] = array(
     'title' => t('registry id'),
@@ -255,7 +255,7 @@ function user_progress_views_data() {
       'label' => t('Activity type in registry'),
     ),
   );
-  
+
   // User ID field.
   $data['user_progress_records']['uid'] = array(
     'title' => t('User progress record'),
@@ -299,7 +299,7 @@ function user_progress_views_data() {
       ),
     );
   }
-  
+
   // Example timestamp field.
   $data['user_progress_records']['created'] = array(
     'title' => t('Timestamp'),

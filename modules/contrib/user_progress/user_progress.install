@@ -21,7 +21,7 @@ function user_progress_uninstall() {
 }
 
 /**
- * Implementation of hook_schema(). 
+ * Implementation of hook_schema().
  */
 function user_progress_schema() {
   // create the records table for storage of all user progress actions
@@ -68,7 +68,7 @@ function user_progress_schema() {
       'upregid' => array('upregid'),
       ),
     'primary key' => array('uprid'),
-  ); 
+  );
   // quickly define 16 datapoints that are all the same
   for ($i=1; $i<17; $i++) {
     $schema['user_progress_records']['fields']['data'. $i] = array(
@@ -78,7 +78,7 @@ function user_progress_schema() {
       'description' => 'Data point to store, is text so it can be anything',
     );
   }
-  
+
   // define the registry that will implement types
   $schema['user_progress_registry'] = array(
     'description' => 'Registry of instances of all types of progress',

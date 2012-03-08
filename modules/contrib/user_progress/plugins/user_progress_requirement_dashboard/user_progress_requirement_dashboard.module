@@ -51,7 +51,7 @@ function user_progress_requirement_dashboard_dashboard_requirements($provider) {
       }
       // render a list of the activities
       $requirements['up_activites'] = array(
-        'title' => t('User progress activities'), 
+        'title' => t('User progress activities'),
         'value' => $output,
         'severity' => REQUIREMENT_INFO,
       );
@@ -65,28 +65,11 @@ function user_progress_requirement_dashboard_dashboard_requirements($provider) {
         $output .= $type['name'] .', ';
       }
       $requirements['up_activites'] = array(
-        'title' => t('User progress activities'), 
+        'title' => t('User progress activities'),
         'value' => $output,
         'severity' => REQUIREMENT_INFO,
       );
     break;
   }
   return $requirements;
-}
-
-/**
- * Implementation of hook_menu_alter().
- */
-function user_progress_requirement_dashboard_menu_alter(&$items) {
-  if (isset($items['node/%node/up_stats'])) {
-    $items['node/%node/up_stats']['access callback'] = 'user_progress_requirement_dashboard_status_access';
-    $items['node/%node/up_stats']['access arguments'] = array(1);
-  }
-}
-
-/**
- * Callback to make sure this isnt the group type
- */
-function user_progress_requirement_dashboard_status_access($node) {
-  return !og_is_group_type($node->type) ? user_access('view user_progress requirements dashboard') : FALSE;
 }

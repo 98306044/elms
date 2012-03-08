@@ -22,7 +22,7 @@ function user_progress_content_init() {
       $regids = _user_progress_get_registry_ids('up_content');
     }
   }
-  
+
   // verify we have at least 1 record
   if (count($regids) > 0) {
     // structure the request
@@ -45,7 +45,7 @@ function user_progress_content_dashboard_requirements($provider) {
       $node = menu_get_object();
       $count = db_result(db_query("SELECT COUNT(uprid) as recordidcount FROM {user_progress_records} as tuprec JOIN {user_progress_registry} as tupreg ON tuprec.upregid=tupreg.upregid WHERE upt_name='%s' AND tuprec.nid=%d", 'up_content', $node->nid));
       $requirements['up_content_page_count'] = array(
-        'title' => t('Page views'), 
+        'title' => t('Page views'),
         'value' => $count,
         'severity' => REQUIREMENT_INFO,
       );
@@ -55,7 +55,7 @@ function user_progress_content_dashboard_requirements($provider) {
         $count++;
       }
       $requirements['up_content_unique_page_count'] = array(
-        'title' => t('Unique page visits'), 
+        'title' => t('Unique page visits'),
         'value' => $count,
         'severity' => REQUIREMENT_INFO,
       );
@@ -65,7 +65,7 @@ function user_progress_content_dashboard_requirements($provider) {
       // count all the data associated to this node
       $count = db_result(db_query("SELECT COUNT(uprid) as recordidcount FROM {user_progress_records} as tuprec JOIN {user_progress_registry} as tupreg ON tuprec.upregid=tupreg.upregid WHERE upt_name='%s' AND tupreg.nid=%d", 'up_content', $group->nid));
       $requirements['up_content_page_count'] = array(
-        'title' => t('Page views'), 
+        'title' => t('Page views'),
         'value' => $count,
         'severity' => REQUIREMENT_INFO,
       );
@@ -75,7 +75,7 @@ function user_progress_content_dashboard_requirements($provider) {
         $count++;
       }
       $requirements['up_content_unique_page_count'] = array(
-        'title' => t('Unique page visits'), 
+        'title' => t('Unique page visits'),
         'value' => $count,
         'severity' => REQUIREMENT_INFO,
       );
@@ -84,7 +84,7 @@ function user_progress_content_dashboard_requirements($provider) {
       // count all the data we have of type content
       $count = db_result(db_query("SELECT COUNT(uprid) as recordidcount FROM {user_progress_records} as tuprec JOIN {user_progress_registry} as tupreg ON tuprec.upregid=tupreg.upregid WHERE upt_name='%s'", 'up_content'));
       $requirements['up_content_page_count'] = array(
-        'title' => t('Page views'), 
+        'title' => t('Page views'),
         'value' => $count,
         'severity' => REQUIREMENT_INFO,
       );
@@ -94,7 +94,7 @@ function user_progress_content_dashboard_requirements($provider) {
         $count++;
       }
       $requirements['up_content_unique_page_count'] = array(
-        'title' => t('Unique page visits'), 
+        'title' => t('Unique page visits'),
         'value' => $count,
         'severity' => REQUIREMENT_INFO,
       );

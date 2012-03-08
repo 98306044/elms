@@ -365,9 +365,13 @@ function _user_progress_verify($type, $val = NULL, $report = TRUE) {
  * Helper function to insert into records
  */
 function _user_progress_set_record($upregid, $uid, $nid, $data) {
-  $data_points = implode(', ', array_keys($data));
-  $values = array_merge(array($data_points, $upregid, $uid, $nid, time()), $data);
-  db_query("INSERT INTO {user_progress_records} (upregid, uid, nid, created,%s) VALUES(%d, %d, %d, %d,". db_placeholders($data, 'text') .")", $values);
+  $field_names = array_keys($data);
+  $field_names = array_merge(array('upregid', 'uid', 'nid', 'created'), $field_names);
+  $values = array_merge($field_names, array($upregid, $uid, $nid, time()), $data);
+	// since we don't know how much data we are inserting this can get messy
+	// basically we verify names are text to satisfy best practices
+	// then strip the 's out so that it is valid mysql
+  db_query("INSERT INTO {user_progress_records} (". str_replace("'", '', db_placeholders($field_names, 'text')) .") VALUES(%d, %d, %d, %d,". db_placeholders($data, 'text') .")", $values);
   return db_last_insert_id('user_progress_records', 'uprid');
 }
 

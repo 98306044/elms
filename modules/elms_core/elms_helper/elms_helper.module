@@ -305,6 +305,18 @@ function elms_helper_menu_alter(&$items) {
   }
   // alter things for the group form standard we want
   $items['node/%node/features']['title'] = t('ID Toolkit');
+  // if user progress dashboard stats are invoked
+  if (isset($items['node/%node/up_stats'])) {
+    $items['node/%node/up_stats']['access callback'] = '_elms_helper_uprd_status_access';
+    $items['node/%node/up_stats']['access arguments'] = array(1);
+  }
+}
+
+/**
+ * Callback to make sure this isnt the group type
+ */
+function _elms_helper_uprd_status_access($node) {
+  return (!og_is_group_type($node->type) && $node->type != ELMS_ROOT_TYPE) ? user_access('view user_progress requirements dashboard') : FALSE;
 }
 
 /**
