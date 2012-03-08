@@ -82,69 +82,71 @@ function _user_progress_settings($form_state) {
   // get all types
   $types = _user_progress_list_types();
   if (count($types) > 0) {
-  $table = '<table><caption>'. t('Defined types') .'</caption><tr><th>'. t('ID') .'</th><th>'. t('Name') .'</th></tr>';
-  // render type list as a table
-  foreach ($types as $type) {
-    $table .= '<tr><td>'. $type['upt_name'] .'</td><td>'. $type['name'] .'</td></tr>';
-    $type_options[$type['upt_name']] = $type['name'];
-  }
-  $table .= '</table>';
-  $form['table'] = array(
-    '#value' => $table,
-    '#description' => t('You can find more out about how to define new types of user progress in the API.txt file included with the module.'),
-  );
-  // get a listing of all items in the registry
-  $result = db_query("SELECT * FROM {user_progress_registry}");
-  $table = '<table><caption>'. t('Activity registry') .'</caption><tr><th>'. t('ID') .'</th><th>'. t('Title') .'</th><th>'. t('Type') .'</th><th>'. t('Group') .'</th></tr>';
-  while ($val = db_fetch_array($result)) {
-    if (empty($val['nid'])) {
-      $gname = 'none';
+    $caption = t('Defined types');
+    $header = array(t('id'), t('name'));
+    $rows = array();
+    // render type list as a table
+    foreach ($types as $type) {
+      $rows[] = array($type['upt_name'], $type['name']);
+      $type_options[$type['upt_name']] = $type['name'];
     }
-    else {
-      $group = node_load($val['nid']);
-      $gname = l($group->title, 'node/'. $group->nid);
+    $form['table'] = array(
+      '#value' => theme('table', $header, $rows, array(), $caption),
+      '#description' => t('You can find more out about how to define new types of user progress in the API.txt file included with the module.'),
+    );
+    // get a listing of all items in the registry
+    $result = db_query("SELECT * FROM {user_progress_registry}");
+    $caption = t('Activity registry');
+    $rows = array();
+    $header = array(t('id'), t('title'), t('type'), t('group'));
+    while ($val = db_fetch_array($result)) {
+      if (empty($val['nid'])) {
+        $gname = 'none';
+      }
+      else {
+        $group = node_load($val['nid']);
+        $gname = l($group->title, 'node/'. $group->nid);
+      }
+      $rows[] = array($val['upregid'], $val['title'], $val['upt_name'], $gname);
     }
-    $table .= '<tr><td>'. $val['upregid'] .'</td><td>'. $val['title'] .'</td><td>'. $val['upt_name'] .'</td><td>'. $gname .'</td></tr>';
-  }
-  $table .= '</table>';
-  $form['table2'] = array(
-    '#value' => $table,
-  );
-  $form['add'] = array(
+    $form['table2'] = array(
+    '#value' => theme('table', $header, $rows, array(), $caption),
+    );
+    $form['add'] = array(
     '#type' => 'fieldset',
     '#title' => t('Add activity to registry'),
     '#collapsed' => FALSE,
     '#collapsible' => TRUE,
-  );
-  $options[0] = t('none');
-  // if og is enabled, populate the list of available groups to this user
-  if (module_exists('og')) {
-    $result = db_query(db_rewrite_sql("SELECT title, n.nid FROM {node} AS n JOIN {og} AS g ON g.nid=n.nid"));
-    while ($val = db_fetch_array($result)) {
-      $options[$val['nid']] = $val['title'];
+    );
+    $options[0] = t('none');
+    // if og is enabled, populate the list of available groups to this user
+    if (module_exists('og')) {
+      $result = db_query(db_rewrite_sql("SELECT title, n.nid FROM {node} AS n JOIN {og} AS g ON g.nid=n.nid"));
+      while ($val = db_fetch_array($result)) {
+        $options[$val['nid']] = $val['title'];
+      }
     }
-  }
-  // allow for associating to a group
-  $form['add']['nid'] = array(
+    // allow for associating to a group
+    $form['add']['nid'] = array(
     '#type' => 'select',
     '#title' => t('Group'),
     '#options' => $options,
     '#description' => t('Group associated to this instance of the UP type'),
-  );
-  $form['add']['title'] = array(
+    );
+    $form['add']['title'] = array(
     '#type' => 'textfield',
     '#title' => t('Title'),
     '#description' => t('Human readable title of the type instance'),
-  );
-  $form['add']['upt_name'] = array(
+    );
+    $form['add']['upt_name'] = array(
     '#type' => 'select',
     '#title' => t('Type'),
     '#options' => $type_options,
     '#required' => TRUE,
     '#description' => t('Select a type for this activity'),
-  );
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Add Activity'));
-  return $form;
+    );
+    $form['submit'] = array('#type' => 'submit', '#value' => t('Add Activity'));
+    return $form;
   }
   else {
     drupal_set_message(t('There are no user progress providers, please install some!'), 'error');
@@ -368,9 +370,9 @@ function _user_progress_set_record($upregid, $uid, $nid, $data) {
   $field_names = array_keys($data);
   $field_names = array_merge(array('upregid', 'uid', 'nid', 'created'), $field_names);
   $values = array_merge($field_names, array($upregid, $uid, $nid, time()), $data);
-	// since we don't know how much data we are inserting this can get messy
-	// basically we verify names are text to satisfy best practices
-	// then strip the 's out so that it is valid mysql
+  // since we don't know how much data we are inserting this can get messy
+  // basically we verify names are text to satisfy best practices
+  // then strip the 's out so that it is valid mysql
   db_query("INSERT INTO {user_progress_records} (". str_replace("'", '', db_placeholders($field_names, 'text')) .") VALUES(%d, %d, %d, %d,". db_placeholders($data, 'text') .")", $values);
   return db_last_insert_id('user_progress_records', 'uprid');
 }
