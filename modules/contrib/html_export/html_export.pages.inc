@@ -142,32 +142,27 @@ function html_export_render_pages($paths, $export_path, $dom_remove, &$context) 
     // Store some result for post-processing in the finished callback.
     $context['results']['paths'][] = $paths[$active_path_count];
     menu_set_active_item($paths[$active_path_count]);
+		$menu_item = menu_get_item($paths[$active_path_count]);
+		menu_set_item(NULL, $menu_item);
     // squelch any and all messages at this time
     $tmpmsg = drupal_get_messages();
     // issue all calls by making things active
     // get object to then be able to activate menu
-    if (strpos($paths[$active_path_count], 'node') !== FALSE) {
+    $result = menu_execute_active_handler($paths[$active_path_count]);
+		if (strpos($paths[$active_path_count], 'node') !== FALSE) {
       $obj = menu_get_object('node', 1, $paths[$active_path_count]);
       if (isset($obj->book)) {
-        menu_set_active_menu_name($obj->book['menu_name']);
         menu_tree_all_data($obj->book['menu_name'], $obj->book);
-				$parent = db_result(db_query("SELECT link_path FROM {menu_links} WHERE mlid=%d", $obj->book['plid']));
       }
       else if(isset($obj->menu)) {
-        menu_set_active_menu_name($obj->menu['menu_name']);
         menu_tree_all_data($obj->menu['menu_name'], $obj->menu);
-				$parent = db_result(db_query("SELECT link_path FROM {menu_links} WHERE mlid=%d", $obj->menu['plid']));
       }
     }
-		if ($parent != '') {
-		  $menu_item = menu_get_item($parent);
-      menu_set_item(NULL, $menu_item);
-		}
 		// render page
-		$data = theme('page', menu_execute_active_handler());
-		context_clear();
-    context_links(TRUE);
-    context_blocks(TRUE);
+		$data = theme('page', $result);
+		//context_clear();
+    //context_links(TRUE);
+    //context_blocks(TRUE);
     // @todo context / global static values that influence render need reestablished somehow..
     // locate all the resources used to make this page and copy them
     _html_export_copy_resources($data, $export_path, $context);
