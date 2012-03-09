@@ -87,6 +87,7 @@ function _html_export_job_page_submit($form, &$form_state) {
       $uid = $masq_user->uid;
     }
   }
+  
   html_export_process_job($paths, 'export'. time(), $dom_remove, $uid);
 }
 
@@ -104,6 +105,10 @@ function html_export_process_job($paths, $export_folder, $dom_remove = NULL, $ui
   // make the directory path for this export (just timestamp)
   $export_path = $dir .'/'. $export_folder;
   file_check_directory(file_create_path($export_path), 1);
+  // @todo remove after testing
+  $paths[] = 'parents';
+  $paths[] = 'user';
+  $paths[] = 'node/522/view/marketing';
   // render pages and deep copy directories
   $batch = array(
     'operations' => array(
@@ -140,12 +145,29 @@ function html_export_render_pages($paths, $export_path, $dom_remove, &$context) 
   while ($count<HTML_EXPORT_PROCESS_LIMIT && $active_path_count < $context['sandbox']['max']) {
     // Store some result for post-processing in the finished callback.
     $context['results']['paths'][] = $paths[$active_path_count];
+    menu_set_active_item($paths[$active_path_count]);
     // squelch any and all messages at this time
     $tmpmsg = drupal_get_messages();
-    // issue all calls
+    // issue all calls by making things active
+    // get object to then be able to activate menu
+    if (strpos($paths[$active_path_count], 'node') !== FALSE) {
+      $obj = menu_get_object('node', 1, $paths[$active_path_count]);
+      if (isset($obj->book)) {
+        menu_set_active_menu_name($obj->book['menu_name']);
+        menu_tree_all_data($obj->book['menu_name'], $obj->book);
+        menu_set_active_trail($paths[$active_path_count]);
+      }
+      else if(isset($obj->menu)) {
+        menu_set_active_menu_name($obj->menu['menu_name']);
+        menu_tree_all_data($obj->menu['menu_name'], $obj->menu);
+        menu_set_active_trail($paths[$active_path_count]);
+      }
+    }
     $return = menu_execute_active_handler($paths[$active_path_count]);
-    // @todo: need to activate a menu or collapse/expand is inaccurate
-    // menu_tree_all_data();
+    // @todo context / global static values that influence render need reestablished somehow..
+    context_clear();
+    context_links(TRUE);
+    context_blocks(TRUE);
     // render as a page
     $data = theme('page', $return);
     // locate all the resources used to make this page and copy them
@@ -205,7 +227,7 @@ function html_export_copy_all_resources($export_path, &$context) {
     $context['sandbox']['progress']++;
     $context['sandbox']['active_copy_id'] = $active_copy_id;
   }
-  $tmpmsg = drupal_get_messages();
+  //$tmpmsg = drupal_get_messages();
   // Inform the batch engine that we are not finished,
   // and provide an estimation of the completion level we reached.
   if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
@@ -221,13 +243,13 @@ function html_export_cleanup($export_path, $uid, &$context) {
   if ($uid != NULL) {
     masquerade_switch_back();
   }
-	// compress it all up if we can
-	if (html_export_compress_directory($export_path, $context)) {
-	  $message = l(t('Click to download export'), $export_path .'.gz', array('absolute' => TRUE, 'purl' => array('disabled' => TRUE)));
-	}
+  // compress it all up if we can
+  if (html_export_compress_directory($export_path, $context)) {
+    $message = l(t('Click to download export'), $export_path .'.gz', array('absolute' => TRUE, 'purl' => array('disabled' => TRUE)));
+  }
   else {
-		$message = l(t('Click to locate export'), $export_path, array('absolute' => TRUE, 'purl' => array('disabled' => TRUE)));
-	}
+    $message = l(t('Click to locate export'), $export_path, array('absolute' => TRUE, 'purl' => array('disabled' => TRUE)));
+  }
   drupal_set_message(filter_xss($message));
   $GLOBALS['html_export_active'] = FALSE;
 }

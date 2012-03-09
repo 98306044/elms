@@ -217,15 +217,17 @@ function html_export_html_export_data_alter(&$data, $paths, $active_path_count, 
  * Helper function to archive a directory if extension exists
  */
 function html_export_compress_directory($source, &$context) {
+  return FALSE;
+  // this isn't working yet but it in the right direction
   if (!extension_loaded('zlib') || !file_exists($source)) {
     return FALSE;
   }
-	$destination = $source .'.gz';
-	$fp = gzopen ($destination, 'w9'); // w9 == highest compression
-	$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($source),RecursiveIteratorIterator::CHILD_FIRST);
+  $destination = $source .'.gz';
+  $fp = gzopen ($destination, 'w9'); // w9 == highest compression
+  $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($source),RecursiveIteratorIterator::CHILD_FIRST);
   foreach ($iterator as $path) {
-		gzwrite ($fp, $path);
-	}
-	gzclose($fp);
-	return TRUE;
+    gzwrite ($fp, $path);
+  }
+  gzclose($fp);
+  return TRUE;
 }
