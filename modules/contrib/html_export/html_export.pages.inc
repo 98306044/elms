@@ -105,10 +105,6 @@ function html_export_process_job($paths, $export_folder, $dom_remove = NULL, $ui
   // make the directory path for this export (just timestamp)
   $export_path = $dir .'/'. $export_folder;
   file_check_directory(file_create_path($export_path), 1);
-  // @todo remove after testing
-  $paths[] = 'parents';
-  $paths[] = 'user';
-  $paths[] = 'node/522/view/marketing';
   // render pages and deep copy directories
   $batch = array(
     'operations' => array(
@@ -155,21 +151,24 @@ function html_export_render_pages($paths, $export_path, $dom_remove, &$context) 
       if (isset($obj->book)) {
         menu_set_active_menu_name($obj->book['menu_name']);
         menu_tree_all_data($obj->book['menu_name'], $obj->book);
-        menu_set_active_trail($paths[$active_path_count]);
+				$parent = db_result(db_query("SELECT link_path FROM {menu_links} WHERE mlid=%d", $obj->book['plid']));
       }
       else if(isset($obj->menu)) {
         menu_set_active_menu_name($obj->menu['menu_name']);
         menu_tree_all_data($obj->menu['menu_name'], $obj->menu);
-        menu_set_active_trail($paths[$active_path_count]);
+				$parent = db_result(db_query("SELECT link_path FROM {menu_links} WHERE mlid=%d", $obj->menu['plid']));
       }
     }
-    $return = menu_execute_active_handler($paths[$active_path_count]);
-    // @todo context / global static values that influence render need reestablished somehow..
-    context_clear();
+		if ($parent != '') {
+		  $menu_item = menu_get_item($parent);
+      menu_set_item(NULL, $menu_item);
+		}
+		// render page
+		$data = theme('page', menu_execute_active_handler());
+		context_clear();
     context_links(TRUE);
     context_blocks(TRUE);
-    // render as a page
-    $data = theme('page', $return);
+    // @todo context / global static values that influence render need reestablished somehow..
     // locate all the resources used to make this page and copy them
     _html_export_copy_resources($data, $export_path, $context);
     // allow projects to process page data
@@ -227,7 +226,7 @@ function html_export_copy_all_resources($export_path, &$context) {
     $context['sandbox']['progress']++;
     $context['sandbox']['active_copy_id'] = $active_copy_id;
   }
-  //$tmpmsg = drupal_get_messages();
+  $tmpmsg = drupal_get_messages();
   // Inform the batch engine that we are not finished,
   // and provide an estimation of the completion level we reached.
   if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
