@@ -206,10 +206,10 @@ function html_export_html_export_data_alter(&$data, $paths, $active_path_count, 
   foreach ($paths as $path) {
     // rewrite aliases to non-aliases
     $alias = drupal_get_path_alias($path);
+    $data = str_replace($path, $path .'/index.html', $data);
     if ($alias != $path) {
       $data = str_replace($alias, $path .'/index.html', $data);
     }
-    $data = str_replace($path, $path .'/index.html', $data);
   }
 }
 

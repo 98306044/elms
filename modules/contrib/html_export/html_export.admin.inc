@@ -42,6 +42,12 @@ function _html_export_settings() {
     '#options' => $options,
     '#description' => t('Select the types that are available for publishing as options.'),
   );
+  $form['html_export_other_paths'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Other paths to export'),
+    '#description' => t("Provide one path per line of additional paths to export."),
+    '#default_value' => variable_get('html_export_other_paths', ''),
+  );
   $form['html_export_dom_remove'] = array(
     '#type' => 'textarea',
     '#title' => t('Default dom removal'),

@@ -25,6 +25,12 @@ function _html_export_job_page() {
     '#options' => $options,
     '#required' => TRUE,
   );
+  $form['html_export_other_paths'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Other paths to export'),
+    '#description' => t("Provide one path per line of additional paths to export."),
+    '#default_value' => variable_get('html_export_other_paths', ''),
+  );
   $form['html_export_dom_remove'] = array(
     '#type' => 'textarea',
     '#title' => t('Advanced dom removal'),
@@ -69,6 +75,14 @@ function _html_export_job_page_submit($form, &$form_state) {
   drupal_alter('html_export_add_path_provider', $path_provders);
   // use the selector from the previous form as to what paths to gather
   $paths = array();
+  // account for additional paths added manually
+  if (!empty($form_state['values']['html_export_other_paths'])) {
+    $other_paths = $form_state['values']['html_export_other_paths'];
+    // convert <front> to an actual path if set
+    $other_paths = str_replace('<front>', variable_get('site_frontpage', 'node'), $other_paths);
+    $other_paths = str_replace("\r", "", $other_paths);
+    $paths = explode("\n", $other_paths);
+  }
   $uid = NULL;
   $selectors = $form_state['values']['path_selector'];
   foreach ($selectors as $selector) {
@@ -82,8 +96,11 @@ function _html_export_job_page_submit($form, &$form_state) {
     $paths = array_merge($paths, $tmp);
     // make sure all paths are numeric as spec won't be
     sort($paths);
+    // reverse order so that deeper paths of nodes are rendered
+    $paths = array_reverse($paths);
   }
   // bring along advanced dom removal on publish, accounting for multiple
+  $form_state['values']['html_export_dom_remove'] = str_replace("\r", "", $form_state['values']['html_export_dom_remove']);
   $dom_remove = explode("\n", $form_state['values']['html_export_dom_remove']);
   // see if checkbox for anonymous was set
   if (!empty($form_state['values']['anonymous'])) {
@@ -299,6 +316,8 @@ function _html_export_copy_resources($data, $export_path, &$context) {
     }
   }
   sort($copy_list);
+  // reverse order so that deeper paths of nodes are rendered
+  $copy_list = array_reverse($copy_list);
   // assets to copy, need to filter out base path
   foreach ($copy_list as $key => $file) {
     // only replace first occurance as this will be base path
