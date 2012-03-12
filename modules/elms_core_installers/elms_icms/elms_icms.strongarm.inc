@@ -5251,5 +5251,29 @@ news',
   $strongarm->value = 'marketing';
   $export['elms_parent_pages_default'] = $strongarm;
 
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'html_export_available_views';
+  $strongarm->value = array();
+  $export['html_export_available_views'] = $strongarm;
+
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'html_export_available_types';
+  $strongarm->value = array(
+    'parent' => 'parent',
+    'site' => 'site',
+  );
+  $export['html_export_available_types'] = $strongarm;
+
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'html_export_dom_remove';
+  $strongarm->value = 'div[id=admin-toolbar],div[id=regions_elms_navigation_left],div[id=regions_elms_navigation_top]';
+  $export['html_export_dom_remove'] = $strongarm;
+
   return $export;
 }
