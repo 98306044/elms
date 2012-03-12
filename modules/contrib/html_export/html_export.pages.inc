@@ -146,39 +146,39 @@ function html_export_render_pages($paths, $export_path, $dom_remove, $anonymous,
   // first run
   if (!isset($context['sandbox']['progress'])) {
     $context['sandbox']['progress'] = 0;
-    $context['sandbox']['current_path'] = 0;
     $context['sandbox']['max'] = count($paths);
     $context['results']['paths'] = array();
     $context['results']['copy_list'] = array();
   }
   // process limit amount of records
   $count = 0;
-  $active_path_count = $context['sandbox']['current_path'];
-  while ($count<HTML_EXPORT_PROCESS_LIMIT && $active_path_count < $context['sandbox']['max']) {
-    // Store some result for post-processing in the finished callback.
-    $context['results']['paths'][] = $paths[$active_path_count];
+  while ($count<HTML_EXPORT_PROCESS_LIMIT && $context['sandbox']['progress'] < $context['sandbox']['max']) {
+    $active = $context['sandbox']['progress'];
+		$context['message'] = t('Now processing %path', array('%path' => drupal_get_path_alias($paths[$active])));
+		// Store some result for post-processing in the finished callback.
+    $context['results']['paths'][] = $paths[$active];
     if ($anonymous) {
 			$root = $_SERVER['HTTP_ORIGIN'] . base_path();
 			if (variable_get('clean_url', 0)) {
-				$http = drupal_http_request($root . $paths[$active_path_count]);
+				$http = drupal_http_request($root . $paths[$active]);
 			}
 			else {
-				$http = drupal_http_request($root .'index.php?q='. $paths[$active_path_count]);
+				$http = drupal_http_request($root .'index.php?q='. $paths[$active]);
 			}
 			// store http data object in variable for processing
 			$data = $http->data;
 		}
 		else {
-			menu_set_active_item($paths[$active_path_count]);
-			$menu_item = menu_get_item($paths[$active_path_count]);
+			menu_set_active_item($paths[$active]);
+			$menu_item = menu_get_item($paths[$active]);
 			menu_set_item(NULL, $menu_item);
 			// squelch any and all messages at this time
 			$tmpmsg = drupal_get_messages();
 			// issue all calls by making things active
 			// get object to then be able to activate menu
-			$result = menu_execute_active_handler($paths[$active_path_count]);
-			if (strpos($paths[$active_path_count], 'node') !== FALSE) {
-				$obj = menu_get_object('node', 1, $paths[$active_path_count]);
+			$result = menu_execute_active_handler($paths[$active]);
+			if (strpos($paths[$active], 'node') !== FALSE) {
+				$obj = menu_get_object('node', 1, $paths[$active]);
 				if (isset($obj->book)) {
 					menu_tree_all_data($obj->book['menu_name'], $obj->book);
 				}
@@ -192,9 +192,9 @@ function html_export_render_pages($paths, $export_path, $dom_remove, $anonymous,
 		// locate all the resources used to make this page and copy them
     _html_export_copy_resources($data, $export_path, $context);
     // allow projects to process page data
-    drupal_alter('html_export_data', $data, $paths, $active_path_count, $dom_remove);
+    drupal_alter('html_export_data', $data, $paths, $active, $dom_remove);
     // prepare to save file by creating folders for path
-    $tmp = split('/', $paths[$active_path_count]);
+    $tmp = split('/', $paths[$active]);
     $folder_path = '';
     // build path leading up to the current one
     foreach ($tmp as $folder) {
@@ -204,16 +204,13 @@ function html_export_render_pages($paths, $export_path, $dom_remove, $anonymous,
       file_check_directory($tmppath, 1);
     }
     // open a writable file at that location
-    if ($file = fopen($export_path .'/'. $paths[$active_path_count] .'/index.html' , 'w')) {
+    if ($file = fopen($export_path .'/'. $paths[$active] .'/index.html' , 'w')) {
       fwrite($file, $data);
       fclose($file);
     }
     // Update our progress information.
     $context['sandbox']['progress']++;
-    $context['sandbox']['current_path'] = $active_path_count;
-    $context['message'] = t('Now processing %path', array('%path' => drupal_get_path_alias($paths[$active_path_count])));
-    $count++;
-    $active_path_count++;
+		$count++;
   }
 
   // Inform the batch engine that we are not finished,
@@ -258,7 +255,8 @@ function html_export_copy_all_resources($export_path, &$context) {
  * Batch Operation Callback to clean up before finished
  */
 function html_export_cleanup($export_path, $uid, &$context) {
-  // unmasquerade if we are done
+  dpm($context);
+	// unmasquerade if we are done
   if ($uid != NULL) {
     masquerade_switch_back();
   }
@@ -289,15 +287,15 @@ function _html_export_copy_resources($data, $export_path, &$context) {
     $objs = $html_obj->find($find);
     // account for ability to find multiple objects
     foreach ($objs as $obj) {
-      // account for internal href resources
+      // account for internal href resources, cut arguments
       if (isset($obj->href) && strpos($obj->href, 'http://') === FALSE && strpos($obj->href, 'https://') === FALSE && strpos($obj->href, '.') !== FALSE && !in_array($obj->href, $copy_list)) {
-          $href = str_replace('?r', '', $obj->href);
-          $copy_list[$href] = $href;
+          $href = explode('?', $obj->href);
+          $copy_list[$href[0]] = $href[0];
       }
-      // account for internal src resources
+      // account for internal src resources, cut arguments
       if (isset($obj->src) && strpos($obj->src, 'http://') === FALSE && strpos($obj->src, 'https://') === FALSE && strpos($obj->src, '.') !== FALSE && !in_array($obj->href, $copy_list)) {
-        $src = str_replace('?r', '', $obj->src);
-        $copy_list[$src ] = $src;
+        $src = explode('?', $obj->src);
+        $copy_list[$src[0]] = $src[0];
       }
     }
   }

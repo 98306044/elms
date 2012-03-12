@@ -12,6 +12,16 @@
 // University Park, PA 16802
 
 /**
+ * Implementation of hook_form_alter().
+ */
+function html_export_og_form_alter(&$form, &$form_state, $form_id) {
+	// default the publishing form to og_active_paths
+	$group = og_get_group_context();
+	if ($form_id == '_html_export_job_page' && isset($group->nid)) {
+		$form['path_selector']['#default_value'] = 'og_active_paths';
+	}
+}
+/**
  * Implementation of hook_html_export_add_path_provider().
  */
 function html_export_og_html_export_add_path_provider() {
