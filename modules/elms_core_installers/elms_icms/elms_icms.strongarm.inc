@@ -378,13 +378,6 @@ function elms_icms_strongarm() {
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'jquery_colorpicker_ie6_page';
-  $strongarm->value = 0;
-  $export['jquery_colorpicker_ie6_page'] = $strongarm;
-
-  $strongarm = new stdClass;
-  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
-  $strongarm->api_version = 1;
   $strongarm->name = 'beautytips_defaults';
   $strongarm->value = array(
     'fill' => '#F4F4F4',
@@ -411,9 +404,9 @@ function elms_icms_strongarm() {
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
-  $strongarm->name = 'views_bulk_operations_actions';
-  $strongarm->value = 'a:11:{i:0;s:6:"fields";i:1;s:6:"script";i:2;s:7:"ruleset";i:3;s:4:"book";i:4;s:6:"delete";i:5;s:16:"content_taxonomy";i:6;s:7:"profile";i:7;s:10:"user_roles";i:8;s:8:"taxonomy";i:9;s:17:"argument_selector";i:10;s:7:"archive";}';
-  $export['views_bulk_operations_actions'] = $strongarm;
+  $strongarm->name = 'jquery_colorpicker_ie6_page';
+  $strongarm->value = 0;
+  $export['jquery_colorpicker_ie6_page'] = $strongarm;
 
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -428,6 +421,13 @@ function elms_icms_strongarm() {
   $strongarm->name = 'site_frontpage_path';
   $strongarm->value = 'parents';
   $export['site_frontpage_path'] = $strongarm;
+
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'views_bulk_operations_actions';
+  $strongarm->value = 'a:11:{i:0;s:6:"fields";i:1;s:6:"script";i:2;s:7:"ruleset";i:3;s:4:"book";i:4;s:6:"delete";i:5;s:16:"content_taxonomy";i:6;s:7:"profile";i:7;s:10:"user_roles";i:8;s:8:"taxonomy";i:9;s:17:"argument_selector";i:10;s:7:"archive";}';
+  $export['views_bulk_operations_actions'] = $strongarm;
 
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
@@ -1694,9 +1694,9 @@ news',
   $strongarm->value = array(
     '# of Sites' => '# of Versions',
     'A brief description for the group details block and the group directory.' => 'Enter a short course version topic description',
-    'Add New Site' => 'Add New Version',
-    'Add Parent' => 'Add Course',
-    'Add Site' => 'Create Sandbox',
+    'Add new site' => 'Add new version',
+    'Add parent' => 'Add course',
+    'Add site' => 'Create sandbox',
     'Books need to have at least one piece of content in them in order to work correctly with the outline designer' => 'Version Outlines need to have at least one piece of content in them before you can work with the outline designer',
     'Choose a path. May contain only lowercase letters, numbers, dashes and underscores. e.g. "my-value"' => '"Choose a path for your version. May only contain lowercase letters and numbers. e.g. "art010""',
     'Create Parent' => 'Create Course',
@@ -1719,6 +1719,7 @@ news',
     'If you chose <strong>Move all group posts</strong> above, specify a destination group.' => 'If you chose <strong>move all course version content</strong>, specify the destination version.',
     'In addition to deleting this group, you choose how to disposition the posts and memberships within it.' => '',
     'Join' => 'Enter Course Version',
+    'Listing of all sites associated to this parent' => 'Listing of all versions associated to this course',
     'Make your personal annotations about this content here. When marked private only you (and the site administrator) will be able to see them.' => 'Notes on content will only be visible to you and instructional staff.',
     'Move all group posts and memberships to the group listed below.' => 'Move all version content and students/instructors to the version selected below.',
     'Move all group posts to the group listed below.' => 'Move all version content to the version selected below.',
@@ -1736,7 +1737,9 @@ news',
     'Search group' => 'Search Course',
     'Selecting a different theme will change the look and feel of the group.' => 'Select a theme for the course version',
     'Site' => 'Version',
+    'Site list' => 'Version list',
     'Site Settings' => 'Version Settings',
+    'Site State: @workflow' => 'Version State: @workflow',
     'Site Status' => 'Version Status',
     'Sites' => 'Versions',
     'Submit' => 'Save',
@@ -1748,7 +1751,6 @@ news',
     'Use a registration key to enroll in a group.' => '',
     'You are now a member of !group_name.' => 'You are now enrolled in !group_name.',
     'You are now a member of %group.' => 'You are now enrolled in %group.',
-    'Site State: @workflow' => 'Version State: @workflow',
   );
   $export['locale_custom_strings_en'] = $strongarm;
 
@@ -5241,6 +5243,13 @@ news',
   $strongarm->name = 'uuid_automatic_for_comments';
   $strongarm->value = '0';
   $export['uuid_automatic_for_comments'] = $strongarm;
+
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'elms_parent_pages_default';
+  $strongarm->value = 'marketing';
+  $export['elms_parent_pages_default'] = $strongarm;
 
   return $export;
 }

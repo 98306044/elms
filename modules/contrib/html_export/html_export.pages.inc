@@ -31,14 +31,20 @@ function _html_export_job_page() {
     '#description' => t("Supply a css style selector to target the removal of. This is especially useful for removing things like the admin toolbar, tabs, or other elements you don't want to have exported. Split selectors with a comma."),
     '#default_value' => variable_get('html_export_dom_remove', ''),
   );
+	$form['anonymous'] = array(
+		'#type' => 'checkbox',
+		'#default_value' => TRUE,
+		'#title' => t('Render as anonymous'),
+		'#description' => t('Render pages via an external request so that they are treated as anonymous.'),
+	);
   // enable ability to export as if you are another user
   if (module_exists('masquerade')) {
     if (masquerade_access('autocomplete')) {
       $markup_value .= t('Enter the username to masquerade as.');
       $form['masquerade_user_field'] = array(
         '#type' => 'textfield',
-        '#title' => t('Masquerade for export'),
-        '#description' => t('Select a user account to masquerade as during this export. This allows you to render to file as if you were a different user.'),
+        '#title' => t('EXPERIMENTAL: Masquerade for export'),
+        '#description' => t('Select a user account to masquerade as during this export. This allows you to render to file as if you were a different user. This has known page rendering conflicts with certain projects, anonymous is recommended for an accurate export.'),
         '#size' => '18',
         '#default_value' => '',
         '#autocomplete_path' => 'masquerade/autocomplete',
@@ -79,14 +85,20 @@ function _html_export_job_page_submit($form, &$form_state) {
   }
   // bring along advanced dom removal on publish, accounting for multiple
   $dom_remove = explode(',', $form_state['values']['html_export_dom_remove']);
-  // see if masquerade was enabled and used
-  if (!empty($form_state['values']['masquerade_user_field'])) {
-    // convert name we were passed to uid
-    $masq_user = user_load(array('name' => $form_state['values']['masquerade_user_field']));
-    if (isset($masq_user->uid)) {
-      $uid = $masq_user->uid;
-    }
-  }
+	// see if checkbox for anonymous was set
+  if (!empty($form_state['values']['anonymous'])) {
+		$uid = 0;
+	}
+	else {
+		// see if masquerade was enabled and used
+		if (!empty($form_state['values']['masquerade_user_field'])) {
+			// convert name we were passed to uid
+			$masq_user = user_load(array('name' => $form_state['values']['masquerade_user_field']));
+			if (isset($masq_user->uid)) {
+				$uid = $masq_user->uid;
+			}
+		}
+	}
   
   html_export_process_job($paths, 'export'. time(), $dom_remove, $uid);
 }
@@ -96,9 +108,13 @@ function _html_export_job_page_submit($form, &$form_state) {
  */
 function html_export_process_job($paths, $export_folder, $dom_remove = NULL, $uid = NULL) {
   $GLOBALS['html_export_active'] = TRUE;
-  if ($uid != NULL) {
+  $anonymous = FALSE;
+	if ($uid != NULL) {
     masquerade_switch_user($uid);
   }
+	elseif ($uid == 0) {
+		$anonymous = TRUE;
+	}
   // create a folders
   $dir = file_create_path(file_directory_path() . '/html_export');
   file_check_directory($dir, 1);
@@ -108,7 +124,7 @@ function html_export_process_job($paths, $export_folder, $dom_remove = NULL, $ui
   // render pages and deep copy directories
   $batch = array(
     'operations' => array(
-      array('html_export_render_pages', array($paths, $export_path, $dom_remove)),
+      array('html_export_render_pages', array($paths, $export_path, $dom_remove, $anonymous)),
       array('html_export_copy_all_resources', array($export_path)),
       array('html_export_cleanup', array($export_path, $uid)),
       ),
@@ -126,7 +142,7 @@ function html_export_process_job($paths, $export_folder, $dom_remove = NULL, $ui
 /**
  * Batch Operation Callback to render all pages
  */
-function html_export_render_pages($paths, $export_path, $dom_remove, &$context) {
+function html_export_render_pages($paths, $export_path, $dom_remove, $anonymous, &$context) {
   // first run
   if (!isset($context['sandbox']['progress'])) {
     $context['sandbox']['progress'] = 0;
@@ -141,30 +157,39 @@ function html_export_render_pages($paths, $export_path, $dom_remove, &$context) 
   while ($count<HTML_EXPORT_PROCESS_LIMIT && $active_path_count < $context['sandbox']['max']) {
     // Store some result for post-processing in the finished callback.
     $context['results']['paths'][] = $paths[$active_path_count];
-    menu_set_active_item($paths[$active_path_count]);
-		$menu_item = menu_get_item($paths[$active_path_count]);
-		menu_set_item(NULL, $menu_item);
-    // squelch any and all messages at this time
-    $tmpmsg = drupal_get_messages();
-    // issue all calls by making things active
-    // get object to then be able to activate menu
-    $result = menu_execute_active_handler($paths[$active_path_count]);
-		if (strpos($paths[$active_path_count], 'node') !== FALSE) {
-      $obj = menu_get_object('node', 1, $paths[$active_path_count]);
-      if (isset($obj->book)) {
-        menu_tree_all_data($obj->book['menu_name'], $obj->book);
-      }
-      else if(isset($obj->menu)) {
-        menu_tree_all_data($obj->menu['menu_name'], $obj->menu);
-      }
-    }
-		// render page
-		$data = theme('page', $result);
-		//context_clear();
-    //context_links(TRUE);
-    //context_blocks(TRUE);
-    // @todo context / global static values that influence render need reestablished somehow..
-    // locate all the resources used to make this page and copy them
+    if ($anonymous) {
+			$root = $_SERVER['HTTP_ORIGIN'] . base_path();
+			if (variable_get('clean_url', 0)) {
+				$http = drupal_http_request($root . $paths[$active_path_count]);
+			}
+			else {
+				$http = drupal_http_request($root .'index.php?q='. $paths[$active_path_count]);
+			}
+			// store http data object in variable for processing
+			$data = $http->data;
+		}
+		else {
+			menu_set_active_item($paths[$active_path_count]);
+			$menu_item = menu_get_item($paths[$active_path_count]);
+			menu_set_item(NULL, $menu_item);
+			// squelch any and all messages at this time
+			$tmpmsg = drupal_get_messages();
+			// issue all calls by making things active
+			// get object to then be able to activate menu
+			$result = menu_execute_active_handler($paths[$active_path_count]);
+			if (strpos($paths[$active_path_count], 'node') !== FALSE) {
+				$obj = menu_get_object('node', 1, $paths[$active_path_count]);
+				if (isset($obj->book)) {
+					menu_tree_all_data($obj->book['menu_name'], $obj->book);
+				}
+				else if(isset($obj->menu)) {
+					menu_tree_all_data($obj->menu['menu_name'], $obj->menu);
+				}
+			}
+			// render page
+			$data = theme('page', $result);
+		}
+		// locate all the resources used to make this page and copy them
     _html_export_copy_resources($data, $export_path, $context);
     // allow projects to process page data
     drupal_alter('html_export_data', $data, $paths, $active_path_count, $dom_remove);

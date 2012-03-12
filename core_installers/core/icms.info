@@ -15,6 +15,9 @@ dependencies[] = "feeds_node_helper"
 dependencies[] = "feeds_ridmap"
 dependencies[] = "feeds_tamper"
 dependencies[] = "feeds_xpathparser"
+; HTML Export
+dependencies[] = "html_export"
+dependencies[] = "html_export_og"
 ; Data
 dependencies[] = "data"
 ; ELMS Core - Features
@@ -23,6 +26,7 @@ dependencies[] = "elms_id_best_practices"
 dependencies[] = "elms_resources"
 dependencies[] = "elms_content_import"
 dependencies[] = "elms_content_export"
+dependencies[] = "elms_parent_pages"
 ; ELMS ICMS Core Installer and help
 dependencies[] = "elms_icms"
 dependencies[] = "elms_help_icms"
