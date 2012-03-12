@@ -276,13 +276,10 @@ function html_export_cleanup($export_path, $uid, &$context) {
   if ($uid != NULL) {
     masquerade_switch_back();
   }
-  // compress it all up if we can
-  if (html_export_compress_directory($export_path, $context)) {
-    $message = l(t('Click to download export'), $export_path .'.gz', array('absolute' => TRUE, 'purl' => array('disabled' => TRUE)));
-  }
-  else {
-    $message = l(t('Click to locate export'), $export_path, array('absolute' => TRUE, 'purl' => array('disabled' => TRUE)));
-  }
+  // message with link to generate tar
+  $tmp = explode('/', $export_path);
+  $export = array_pop($tmp);
+  $message = l(t('Click to download export'), 'html_export/download/'. $export, array('absolute' => TRUE, 'purl' => array('disabled' => TRUE)));
   drupal_set_message(filter_xss($message));
   $GLOBALS['html_export_active'] = FALSE;
 }
@@ -401,4 +398,35 @@ function html_export_finished($success, $results, $operations) {
     $message = t('An error occurred while processing %error_operation with arguments: @arguments', array('%error_operation' => $error_operation[0], '@arguments' => print_r($error_operation[1], TRUE)));
   }
   drupal_set_message($message);
+}
+
+/**
+ * Helper to tar a folder based on Features.
+ */
+function _html_export_download_folder($export_path) {
+  // Generate download
+  $dir = file_create_path(file_directory_path() . '/html_export');
+  file_check_directory($dir, 1);
+  $filename = $export_path .'.tar';
+  // Clear out output buffer to remove any garbage from tar output.
+  if (ob_get_level()) {
+    ob_end_clean();
+  }
+
+  drupal_set_header('Content-type: application/x-tar');
+  drupal_set_header('Content-Disposition: attachment; filename="'. $filename .'"');
+
+  $tar = array();
+  // file_scan_directory() can throw warnings when using PHP 5.3, messing
+  // up the output of our file stream. Suppress errors in this one case in
+  // order to produce valid output.
+  foreach (@file_scan_directory($dir .'/'. $export_path, '.*') as $file) {
+    $filename = drupal_substr($file->filename, strpos($file->filename, $export_path));
+    // Add this file.
+    $contents = file_get_contents($file->filename);
+    print html_export_tar_create("{$filename}", $contents);
+    unset($contents);
+  }
+  print pack("a1024", "");
+  exit;
 }
