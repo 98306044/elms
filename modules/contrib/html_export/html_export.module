@@ -211,6 +211,8 @@ function html_export_html_export_data_alter(&$data, $paths, $active_path_count, 
       $data = str_replace($alias, $path .'/index.html', $data);
     }
   }
+  // clean up for potentially full paths goofed up
+  $data = str_replace('/index.html/', '/', $data);
 }
 
 /**
