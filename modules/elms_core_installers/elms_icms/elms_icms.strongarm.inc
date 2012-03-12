@@ -5272,7 +5272,11 @@ news',
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'html_export_dom_remove';
-  $strongarm->value = 'div[id=admin-toolbar],div[id=regions_elms_navigation_left],div[id=regions_elms_navigation_top]';
+  $strongarm->value = 'div[id=admin-toolbar]
+div[id=regions_elms_navigation_left]
+div[id=regions_elms_navigation_top]
+li[class=elms_print_page]
+div[id=block-menu-features]';
   $export['html_export_dom_remove'] = $strongarm;
 
   return $export;
