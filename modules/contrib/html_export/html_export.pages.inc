@@ -79,7 +79,13 @@ function _html_export_job_page_submit($form, &$form_state) {
   if (!empty($form_state['values']['html_export_other_paths'])) {
     $other_paths = $form_state['values']['html_export_other_paths'];
     // convert <front> to an actual path if set
-    $other_paths = str_replace('<front>', variable_get('site_frontpage', 'node'), $other_paths);
+    if (strpos($other_paths, '<front>') !== FALSE) {
+      $front_found = TRUE;
+      $other_paths = str_replace('<front>', variable_get('site_frontpage', 'node'), $other_paths);
+    }
+    else {
+      $front_found = FALSE;
+    }
     $other_paths = str_replace("\r", "", $other_paths);
     $paths = explode("\n", $other_paths);
   }
@@ -117,13 +123,13 @@ function _html_export_job_page_submit($form, &$form_state) {
     }
   }
 
-  html_export_process_job($paths, 'export'. time(), $dom_remove, $uid);
+  html_export_process_job($paths, 'export'. time(), $dom_remove, $uid, $front_found);
 }
 
 /**
  * Initialize batch job
  */
-function html_export_process_job($paths, $export_folder, $dom_remove = NULL, $uid = NULL) {
+function html_export_process_job($paths, $export_folder, $dom_remove = NULL, $uid = NULL, $front_found = FALSE) {
   $GLOBALS['html_export_active'] = TRUE;
   $anonymous = FALSE;
   if ($uid != NULL) {
@@ -141,7 +147,7 @@ function html_export_process_job($paths, $export_folder, $dom_remove = NULL, $ui
   // render pages and deep copy directories
   $batch = array(
     'operations' => array(
-      array('html_export_render_pages', array($paths, $export_path, $dom_remove, $anonymous)),
+      array('html_export_render_pages', array($paths, $export_path, $dom_remove, $anonymous, $front_found)),
       array('html_export_copy_all_resources', array($export_path)),
       array('html_export_cleanup', array($export_path, $uid)),
       ),
@@ -159,13 +165,25 @@ function html_export_process_job($paths, $export_folder, $dom_remove = NULL, $ui
 /**
  * Batch Operation Callback to render all pages
  */
-function html_export_render_pages($paths, $export_path, $dom_remove, $anonymous, &$context) {
+function html_export_render_pages($paths, $export_path, $dom_remove, $anonymous, $front_found, &$context) {
   // first run
   if (!isset($context['sandbox']['progress'])) {
     $context['sandbox']['progress'] = 0;
     $context['sandbox']['max'] = count($paths);
     $context['results']['paths'] = array();
-    $context['results']['copy_list'] = array();
+    $context['results']['asset_list'] = array();
+    // if we found front then render it first
+    if ($front_found) {
+      $front = variable_get('site_frontpage', 'node');
+      $data = _html_export_get_page_data($front, $anonymous);
+      // special alter that doesn't rewrite base path
+      drupal_alter('html_export_data', $data, $paths, $front, $dom_remove, FALSE);
+      // open a writable file at that location
+      if ($file = fopen($export_path .'/index.html' , 'w')) {
+        fwrite($file, $data);
+        fclose($file);
+      }
+    }
   }
   // process limit amount of records
   $count = 0;
@@ -174,42 +192,11 @@ function html_export_render_pages($paths, $export_path, $dom_remove, $anonymous,
     $context['message'] = t('Now processing %path', array('%path' => drupal_get_path_alias($paths[$active])));
     // Store some result for post-processing in the finished callback.
     $context['results']['paths'][] = $paths[$active];
-    if ($anonymous) {
-      $root = $_SERVER['HTTP_ORIGIN'] . base_path();
-      if (variable_get('clean_url', 0)) {
-        $http = drupal_http_request($root . $paths[$active]);
-      }
-      else {
-        $http = drupal_http_request($root .'index.php?q='. $paths[$active]);
-      }
-      // store http data object in variable for processing
-      $data = $http->data;
-    }
-    else {
-      menu_set_active_item($paths[$active]);
-      $menu_item = menu_get_item($paths[$active]);
-      menu_set_item(NULL, $menu_item);
-      // squelch any and all messages at this time
-      $tmpmsg = drupal_get_messages();
-      // issue all calls by making things active
-      // get object to then be able to activate menu
-      $result = menu_execute_active_handler($paths[$active]);
-      if (strpos($paths[$active], 'node') !== FALSE) {
-        $obj = menu_get_object('node', 1, $paths[$active]);
-        if (isset($obj->book)) {
-          menu_tree_all_data($obj->book['menu_name'], $obj->book);
-        }
-        elseif (isset($obj->menu)) {
-          menu_tree_all_data($obj->menu['menu_name'], $obj->menu);
-        }
-      }
-      // render page
-      $data = theme('page', $result);
-    }
+    $data = _html_export_get_page_data($paths[$active], $anonymous);
     // locate all the resources used to make this page and copy them
     _html_export_copy_resources($data, $export_path, $context);
     // allow projects to process page data
-    drupal_alter('html_export_data', $data, $paths, $active, $dom_remove);
+    drupal_alter('html_export_data', $data, $paths, $paths[$active], $dom_remove);
     // prepare to save file by creating folders for path
     $tmp = split('/', $paths[$active]);
     $folder_path = '';
@@ -243,18 +230,20 @@ function html_export_render_pages($paths, $export_path, $dom_remove, $anonymous,
 function html_export_copy_all_resources($export_path, &$context) {
   // first run
   if (!isset($context['sandbox']['progress'])) {
+    // allow other modules to modify the asset list to include other assets
+    drupal_alter('html_export_asset_list', $context['results']['asset_list']);
     $context['sandbox']['progress'] = 0;
     $context['sandbox']['active_copy_id'] = 0;
     $context['results']['files'] = array();
-    $context['sandbox']['max'] = count($context['results']['copy_list']);
+    $context['sandbox']['max'] = count($context['results']['asset_list']);
   }
   // process limit amount of records
   $count = 0;
   $active_copy_id = $context['sandbox']['active_copy_id'];
   while ($count<HTML_EXPORT_FILE_PROCESS_LIMIT && $active_copy_id < $context['sandbox']['max']) {
-    _html_export_copy_file($context['results']['copy_list'][$active_copy_id], $export_path, $context);
+    _html_export_copy_file($context['results']['asset_list'][$active_copy_id], $export_path, $context);
     // Update our progress information.
-    $context['message'] = t('Now copying %file', array('%file' => $context['results']['copy_list'][$active_copy_id]));
+    $context['message'] = t('Now copying %file', array('%file' => $context['results']['asset_list'][$active_copy_id]));
     $active_copy_id++;
     $count++;
     $context['sandbox']['progress']++;
@@ -290,7 +279,7 @@ function html_export_cleanup($export_path, $uid, &$context) {
 function _html_export_copy_resources($data, $export_path, &$context) {
   // Create a DOM object
   $html_obj = new simple_html_dom();
-  $copy_list = array();
+  $asset_list = array();
   // Load HTML from a string
   $html_obj->load($data);
   $resources = array('link', 'img', 'script', 'a', 'object');
@@ -301,29 +290,29 @@ function _html_export_copy_resources($data, $export_path, &$context) {
     // account for ability to find multiple objects
     foreach ($objs as $obj) {
       // account for internal href resources, cut arguments
-      if (isset($obj->href) && strpos($obj->href, 'http://') === FALSE && strpos($obj->href, 'https://') === FALSE && strpos($obj->href, '.') !== FALSE && !in_array($obj->href, $copy_list)) {
+      if (isset($obj->href) && strpos($obj->href, 'http://') === FALSE && strpos($obj->href, 'https://') === FALSE && strpos($obj->href, '.') !== FALSE && !in_array($obj->href, $asset_list)) {
           $href = explode('?', $obj->href);
-          $copy_list[$href[0]] = $href[0];
+          $asset_list[$href[0]] = $href[0];
       }
       // account for internal src resources, cut arguments
-      if (isset($obj->src) && strpos($obj->src, 'http://') === FALSE && strpos($obj->src, 'https://') === FALSE && strpos($obj->src, '.') !== FALSE && !in_array($obj->href, $copy_list)) {
+      if (isset($obj->src) && strpos($obj->src, 'http://') === FALSE && strpos($obj->src, 'https://') === FALSE && strpos($obj->src, '.') !== FALSE && !in_array($obj->href, $asset_list)) {
         $src = explode('?', $obj->src);
-        $copy_list[$src[0]] = $src[0];
+        $asset_list[$src[0]] = $src[0];
       }
     }
   }
-  sort($copy_list);
+  sort($asset_list);
   // reverse order so that deeper paths of nodes are rendered
-  $copy_list = array_reverse($copy_list);
+  $asset_list = array_reverse($asset_list);
   // assets to copy, need to filter out base path
-  foreach ($copy_list as $key => $file) {
+  foreach ($asset_list as $key => $file) {
     // only replace first occurance as this will be base path
     $pos = strpos($file, base_path());
     if ($pos !== FALSE) {
-      $context['results']['copy_list'][$key] = substr_replace($file, '', $pos, drupal_strlen(base_path()));
+      $context['results']['asset_list'][$key] = substr_replace($file, '', $pos, drupal_strlen(base_path()));
     }
   }
-  return $copy_list;
+  return $asset_list;
 }
 
 /**

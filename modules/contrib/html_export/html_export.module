@@ -163,7 +163,7 @@ function _html_export_node_type($type) {
 /**
  * Implementation of hook_html_export_data_alter().
  */
-function html_export_html_export_data_alter(&$data, $paths, $active_path_count, $dom_remove) {
+function html_export_html_export_data_alter(&$data, $paths, $active_path, $dom_remove, $remove_base = TRUE) {
   // advanced dom removal routine
   // Create a DOM object
   $html_obj = new simple_html_dom();
@@ -178,12 +178,18 @@ function html_export_html_export_data_alter(&$data, $paths, $active_path_count, 
       $obj->outertext = '';
     }
   }
-  // remove base_path so that everything is relative to root
-  $sub = '';
-  // we need to retrace paths to account for nesting
-  $tmp = explode('/', $paths[$active_path_count]);
-  foreach ($tmp as $dir) {
-    $sub .= '../';
+  // only remove base if told
+  if ($remove_base) {
+    // remove base_path so that everything is relative to root
+    $sub = '';
+    // we need to retrace paths to account for nesting
+    $tmp = explode('/', $active_path);
+    foreach ($tmp as $dir) {
+      $sub .= '../';
+    }
+  }
+  else {
+    $sub = '';
   }
   $resources = array('link', 'img', 'script', 'a', 'object');
   // repair paths for these resources
@@ -260,4 +266,43 @@ function html_export_tar_create($name, $contents) {
     $tar .= pack("a512", $item);
   }
   return $tar;
+}
+
+/**
+ * Helper function to pull in page data
+ */
+function _html_export_get_page_data($path, $anonymous) {
+  if ($anonymous) {
+    $root = $_SERVER['HTTP_ORIGIN'] . base_path();
+    if (variable_get('clean_url', 0)) {
+      $http = drupal_http_request($root . $path);
+    }
+    else {
+      $http = drupal_http_request($root .'index.php?q='. $path);
+    }
+    // store http data object in variable for processing
+    $data = $http->data;
+  }
+  else {
+    menu_set_active_item($path);
+    $menu_item = menu_get_item($path);
+    menu_set_item(NULL, $menu_item);
+    // squelch any and all messages at this time
+    $tmpmsg = drupal_get_messages();
+    // issue all calls by making things active
+    // get object to then be able to activate menu
+    $result = menu_execute_active_handler($path);
+    if (strpos($path, 'node') !== FALSE) {
+      $obj = menu_get_object('node', 1, $path);
+      if (isset($obj->book)) {
+        menu_tree_all_data($obj->book['menu_name'], $obj->book);
+      }
+      elseif (isset($obj->menu)) {
+        menu_tree_all_data($obj->menu['menu_name'], $obj->menu);
+      }
+    }
+    // render page
+    $data = theme('page', $result);
+  }
+  return $data;
 }

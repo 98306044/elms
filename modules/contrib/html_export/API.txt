@@ -14,7 +14,14 @@ function hook_html_export_add_path_provider() {
 /**
  * Implementation of hook_html_export_add_path_provider_alter().
  */
-function hook_html_export_add_path_provider_alter($providers) {
+function hook_html_export_add_path_provider_alter(&$providers) {
+  // providers is a list of all path selection definitions
+}
+
+/**
+ * Implementation of hook_html_export_asset_list_alter().
+ */
+function hook_html_export_asset_list_alter(&$asset_list) {
   // providers is a list of all path selection definitions
 }
 
@@ -25,4 +32,4 @@ function hook_html_export_data_alter(&$data, $paths, $active_path_count, $dom_re
   // data is the html of the page to work with
 }
 
-There is also a global variable set when HTML publishing starts called $GLOBALS['html_export_active'] that can be used as other developers wish to know this batch is running.
+There is also a global variable set when HTML publishing starts called $GLOBALS['html_export_active'] that can be used as other developers wish to know this batch is running. This is only valid with the masquerade publishing method.
