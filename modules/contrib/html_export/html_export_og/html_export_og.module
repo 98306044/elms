@@ -69,17 +69,6 @@ function _html_export_og_active_og_nodes() {
 }
 
 /**
- * Implementation of hook_html_export_data_alter().
- */
-function html_export_og_html_export_data_alter(&$data, $paths, $active_path_count, $dom_remove) {
-  $group = og_get_group_context();
-  // check for purl
-  if (isset($group->purl)) {
-    $data = str_replace('/'. $group->purl .'/', '/', $data);
-  }
-}
-
-/**
  * Callback for og version of type provider.
  */
 function _html_export_node_type_og($type) {
@@ -91,4 +80,32 @@ function _html_export_node_type_og($type) {
     $paths['node/'. $val['nid']] = 'node/'. $val['nid'];
   }
   return $paths;
+}
+
+/**
+ * Implementation of hook_html_export_data_alter().
+ */
+function html_export_og_html_export_data_alter(&$data, $paths, $active_path, $dom_remove, $remove_base = TRUE) {
+  // only run this if purl is installed as it gets complicated
+  if (module_exists('purl')) {
+    $tmp = explode('/', $active_path);
+    if ($tmp[0] == 'node') {
+      $node = node_load($tmp[1]);
+      // if this is the group type and purl is set
+      if (og_is_group_type($node->type) && isset($node->purl)) {
+        $data = str_replace('/'. $node->purl .'/', '/', $data);
+      }
+      elseif (isset($node->og_groups) && count($node->og_groups) == 1) {
+        // set the group because one is set for this to target
+        $group = node_load(array_pop($node->og_groups));
+        // if purl is set for the group wipe, otherwise we wasted time :)
+        if (isset($group->purl)) {
+          $data = str_replace('/'. $group->purl .'/', '/', $data);
+        }
+      }
+      else {
+        // do nothing, purl wasn't found on whatever the content was
+      }
+    }
+  }
 }

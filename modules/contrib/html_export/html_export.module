@@ -222,9 +222,13 @@ function html_export_html_export_data_alter(&$data, $paths, $active_path, $dom_r
   foreach ($paths as $path) {
     // rewrite aliases to non-aliases
     $alias = drupal_get_path_alias($path);
-    $data = str_replace($path, $path .'/index.html', $data);
+    // seems odd but ensures that its not part of another string
+    // and is instead the end of a resource
+    $data = str_replace($path .'"', $path .'/index.html"', $data);
+    $data = str_replace($path ."'", $path ."/index.html'", $data);
     if ($alias != $path) {
-      $data = str_replace($alias, $path .'/index.html', $data);
+      $data = str_replace($alias .'"', $path .'/index.html"', $data);
+      $data = str_replace($alias ."'", $path ."/index.html'", $data);
     }
   }
   // clean up for potentially full paths goofed up
@@ -271,7 +275,7 @@ function html_export_tar_create($name, $contents) {
 /**
  * Helper function to pull in page data
  */
-function _html_export_get_page_data($path, $anonymous) {
+function _html_export_get_page_data($path, $anonymous, $render_errors) {
   if ($anonymous) {
     $root = $_SERVER['HTTP_ORIGIN'] . base_path();
     if (variable_get('clean_url', 0)) {
@@ -281,7 +285,16 @@ function _html_export_get_page_data($path, $anonymous) {
       $http = drupal_http_request($root .'index.php?q='. $path);
     }
     // store http data object in variable for processing
-    $data = $http->data;
+    $error_codes = array(403, 404, 500);
+    if ($render_errors) {
+      $data = $http->data;
+    }
+    elseif (!in_array($http->code, $error_codes)) {
+      $data = $http->data;
+    }
+    else {
+      $data = FALSE;
+    }
   }
   else {
     menu_set_active_item($path);
@@ -305,4 +318,22 @@ function _html_export_get_page_data($path, $anonymous) {
     $data = theme('page', $result);
   }
   return $data;
+}
+
+/**
+ * Implementation of hook_html_export_add_format().
+ */
+function html_export_html_export_add_format() {
+  return array(
+    'none' => array(
+      'option' => 'Leave in files folder',
+      'text' => 'Click to access export',
+      'path' => file_directory_path() .'/html_export/%/index.html',
+    ),
+    'tar_download' => array(
+      'option' => 'Tar export for download',
+      'text' => 'Click to download export',
+      'path' => 'html_export/download/%',
+    ),
+  );
 }

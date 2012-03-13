@@ -29,13 +29,34 @@ function _html_export_job_page() {
     '#type' => 'textarea',
     '#title' => t('Other paths to export'),
     '#description' => t("Provide one path per line of additional paths to export."),
-    '#default_value' => variable_get('html_export_other_paths', ''),
+    '#default_value' => variable_get('html_export_other_paths', '<front>'),
   );
   $form['html_export_dom_remove'] = array(
     '#type' => 'textarea',
     '#title' => t('Advanced dom removal'),
     '#description' => t("Supply a css style selector to target the removal of. This is especially useful for removing things like the admin toolbar, tabs, or other elements you don't want to have exported. Add one selector per line."),
     '#default_value' => variable_get('html_export_dom_remove', ''),
+  );
+  // format for dealing with the export
+  $formats = module_invoke_all('html_export_add_format');
+  // allow projects to alter list
+  drupal_alter('html_export_add_format', $formats);
+  // convert providers to options array
+  foreach ($formats as $key => $format) {
+    $formats_ary[$key] = t($format['option']);
+  }
+  $form['html_export_format'] = array(
+    '#type' => 'select',
+    '#title' => t('Packaging format'),
+    '#description' => t('What would you like to do with your format?'),
+    '#options' => $formats_ary,
+    '#required' => TRUE,
+  );
+  $form['render_errors'] = array(
+    '#type' => 'checkbox',
+    '#default_value' => TRUE,
+    '#title' => t("Don't export paths returning errors"),
+    '#description' => t("If a path request returns a 403, 404 or 500 error then don't export that page."),
   );
   $form['anonymous'] = array(
     '#type' => 'checkbox',
@@ -108,6 +129,14 @@ function _html_export_job_page_submit($form, &$form_state) {
   // bring along advanced dom removal on publish, accounting for multiple
   $form_state['values']['html_export_dom_remove'] = str_replace("\r", "", $form_state['values']['html_export_dom_remove']);
   $dom_remove = explode("\n", $form_state['values']['html_export_dom_remove']);
+  $format = $form_state['values']['html_export_format'];
+  // block pages that return errors from export
+  if (!empty($form_state['values']['render_errors'])) {
+    $render_errors = FALSE;
+  }
+  else {
+    $render_errors = TRUE;
+  }
   // see if checkbox for anonymous was set
   if (!empty($form_state['values']['anonymous'])) {
     $uid = 0;
@@ -123,13 +152,13 @@ function _html_export_job_page_submit($form, &$form_state) {
     }
   }
 
-  html_export_process_job($paths, 'export'. time(), $dom_remove, $uid, $front_found);
+  html_export_process_job($paths, 'export'. time(), $dom_remove, $uid, $front_found, $render_errors, $format);
 }
 
 /**
  * Initialize batch job
  */
-function html_export_process_job($paths, $export_folder, $dom_remove = NULL, $uid = NULL, $front_found = FALSE) {
+function html_export_process_job($paths, $export_folder, $dom_remove = NULL, $uid = NULL, $front_found = FALSE, $render_errors = FALSE, $format = '') {
   $GLOBALS['html_export_active'] = TRUE;
   $anonymous = FALSE;
   if ($uid != NULL) {
@@ -139,7 +168,7 @@ function html_export_process_job($paths, $export_folder, $dom_remove = NULL, $ui
     $anonymous = TRUE;
   }
   // create a folders
-  $dir = file_create_path(file_directory_path() . '/html_export');
+  $dir = file_create_path(file_directory_path() .'/html_export');
   file_check_directory($dir, 1);
   // make the directory path for this export (just timestamp)
   $export_path = $dir .'/'. $export_folder;
@@ -147,9 +176,9 @@ function html_export_process_job($paths, $export_folder, $dom_remove = NULL, $ui
   // render pages and deep copy directories
   $batch = array(
     'operations' => array(
-      array('html_export_render_pages', array($paths, $export_path, $dom_remove, $anonymous, $front_found)),
+      array('html_export_render_pages', array($paths, $export_path, $dom_remove, $anonymous, $front_found, $render_errors)),
       array('html_export_copy_all_resources', array($export_path)),
-      array('html_export_cleanup', array($export_path, $uid)),
+      array('html_export_cleanup', array($export_path, $uid, $format)),
       ),
     'finished' => 'html_export_finished',
     'title' => t('Processing html export'),
@@ -165,7 +194,7 @@ function html_export_process_job($paths, $export_folder, $dom_remove = NULL, $ui
 /**
  * Batch Operation Callback to render all pages
  */
-function html_export_render_pages($paths, $export_path, $dom_remove, $anonymous, $front_found, &$context) {
+function html_export_render_pages($paths, $export_path, $dom_remove, $anonymous, $front_found, $render_errors, &$context) {
   // first run
   if (!isset($context['sandbox']['progress'])) {
     $context['sandbox']['progress'] = 0;
@@ -175,7 +204,9 @@ function html_export_render_pages($paths, $export_path, $dom_remove, $anonymous,
     // if we found front then render it first
     if ($front_found) {
       $front = variable_get('site_frontpage', 'node');
-      $data = _html_export_get_page_data($front, $anonymous);
+      $data = _html_export_get_page_data($front, $anonymous, $render_errors);
+       // locate all the resources used to make this page and copy them
+      _html_export_copy_resources($data, $export_path, $context);
       // special alter that doesn't rewrite base path
       drupal_alter('html_export_data', $data, $paths, $front, $dom_remove, FALSE);
       // open a writable file at that location
@@ -192,7 +223,7 @@ function html_export_render_pages($paths, $export_path, $dom_remove, $anonymous,
     $context['message'] = t('Now processing %path', array('%path' => drupal_get_path_alias($paths[$active])));
     // Store some result for post-processing in the finished callback.
     $context['results']['paths'][] = $paths[$active];
-    $data = _html_export_get_page_data($paths[$active], $anonymous);
+    $data = _html_export_get_page_data($paths[$active], $anonymous, $render_errors);
     // locate all the resources used to make this page and copy them
     _html_export_copy_resources($data, $export_path, $context);
     // allow projects to process page data
@@ -236,6 +267,10 @@ function html_export_copy_all_resources($export_path, &$context) {
     $context['sandbox']['active_copy_id'] = 0;
     $context['results']['files'] = array();
     $context['sandbox']['max'] = count($context['results']['asset_list']);
+    // convert keys to array positions
+    sort($context['results']['asset_list']);
+    // reverse order so that deeper paths of nodes are rendered
+    $context['results']['asset_list'] = array_reverse($context['results']['asset_list']);
   }
   // process limit amount of records
   $count = 0;
@@ -260,15 +295,22 @@ function html_export_copy_all_resources($export_path, &$context) {
 /**
  * Batch Operation Callback to clean up before finished
  */
-function html_export_cleanup($export_path, $uid, &$context) {
+function html_export_cleanup($export_path, $uid, $format, &$context) {
   // unmasquerade if we are done
   if ($uid != NULL) {
     masquerade_switch_back();
   }
-  // message with link to generate tar
+  // format for dealing with the export
+  $formats = module_invoke_all('html_export_add_format');
+  // allow projects to alter list
+  drupal_alter('html_export_add_format', $formats);
+  $format_data = $formats[$format];
+  // pull out just the export folder location
   $tmp = explode('/', $export_path);
   $export = array_pop($tmp);
-  $message = l(t('Click to download export'), 'html_export/download/'. $export, array('absolute' => TRUE, 'purl' => array('disabled' => TRUE)));
+  $format_data['path'] = str_replace('%', $export, $format_data['path']);
+  // message with link
+  $message = l(t($format_data['text']), $format_data['path'], array('absolute' => TRUE, 'purl' => array('disabled' => TRUE)));
   drupal_set_message(filter_xss($message));
   $GLOBALS['html_export_active'] = FALSE;
 }
@@ -295,15 +337,12 @@ function _html_export_copy_resources($data, $export_path, &$context) {
           $asset_list[$href[0]] = $href[0];
       }
       // account for internal src resources, cut arguments
-      if (isset($obj->src) && strpos($obj->src, 'http://') === FALSE && strpos($obj->src, 'https://') === FALSE && strpos($obj->src, '.') !== FALSE && !in_array($obj->href, $asset_list)) {
+      if (isset($obj->src) && strpos($obj->src, 'http://') === FALSE && strpos($obj->src, 'https://') === FALSE && strpos($obj->src, '.') !== FALSE && !in_array($obj->src, $asset_list)) {
         $src = explode('?', $obj->src);
         $asset_list[$src[0]] = $src[0];
       }
     }
   }
-  sort($asset_list);
-  // reverse order so that deeper paths of nodes are rendered
-  $asset_list = array_reverse($asset_list);
   // assets to copy, need to filter out base path
   foreach ($asset_list as $key => $file) {
     // only replace first occurance as this will be base path
@@ -312,7 +351,6 @@ function _html_export_copy_resources($data, $export_path, &$context) {
       $context['results']['asset_list'][$key] = substr_replace($file, '', $pos, drupal_strlen(base_path()));
     }
   }
-  return $asset_list;
 }
 
 /**
@@ -394,7 +432,7 @@ function html_export_finished($success, $results, $operations) {
  */
 function _html_export_download_folder($export_path) {
   // Generate download
-  $dir = file_create_path(file_directory_path() . '/html_export');
+  $dir = file_create_path(file_directory_path() .'/html_export');
   file_check_directory($dir, 1);
   $filename = $export_path .'.tar';
   // Clear out output buffer to remove any garbage from tar output.

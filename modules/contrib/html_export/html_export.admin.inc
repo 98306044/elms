@@ -46,7 +46,7 @@ function _html_export_settings() {
     '#type' => 'textarea',
     '#title' => t('Other paths to export'),
     '#description' => t("Provide one path per line of additional paths to export."),
-    '#default_value' => variable_get('html_export_other_paths', ''),
+    '#default_value' => variable_get('html_export_other_paths', '<front>'),
   );
   $form['html_export_dom_remove'] = array(
     '#type' => 'textarea',
