@@ -647,7 +647,8 @@ else {
 sp|Spring
 su|Summer
 su1|Summer 1
-su2|Summer 2',
+su2|Summer 2
+active|Active',
     'allowed_values_php' => '',
     'widget' => array(
       'default_value' => array(
@@ -658,7 +659,7 @@ su2|Summer 2',
       'default_value_php' => NULL,
       'label' => 'Section Semester',
       'weight' => '18',
-      'description' => '',
+      'description' => 'Select the semester that this is associated to. If you only want to have 1 active section at a time, use active which will create a path with _active in it.',
       'type' => 'optionwidgets_select',
       'module' => 'optionwidgets',
     ),

@@ -44,7 +44,9 @@ function elms_icms_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'menu_expanded';
-  $strongarm->value = array();
+  $strongarm->value = array(
+    0 => 'admin',
+  );
   $export['menu_expanded'] = $strongarm;
 
   $strongarm = new stdClass;
@@ -1060,21 +1062,21 @@ if (isset($node->nid)) {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'dev_mem';
-  $strongarm->value = 1;
+  $strongarm->value = 0;
   $export['dev_mem'] = $strongarm;
 
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'dev_query';
-  $strongarm->value = 1;
+  $strongarm->value = 0;
   $export['dev_query'] = $strongarm;
 
   $strongarm = new stdClass;
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'dev_timer';
-  $strongarm->value = 1;
+  $strongarm->value = 0;
   $export['dev_timer'] = $strongarm;
 
   $strongarm = new stdClass;
@@ -1751,6 +1753,7 @@ news',
     'Use a registration key to enroll in a group.' => '',
     'You are now a member of !group_name.' => 'You are now enrolled in !group_name.',
     'You are now a member of %group.' => 'You are now enrolled in %group.',
+    'Edit micro-site settings' => 'Edit version settings',
   );
   $export['locale_custom_strings_en'] = $strongarm;
 
@@ -5278,6 +5281,13 @@ div[id=regions_elms_navigation_top]
 li[class=elms_print_page]
 div[id=block-menu-features]';
   $export['html_export_dom_remove'] = $strongarm;
+
+  $strongarm = new stdClass;
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'html_export_other_paths';
+  $strongarm->value = '<front>';
+  $export['html_export_other_paths'] = $strongarm;
 
   return $export;
 }
