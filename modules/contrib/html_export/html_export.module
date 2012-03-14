@@ -29,7 +29,7 @@ function html_export_help($section) {
  * Implementation of hook_perms().
  */
 function html_export_perms() {
-  return array('use html export');
+  return array('use html export', 'download html export', 'sftp html export');
 }
 
 /**
@@ -55,14 +55,24 @@ function html_export_menu() {
   );
   $items['html_export/download'] = array(
     'title' => 'Download html export',
-    'description' => 'Create a new feature.',
+    'description' => 'Download the export in tar format',
     'page callback' => '_html_export_download_folder',
-    'page arguments' => array(2),
-    'access arguments' => array('use html export'),
-    'type' => MENU_LOCAL_TASK,
+    'page arguments' => array(2, 3),
+    'access arguments' => array('download html export'),
+    'type' => MENU_CALLBACK,
     'file' => 'html_export.pages.inc',
-    'weight' => 10,
   );
+  /*
+  $items['html_export/sftp'] = array(
+    'title' => 'SFTP html export',
+    'description' => 'Push the export to an sftp location',
+    'page callback' => 'html_export_sftp_folder',
+    'page arguments' => array(2, 3),
+    'access arguments' => array('sftp html export'),
+    'type' => MENU_CALLBACK,
+    'file' => 'html_export.pages.inc',
+  );
+  */
   return $items;
 }
 
@@ -324,16 +334,30 @@ function _html_export_get_page_data($path, $anonymous, $render_errors) {
  * Implementation of hook_html_export_add_format().
  */
 function html_export_html_export_add_format() {
-  return array(
+  $formats = array(
     'none' => array(
       'option' => 'Leave in files folder',
       'text' => 'Click to access export',
       'path' => file_directory_path() .'/html_export/%/index.html',
     ),
-    'tar_download' => array(
+  );
+  // verify they can access the download method
+  if (user_access('download html export')) {
+    $formats['tar_download'] = array(
       'option' => 'Tar export for download',
       'text' => 'Click to download export',
       'path' => 'html_export/download/%',
-    ),
-  );
+    );
+  }
+  // if curl is active, and they have access then add sftp option
+  /*
+  if (extension_loaded('curl') && user_access('sftp html export')) {
+    $formats['sftp_upload'] = array(
+      'option' => 'Push directory to SFTP location',
+      'text' => 'Click to upload export',
+      'path' => 'html_export/sftp/%',
+    );
+  }
+  */
+  return $formats;
 }

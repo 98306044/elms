@@ -308,7 +308,12 @@ function html_export_cleanup($export_path, $uid, $format, &$context) {
   // pull out just the export folder location
   $tmp = explode('/', $export_path);
   $export = array_pop($tmp);
-  $format_data['path'] = str_replace('%', $export, $format_data['path']);
+  if ($format != 'none') {
+    $format_data['path'] = str_replace('%', $export .'/'. drupal_get_token(), $format_data['path']);
+  }
+  else {
+    $format_data['path'] = str_replace('%', $export, $format_data['path']);
+  }
   // message with link
   $message = l(t($format_data['text']), $format_data['path'], array('absolute' => TRUE, 'purl' => array('disabled' => TRUE)));
   drupal_set_message(filter_xss($message));
@@ -430,30 +435,81 @@ function html_export_finished($success, $results, $operations) {
 /**
  * Helper to tar a folder based on Features.
  */
-function _html_export_download_folder($export_path) {
-  // Generate download
-  $dir = file_create_path(file_directory_path() .'/html_export');
-  file_check_directory($dir, 1);
-  $filename = $export_path .'.tar';
-  // Clear out output buffer to remove any garbage from tar output.
-  if (ob_get_level()) {
-    ob_end_clean();
+function _html_export_download_folder($export_path, $token) {
+  // verify token
+  if (drupal_valid_token($token)) {
+    $dir = file_create_path(file_directory_path() .'/html_export');
+    file_check_directory($dir, 1);
+    $filename = $export_path .'.tar';
+    // Clear out output buffer to remove any garbage from tar output.
+    if (ob_get_level()) {
+      ob_end_clean();
+    }
+    drupal_set_header('Content-type: application/x-tar');
+    drupal_set_header('Content-Disposition: attachment; filename="'. $filename .'"');
+    $tar = array();
+    // file_scan_directory() can throw warnings when using PHP 5.3, messing
+    // up the output of our file stream. Suppress errors in this one case in
+    // order to produce valid output.
+    foreach (@file_scan_directory($dir .'/'. $export_path, '.*') as $file) {
+      $filename = drupal_substr($file->filename, strpos($file->filename, $export_path));
+      // Add this file.
+      $contents = file_get_contents($file->filename);
+      print html_export_tar_create("{$filename}", $contents);
+      unset($contents);
+    }
+    print pack("a1024", "");
+    exit;
   }
-
-  drupal_set_header('Content-type: application/x-tar');
-  drupal_set_header('Content-Disposition: attachment; filename="'. $filename .'"');
-
-  $tar = array();
-  // file_scan_directory() can throw warnings when using PHP 5.3, messing
-  // up the output of our file stream. Suppress errors in this one case in
-  // order to produce valid output.
-  foreach (@file_scan_directory($dir .'/'. $export_path, '.*') as $file) {
-    $filename = drupal_substr($file->filename, strpos($file->filename, $export_path));
-    // Add this file.
-    $contents = file_get_contents($file->filename);
-    print html_export_tar_create("{$filename}", $contents);
-    unset($contents);
+  else {
+    drupal_set_message('Invalid token passed to html export download!', 'error');
   }
-  print pack("a1024", "");
-  exit;
 }
+
+/**
+ * Callback to push a directory to sftp via curl
+ */
+ /*
+function html_export_sftp_folder($export_path, $token) {
+  // verify token
+  if (drupal_valid_token($token)) {
+    $username = variable_get('html_export_sftp_name', '');
+    $pass = variable_get('html_export_sftp_pass', '');
+    $location = variable_get('html_export_sftp_location', '');
+    // establish directory path
+    $dir = file_create_path(file_directory_path() .'/html_export');
+    file_check_directory($dir, 1);
+    // deep copy everything in the export folder
+    foreach (@file_scan_directory($dir .'/'. $export_path, '.*') as $file) {
+      // set curl object
+      $ch = curl_init();
+      // set sftp info
+      $connection = "sftp://$username:$pass@$location". str_replace($dir, '', $file->filename);
+      curl_setopt($ch, CURLOPT_URL, $connection);
+      // we will be uploading
+      curl_setopt($ch, CURLOPT_UPLOAD, 1);
+      // use SFTP protocol
+      curl_setopt($ch, CURLOPT_PROTOCOLS, CURLPROTO_SFTP);
+      // open the current file
+      $fp = fopen($file->filename, 'r');
+      // set file for the operation
+      curl_setopt($ch, CURLOPT_INFILE, $fp);
+      // say how large the file is
+      curl_setopt($ch, CURLOPT_INFILESIZE, filesize($file->filename));
+      // execute curl request
+      curl_exec ($ch);
+      // capture error messages potentially
+      $error_code = curl_errno($ch);
+      curl_close ($ch);
+      // see if this caused an error
+      if ($error_code != 0) {
+        $error = 'Upload error!';
+      }
+    }
+    return $error;
+  }
+  else {
+    drupal_set_message('Invalid token passed to html export sftp!', 'error');
+  }
+}
+*/ 

@@ -114,8 +114,8 @@ function elms_navigation_left_block($op = 'list', $delta = 0, $edit = array()) {
 // helper function for system level items
 function _elms_navigation_left_system_block() {
   $output = '';
-  if (user_access('view system requirements dashboard')) {
-    $output .= theme('menu_item', l(t('System Status'), 'system_stats', array('attributes' => array('title' => t('System Status')))), 0, '', FALSE, 'system');
+  if (user_access('administer elms configuration')) {
+    $output .= theme('menu_item', l(t('System settings'), 'admin/elms', array('attributes' => array('title' => t('System settings')))), 0, '', FALSE, 'system');
   }
   if (user_access('create parent content')) {
     $output .= theme('menu_item', l(t('Add Parent'), 'node/add/parent', array('attributes' => array('title' => t('Add Parent')))), 0, '', FALSE, 'elms_parent');

@@ -304,7 +304,7 @@ function elms_helper_menu_alter(&$items) {
     $menu_item['access arguments'] = array('administer users');
   }
   // alter things for the group form standard we want
-  $items['node/%node/features']['title'] = t('ID Toolkit');
+  $items['node/%node/features']['title'] = t('ID toolkit');
   // if user progress dashboard stats are invoked
   if (isset($items['node/%node/up_stats'])) {
     $items['node/%node/up_stats']['access callback'] = '_elms_helper_uprd_status_access';
