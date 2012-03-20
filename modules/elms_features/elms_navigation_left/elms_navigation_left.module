@@ -179,6 +179,10 @@ function _elms_navigation_left_parent_block($group) {
   if (module_exists('elms_content_export') && user_access('access elms book export') && spaces_access_feature('view', 'elms_content')) {
       $output .= theme('menu_item', l(t('Export Content'), 'elms_export.xml/'. $group->book_nid, array('attributes' => array('title' => t('Export Outline')))), 0, '', FALSE, 'manage_content');
   }
+	// export content outline
+  if (module_exists('html_export') && user_access('use html export')) {
+      $output .= theme('menu_item', l(t('HTML export'), 'html_export', array('attributes' => array('title' => t('HTML export')))), 0, '', FALSE, 'manage_content');
+  }
   return $output;
 }
 

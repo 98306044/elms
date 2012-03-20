@@ -26,9 +26,9 @@ function html_export_help($section) {
 }
 
 /**
- * Implementation of hook_perms().
+ * Implementation of hook_perm().
  */
-function html_export_perms() {
+function html_export_perm() {
   return array('use html export', 'download html export', 'sftp html export');
 }
 
