@@ -44,7 +44,7 @@ function elms_navigation_top_menu_default_menu_links() {
     'external' => '0',
     'has_children' => '0',
     'expanded' => '0',
-    'weight' => '-41',
+    'weight' => '-40',
   );
   // Exported menu link: menu-usermenu:parents/my
   $menu_links['menu-usermenu:parents/my'] = array(

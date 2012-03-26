@@ -147,22 +147,12 @@ function elms_places_strongarm() {
   $strongarm->api_version = 1;
   $strongarm->name = 'gmap_node_markers';
   $strongarm->value = array(
-    'accessibility_guideline' => 'drupal',
-    'accessibility_test' => 'drupal',
-    'folder' => 'drupal',
-    'link' => 'drupal',
-    'page' => 'drupal',
-    'referenced_page' => 'drupal',
-    'parent' => 'drupal',
+    'poll' => 'drupal',
     'place' => 'drupal',
     'reaction' => 'drupal',
     'content_links' => 'drupal',
-    'elms_resource' => 'drupal',
     'term' => 'drupal',
     'timeline_item' => 'drupal',
-    'elms_event' => 'drupal',
-    'site' => 'drupal',
-    'poll' => 'drupal',
   );
   $export['gmap_node_markers'] = $strongarm;
 

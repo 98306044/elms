@@ -41,7 +41,7 @@ function elms_places_menu_default_menu_links() {
     'external' => '0',
     'has_children' => '0',
     'expanded' => '0',
-    'weight' => '-46',
+    'weight' => '-47',
   );
   // Translatables
   // Included for use with string extractors like potx.

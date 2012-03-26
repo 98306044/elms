@@ -1055,6 +1055,8 @@ if (isset($node->nid)) {
     'user_import-xpathparser_0-convert_case' => '',
     'user_import-xpathparser_1-rewrite' => '',
     'elms_node_import-xpathparser_3-current_user_id' => '',
+    'elms_user_file_import-user-trim_white_space' => FALSE,
+    'elms_user_file_import-role-drupal_roles' => FALSE,
   );
   $export['default_feeds_tamper'] = $strongarm;
 
@@ -1237,7 +1239,9 @@ if (isset($node->nid)) {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'feeds_reschedule';
-  $strongarm->value = FALSE;
+  $strongarm->value = array(
+    'elms_user_file_import' => 'elms_user_file_import',
+  );
   $export['feeds_reschedule'] = $strongarm;
 
   $strongarm = new stdClass;
@@ -1697,14 +1701,15 @@ news',
     '# of Sites' => '# of Versions',
     'A brief description for the group details block and the group directory.' => 'Enter a short course version topic description',
     'Add new site' => 'Add new version',
-    'Add parent' => 'Add course',
-    'Add site' => 'Create sandbox',
+    'Add Parent' => 'Add course',
+    'Add Site' => 'Create sandbox',
     'Books need to have at least one piece of content in them in order to work correctly with the outline designer' => 'Version Outlines need to have at least one piece of content in them before you can work with the outline designer',
     'Choose a path. May contain only lowercase letters, numbers, dashes and underscores. e.g. "my-value"' => '"Choose a path for your version. May only contain lowercase letters and numbers. e.g. "art010""',
     'Create Parent' => 'Create Course',
     'Create Site' => 'Create Version',
     'Delete all group posts which don\'t also belong to another group.' => 'Delete all content of this version.',
     'Delete group' => 'Delete Course Version',
+    'Edit micro-site settings' => 'Edit version settings',
     'Editorial note' => 'Instructor Highlight',
     'Enroll in a group' => 'Enter code',
     'Enter a registration key if you want to allow users to enter a key to join this group. Leave this field blank if you do not want to allow users to join this group with a registration key.' => 'Enter a passcode if you want to restrict your course version materials to only the people you give the code to.',
@@ -1753,7 +1758,6 @@ news',
     'Use a registration key to enroll in a group.' => '',
     'You are now a member of !group_name.' => 'You are now enrolled in !group_name.',
     'You are now a member of %group.' => 'You are now enrolled in %group.',
-    'Edit micro-site settings' => 'Edit version settings',
   );
   $export['locale_custom_strings_en'] = $strongarm;
 
@@ -4014,12 +4018,12 @@ news',
     'toggle_node_info_referenced_page' => 0,
     'toggle_node_info_parent' => 0,
     'toggle_node_info_place' => 0,
+    'toggle_node_info_reaction' => 0,
     'toggle_node_info_content_links' => 0,
     'toggle_node_info_elms_resource' => 0,
     'toggle_node_info_term' => 0,
     'toggle_node_info_timeline_item' => 0,
     'toggle_node_info_site' => 0,
-    'toggle_node_info_reaction' => 0,
     'logo_upload' => '',
     'favicon_upload' => '',
   );
@@ -5196,9 +5200,21 @@ news',
   $strongarm->api_version = 1;
   $strongarm->name = 'elms_helper_disallowed_themes';
   $strongarm->value = array(
+    'elms_cube' => 'elms_cube',
     'cube' => 'cube',
-    'bluemarine' => 'bluemarine',
-    'pushbutton' => 'pushbutton',
+    'chapter10' => 'chapter10',
+    'chapter11' => 'chapter11',
+    'chapter12' => 'chapter12',
+    'chapter13' => 'chapter13',
+    'chapter1' => 'chapter1',
+    'chapter2' => 'chapter2',
+    'chapter3' => 'chapter3',
+    'chapter4' => 'chapter4',
+    'chapter5' => 'chapter5',
+    'chapter6' => 'chapter6',
+    'chapter7' => 'chapter7',
+    'chapter8' => 'chapter8',
+    'chapter9' => 'chapter9',
   );
   $export['elms_helper_disallowed_themes'] = $strongarm;
 
