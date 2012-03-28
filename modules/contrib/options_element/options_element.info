@@ -3,9 +3,9 @@ description = A custom form element for entering the options in select lists, ra
 core = 6.x
 php = 5.0
 
-; Information added by drupal.org packaging script on 2012-01-16
-version = "6.x-1.5"
+; Information added by drupal.org packaging script on 2012-03-17
+version = "6.x-1.7"
 core = "6.x"
 project = "options_element"
-datestamp = "1326701746"
+datestamp = "1332018947"
 

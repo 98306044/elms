@@ -12,7 +12,7 @@ function data_ui_view() {
   $rows = array();
   foreach ($tables as $table) {
     $row = array(
-      $table->get('title'),
+      check_plain($table->get('title')),
       $table->get('name'),
       db_result(db_query('SELECT COUNT(*) FROM {'. db_escape_table($table->get('name')) .'}')),
     );
@@ -555,10 +555,12 @@ function data_ui_edit_form_submit($form, &$form_state) {
   $schema = $table->get('table_schema');
 
   if (!db_table_exists($table->get('name'))) {
-    drupal_set_message(t('Table does not exist in database.'), 'error');
-    if (module_exists('schema')) {
-      drupal_set_message(t('Go to !compare to resolve conflicts.', array('!compare' => l(t('Compare schemas'), 'admin/build/data/compare'))), 'error');
-    }
+    drupal_set_message(
+      t('Table does not exist in database.') . ' ' .
+      t('Go to !compare to resolve conflicts.', array(
+        '!compare' => l(t('Compare schemas'), 'admin/build/data/compare')
+      )),
+      'error');
     return;
   }
 
@@ -653,7 +655,8 @@ function data_ui_edit_title_form(&$form_state, $table) {
     '#type' => 'textfield',
     '#title' => t('Title'),
     '#description' => t('Natural name of the table.'),
-    '#default_value' => db_escape_table($table->get('title')),
+    // Do not escape the title: show the user what they originally entered.
+    '#default_value' => $table->get('title'),
   );
   $form['submit'] = array(
     '#type' => 'submit',

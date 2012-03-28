@@ -56,7 +56,8 @@ Drupal.optionsElement = function(element) {
 
   // Enable add item link.
   $(this.optionAddElement).find('a').click(function() {
-    self.addOption($('table tr:last', self.optionsElement).get(0));
+    var newOption = self.addOption($('table tr:last', self.optionsElement).get(0));
+    $(newOption).find('input[type=text]:visible:first').focus();
     return false;
   });
 
@@ -164,7 +165,7 @@ Drupal.optionsElement.prototype.updateWidgetElements = function() {
   // Enable button for adding options.
   $('a.add', this.optionsElement).click(function() {
     var newOption = self.addOption($(this).parents('tr:first').get(0));
-    $(newOption).find('a.add').focus();
+    $(newOption).find('input[type=text]:visible:first').focus();
     return false;
   });
 
@@ -360,7 +361,7 @@ Drupal.optionsElement.prototype.addOption = function(currentOption) {
   // Enable button for adding options.
   $('a.add', newOption).click(function() {
     var newOption = self.addOption($(this).parents('tr:first').get(0));
-    $(newOption).find('a.add').focus();
+    $(newOption).find('input[type=text]:visible:first').focus();
     return false;
   });
 

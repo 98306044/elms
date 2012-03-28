@@ -68,6 +68,7 @@ function data_ui_views_default_views() {
         'style_options' => array(),
         'wildcard' => 'all',
         'wildcard_substitution' => 'All',
+        // These correspond to user-entered data and so should not be escaped.
         'title' => $table->get('title') .' %1',
         'id' => $first,
         'table' => $table->get('name'),

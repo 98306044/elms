@@ -41,9 +41,16 @@ function _elms_get_core_install_data($core_part = 'all') {
  * Helper to allow for modularity in the direction the install profile shifts based on creation of new .info files
  */
 function _elms_get_core_install_files() {
+	// find profiles provided by default in elms
   $dir = "./profiles/elms/core_installers";
   $mask = '\.info$';
-  $files = file_scan_directory($dir, $mask, array('.', '..', 'CVS'), 0, TRUE, 'name', 0);
+  $files1 = file_scan_directory($dir, $mask, array('.', '..', 'CVS'), 0, TRUE, 'name', 0);
+	// profiles can also be stored in sites all
+	// this allows for easier creation of sub-elms profiles
+	$dir = "./sites/all/core_installers";
+  $files2 = file_scan_directory($dir, $mask, array('.', '..', 'CVS'), 0, TRUE, 'name', 0);
+	// merge listing 1 and 2
+	$files = array_merge($files1, $files2);
   return $files;
 }
 

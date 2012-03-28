@@ -25,7 +25,7 @@ function data_views_data() {
 
     $table_data = array();
     $table_data['table'] = array(
-      'group' => $table->get('title'),
+      'group' => check_plain($table->get('title')),
       );
     foreach ($schema['fields'] as $field_name => $field) {
       // If there is no label, generate one from field name.
@@ -59,7 +59,7 @@ function data_views_data() {
     if (isset($schema['primary key']) && count($schema['primary key']) >= 1) {
       $table_data['table']['base'] = array(
         'field' => current($schema['primary key']),
-        'title' => $table->get('title'),
+        'title' => check_plain($table->get('title')),
         'help' => t('Data table'),
         'weight' => 10, 
       );

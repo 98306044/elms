@@ -27,6 +27,10 @@ Context
 -- Allow for setting block weights through the UI to avoid conflicts between context placement
 -- http://drupal.org/node/455908#comment-4998204
 
+Feeds
+-- Patch to ignore SSL errors for imports by default CURLOPT_SSL_VERIFYPEER
+-- http://drupal.org/node/1062178
+
 HTML Purifier Library
 -- Allow for matching of the WCAG 2.0 specification
 -- http://htmlpurifier.org/phorum/read.php?2,5688
