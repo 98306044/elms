@@ -165,6 +165,9 @@ function _elms_navigation_top_notifications() {
   if ($user->uid == 1) {
     $messages = drupal_get_messages(NULL, FALSE);
   }
+  elseif (arg(2) == 'edit') {
+    $messages = drupal_get_messages(NULL, FALSE);
+  }
   else {
     $messages = drupal_get_messages();
   }

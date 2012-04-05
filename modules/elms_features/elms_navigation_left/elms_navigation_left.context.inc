@@ -21,20 +21,9 @@ function elms_navigation_left_context_default_contexts() {
         'node_form' => 1,
       ),
     ),
-    'node' => array(
+    'path' => array(
       'values' => array(
-        'elms_event' => 'elms_event',
-        'folder' => 'folder',
-        'link' => 'link',
-        'page' => 'page',
-        'place' => 'place',
-        'poll' => 'poll',
-        'reaction' => 'reaction',
-        'referenced_page' => 'referenced_page',
-        'timeline_item' => 'timeline_item',
-      ),
-      'options' => array(
-        'node_form' => '1',
+        'node/*' => 'node/*',
       ),
     ),
   );

@@ -33,7 +33,7 @@ function elms_parent_strongarm() {
   $strongarm->name = 'node_options_parent';
   $strongarm->value = array(
     0 => 'status',
-    1 => 'promote',
+    1 => 'revision',
   );
   $export['node_options_parent'] = $strongarm;
 

@@ -171,10 +171,8 @@ function elms_terms_views_default_views() {
   $handler->override_option('items_per_page', 20);
   $handler->override_option('use_pager', 'mini');
   $handler->override_option('distinct', 0);
-  $handler->override_option('style_plugin', 'list');
   $handler->override_option('style_options', array(
     'grouping' => '',
-    'type' => 'ul',
   ));
   $handler->override_option('row_options', array(
     'inline' => array(
@@ -357,6 +355,20 @@ function elms_terms_views_default_views() {
   ));
   $handler->override_option('items_per_page', 0);
   $handler->override_option('use_pager', '0');
+  $handler->override_option('row_plugin', 'semanticviews_fields');
+  $handler->override_option('row_options', array(
+    'semantic_html' => array(
+      'title' => array(
+        'element_type' => 'span',
+        'class' => 'elms_size1',
+      ),
+      'body' => array(
+        'element_type' => 'span',
+        'class' => '',
+      ),
+    ),
+    'skip_blank' => 0,
+  ));
   $handler->override_option('block_description', '');
   $handler->override_option('block_caching', -1);
   $handler = $view->new_display('page', 'Listing page', 'page_1');

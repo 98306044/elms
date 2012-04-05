@@ -46,7 +46,7 @@ function elms_resources_node_info() {
       'has_title' => '1',
       'title_label' => t('Title'),
       'has_body' => '1',
-      'body_label' => t('Body'),
+      'body_label' => t('Content'),
       'min_word_count' => '0',
       'help' => '',
     ),

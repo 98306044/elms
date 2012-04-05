@@ -36,8 +36,15 @@ function elms_id_best_practices_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'elms_id_best_practices.pages.inc',
   );
-  $items['admin/elms/id_best_practices'] = array(
+	$items['admin/elms/id_best_practices'] = array(
     'title' => 'ID best practices',
+    'description' => 'Default settings related to instructional best practices',
+    'page callback' => 'elms_id_best_practices_settings_overview',
+    'access arguments' => array('administer elms configuration'),
+    'file' => 'elms_id_best_practices.admin.inc',
+  );
+  $items['admin/elms/id_best_practices/settings'] = array(
+    'title' => 'ID default settings',
     'description' => 'Default settings related to instructional best practices',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('elms_id_best_practices_settings'),

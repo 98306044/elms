@@ -129,6 +129,13 @@ div#admin-toolbar {
 #regions_elms_navigation_left .help {
   background-image:url(images/helpdesk.png);
 }
+#regions_elms_navigation_left .page_ups {
+  background-image:url(images/track.png);
+}
+#regions_elms_navigation_left .page_revisions {
+  background-image:url(images/change_shape.png);
+}
+
 #regions_elms_navigation_left .feed_reader_field_associated_to {
   background-image:url(images/social_media.png) !important;
   background-position:right !important;
