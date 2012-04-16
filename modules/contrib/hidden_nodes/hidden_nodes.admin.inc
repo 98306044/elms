@@ -16,7 +16,7 @@ function hidden_nodes_setting_page() {
     '#default_value' => variable_get('hidden_nodes_types', array()),
     '#multiple' => TRUE,
   );
-	$form['hidden_nodes_show_message'] = array(
+  $form['hidden_nodes_show_message'] = array(
     '#type' => 'checkbox',
     '#title' => t('Display message'),
     '#description' => t("Display a message to users who can view hidden nodes that it is hidden."),

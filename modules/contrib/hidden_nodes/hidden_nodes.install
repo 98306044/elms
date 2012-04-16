@@ -4,8 +4,8 @@
  * Implementation of hook_install().
  */
 function hidden_nodes_install() {
-  // Make sure that the hidden_nodes module runs after other access modules.
-  db_query("UPDATE {system} SET weight = 1 WHERE name = 'hidden_nodes' AND type = 'module' AND weight = 0");
+  // Make sure that the hidden_nodes module runs before menu alter system
+  db_query("UPDATE {system} SET weight = -1 WHERE name = 'hidden_nodes' AND type = 'module'");
   drupal_install_schema('hidden_nodes');
 }
 
@@ -36,9 +36,18 @@ function hidden_nodes_schema() {
         'default' => 0),
       ),
     'indexes' => array(
-      'hidden'                 => array('hidden'),
+      'hidden' => array('hidden'),
       ),
     'primary key' => array('nid'),
     );
   return $schema;
+}
+
+/**
+ * Implementation of hook_update_N().
+ */
+function hidden_nodes_update_6100() {
+  // Make sure that the hidden_nodes module runs before menu system
+  db_query("UPDATE {system} SET weight = -1 WHERE name = 'hidden_nodes' AND type = 'module'");
+  return array();
 }

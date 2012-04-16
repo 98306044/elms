@@ -5,10 +5,18 @@
  */
 
 /**
+ * Implementation of hook_init().
+ *
+ * Loads nessecary css onto the page to overlay hidden elements
+ */
+function hidden_nodes_init() {
+  drupal_add_css(drupal_get_path('module', 'hidden_nodes') .'/hidden_nodes.css');
+}
+
+/**
  * Implementation of hook_perm().
  *
- * Adds a global 'view hidden content' permission and also
- * a new permission for each content type.
+ * Adds a global 'view hidden content' to see anything hidden.
  */
 function hidden_nodes_perm() {
   return array('view hidden content');
@@ -47,18 +55,41 @@ function hidden_nodes_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
       }
     break;
     case 'load':
-      // set hidden value
-      $node->hidden = db_result(db_query('SELECT hidden FROM {hidden_nodes} WHERE nid = %d', $node->nid));
-      if (empty($node->hidden)) {
-        $node->hidden = 0;
+      // set hidden value if this is a valid type
+      if (in_array($node->type, variable_get('hidden_nodes_types', array()))) {
+        $node->hidden = _hidden_nodes_get_status($node->nid);
+        if (empty($node->hidden)) {
+          $node->hidden = 0;
+        }
       }
     break;
-		case 'view':
-		  // if this is hidden and global message set
-		  if ($node->hidden && variable_get('hidden_nodes_show_message', 1)) {
-				drupal_set_message(t('This content is currently hidden and not displayed to certain user roles.'), 'warning', FALSE);
-			}
-		break;
+    case 'view':
+      // if this is hidden and global message set
+      if (isset($node->hidden) && variable_get('hidden_nodes_show_message', 1)) {
+        // display message if hidden is true
+        if ($node->hidden) {
+          drupal_set_message(t('This content is currently hidden and not displayed to certain user roles.'), 'warning', FALSE);
+        }
+        // book module integration, check parents for hidden status to report more accurately
+        else if(isset($node->book)) {
+          $parents = array();
+          // ignore p1 as its always the page itself and there are only 8 parents allowed
+          for ($i = 2; $i<10; $i++) {
+            // if parent has an mlid then it exists in the book router table potentially
+            if ($node->book['p'. $i] != 0) {
+              $parents[] = $node->book['p'. $i];
+            }
+          }
+          // if there are parents, perform the join otherwise we are done
+          if (count($parents) > 0) {
+            // if we count parents that are hidden, report that fact
+            if (db_result(db_query("SELECT COUNT(hn.nid) FROM {hidden_nodes} AS hn JOIN {book} AS b ON hn.nid=b.nid WHERE mlid IN (" . db_placeholders($parents) . ") AND hidden=1", $parents))) {
+              drupal_set_message(t('This content is not hidden, but it has some parent content that is and will not display in most menus as a result.'), 'warning', FALSE);
+            }
+          }
+        }
+      }
+    break;
     case 'delete':
       // clean up on node delete
       db_query("DELETE FROM {hidden_nodes} WHERE nid=%d", $node->nid);
@@ -140,10 +171,23 @@ function hidden_nodes_node_access_explain($row) {
 function hidden_nodes_menu_link_alter(&$item, $menu) {
   // try and load from the menu object
   $node = menu_get_object();
-	// if we have a node object that is hidden, add a class
-  if (isset($node->hidden) && $node->hidden) {
-    dpm($item);
-		$item['options']['attributes']['class'] = 'node_is_hidden';
-		dpm($item);
+  // if we have a node object that is hidden, add a class
+  if (isset($node->nid)) {
+    // need to directly access database as static cache of node object is invalid
+    // this happens because page save will potentially change the value of hidden
+    if (_hidden_nodes_get_status($node->nid)) {
+      $item['options']['attributes']['class'] = ' node_is_hidden';
+    }
+    else{
+      // we do this to avoid potential conflicts with menu attributes module
+      $item['options']['attributes']['class'] = str_replace(' node_is_hidden', '', $item['options']['attributes']['class']);
+    }
   }
+}
+
+/**
+ * Helper function to return hidden status based on nid.
+ */
+function _hidden_nodes_get_status($nid) {
+  return db_result(db_query('SELECT hidden FROM {hidden_nodes} WHERE nid = %d', $nid));
 }
