@@ -52,3 +52,7 @@ Timeline Library
 Timeline
 -- http://drupal.org/node/1433262
 -- Line 159 changed from file_check_directory to file_exists
+
+Hierarchical Select
+-- http://drupal.org/node/736792#comment-4584412
+-- patch to allow for usage with PURL / Spaces_OG

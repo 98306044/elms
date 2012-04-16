@@ -1,0 +1,50 @@
+Index: hierarchical_select.js
+===================================================================
+--- hierarchical_select.js	(revision 1471)
++++ hierarchical_select.js	(working copy)
+@@ -518,7 +518,7 @@
+ 
+   // Construct the URL the request should be made to. GET arguments may not be
+   // forgotten.
+-  var url = Drupal.settings.HierarchicalSelect.basePath + Drupal.settings.HierarchicalSelect.settings[hsid]['path'];
++  var url = /*Drupal.settings.HierarchicalSelect.basePath +*/ Drupal.settings.HierarchicalSelect.settings[hsid]['path'];
+   if (Drupal.settings.HierarchicalSelect.getArguments.length > 0) {
+     url += (url.indexOf('?') == -1) ? '?' : '&';
+     url += Drupal.settings.HierarchicalSelect.getArguments;
+Index: hierarchical_select.module
+===================================================================
+--- hierarchical_select.module	(revision 1471)
++++ hierarchical_select.module	(working copy)
+@@ -457,7 +457,7 @@
+            'createNewItems'   => (isset($config['editability']['status'])) ? (int) $config['editability']['status'] : 0,
+            'createNewLevels'  => (isset($config['editability']['allow_new_levels'])) ? (int) $config['editability']['allow_new_levels'] : 0,
+            'resizable'        => (isset($config['resizable'])) ? (int) $config['resizable'] : 0,
+-           'path'             => $config['path'],
++           'path'             => url($config['path']),
+         ),
+        ),
+      )
+@@ -1335,22 +1335,7 @@
+   );
+ 
+   if (!$js_settings_added && isset($form_state)) {
+-    $url = base_path();
+-    $url .= variable_get('clean_url', 0) ? '' : 'index.php?q=';
+-    // Prefix URL with language path when i18n is enabled and when path-based
+-    // negotiation is being used.
+-    $negotiation = variable_get('language_negotiation', LANGUAGE_NEGOTIATION_NONE);
+-    if (module_exists('i18n') && ($language->prefix != '') && ($negotiation == LANGUAGE_NEGOTIATION_PATH_DEFAULT || $negotiation == LANGUAGE_NEGOTIATION_PATH)) {
+-       $url .= $language->prefix . '/';
+-    }
+-    if (module_exists('purl')) {
+-      $options = array();
+-      purl_url_outbound_alter($url, $options, '');
+-      $url = str_replace('//', '/', '/' . $url);
+-    }
+-
+-    _hierarchical_select_add_js_settings(array('HierarchicalSelect' => array('basePath' => $url, 'getArguments' => drupal_query_string_encode($_GET, array('q')))), $form_state);
+-
++    _hierarchical_select_add_js_settings(array('HierarchicalSelect' => array('getArguments' => drupal_query_string_encode($_GET, array('q')))), $form_state);
+     $js_settings_added = TRUE;
+   }
+ 

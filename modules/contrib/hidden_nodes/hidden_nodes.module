@@ -1,0 +1,149 @@
+<?php
+/**
+ * @file
+ * Allow users to hide nodes based on permissions.
+ */
+
+/**
+ * Implementation of hook_perm().
+ *
+ * Adds a global 'view hidden content' permission and also
+ * a new permission for each content type.
+ */
+function hidden_nodes_perm() {
+  return array('view hidden content');
+}
+
+/**
+ * Implementation of hook_menu().
+ */
+function hidden_nodes_menu() {
+  $items = array();
+  $items['admin/settings/hidden_nodes'] = array(
+    'title' => 'Hidden nodes',
+    'description' => 'Settings for Hidden nodes module',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('hidden_nodes_setting_page'),
+    'file' => 'hidden_nodes.admin.inc',
+    'access arguments' => array('administer site configuration'),
+  );
+  return $items;
+}
+
+/**
+ * Implementation of hook_nodeapi().
+ */
+function hidden_nodes_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
+  switch ($op) {
+    case 'insert':
+    case 'update':
+      // if node's ability to be hidden is valid, save it
+      if (isset($node->hidden)) {
+        db_query("UPDATE {hidden_nodes} SET hidden=%d WHERE nid=%d", $node->hidden, $node->nid);
+        // if there was no update then insert new
+        if (!db_affected_rows()) {
+          @db_query("INSERT INTO {hidden_nodes} (nid, hidden) VALUES(%d, %d)", $node->nid, $node->hidden);
+        }
+      }
+    break;
+    case 'load':
+      // set hidden value
+      $node->hidden = db_result(db_query('SELECT hidden FROM {hidden_nodes} WHERE nid = %d', $node->nid));
+      if (empty($node->hidden)) {
+        $node->hidden = 0;
+      }
+    break;
+		case 'view':
+		  // if this is hidden and global message set
+		  if ($node->hidden && variable_get('hidden_nodes_show_message', 1)) {
+				drupal_set_message(t('This content is currently hidden and not displayed to certain user roles.'), 'warning', FALSE);
+			}
+		break;
+    case 'delete':
+      // clean up on node delete
+      db_query("DELETE FROM {hidden_nodes} WHERE nid=%d", $node->nid);
+    break;
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function hidden_nodes_form_alter(&$form, $form_state, $form_id) {
+  // inject new option to hide node onto all node forms
+  if (isset($form['type']['#value']) && $form['type']['#value'] . '_node_form' == $form_id) {
+    // Get a copy of the current node object.
+    $node = $form['#node'];
+    // add field to the form if the setting is there for it
+    if (in_array($node->type, variable_get('hidden_nodes_types', array()))) {
+      $form['hidden_nodes'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Hide content'),
+        '#description' => t('Hide this content from displaying for users without the ability to see it. By having access to this option you will still be able to see the content after submission.'),
+        '#collapsible' => TRUE,
+        '#collapsed' => !($node->hidden),
+        '#access' => user_access('view hidden content'),
+      );
+      $form['hidden_nodes']['hidden'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Hide this content'),
+        '#default_value' => $node->hidden,
+        '#access' => user_access('view hidden content'),
+      );
+    }
+  }
+}
+
+/**
+ * Implementation of hook_node_grants().
+ */
+function hidden_nodes_node_grants($account, $op) {
+  $grants = array();
+  // if operation is to view and they have view hidden nodes perm
+  if ($op == 'view' && user_access('view hidden content', $account)) {
+    $grants['hidden_nodes'] = array(1);
+  }
+  return $grants;
+}
+
+/**
+ * Implementation of hook_node_access_records().
+ */
+function hidden_nodes_node_access_records($node) {
+  $grants = array();
+  // only return grants if hidden is true
+  if ($node->hidden) {
+    $grants[] = array (
+      'realm' => 'hidden_nodes',
+      'gid' => 1,
+      'grant_view' => 1,
+      'grant_update' => 0,
+      'grant_delete' => 0,
+      'priority' => 1000, // very high in hopes it is always first
+    );
+  }
+  return $grants;
+}
+
+/**
+ * Implementation of hook_node_access_explain().
+ */
+function hidden_nodes_node_access_explain($row) {
+  if ($row->realm == 'hidden_nodes') {
+    return t('Users with permission to see hidden nodes will.');
+  }
+}
+
+/**
+ * Implementation of hook_menu_link_alter().
+ */
+function hidden_nodes_menu_link_alter(&$item, $menu) {
+  // try and load from the menu object
+  $node = menu_get_object();
+	// if we have a node object that is hidden, add a class
+  if (isset($node->hidden) && $node->hidden) {
+    dpm($item);
+		$item['options']['attributes']['class'] = 'node_is_hidden';
+		dpm($item);
+  }
+}
