@@ -1,6 +1,0 @@
-name = Outline Child Pages
-description = Allow user to outline their own books if they have the 'add content to books' permission without needing 'administer book outlines'
-dependencies[] = outline_designer
-package = Outline Designer
-core = "6.x"
-project = "outline_designer"

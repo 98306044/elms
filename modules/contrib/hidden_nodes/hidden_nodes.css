@@ -1,16 +1,29 @@
 /* CSS Document */
-.node_is_hidden *{
-	font-style:italic;
-	opacity:0.5;
+.node_is_hidden{
+  font-style:italic;
+  opacity:0.5;
   filter:alpha(opacity=50); /* For IE8 and earlier */
   background-color:#FFD;
-	color:#444;
+  color:#444;
+}
+.node_is_hidden *{
+  font-style:italic;
+  opacity:0.5;
+  filter:alpha(opacity=50); /* For IE8 and earlier */
+  background-color:#FFD;
+  color:#444;
 }
 
 li a.node_is_hidden + ul.menu {
-	font-style:italic;
-	opacity:0.5;
-  filter:alpha(opacity=50); /* For IE8 and earlier */
+  font-style:italic;
   background-color:#FFD;
-	color:#444;
+  color:#444;
+}
+
+#book-outline .node_is_hidden * {
+  font-style:italic;
+  opacity:0.7;
+  filter:alpha(opacity=70); /* For IE8 and earlier */
+  background-color:#FFD;
+  color:#000;
 }

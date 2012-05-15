@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Administration settings pages
+ */
 
 /**
  * Implementation of page callback for settings.
@@ -12,7 +16,7 @@ function hidden_nodes_setting_page() {
     '#type' => 'select',
     '#options' => $types,
     '#title' => t('Types to hide'),
-    '#description' => t("Select the types that are allowed to be hidden from users that don't have permission to view hidden content."),
+    '#description' => t("Select the content types that are allowed to be hidden."),
     '#default_value' => variable_get('hidden_nodes_types', array()),
     '#multiple' => TRUE,
   );

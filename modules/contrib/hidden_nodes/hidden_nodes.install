@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Installation routine for hidden nodes.
+ */
 
 /**
  * Implementation of hook_install().
@@ -48,6 +52,6 @@ function hidden_nodes_schema() {
  */
 function hidden_nodes_update_6100() {
   // Make sure that the hidden_nodes module runs before menu system
-  db_query("UPDATE {system} SET weight = -1 WHERE name = 'hidden_nodes' AND type = 'module'");
+  update_sql("UPDATE {system} SET weight = -1 WHERE name = 'hidden_nodes' AND type = 'module'");
   return array();
 }

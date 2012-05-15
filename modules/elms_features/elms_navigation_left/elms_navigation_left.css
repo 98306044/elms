@@ -8,14 +8,17 @@
   left:-182px;
   float:left;
   position:fixed;
-  padding:0px;
-  margin:0px;
+  padding:5px;
+  margin-left:5px;
   text-align:left;
   font-size:12px;
   font-weight: normal;
   color:#ccc;
-  background-image:url(images/sidebarbgtop.png);
-  background-repeat:repeat-y;
+ /* background-image:url(images/sidebarbgtop.png);
+  background-repeat:repeat-y;*/
+-webkit-border-radius: 10px;
+-moz-border-radius: 10px;
+border-radius: 10px;
 }
 /* need to allow admin-toolbar to display higher then left nav if both are installed */
 div#admin-toolbar {
@@ -29,6 +32,7 @@ div#admin-toolbar {
  background-position:right;
  display:block;
  cursor:pointer;
+
 }
 
 #regions_block_elms_navigation_left_3 div.regions_block_title {
@@ -41,14 +45,18 @@ div#admin-toolbar {
   padding: 0px 0px 0px 10px;
   border:none;
   clear: both;
-  height:24px;
-  line-height:24px;
+  height:30px;
+  line-height:30px;
 }
-#regions_block_elms_navigation_left_2 li:hover {
+#regions_elms_navigation_left li {
+  padding-top:5px;
+}
+/*#regions_block_elms_navigation_left_2 li:hover {
   background-image:url(images/sidebarmouseover.png);
   background-repeat:repeat-y;
   background-position:-10px;
 }
+
 
 #regions_block_menu_menu-elms-system li.leaf:hover {
   background-image:url(images/sidebarmouseover.png);
@@ -64,7 +72,7 @@ div#admin-toolbar {
   background-image:url(images/sidebarmouseover.png);
   background-repeat:repeat-y;
   background-position:-20px;
-}
+}*/
 #regions_elms_navigation_left li:hover {
   color:#CCC !important;
 }
@@ -73,16 +81,17 @@ div#admin-toolbar {
 }
 #regions_elms_navigation_left li a.active {
   text-shadow:#333 0px 1px 0px;
-  background-color:#666;
+  font-weight:bold;
+  color:#0C0 !important;
 }
 #regions_elms_navigation_left li a {
   color:#CCC !important;
   text-decoration:none;
   clear: both;
   float:left;
-  height:24px;
+  height:30px;
   width:100%;
-  line-height:24px;
+  line-height:30px;
   font-weight: normal;
   font-size:12px;
 }
@@ -93,13 +102,13 @@ div#admin-toolbar {
   cursor:pointer;
   padding: 2px 0px 2px 10px;
   clear: both;
-  height:24px;
+  height:30px;
 }
 
 #regions_elms_navigation_left .regions_block {
- padding:0px 0px 0px 10px;
- background-image:url(images/sidebarbgtop.png);
- background-repeat:repeat-y;
+ padding:0px 0px 0px 0px;
+ /*background-image:url(images/sidebarbgtop.png);
+ background-repeat:repeat-y;*/
 }
 #regions_elms_navigation_left li, #regions_elms_navigation_left a, #regions_elms_navigation_left .regions_block_title {
   background-position:right;
@@ -176,8 +185,8 @@ div#admin-toolbar {
 }
 
 #regions_elms_navigation_left .workflow_state {
-  height: 24px;
-  line-height:24px;
+  height: 30px;
+  line-height:30px;
 }
 
 #regions_elms_navigation_left #masquerade-block-1 input {
@@ -192,8 +201,8 @@ div#admin-toolbar {
  cursor:pointer;
  float:right;
  position:static;
- width:24px;
- height:24px;
+ width:30px;
+ height:30px;
  background-image:url(images/masquerade.png);
  background-position:top right !important;
  background-repeat:no-repeat !important;
@@ -209,18 +218,41 @@ div#admin-toolbar {
 }
 .workflow_state_3 { /*sandbox*/
   background-color:#C66;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 5px;
 }
+#regions_elms_navigation_left li.workflow_state_3 a,
+#regions_elms_navigation_left li.workflow_state_5 a,
+#regions_elms_navigation_left li.workflow_state_6 a,
+#regions_elms_navigation_left li.workflow_state_7 a,
+#regions_elms_navigation_left li.workflow_state_10 a {
+ color:#fff !important;  
+}
+
 .workflow_state_5 { /*offered*/
   background-color:#356090;
+    -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 5px;
 }
 .workflow_state_6 { /*archive*/
   background-color:#e6e6d4;
+    -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 5px;
 }
 .workflow_state_7 { /*demo*/
   background-color:#327944;
+    -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 5px;
 }
 .workflow_state_10 { /*master*/
   background-color:#AA5;
+    -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 5px;
 }
 
 /* open / close block display */

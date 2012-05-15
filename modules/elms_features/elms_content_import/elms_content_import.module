@@ -19,11 +19,11 @@ function elms_content_import_feeds_after_import($importer, $source) {
   // need to clear the UUIDs of all imported nodes from the
   // get a list of nodes that were just imported
   $ary = array();
-	$result = db_query("SELECT nid FROM {feeds_node_item} WHERE id='elms_node_import'");
+  $result = db_query("SELECT nid FROM {feeds_node_item} WHERE id='elms_node_import'");
   while ($val = db_fetch_array($result)) {
     $ary[] = $val['nid'];
   }
-	if (count($ary) != 0) {
+  if (count($ary) != 0) {
     // clear all nodes that came across
     db_query("DELETE FROM {uuid_node} WHERE nid IN(". db_placeholders($ary) .")", $ary);
     // clean up revisions if they exist
@@ -37,5 +37,5 @@ function elms_content_import_feeds_after_import($importer, $source) {
       $node->revision_uuid = uuid_uuid();
       node_save($node);
     }
-	}
+  }
 }

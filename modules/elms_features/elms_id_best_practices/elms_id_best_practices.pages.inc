@@ -34,6 +34,13 @@ function elms_id_best_practices_settings() {
   $dir = file_create_path(file_directory_path() .'/syllabi');
   file_check_directory($dir,  1);
   $form = array();
+  $form['elms_id_bp_syllabus_type'] = array(
+    '#default_value' => variable_get('elms_id_bp_syllabus_type', 'node'),
+    '#description' => t('How you want to treat the syllabus in the course, if its an uploaded file or a piece of content to edit.'),
+    '#type' => 'select',
+    '#options' => array('node' => 'Page of content', 'upload' => 'Uploaded file'),
+    '#title' => t('Type of syllabus'),
+  );
   $form['elms_id_bp_syllabus'] = array(
     '#default_value' => variable_get('elms_id_bp_syllabus', ''),
     '#description' => t('Upload your syllabus'),
@@ -49,6 +56,15 @@ function elms_id_best_practices_settings() {
     '#input_format' => '2',
     '#type' => 'textarea',
     '#title' => t('Help page'),
+  );
+  $form['elms_id_bp_instructor_block'] = array(
+    '#default_value' => variable_get('elms_id_bp_instructor_block', ''),
+    '#description' => t('Text to display in the instructor contact info block'),
+    '#rows' => '3',
+    '#cols' => '60',
+    '#input_format' => '2',
+    '#type' => 'textarea',
+    '#title' => t('Instructor contact block'),
   );
   // render a select list based on a list of all available resources
   $result = db_query(db_rewrite_sql("SELECT nid,title FROM {node} as n WHERE n.type='elms_resource'"));

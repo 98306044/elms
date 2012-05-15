@@ -36,7 +36,7 @@ function elms_id_best_practices_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'elms_id_best_practices.pages.inc',
   );
-	$items['admin/elms/id_best_practices'] = array(
+  $items['admin/elms/id_best_practices'] = array(
     'title' => 'ID best practices',
     'description' => 'Default settings related to instructional best practices',
     'page callback' => 'elms_id_best_practices_settings_overview',
@@ -174,4 +174,37 @@ function elms_id_best_practices_book_outline_builder_template() {
       ),
   );
   return $outline;
+}
+
+/**
+ * Implementation of hook_block().
+ */
+function elms_id_best_practices_block($op = 'list', $delta = 0, $edit = array()) {
+  if ($op == 'list') {
+    $blocks[0] = array(
+      'info' => t('Instructor contact info'),
+      'weight' => 0,
+      'status' => 0,
+    );
+    return $blocks;
+  }
+  elseif ($op == 'view') {
+    switch ($delta) {
+      case 0:
+          $block['title'] = t('Instructor contact info');
+          $block['content'] = _elms_id_best_practices_contact_info_block();
+      break;
+    }
+    return $block;
+  }
+}
+
+/**
+ * Callback for instructor contact info block.
+ */
+function _elms_id_best_practices_contact_info_block() {
+  $content = variable_get('elms_id_bp_instructor_block', '');
+  if ($content != '') {
+    return $content;
+  }
 }

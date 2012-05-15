@@ -1,0 +1,7 @@
+name = "Outline Designer Book Organic Groups"
+description = "Allows group admins to use Outline Designer for books in their group."
+dependencies[] = "outline_designer_book"
+dependencies[] = "og"
+package = "Outline Designer"
+core = "6.x"
+project = "outline_designer"

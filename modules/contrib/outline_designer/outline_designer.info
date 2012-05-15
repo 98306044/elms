@@ -1,6 +1,5 @@
-name = Outline Designer
-description = Usability improvements to the core-optional Book module that allows the rapid building of content outlines.
-dependencies[] = book
-package = Outline Designer
+name = "Outline Designer API"
+description = "API for usability improvements to tableDrag based forms in drupal"
+package = "Outline Designer"
 project = "outline_designer"
 core = "6.x"

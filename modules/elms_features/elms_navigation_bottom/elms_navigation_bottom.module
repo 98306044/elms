@@ -144,8 +144,10 @@ function _elms_navigation_bottom_page_controls() {
     }
   }
   // scaling options, weird looking but needed for anchor trigger
+  /*
   $output .= theme('menu_item', l('', '', array('fragment' => ' ', 'external' => TRUE, 'attributes' => array('title' => t('Scale Out')))), 0, '', FALSE, 'elms_zoom_out');
   $output .= theme('menu_item', l('', '', array('fragment' => ' ', 'external' => TRUE, 'attributes' => array('title' => t('Scale Page')))), 0, '', FALSE, 'elms_zoom_in');
   $output .= theme('menu_item', l('', '', array('fragment' => ' ', 'external' => TRUE, 'attributes' => array('title' => t('Reset Scale')))), 0, '', FALSE, 'elms_zoom_reset');
+  */
   return $output;
 }

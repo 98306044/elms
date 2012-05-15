@@ -152,9 +152,9 @@ function _elms_navigation_left_page_block() {
   $output = str_replace('/track">', '/track" class="page_track" title="'. t('Track') .'">', $output);
   // add devel class -- admin/developer only
   $output = str_replace('/devel">', '/devel" class="page_devel" title="'. t('Developer node debug') .'">', $output);
-	// add track class for user progress stats
+  // add track class for user progress stats
   $output = str_replace('/up_stats">', '/up_stats" class="page_ups" title="'. t('Content statistics') .'">', $output);
-	// add track class for user progress stats
+  // add track class for user progress stats
   $output = str_replace('/revisions">', '/revisions" class="page_revisions" title="'. t('Revision history') .'">', $output);
   return $output;
 }
@@ -183,7 +183,7 @@ function _elms_navigation_left_parent_block($group) {
   if (module_exists('elms_content_export') && user_access('access elms book export') && spaces_access_feature('view', 'elms_content')) {
       $output .= theme('menu_item', l(t('Export Content'), 'elms_export.xml/'. $group->book_nid, array('attributes' => array('title' => t('Export Outline')))), 0, '', FALSE, 'manage_content');
   }
-	// export content outline
+  // export content outline
   if (module_exists('html_export') && user_access('use html export')) {
       $output .= theme('menu_item', l(t('HTML export'), 'html_export', array('attributes' => array('title' => t('HTML export')))), 0, '', FALSE, 'manage_content');
   }

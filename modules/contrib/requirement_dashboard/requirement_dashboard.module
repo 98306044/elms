@@ -75,6 +75,8 @@ function requirement_dashboard_perm() {
 function requirement_dashboard_status($provider = FALSE) {
   // invoke hook to pull all requirements of the provider
   $requirements = module_invoke_all('dashboard_requirements', $provider);
+  // allow other projects to alter this one
+  drupal_alter('dashboard_requirements', $requirements, $provider);
   // if provider isn't set do nothing
   if (!$provider) {
   return t('Provider needs to be set to render anything.');
@@ -87,5 +89,7 @@ function requirement_dashboard_status($provider = FALSE) {
 function _requirement_dashboard_provider_list() {
   // invoke the hook and get all the providers
   $requirement_dashboards = module_invoke_all('requirement_dashboard_provider');
+  // allow other projects to alter this one
+  drupal_alter('requirement_dashboard_provider', $requirement_dashboards);
   return $requirement_dashboards;
 }

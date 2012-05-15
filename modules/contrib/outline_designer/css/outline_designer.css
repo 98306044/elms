@@ -70,24 +70,24 @@
 #book-outline {
   min-width:inherit;
   width:100%;
-	float:left;
+  float:left;
 }
 #book-outline tr td div.form-item{
-	float:left;
+  float:left;
 }
 #book-outline tr{
-	width:98%;
-	margin:0px;
-	padding-left:1%;
-	padding-right:1%;
-	border-bottom:1px solid #DDDDDD;
-	border-top:none;
+  width:98%;
+  margin:0px;
+  padding-left:1%;
+  padding-right:1%;
+  border-bottom:1px solid #DDDDDD;
+  border-top:none;
 }
 #book-outline tr td {
-	border:none;
+  border:none;
 }
 #od-book-edit {
-	margin:0px;
+  margin:0px;
 }
 #book-outline .tableHeader-processed {
   display:none;
@@ -368,25 +368,25 @@
 }
 .od_cancel_button {
   position:absolute;
-	top:0;
-	right:0;
-	margin:-8px -8px 0px 0px;
-	padding:0px;
+  top:0;
+  right:0;
+  margin:-8px -8px 0px 0px;
+  padding:0px;
 }
 
 .od-operation-icons {
-	float:left;
-	margin:6px 6px 0px 6px;
+  float:left;
+  margin:6px 6px 0px 6px;
 }
 
 #book-admin-edit .sticky-header {
-	display:none;
+  display:none;
 }
 
 .ahah-progress-throbber {
-	float:left
+  float:left
 }
 .message {
-	float:left;
-	font-weight:bold;
+  float:left;
+  font-weight:bold;
 }
