@@ -3,8 +3,8 @@ core = 6.x
 api = 2
 ; comment these out when using d.o. packaging
 projects[] = drupal
-projects[] = elms
-projects[elms][subdir] = "../../profiles/"
+; projects[] = elms
+projects[elms][subdir] = "profiles"
 ; ELMS core, install profile is assumed
 
 projects[elms_features][version] = "1.0-alpha6"
