@@ -1,9 +1,11 @@
 ; ELMS make file
 core = 6.x
 api = 2
-projects[drupal][version] = "6.24"
-
+; comment these out when using d.o. packaging
+projects[] = drupal
+projects[] = elms
 ; ELMS core, install profile is assumed
+
 projects[elms_features][version] = "1.0-alpha6"
 
 ; Modules
@@ -368,10 +370,10 @@ projects[context][patch][] = "http://drupal.org/files/issues/context-expose-weig
 
 projects[context_reaction_theme][patch][] = "http://drupal.org/files/lower_module_weight_to_0-1401510-3.patch"
 
-;projects[feeds][patch][] = "http://drupal.org/files/1062178-feeds-ignore-ssl-errors-default-updated_0.patch"
+; projects[feeds][patch][] = "http://drupal.org/files/1062178-feeds-ignore-ssl-errors-default-updated_0.patch"
 projects[feeds][patch][] = "http://drupal.org/files/issues/724536-128-feeds-nodereference-mapper.patch"
 
-;libraries[htmlpurifier][patch][] = "http://drupal.org/files/htmlpurifier-wcag_tables.patch"
+; libraries[htmlpurifier][patch][] = "http://drupal.org/files/htmlpurifier-wcag_tables.patch"
 
 ; TODO: Editable Fields Patch needed http://drupal.org/node/777870
 ; TODO: WYSIWYG Templates Patch needed
