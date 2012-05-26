@@ -357,7 +357,7 @@ libraries[quail][download][type] = "get"
 libraries[quail][download][url] = "http://quail-lib.googlecode.com/files/quail-lib-0.4.1.tar.gz"
 libraries[quail][directory_name] = "quail"
 libraries[quail][type] = "library"
-libraries[quail][destination] = "../../sites/all/libraries"
+libraries[quail][destination] = "libraries"
 
 ; Patches
 projects[og_user_roles][patch][] = "http://drupal.org/files/issues/729256_og_user_roles_views_int_1.patch"
